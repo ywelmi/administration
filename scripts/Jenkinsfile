@@ -1,0 +1,18 @@
+pipeline {
+  agent {}
+
+  stages {
+    stage('build') {
+      steps {
+        bat "npm install"
+      }
+    }
+
+    stage('dev') {
+      steps {
+        bat "npm run dev" // Serve at 3030
+      }
+    }
+
+  }
+}

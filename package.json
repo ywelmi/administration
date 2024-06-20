@@ -1,0 +1,52 @@
+{
+  "name": "tq24-admin",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite -m dev --port 3030",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "easymde": "^2.18.0",
+    "filepond": "^4.31.1",
+    "flag-icons": "^7.2.3",
+    "font-awesome": "^4.7.0",
+    "leaflet": "^1.9.4",
+    "photoswipe": "^5.4.4",
+    "react": "^18.2.0",
+    "react-bootstrap-typeahead": "^6.3.2",
+    "react-calendar": "^5.0.0",
+    "react-calendar-timeline": "^0.28.0",
+    "react-datepicker": "^7.0.0",
+    "react-dom": "^18.2.0",
+    "react-dropzone-uploader": "^2.11.0",
+    "react-feather": "^2.0.10",
+    "react-image-crop": "^11.0.5",
+    "react-perfect-scrollbar": "^1.5.8",
+    "react-responsive-carousel": "^3.2.23",
+    "react-router-dom": "^6.23.1",
+    "react-toastify": "^10.0.5",
+    "reactstrap": "^9.2.2",
+    "simplebar-react": "^3.2.6",
+    "slick-carousel": "^1.8.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "postcss": "^8.4.38",
+    "sass": "^1.77.6",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  }
+}
