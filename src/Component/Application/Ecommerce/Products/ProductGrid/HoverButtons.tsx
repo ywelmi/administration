@@ -2,7 +2,10 @@ import { Link } from "react-router-dom";
 import { Btn, LI, UL } from "../../../../../AbstractElements";
 import { useAppDispatch } from "../../../../../ReduxToolkit/Hooks";
 import { Href } from "../../../../../utils/Constant";
-import {HoverButtonsProp, ProductItemInterface} from "../../../../../Types/Application/Ecommerce/Product";
+import {
+  HoverButtonsProp,
+  ProductItemInterface,
+} from "../../../../../Types/Application/Ecommerce/Product";
 import { addToCartData } from "../../../../../ReduxToolkit/Reducer/CartSlice";
 
 const HoverButtons = ({ item, setDataId, setOpenModal }: HoverButtonsProp) => {
@@ -22,7 +25,7 @@ const HoverButtons = ({ item, setDataId, setOpenModal }: HoverButtonsProp) => {
         <LI>
           <Link
             onClick={() => AddToCarts(item, 1)}
-            to={`${process.env.PUBLIC_URL}/ecommerce/cart`}
+            to={`/ecommerce/cart`}
           >
             <i className="icon-shopping-cart"></i>
           </Link>
@@ -33,7 +36,7 @@ const HoverButtons = ({ item, setDataId, setOpenModal }: HoverButtonsProp) => {
           </Link>
         </LI>
       </UL>
-    </div> 
+    </div>
   );
 };
 

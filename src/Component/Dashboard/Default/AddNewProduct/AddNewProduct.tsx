@@ -1,5 +1,5 @@
 import { Card, CardBody, Col } from "reactstrap";
-import { addNewProductData } from "../../../../Data/Dashboard/Default";
+import { addNewProductData } from "../../../../Data/dashboard";
 import { H6, SVG } from "../../../../AbstractElements";
 
 const AddNewProduct = () => {
@@ -8,7 +8,7 @@ const AddNewProduct = () => {
       <Card>
         <div className="ecommerce-banner"></div>
       </Card>
-      {addNewProductData.map((data,i)=>(
+      {addNewProductData.map((data, i) => (
         <Col xl="12" key={i}>
           <Card className="product-widget">
             <CardBody className="new-product">

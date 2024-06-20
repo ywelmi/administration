@@ -22,34 +22,103 @@ import Error500 from "../Pages/OtherPages/Error/Error500/Error500";
 import Error503 from "../Pages/OtherPages/Error/Error503/Error503";
 import LoginSimple from "../Pages/OtherPages/Authentication/LoginSimple/LoginSimple";
 
-
 export const authRoutes = [
-    //Error
-    { path: `${process.env.PUBLIC_URL}/errors/error400`, Component: <Error400/> },
-    { path: `${process.env.PUBLIC_URL}/errors/error401`, Component: <Error401/> },
-    { path: `${process.env.PUBLIC_URL}/errors/error403`, Component: <Error403/> },
-    { path: `${process.env.PUBLIC_URL}/errors/error404`, Component: <Error404/> },
-    { path: `${process.env.PUBLIC_URL}/errors/error500`, Component: <Error500/> },
-    { path: `${process.env.PUBLIC_URL}/errors/error503`, Component: <Error503/> },
-    
-    // Auth Pages
-    { path: `${process.env.PUBLIC_URL}/authentication/loginsimple`, Component: <LoginSimple /> },
-    { path: `${process.env.PUBLIC_URL}/authentication/loginbgimage`, Component: <LoginWithBackGroundImage /> },
-    { path: `${process.env.PUBLIC_URL}/authentication/loginwithimagetwo`, Component: <LoginWithImageTwo /> },
-    { path: `${process.env.PUBLIC_URL}/authentication/loginvalidation`, Component: <LoginWithValidation /> },
-    { path: `${process.env.PUBLIC_URL}/authentication/logintooltip`, Component: <LoginWithTooltip /> },
-    { path: `${process.env.PUBLIC_URL}/authentication/loginsweetalert`, Component: <LoginWithSweetAlert /> },
-    { path: `${process.env.PUBLIC_URL}/authentication/registersimple`, Component: <RegisterSimple /> },
-    { path: `${process.env.PUBLIC_URL}/authentication/registerbgimage`, Component: <RegisterWithBgImage /> },
-    { path: `${process.env.PUBLIC_URL}/authentication/registerwithimagetwo`, Component: <RegisterWithImageTwo /> },
-    { path: `${process.env.PUBLIC_URL}/authentication/registerwizard`, Component: <RegisterWizard /> },
-    { path: `${process.env.PUBLIC_URL}/authentication/unlockuser`, Component:<UnlockUser />},
-    { path: `${process.env.PUBLIC_URL}/authentication/forgetpassword`, Component:<ForgetPassword />},
-    { path: `${process.env.PUBLIC_URL}/authentication/resetpassword`, Component: <ResetPassword />},
-    { path: `${process.env.PUBLIC_URL}/authentication/maintenance`, Component: <Maintenance />},
+  //Error
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/errors/error400`,
+    Component: <Error400 />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/errors/error401`,
+    Component: <Error401 />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/errors/error403`,
+    Component: <Error403 />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/errors/error404`,
+    Component: <Error404 />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/errors/error500`,
+    Component: <Error500 />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/errors/error503`,
+    Component: <Error503 />,
+  },
 
-     //  ComingSoon
-     { path: `${process.env.PUBLIC_URL}/comingsoon/comingsoonsimple`, Component: <ComingSoonSimple/> },
-     { path: `${process.env.PUBLIC_URL}/comingsoon/comingbgvideo`, Component: <ComingWithBgVideo/> },
-     { path: `${process.env.PUBLIC_URL}/comingsoon/comingbgimg`, Component: <ComingSoonWithBgImage/> }
-   ];
+  // Auth Pages
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/loginsimple`,
+    Component: <LoginSimple />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/loginbgimage`,
+    Component: <LoginWithBackGroundImage />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/loginwithimagetwo`,
+    Component: <LoginWithImageTwo />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/loginvalidation`,
+    Component: <LoginWithValidation />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/logintooltip`,
+    Component: <LoginWithTooltip />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/loginsweetalert`,
+    Component: <LoginWithSweetAlert />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/registersimple`,
+    Component: <RegisterSimple />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/registerbgimage`,
+    Component: <RegisterWithBgImage />,
+  },
+  {
+    path:
+      `${import.meta.env.VITE_PUBLIC_URL}/authentication/registerwithimagetwo`,
+    Component: <RegisterWithImageTwo />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/registerwizard`,
+    Component: <RegisterWizard />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/unlockuser`,
+    Component: <UnlockUser />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/forgetpassword`,
+    Component: <ForgetPassword />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/resetpassword`,
+    Component: <ResetPassword />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/maintenance`,
+    Component: <Maintenance />,
+  },
+
+  //  ComingSoon
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/comingsoon/comingsoonsimple`,
+    Component: <ComingSoonSimple />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/comingsoon/comingbgvideo`,
+    Component: <ComingWithBgVideo />,
+  },
+  {
+    path: `${import.meta.env.VITE_PUBLIC_URL}/comingsoon/comingbgimg`,
+    Component: <ComingSoonWithBgImage />,
+  },
+];

@@ -1,11 +1,14 @@
-import { Link } from 'react-router-dom'
-import { Image } from '../../../../AbstractElements'
-import { dynamicImage } from '../../../../Service'
-import { CommonFormPropsType } from '../../../../Types/OtherPages/OtherPages'
+import { Link } from "react-router-dom";
+import { Image } from "../../../../AbstractElements";
+import { dynamicImage } from "../../../../Service";
+import { CommonFormPropsType } from "../../../../Types/OtherPages/OtherPages";
 
 const CommonLogo = ({ alignLogo }: CommonFormPropsType) => {
   return (
-    <Link className={`logo ${alignLogo ? alignLogo :""}`} to={`${process.env.PUBLIC_URL}/dashboard/default`}>
+    <Link
+      className={`logo ${alignLogo ? alignLogo : ""}`}
+      to={`${import.meta.env.VITE_PUBLIC_URL}/dashboard`}
+    >
       <Image
         className="img-fluid for-dark"
         src={dynamicImage("logo/logo.png")}
@@ -17,7 +20,8 @@ const CommonLogo = ({ alignLogo }: CommonFormPropsType) => {
         alt="loginpage"
       />
     </Link>
-  )
-}
+  );
+};
 
-export default CommonLogo
+export default CommonLogo;
+

@@ -1,4 +1,12 @@
-import { Btn, FeatherIcons, H6, Image, LI, SVG, UL } from "../../../../AbstractElements";
+import {
+  Btn,
+  FeatherIcons,
+  H6,
+  Image,
+  LI,
+  SVG,
+  UL,
+} from "../../../../AbstractElements";
 import { dynamicImage } from "../../../../Service";
 import { Link } from "react-router-dom";
 import { Href } from "../../../../utils/Constant";
@@ -12,17 +20,31 @@ const FirstTabContent = () => {
         <UL className="simple-list">
           <LI className="pr-0 pl-0 pb-3 pt-3">
             <div className="media">
-              <Image className="img-fluid b-r-5 me-3 img-60" src={dynamicImage("other-images/receiver-img.jpg")} alt="receiver"/>
+              <Image
+                className="img-fluid b-r-5 me-3 img-60"
+                src={dynamicImage("other-images/receiver-img.jpg")}
+                alt="receiver"
+              />
               <div className="media-body">
-                <Link className="f-light f-w-500" to={`${process.env.PUBLIC_URL}/ecommerce/products`}>Men Blue T-Shirt</Link>
+                <Link
+                  className="f-light f-w-500"
+                  to={`${import.meta.env.VITE_PUBLIC_URL}/ecommerce/products`}
+                >
+                  Men Blue T-Shirt
+                </Link>
                 <div className="qty-box">
                   <InputGroup>
                     <span className="input-group-prepend">
-                      <Btn className="quantity-left-minus"> - </Btn>
+                      <Btn className="quantity-left-minus">-</Btn>
                     </span>
-                    <Input className="input-number" type="text" name="quantity" defaultValue={1} />
+                    <Input
+                      className="input-number"
+                      type="text"
+                      name="quantity"
+                      defaultValue={1}
+                    />
                     <span className="input-group-prepend">
-                      <Btn className="quantity-right-plus"> + </Btn>
+                      <Btn className="quantity-right-plus">+</Btn>
                     </span>
                   </InputGroup>
                 </div>
@@ -38,14 +60,23 @@ const FirstTabContent = () => {
         </UL>
       </div>
       <UL className="simple-list">
-        {userNotification.map((data,i)=>(
+        {userNotification.map((data, i) => (
           <LI key={i}>
             <div className="user-alerts">
-              <Image className="user-image rounded-circle img-fluid me-2" src={dynamicImage(`dashboard/user/${data.image}`)} alt="user"/>
+              <Image
+                className="user-image rounded-circle img-fluid me-2"
+                src={dynamicImage(`dashboard/user/${data.image}`)}
+                alt="user"
+              />
               <div className="user-name">
                 <div>
                   <H6>
-                    <Link className="f-w-500 f-14" to={`${process.env.PUBLIC_URL}/users/userprofile`} >{data.name}</Link>
+                    <Link
+                      className="f-w-500 f-14"
+                      to={`${import.meta.env.VITE_PUBLIC_URL}/users/userprofile`}
+                    >
+                      {data.name}
+                    </Link>
                   </H6>
                   <span className="f-light f-w-500 f-12">
                     {data.detail}

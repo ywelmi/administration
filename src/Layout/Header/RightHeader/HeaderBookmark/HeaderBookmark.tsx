@@ -1,10 +1,10 @@
 import { LI, SVG } from "../../../../AbstractElements";
-import { useAppSelector } from "../../../../ReduxToolkit/Hooks";
+import { useLayoutStore } from "../../../../store/layout";
 import BookmarkBack from "./BookmarkBack";
 import BookmarkFront from "./BookmarkFront";
 
 const HeaderBookmark = () => {
-  const { flip } = useAppSelector((state) => state.layout);
+  const { flip } = useLayoutStore();
   return (
     <LI className="onhover-dropdown">
       <SVG iconId="star" />

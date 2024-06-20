@@ -15,7 +15,7 @@ const Breadcrumbs = ({ mainTitle, parent }: PropsTypes) => {
           <Col xs="6">
             <Breadcrumb>
               <BreadcrumbItem>
-                <Link to={`${process.env.PUBLIC_URL}/dashboard/default`}>
+                <Link to={"/dashboard"}>
                   <SVG iconId="stroke-home" className="stroke-icon" />
                 </Link>
               </BreadcrumbItem>

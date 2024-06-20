@@ -2,12 +2,12 @@ import { Col, Row } from "reactstrap";
 import { H6, LI, SVG, UL } from "../../../../AbstractElements";
 import { AddNewBookmark, Bookmark, Href } from "../../../../utils/Constant";
 import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../../ReduxToolkit/Hooks";
-import { setFlip } from "../../../../ReduxToolkit/Reducer/LayoutSlice";
+import { useBookmarkStore } from "../../../../store/bookmark";
+import { useLayoutStore } from "../../../../store/layout";
 
 const BookmarkFront = () => {
-  const {bookmarkedData} = useAppSelector((state)=>state.bookmarkHeader)
-  const dispatch = useAppDispatch();
+  const { bookmarkedData } = useBookmarkStore();
+  const { setFlip } = useLayoutStore();
   return (
     <div className="front">
       <H6 className="f-18 mb-0 dropdown-title">{Bookmark}</H6>
@@ -19,7 +19,12 @@ const BookmarkFront = () => {
                 <Link to={`${item.path}`}>
                   <div className="bookmark-content">
                     <div className="bookmark-icon">
-                      <SVG className={`stroke-icon stroke-${item.color ? item.color : "primary" }`} iconId={`stroke-${item.icon}`}/>
+                      <SVG
+                        className={`stroke-icon stroke-${
+                          item.color ? item.color : "primary"
+                        }`}
+                        iconId={`stroke-${item.icon}`}
+                      />
                     </div>
                     <span>{item.title}</span>
                   </div>
@@ -28,8 +33,8 @@ const BookmarkFront = () => {
             ))}
           </Row>
         </LI>
-        <LI className="text-center" onClick={()=>dispatch(setFlip())}>
-          <Link className="flip-btn f-w-700" id="flip-btn" to={Href} >
+        <LI className="text-center" onClick={() => (setFlip())}>
+          <Link className="flip-btn f-w-700" id="flip-btn" to={Href}>
             {AddNewBookmark}
           </Link>
         </LI>

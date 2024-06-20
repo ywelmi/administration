@@ -1,10 +1,10 @@
-import { Col, Row } from 'reactstrap'
-import TotalProjectCard from '../../../Dashboard/Ecommerce/TotalProject/TotalProjectCard'
-import TotalSalesCard from '../../../Dashboard/Default/TotalSales/TotalSalesCard'
-import UserVisitsDay from './UserVisitsDay/UserVisitsDay'
-import BoostUpYourSale from './BoostUpYourSale/BoostUpYourSale'
-import WidgetsSalesChart from './WidgetsSalesChart/WidgetsSalesChart'
-import WidgetTimeLine from './WidgetTimeLine/WidgetTimeLine'
+import { Col, Row } from "reactstrap";
+import TotalProjectCard from "../../../Dashboard/Ecommerce/TotalProject/TotalProjectCard";
+import TotalSalesCard from "../../../dashboard/TotalSales/TotalSalesCard";
+import UserVisitsDay from "./UserVisitsDay/UserVisitsDay";
+import BoostUpYourSale from "./BoostUpYourSale/BoostUpYourSale";
+import WidgetsSalesChart from "./WidgetsSalesChart/WidgetsSalesChart";
+import WidgetTimeLine from "./WidgetTimeLine/WidgetTimeLine";
 
 const WidgetTotalProject = () => {
   return (
@@ -18,7 +18,8 @@ const WidgetTotalProject = () => {
         <WidgetsSalesChart />
       </Row>
     </Col>
-  )
-}
+  );
+};
 
-export default WidgetTotalProject
+export default WidgetTotalProject;
+

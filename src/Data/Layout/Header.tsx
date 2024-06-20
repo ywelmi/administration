@@ -1,20 +1,21 @@
 import { ProfilesMessageType } from "../../Types/Layout/Header";
+import { BookmarkedDataType } from "../../Types/Layout/Sidebar";
 
 export const profilesMessage: ProfilesMessageType[] = [
   {
     name: "My Profile",
     icon: "User",
-    link: `${process.env.PUBLIC_URL}/users/userprofile`,
+    link: `${import.meta.env.VITE_PUBLIC_URL}/users/userprofile`,
   },
   {
     name: "Inbox",
     icon: "Mail",
-    link: `${process.env.PUBLIC_URL}/email/letterbox`,
+    link: `${import.meta.env.VITE_PUBLIC_URL}/email/letterbox`,
   },
   {
     name: "Settings",
     icon: "Settings",
-    link: `${process.env.PUBLIC_URL}/users/useredit`,
+    link: `${import.meta.env.VITE_PUBLIC_URL}/users/useredit`,
   },
 ];
 
@@ -86,7 +87,7 @@ export const cartData = [
   },
 ];
 
-export const bookMarkData = [
+export const bookMarkData: BookmarkedDataType[] = [
   {
     icon: "form",
     path: `/forms/formscontrols/formvalidation`,

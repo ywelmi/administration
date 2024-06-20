@@ -1,14 +1,14 @@
 import { Card, CardBody, Col } from "reactstrap";
 import { H2, LI, SVG, UL } from "../../../../AbstractElements";
-import { totalSalesData } from "../../../../Data/Dashboard/Default";
+import { totalSalesData } from "../../../../Data/dashboard";
 import { PropsWidgetsType } from "../../../../Types/Widgets/GeneralType";
 
-const TotalSalesCard:React.FC<PropsWidgetsType> = ({changeClass}) => {
+const TotalSalesCard: React.FC<PropsWidgetsType> = ({ changeClass }) => {
   return (
-    <Col xl={changeClass ? "4":"5"} sm="6">
+    <Col xl={changeClass ? "4" : "5"} sm="6">
       <Card className="height-equal">
         <CardBody>
-          {totalSalesData.map((data,i)=>(
+          {totalSalesData.map((data, i) => (
             <UL className="product-costing simple-list" key={i}>
               <LI className="product-cost">
                 <div className={`product-icon bg-${data.color}`}>

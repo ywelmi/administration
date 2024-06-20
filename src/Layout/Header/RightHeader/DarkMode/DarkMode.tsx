@@ -1,12 +1,10 @@
 import { FeatherIcons, LI } from "../../../../AbstractElements";
-import { useAppDispatch, useAppSelector } from "../../../../ReduxToolkit/Hooks";
-import { setDarkMode } from "../../../../ReduxToolkit/Reducer/LayoutSlice";
+import { useLayoutStore } from "../../../../store/layout";
 
 const DarkMode = () => {
-  const { darkMode } = useAppSelector((state) => state.layout);
-  const dispatch = useAppDispatch();
+  const { darkMode, setDarkMode } = useLayoutStore();
   const handleDarkMode = () => {
-    dispatch(setDarkMode(!darkMode));
+    setDarkMode();
   };
   return (
     <LI onClick={handleDarkMode}>

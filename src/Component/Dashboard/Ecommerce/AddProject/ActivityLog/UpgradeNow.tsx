@@ -14,8 +14,13 @@ const UpgradeNow = () => {
                 Get more ideas for your important project
               </span>
               <div className="btn-showcase text-center">
-                <Link to={`${process.env.PUBLIC_URL}/ecommerce/pricing`}>
-                  <Btn outline color="primary-2x" className="btn-pill b-r-8" active>
+                <Link to={`/ecommerce/pricing`}>
+                  <Btn
+                    outline
+                    color="primary-2x"
+                    className="btn-pill b-r-8"
+                    active
+                  >
                     {UpgradeNowHeading}
                   </Btn>
                 </Link>

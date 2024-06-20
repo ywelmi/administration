@@ -1,11 +1,12 @@
-import ContainerDefault from '../../../Component/Dashboard/Default/Default'
+import ContainerDefault from "../../../Component/Dashboard/Default/Default";
 
 const Default = () => {
   return (
-    <div className='page-body'>
+    <div className="page-body">
       <ContainerDefault />
     </div>
-  )
-}
+  );
+};
 
-export default Default
+export default Default;
+

@@ -1,7 +1,7 @@
-import { Col, Row } from 'reactstrap'
-import { Btn } from '../../../../AbstractElements'
-import { Add, Cancel } from '../../../../utils/Constant'
-import { Link } from 'react-router-dom'
+import { Col, Row } from "reactstrap";
+import { Btn } from "../../../../AbstractElements";
+import { Add, Cancel } from "../../../../utils/Constant";
+import { Link } from "react-router-dom";
 
 const ButtonSection = () => {
   return (
@@ -9,13 +9,14 @@ const ButtonSection = () => {
       <Col>
         <div className="text-end">
           <Btn color="success" className="me-3">{Add}</Btn>
-          <Link to={`${process.env.PUBLIC_URL}/project/projectlist`}>
+          <Link to={`/project/projectlist`}>
             <Btn color="danger">{Cancel}</Btn>
           </Link>
         </div>
       </Col>
     </Row>
-  )
-}
+  );
+};
 
-export default ButtonSection
+export default ButtonSection;
+

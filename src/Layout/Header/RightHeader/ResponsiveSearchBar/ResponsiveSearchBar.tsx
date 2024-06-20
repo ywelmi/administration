@@ -2,18 +2,23 @@ import { Form, Input, InputGroup } from "reactstrap";
 import { LI, SVG } from "../../../../AbstractElements";
 import { Search } from "../../../../utils/Constant";
 import { ChangeEvent, useEffect, useState } from "react";
-import { MenuItem, SearchSuggestionItem } from "../../../../Types/Layout/Sidebar";
-import { useAppDispatch } from "../../../../ReduxToolkit/Hooks";
+import {
+  MenuItem,
+  SearchSuggestionItem,
+} from "../../../../Types/Layout/Sidebar";
 import { MenuList } from "../../../../Data/Layout/Sidebar";
-import { setResponsiveSearch } from "../../../../ReduxToolkit/Reducer/LayoutSlice";
 import SearchSuggestionList from "./SearchSuggestionList";
-import { getLinkItemsArray } from "../../../../ReduxToolkit/Reducer/BookmarkHeaderSlice";
+import { useLayoutStore } from "../../../../store/layout";
+import { useBookmarkStore } from "../../../../store/bookmark";
 
 const ResponsiveSearchBar = () => {
   const [arr, setArr] = useState<SearchSuggestionItem[]>([]);
   const [searchedWord, setSearchedWord] = useState<string>("");
-  const [searchedArray, setSearchedArray] = useState<SearchSuggestionItem[]>([]);
-  const dispatch = useAppDispatch()
+  const [searchedArray, setSearchedArray] = useState<SearchSuggestionItem[]>(
+    [],
+  );
+  const { setResponsiveSearch } = useLayoutStore();
+  const { getLinkItemsArray } = useBookmarkStore();
 
   useEffect(() => {
     const suggestionArray: SearchSuggestionItem[] = [];
@@ -25,7 +30,13 @@ const ResponsiveSearchBar = () => {
         });
       } else {
         num = num + 1;
-        suggestionArray.push({ icon: icon, title: item.title, path: item.path ? item.path : '' , bookmarked: false, id: num });
+        suggestionArray.push({
+          icon: icon,
+          title: item.title,
+          path: item.path ? item.path : "",
+          bookmarked: false,
+          id: num,
+        });
       }
     };
     MenuList?.forEach((item) => {
@@ -34,13 +45,15 @@ const ResponsiveSearchBar = () => {
       });
     });
     setArr(suggestionArray);
-    dispatch(getLinkItemsArray(suggestionArray));
+    getLinkItemsArray(suggestionArray);
   }, []);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     if (!searchedWord) setSearchedWord("");
     setSearchedWord(e.target.value);
-    let result = arr.filter((item) =>item.title?.toLowerCase().includes(e.target.value.toLowerCase()));
+    let result = arr.filter((item) =>
+      item.title?.toLowerCase().includes(e.target.value.toLowerCase())
+    );
     setSearchedArray(result);
   };
 
@@ -49,12 +62,28 @@ const ResponsiveSearchBar = () => {
       <Form className="search-form mb-0">
         <InputGroup>
           <span className="input-icon">
-            <SVG iconId="search-header" onClick={()=>dispatch(setResponsiveSearch())} />
-            <Input className="w-100" type="search" placeholder={Search} onChange={(e) => handleSearch(e)} value={searchedWord} />
+            <SVG
+              iconId="search-header"
+              onClick={() => (setResponsiveSearch())}
+            />
+            <Input
+              className="w-100"
+              type="search"
+              placeholder={Search}
+              onChange={(e) => handleSearch(e)}
+              value={searchedWord}
+            />
           </span>
         </InputGroup>
-        <div className={`Typeahead-menu w-100 custom-scrollbar ${searchedWord.length ? "is-open" : ""}`}>
-          <SearchSuggestionList searchedArray={searchedArray} setSearchedWord={setSearchedWord}/>
+        <div
+          className={`Typeahead-menu w-100 custom-scrollbar ${
+            searchedWord.length ? "is-open" : ""
+          }`}
+        >
+          <SearchSuggestionList
+            searchedArray={searchedArray}
+            setSearchedWord={setSearchedWord}
+          />
         </div>
       </Form>
     </LI>

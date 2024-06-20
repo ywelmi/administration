@@ -13,8 +13,17 @@ const TeamActivityTableBody = () => {
               <div className="activity-data d-flex align-items-center gap-3">
                 <div className="common-space gap-2 ">
                   <div className="user-activity me-3">
-                    <Image className="rounded-circle p-1 img-fluid me-3 img-50" src={dynamicImage(`user/${data.image}`)} alt="user"/>
-                    <Link className="f-10 f-w-500 username" to={`${process.env.PUBLIC_URL}/users/useredit`}>{data.name}</Link>
+                    <Image
+                      className="rounded-circle p-1 img-fluid me-3 img-50"
+                      src={dynamicImage(`user/${data.image}`)}
+                      alt="user"
+                    />
+                    <Link
+                      className="f-10 f-w-500 username"
+                      to={`/users/useredit`}
+                    >
+                      {data.name}
+                    </Link>
                   </div>
                   <div className="activity-time">
                     <span className="f-light f-w-500 f-10">{data.time}</span>

@@ -1,13 +1,13 @@
-import { Card, CardBody, Col } from 'reactstrap'
-import { addNewProductData } from '../../../../../Data/Dashboard/Default'
-import { H6, SVG } from '../../../../../AbstractElements'
+import { Card, CardBody, Col } from "reactstrap";
+import { addNewProductData } from "../../../../../Data/dashboard";
+import { H6, SVG } from "../../../../../AbstractElements";
 
 const AddNewWidgetProduct = () => {
   return (
     <Col xl="12">
-      {addNewProductData.map((data,i)=>(
+      {addNewProductData.map((data, i) => (
         <Col xl="12" key={i}>
-          <Card >
+          <Card>
             <CardBody className="new-product">
               <div className="product-cost">
                 <div className="add-product">
@@ -27,7 +27,8 @@ const AddNewWidgetProduct = () => {
         </Col>
       ))}
     </Col>
-  )
-}
+  );
+};
 
-export default AddNewWidgetProduct
+export default AddNewWidgetProduct;
+
