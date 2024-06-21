@@ -7,6 +7,7 @@ import TapTop from "./TapTop/TapTop";
 import { useEffect } from "react";
 import { useThemeStore } from "../store/theme";
 import { useLayoutStore } from "../store/layout";
+import ThemeCustomizer from "./ThemeCustomizer/ThemeCustomizer";
 
 const Layout = () => {
   const { layout, setLayout } = useThemeStore();
@@ -50,7 +51,7 @@ const Layout = () => {
           <Footer />
         </div>
       </div>
-      {/* <ThemeCustomizer /> */}
+      <ThemeCustomizer />
     </>
   );
 };
