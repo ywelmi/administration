@@ -1,4 +1,5 @@
 import Default from "../Pages/Dashboard/Default/Default";
+import { ListUser } from "../Pages/User/ListUser";
 // import ApexChart from "../Pages/Charts/Apexchart/ApexChart";
 // import ChartJs from "../Pages/Charts/ChartJs/ChartJs";
 // import GoogleChart from "../Pages/Charts/GoogleChart/GoogleChart";
@@ -128,6 +129,10 @@ const Routes = [
   {
     path: "/dashboard",
     Component: <Default />,
+  },
+  {
+    path: "/user/list",
+    Component: <ListUser />,
   },
   // {
   //   path: `${import.meta.env.VITE_PUBLIC_URL}/dashboard/ecommerce`,
@@ -621,4 +626,3 @@ const Routes = [
 ];
 
 export default Routes;
-

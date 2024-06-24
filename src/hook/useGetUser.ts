@@ -1,11 +1,17 @@
 import { useEffect } from "react";
-import { getUsers } from "../Service/user";
+import { usersGet } from "../Service/user";
+import { TUser } from "../type/user";
+import { useUserStore } from "../store/user";
 
 export default function useGetUser() {
+  const { addUsers } = useUserStore();
   const fetch = () => {
-    getUsers().then((res) => {
+    usersGet().then((res) => {
       const { data, status } = res;
       console.log({ data, status });
+      if (!data.data) return;
+      const users = data.data as TUser[];
+      addUsers(users);
     });
   };
 

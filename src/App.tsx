@@ -1,8 +1,7 @@
-import { ToastContainer } from 'react-toastify';
-import RouterData from './Routes';
-import './index.css'
-
-// import '../public/assets/scss/app.scss';
+import { ToastContainer } from "react-toastify";
+import RouterData from "./Routes";
+import "./index.css";
+import "./i18n";
 
 function App() {
   return (
@@ -13,4 +12,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

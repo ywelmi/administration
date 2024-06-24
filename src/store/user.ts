@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { TUser } from "../Types/user";
+import { TUser } from "../type/user";
 
 export type UserState = {
   users: TUser[];
@@ -10,7 +10,7 @@ export type UserState = {
   deleteUser: (data: TUser) => void;
 };
 
-export const useUser = create<UserState>()(
+export const useUserStore = create<UserState>()(
   immer((set) => ({
     users: [],
     addUsers: (data: TUser[]) =>

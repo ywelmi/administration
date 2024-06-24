@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import { Cancel, Configuration, CopyText } from "../../utils/Constant";
 import { Btn, P } from "../../AbstractElements";
-import CopyToClipboard from "react-copy-to-clipboard";
+// import CopyToClipboard from "react-copy-to-clipboard";
 import { PropsTypeProp } from "../../Types/Layout/ThemeCustomizerTypes";
 import { useThemeStore } from "../../store/theme";
 
@@ -85,18 +85,18 @@ const ConfigurationClass: React.FC<PropsTypeProp> = ({ toggle, modal }) => {
             </pre>
           </Container>
         </ModalBody>
-        <ModalFooter>
-          <CopyToClipboard text={JSON.stringify(configDB)}>
-            <Btn
-              color="primary"
-              className="notification"
-              onClick={handleThemeCopy}
-            >
-              {CopyText}
-            </Btn>
-          </CopyToClipboard>
-          <Btn color="secondary" onClick={toggle}>{Cancel}</Btn>
-        </ModalFooter>
+        {/* <ModalFooter> */}
+        {/*   <CopyToClipboard text={JSON.stringify(configDB)}> */}
+        {/*     <Btn */}
+        {/*       color="primary" */}
+        {/*       className="notification" */}
+        {/*       onClick={handleThemeCopy} */}
+        {/*     > */}
+        {/*       {CopyText} */}
+        {/*     </Btn> */}
+        {/*   </CopyToClipboard> */}
+        {/*   <Btn color="secondary" onClick={toggle}>{Cancel}</Btn> */}
+        {/* </ModalFooter> */}
       </Modal>
     </Fragment>
   );
