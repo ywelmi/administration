@@ -1,11 +1,11 @@
 import { TUser } from "../type/user";
-import { httpGet, httpPost, httpPut } from "./_request";
+import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
 export const usersGet = async () => {
   return httpPost("/users/padding_filter", {
     "skip": 0,
     "take": 20,
-    "columns": "username,fullname",
+    "columns": "username,fullname,id",
     "sort": "",
     "filter": "",
   });
@@ -21,4 +21,8 @@ export const userCreate = (user: TUser) => {
 
 export const userUpdate = (user: TUser) => {
   return httpPut(`users/${user.id}`, user);
+};
+
+export const userDelete = (id: string) => {
+  return httpDel(`users/${id}`);
 };

@@ -21,13 +21,13 @@ import { TUser } from "../../type/user";
 import { useUserStore } from "../../store/user";
 import { useMemo, useState } from "react";
 import { useUserModal } from "./UserForm";
-import { userCreate, userUpdate } from "../../Service/user";
+import { userCreate, userDelete, userUpdate } from "../../Service/user";
 import { toast } from "react-toastify";
+import { useConfirmModal } from "../../Component/confirmModal";
 
-const UserTableAction = ({ id }: { id: string }) => {
-  const { users, updateUser } = useUserStore();
+const UserTableAction = ({ user }: { user: TUser }) => {
+  const { updateUser, deleteUser } = useUserStore();
   const { t } = useTranslation();
-  const user = users.find(({ username }) => username === id);
   const handleUpdateUser = (user: TUser) => {
     console.log({ handleUpdateUser: user });
     userUpdate(user).then(
@@ -49,8 +49,29 @@ const UserTableAction = ({ id }: { id: string }) => {
   const { handleToggle: handleToggleUpdateModal, UserModal: UserUpdateModal } =
     useUserModal({ onSubmit: handleUpdateUser, user });
 
+  const handleConfirmDel = () => {
+    const { confirm } = useConfirmModal();
+    if (confirm) {
+      userDelete(user.id).then((res) => {
+        const { status, data } = res;
+        console.log({ status, data });
+        if (status === 200) {
+          toast.success(t("success"));
+          deleteUser(user.id);
+          return;
+        }
+        return Promise.reject(status);
+      })
+        .catch((err) => {
+          toast.error(t("error"));
+          console.log({ err });
+        });
+    }
+    return;
+  };
+
   return (
-    <UL className="action simple-list flex-row" id={id}>
+    <UL className="action simple-list flex-row" id={user.id}>
       <LI className="edit btn">
         <i
           className="icon-pencil-alt"
@@ -59,8 +80,7 @@ const UserTableAction = ({ id }: { id: string }) => {
         <UserUpdateModal />
       </LI>
       <LI className="delete btn">
-        <i className="icon-trash cursor-pointer" // onClick={handleToggleDelModal}
-        />
+        <i className="icon-trash cursor-pointer" onClick={handleConfirmDel} />
       </LI>
     </UL>
   );
@@ -75,18 +95,17 @@ const ListUser = () => {
     item.fullname.toLowerCase().includes(filterText.toLowerCase())
   );
 
-  const columns: TableColumn<TUser>[] = users?.[0]
-    ? Object.keys(users[0] as TUser).filter((c) => !!c && !["id"].includes(c))
-      .map((c) => ({
-        "name": t(c),
-        selector: (row) => row[c as keyof TUser],
-      }))
-    : [];
+  const columns: TableColumn<TUser>[] = [
+    ...["username", "fullname"].map((c) => ({
+      "name": t(c),
+      selector: (row: TUser) => row[c as keyof TUser],
+    })),
+  ];
   if (columns.length > 0) {
     columns.push(
       {
         name: "#",
-        cell: (row: TUser) => <UserTableAction id={row.username} />,
+        cell: (row: TUser) => <UserTableAction user={row} />,
         sortable: true,
       },
     );

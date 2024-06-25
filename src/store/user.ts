@@ -7,7 +7,7 @@ export type UserState = {
   addUsers: (data: TUser[]) => void;
   addUser: (data: TUser) => void;
   updateUser: (data: TUser) => void;
-  deleteUser: (data: TUser) => void;
+  deleteUser: (id: string) => void;
 };
 
 export const useUserStore = create<UserState>()(
@@ -30,11 +30,9 @@ export const useUserStore = create<UserState>()(
           state.users[idx] = data;
         }
       }),
-    deleteUser: (data: TUser) =>
+    deleteUser: (id: string) =>
       set((state: UserState) => {
-        const idx = state.users.findIndex(({ username }) =>
-          username === data.username
-        );
+        const idx = state.users.findIndex(({ id: userId }) => userId === id);
         if (idx > -1) {
           state.users.splice(idx, 1);
         }
