@@ -1,19 +1,21 @@
-import { Route, Routes } from 'react-router-dom'
-import Layout from '../Layout/Layout'
+import { Route, Routes } from "react-router-dom";
+import Layout from "../Layout/Layout";
 import routes from "./Route";
-import useGetUser from '../hook/useGetUser';
+import useGetUser from "../hook/useGetUser";
+import useGetOrg from "../hook/useGetOrg";
 
 const LayoutRoutes = () => {
-  useGetUser()
+  useGetUser();
+  useGetOrg();
   return (
     <Routes>
       {routes.map(({ path, Component }, i) => (
         <Route element={<Layout />} key={i}>
-          <Route path={path} element={Component}/>
+          <Route path={path} element={Component} />
         </Route>
       ))}
     </Routes>
-  )
-}
+  );
+};
 
-export default LayoutRoutes
+export default LayoutRoutes;

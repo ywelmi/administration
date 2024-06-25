@@ -15,7 +15,7 @@ export const userGet = (id: string) => {
   return httpGet(`/users/${id}`);
 };
 
-export const userCreate = (user: TUser) => {
+export const userCreate = (user: Omit<TUser, "id">) => {
   return httpPost("/users", user);
 };
 

@@ -1,4 +1,5 @@
 import Default from "../Pages/Dashboard/Default/Default";
+import { ListOrg } from "../Pages/Org/ListOrg";
 import { ListUser } from "../Pages/User/ListUser";
 // import ApexChart from "../Pages/Charts/Apexchart/ApexChart";
 // import ChartJs from "../Pages/Charts/ChartJs/ChartJs";
@@ -133,6 +134,10 @@ const Routes = [
   {
     path: "/user/list",
     Component: <ListUser />,
+  },
+  {
+    path: "/org/list",
+    Component: <ListOrg />,
   },
   // {
   //   path: `${import.meta.env.VITE_PUBLIC_URL}/dashboard/ecommerce`,

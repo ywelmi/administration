@@ -23,8 +23,8 @@ export const useUserStore = create<UserState>()(
       }),
     updateUser: (data: TUser) =>
       set((state: UserState) => {
-        const idx = state.users.findIndex(({ username }) =>
-          username === data.username
+        const idx = state.users.findIndex(({ id: userId }) =>
+          userId === data.id
         );
         if (idx > -1) {
           state.users[idx] = data;
