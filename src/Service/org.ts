@@ -1,17 +1,12 @@
 import { TOrg } from "../type/org";
+import { baseGetParams } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
 // TODO: how to filter
 export const orgsGet = async (
-  filter: string = "[{'f':'name','o':'=','v':'LQ2'}]",
+  params = baseGetParams,
 ) => {
-  return httpPost("/orgs/padding_filter", {
-    "skip": 0,
-    "take": 20,
-    "sort": "",
-    "filter": filter,
-    "columns": "",
-  });
+  return httpPost("/orgs/padding_filter", params);
 };
 
 export const orgGet = (id: string) => {

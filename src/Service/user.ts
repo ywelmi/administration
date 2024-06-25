@@ -1,13 +1,11 @@
 import { TUser } from "../type/user";
+import { baseGetParams } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
-export const usersGet = async () => {
+export const usersGet = async (params = baseGetParams) => {
   return httpPost("/users/padding_filter", {
-    "skip": 0,
-    "take": 20,
-    "columns": "username,fullname,id",
-    "sort": "",
-    "filter": "",
+    ...params,
+    columns: ["username", "fullname", "id"],
   });
 };
 
