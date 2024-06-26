@@ -4,12 +4,14 @@ export interface IGetParams {
   columns: string[];
   sort: string;
   filter: unknown[];
+  // filter: string;
 }
 
 const baseGetParams: IGetParams = {
   skip: 0,
   take: 20,
   sort: "",
+  // filter: "",
   filter: [],
   columns: [],
 };

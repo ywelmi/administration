@@ -1,53 +1,32 @@
 import { Col, InputGroup, InputGroupText, Label, Row } from "reactstrap";
-import { TOrg } from "../../type/org";
+import { TSport } from "../../type/sport";
 import { Field, Form, Formik } from "formik";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useState } from "react";
-import { useGroupStore } from "../../store/group";
 import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
+import { useCompetitionStore } from "../../store/competition";
 
-interface IOrgForm {
-  org?: TOrg;
-  onSubmit: (org: TOrg) => void;
+interface ISportForm {
+  sport?: TSport;
+  onSubmit: (sport: TSport) => void;
 }
 
-interface IOrgModal extends IOrgForm {
+interface ISportModal extends ISportForm {
 }
 
-const OrgForm = ({ org: initOrg, onSubmit }: IOrgForm) => {
-  const org = initOrg ? initOrg : { name: "", group_id: null };
-  const { groups } = useGroupStore();
-  // const groups = [
-  //   {
-  //     "id": 1,
-  //     "name": "Quân khu",
-  //   },
-  //   {
-  //     "id": 2,
-  //     "name": "Quân doàn, quân chủng, Bộ đội biên phòng",
-  //   },
-  //   {
-  //     "id": 3,
-  //     "name": "Binh chủng, Bộ Tư lệnh",
-  //   },
-  //   {
-  //     "id": 4,
-  //     "name": "Học viện, nhà trường",
-  //   },
-  //   {
-  //     "id": 5,
-  //     "name": "Cơ quan, trung tâm, viện, bệnh viện",
-  //   },
-  // ];
+const SportForm = ({ sport: initSport, onSubmit }: ISportForm) => {
+  const sport = initSport ? initSport : { name: "", competition_id: null };
+  const { competitions } = useCompetitionStore();
+  console.log({ competitions });
 
   return (
     <Formik
-      initialValues={{ ...org }}
+      initialValues={{ ...sport }}
       onSubmit={(value) => {
         console.log({ submitValue: value });
 
-        let submitValue = { ...value } as TOrg;
+        let submitValue = { ...value } as TSport;
         if (hasOwnProperty(value, "id")) {
           submitValue["id"] = value.id as string;
         }
@@ -59,21 +38,24 @@ const OrgForm = ({ org: initOrg, onSubmit }: IOrgForm) => {
         <Form>
           <Row className="g-3">
             <Col md="12">
-              <Label>Tên đơn vị</Label>
+              <Label>Môn thi</Label>
               <Field
                 className="form-control"
                 name="name"
                 type="text"
-                placeholder={org.name}
+                placeholder={sport.name}
               />
             </Col>
-            {(groups?.length)
+            {(competitions?.length)
               ? (
                 <Col md="12">
                   <InputGroup>
-                    <InputGroupText>Nhóm</InputGroupText>
-                    <Field name="group_id" as="select">
-                      {groups.map(({ id, name }) => (
+                    <InputGroupText>Cuộc thi</InputGroupText>
+                    <Field
+                      name="competition_id"
+                      as="select"
+                    >
+                      {competitions.map(({ id, name }) => (
                         <option value={id}>{name}</option>
                       ))}
                     </Field>
@@ -94,28 +76,28 @@ const OrgForm = ({ org: initOrg, onSubmit }: IOrgForm) => {
   );
 };
 
-const useOrgModal = ({ onSubmit, ...rest }: IOrgModal) => {
+const useSportModal = ({ onSubmit, ...rest }: ISportModal) => {
   const [opened, setOpened] = useState(false);
   const handleToggle = () => {
     setOpened((s) => !s);
   };
 
-  const handleSubmit = (org: TOrg) => {
-    onSubmit(org);
+  const handleSubmit = (sport: TSport) => {
+    onSubmit(sport);
     setOpened(false);
   };
-  const OrgModal = () => (
+  const SportModal = () => (
     <CommonModal
       backdrop="static"
       modalBodyClassName="social-profile text-start"
       isOpen={opened}
       toggle={handleToggle}
     >
-      <OrgForm onSubmit={handleSubmit} {...rest} />
+      <SportForm onSubmit={handleSubmit} {...rest} />
     </CommonModal>
   );
 
-  return { OrgModal, handleToggle };
+  return { SportModal, handleToggle };
 };
 
-export { OrgForm, useOrgModal };
+export { SportForm, useSportModal };

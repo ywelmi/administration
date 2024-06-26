@@ -35,6 +35,27 @@ export const MenuList: MenuItem[] = [
           },
         ],
       },
+      {
+        title: "Thi đấu",
+        id: 1,
+        icon: "home",
+        type: "sub",
+        lanClass: "lan-3",
+        children: [
+          {
+            path: "/sport/list",
+            title: "Môn thi",
+            type: "link",
+            lanClass: "lan-4",
+          },
+          {
+            path: "/teammember/list",
+            title: "Vận động viên",
+            type: "link",
+            lanClass: "lan-4",
+          },
+        ],
+      },
     ],
   },
 ];

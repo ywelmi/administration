@@ -17,27 +17,34 @@ import {
 import { LI, UL } from "../../AbstractElements";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
-import { TOrg } from "../../type/org";
-import { useOrgStore } from "../../store/org";
+import { TTeammember } from "../../type/teammember";
+import { useTeammemberStore } from "../../store/teammember";
 import { useMemo, useState } from "react";
-import { useOrgModal } from "./OrgForm";
-import { orgCreate, orgDelete, orgUpdate } from "../../Service/org";
+import { useTeammemberModal } from "./TeammemberForm";
+import {
+  teammemberCreate,
+  teammemberDelete,
+  teammemberUpdate,
+} from "../../Service/teammember";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { useGroupStore } from "../../store/group";
+import { DGender, DRank } from "../../type/enum";
 
-type TOrgColumn = TOrg;
+type TTeammemberColumn = TTeammember;
 
-const OrgTableAction = ({ org }: { org: TOrgColumn }) => {
-  const { updateOrg, deleteOrg } = useOrgStore();
+const TeammemberTableAction = (
+  { teammember }: { teammember: TTeammemberColumn },
+) => {
+  const { updateTeammember, deleteTeammember } = useTeammemberStore();
   const { t } = useTranslation();
-  const handleUpdateOrg = (org: TOrg) => {
-    console.log({ handleUpdateOrg: org });
-    orgUpdate(org).then(
+  const handleUpdateTeammember = (teammember: TTeammember) => {
+    console.log({ handleUpdateTeammember: teammember });
+    teammemberUpdate(teammember).then(
       (res) => {
         const { status, data } = res;
         if (status === 200) {
-          updateOrg(data as TOrg);
+          updateTeammember(data as TTeammember);
           toast.success(t("success"));
           return;
         }
@@ -49,18 +56,20 @@ const OrgTableAction = ({ org }: { org: TOrgColumn }) => {
       console.log({ err });
     });
   };
-  const { handleToggle: handleToggleUpdateModal, OrgModal: OrgUpdateModal } =
-    useOrgModal({ onSubmit: handleUpdateOrg, org });
+  const {
+    handleToggle: handleToggleUpdateModal,
+    TeammemberModal: TeammemberUpdateModal,
+  } = useTeammemberModal({ onSubmit: handleUpdateTeammember, teammember });
 
   const handleConfirmDel = () => {
     const { confirm } = useConfirmModal();
     if (confirm) {
-      orgDelete(org.id).then((res) => {
+      teammemberDelete(teammember.id).then((res) => {
         const { status, data } = res;
         console.log({ status, data });
         if (status === 200) {
           toast.success(t("success"));
-          deleteOrg(org.id);
+          deleteTeammember(teammember.id);
           return;
         }
         return Promise.reject(status);
@@ -74,13 +83,13 @@ const OrgTableAction = ({ org }: { org: TOrgColumn }) => {
   };
 
   return (
-    <UL className="action simple-list flex-row" id={org.id}>
+    <UL className="action simple-list flex-row" id={teammember.id}>
       <LI className="edit btn">
         <i
           className="icon-pencil-alt"
           onClick={handleToggleUpdateModal}
         />
-        <OrgUpdateModal />
+        <TeammemberUpdateModal />
       </LI>
       <LI className="delete btn">
         <i className="icon-trash cursor-pointer" onClick={handleConfirmDel} />
@@ -89,25 +98,28 @@ const OrgTableAction = ({ org }: { org: TOrgColumn }) => {
   );
 };
 
-const ListOrg = () => {
+const ListTeammember = () => {
   const [filterText, setFilterText] = useState("");
   const { t } = useTranslation();
-  const { groups } = useGroupStore();
-  const { orgs, addOrg } = useOrgStore();
-  const filteredItems = orgs.filter((item) =>
+  const { teammembers, addTeammember } = useTeammemberStore();
+  const filteredItems = teammembers.filter((item) =>
     item.name &&
     item.name.toLowerCase().includes(filterText.toLowerCase())
   );
 
-  const columns: TableColumn<TOrgColumn>[] = [
-    ...["name", "group_id"].map((c) => ({
+  const columns: TableColumn<TTeammemberColumn>[] = [
+    ...["name", "gender", "rank", "team_name"].map((c) => ({
       "name": t(c),
-      selector: (row: TOrgColumn) => {
-        if (c == "group_id") {
-          const group_id = row[c as keyof TOrgColumn];
-          return groups.find((g) => g.id === group_id)?.name || "";
+      selector: (row: TTeammemberColumn) => {
+        if (c == "gender") {
+          const i = row[c as keyof TTeammemberColumn];
+          return DGender[parseInt(i as string)];
         }
-        return row[c as keyof TOrgColumn];
+        if (c == "rank") {
+          const i = row[c as keyof TTeammemberColumn];
+          return DRank[parseInt(i as string)];
+        }
+        return row[c as keyof TTeammemberColumn];
       },
     })),
   ];
@@ -115,19 +127,21 @@ const ListOrg = () => {
     columns.push(
       {
         name: "#",
-        cell: (row: TOrgColumn) => <OrgTableAction org={row} />,
+        cell: (row: TTeammemberColumn) => (
+          <TeammemberTableAction teammember={row} />
+        ),
         sortable: true,
       },
     );
   }
 
-  const handleAddOrg = (org: TOrg) => {
-    console.log({ handleAddOrg: org });
-    const { id, ...rests } = org;
-    orgCreate(rests).then((res) => {
+  const handleAddTeammember = (teammember: TTeammember) => {
+    console.log({ handleAddTeammember: teammember });
+    const { id, ...rests } = teammember;
+    teammemberCreate(rests).then((res) => {
       const { status, data } = res;
       if (status === 200) {
-        addOrg(data as TOrg);
+        addTeammember(data as TTeammember);
         toast.info(t("success"));
         return;
       }
@@ -137,8 +151,10 @@ const ListOrg = () => {
       console.log({ err });
     });
   };
-  const { handleToggle: handleToggleAddModal, OrgModal: OrgAddModal } =
-    useOrgModal({ onSubmit: handleAddOrg });
+  const {
+    handleToggle: handleToggleAddModal,
+    TeammemberModal: TeammemberAddModal,
+  } = useTeammemberModal({ onSubmit: handleAddTeammember });
 
   const subHeaderComponentMemo = useMemo(() => {
     return (
@@ -169,7 +185,7 @@ const ListOrg = () => {
                   <i className="fa fa-plus" />
                   {"Thêm mới"}
                 </div>
-                <OrgAddModal />
+                <TeammemberAddModal />
               </CardHeader>
               <CardBody>
                 <div className="table-responsive">
@@ -193,4 +209,4 @@ const ListOrg = () => {
   );
 };
 
-export { ListOrg };
+export { ListTeammember };

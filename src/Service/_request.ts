@@ -95,7 +95,10 @@ const httpPost: <T = any, R = AxiosResponse<T, any>, D = any>(
     !!interceptData
   ) {
     const filter = interceptData["filter"];
-    interceptData["filter"] = JSON.stringify(filter);
+    if (typeof filter !== "string") {
+      interceptData["filter"] = `[${filter.join(",")}]`;
+    }
+    // interceptData["filter"] = (filter);
   }
 
   return req.post(url, interceptData, config) as Promise<R>;

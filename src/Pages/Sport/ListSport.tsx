@@ -17,27 +17,27 @@ import {
 import { LI, UL } from "../../AbstractElements";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
-import { TOrg } from "../../type/org";
-import { useOrgStore } from "../../store/org";
+import { TSport } from "../../type/sport";
+import { useSportStore } from "../../store/sport";
 import { useMemo, useState } from "react";
-import { useOrgModal } from "./OrgForm";
-import { orgCreate, orgDelete, orgUpdate } from "../../Service/org";
+import { useSportModal } from "./SportForm";
+import { sportCreate, sportDelete, sportUpdate } from "../../Service/sport";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { useGroupStore } from "../../store/group";
 
-type TOrgColumn = TOrg;
+type TSportColumn = TSport;
 
-const OrgTableAction = ({ org }: { org: TOrgColumn }) => {
-  const { updateOrg, deleteOrg } = useOrgStore();
+const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
+  const { updateSport, deleteSport } = useSportStore();
   const { t } = useTranslation();
-  const handleUpdateOrg = (org: TOrg) => {
-    console.log({ handleUpdateOrg: org });
-    orgUpdate(org).then(
+  const handleUpdateSport = (sport: TSport) => {
+    console.log({ handleUpdateSport: sport });
+    sportUpdate(sport).then(
       (res) => {
         const { status, data } = res;
         if (status === 200) {
-          updateOrg(data as TOrg);
+          updateSport(data as TSport);
           toast.success(t("success"));
           return;
         }
@@ -49,18 +49,20 @@ const OrgTableAction = ({ org }: { org: TOrgColumn }) => {
       console.log({ err });
     });
   };
-  const { handleToggle: handleToggleUpdateModal, OrgModal: OrgUpdateModal } =
-    useOrgModal({ onSubmit: handleUpdateOrg, org });
+  const {
+    handleToggle: handleToggleUpdateModal,
+    SportModal: SportUpdateModal,
+  } = useSportModal({ onSubmit: handleUpdateSport, sport });
 
   const handleConfirmDel = () => {
     const { confirm } = useConfirmModal();
     if (confirm) {
-      orgDelete(org.id).then((res) => {
+      sportDelete(sport.id).then((res) => {
         const { status, data } = res;
         console.log({ status, data });
         if (status === 200) {
           toast.success(t("success"));
-          deleteOrg(org.id);
+          deleteSport(sport.id);
           return;
         }
         return Promise.reject(status);
@@ -74,13 +76,13 @@ const OrgTableAction = ({ org }: { org: TOrgColumn }) => {
   };
 
   return (
-    <UL className="action simple-list flex-row" id={org.id}>
+    <UL className="action simple-list flex-row" id={sport.id}>
       <LI className="edit btn">
         <i
           className="icon-pencil-alt"
           onClick={handleToggleUpdateModal}
         />
-        <OrgUpdateModal />
+        <SportUpdateModal />
       </LI>
       <LI className="delete btn">
         <i className="icon-trash cursor-pointer" onClick={handleConfirmDel} />
@@ -89,25 +91,20 @@ const OrgTableAction = ({ org }: { org: TOrgColumn }) => {
   );
 };
 
-const ListOrg = () => {
+const ListSport = () => {
   const [filterText, setFilterText] = useState("");
   const { t } = useTranslation();
-  const { groups } = useGroupStore();
-  const { orgs, addOrg } = useOrgStore();
-  const filteredItems = orgs.filter((item) =>
+  const { sports, addSport } = useSportStore();
+  const filteredItems = sports.filter((item) =>
     item.name &&
     item.name.toLowerCase().includes(filterText.toLowerCase())
   );
 
-  const columns: TableColumn<TOrgColumn>[] = [
-    ...["name", "group_id"].map((c) => ({
+  const columns: TableColumn<TSportColumn>[] = [
+    ...["name", "competition_name"].map((c) => ({
       "name": t(c),
-      selector: (row: TOrgColumn) => {
-        if (c == "group_id") {
-          const group_id = row[c as keyof TOrgColumn];
-          return groups.find((g) => g.id === group_id)?.name || "";
-        }
-        return row[c as keyof TOrgColumn];
+      selector: (row: TSportColumn) => {
+        return row[c as keyof TSportColumn];
       },
     })),
   ];
@@ -115,19 +112,19 @@ const ListOrg = () => {
     columns.push(
       {
         name: "#",
-        cell: (row: TOrgColumn) => <OrgTableAction org={row} />,
+        cell: (row: TSportColumn) => <SportTableAction sport={row} />,
         sortable: true,
       },
     );
   }
 
-  const handleAddOrg = (org: TOrg) => {
-    console.log({ handleAddOrg: org });
-    const { id, ...rests } = org;
-    orgCreate(rests).then((res) => {
+  const handleAddSport = (sport: TSport) => {
+    console.log({ handleAddSport: sport });
+    const { id, ...rests } = sport;
+    sportCreate(rests).then((res) => {
       const { status, data } = res;
       if (status === 200) {
-        addOrg(data as TOrg);
+        addSport(data as TSport);
         toast.info(t("success"));
         return;
       }
@@ -137,8 +134,8 @@ const ListOrg = () => {
       console.log({ err });
     });
   };
-  const { handleToggle: handleToggleAddModal, OrgModal: OrgAddModal } =
-    useOrgModal({ onSubmit: handleAddOrg });
+  const { handleToggle: handleToggleAddModal, SportModal: SportAddModal } =
+    useSportModal({ onSubmit: handleAddSport });
 
   const subHeaderComponentMemo = useMemo(() => {
     return (
@@ -169,7 +166,7 @@ const ListOrg = () => {
                   <i className="fa fa-plus" />
                   {"Thêm mới"}
                 </div>
-                <OrgAddModal />
+                <SportAddModal />
               </CardHeader>
               <CardBody>
                 <div className="table-responsive">
@@ -193,4 +190,4 @@ const ListOrg = () => {
   );
 };
 
-export { ListOrg };
+export { ListSport };

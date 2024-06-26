@@ -1,0 +1,21 @@
+import { useEffect } from "react";
+import { teammembersGet } from "../Service/teammember";
+import { TTeammember } from "../type/teammember";
+import { useTeammemberStore } from "../store/teammember";
+
+export default function useGetTeammember() {
+  const { addTeammembers } = useTeammemberStore();
+  const fetch = () => {
+    teammembersGet().then((res) => {
+      const { data, status } = res;
+      console.log({ data, status });
+      if (!data.data) return;
+      const teammembers = data.data as TTeammember[];
+      addTeammembers(teammembers);
+    });
+  };
+
+  useEffect(() => {
+    fetch();
+  }, []);
+}
