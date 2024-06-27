@@ -8,7 +8,6 @@ export default function useGetUser() {
   const fetch = () => {
     usersGet().then((res) => {
       const { data, status } = res;
-      console.log({ data, status });
       if (!data.data) return;
       const users = data.data as TUser[];
       addUsers(users);

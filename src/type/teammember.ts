@@ -2,7 +2,7 @@ export interface TTeammember {
   id: string;
   team_id: string;
   name: string;
-  rank: string;
+  rank: number;
   // created: string;
   gender: number;
   // dob: string;

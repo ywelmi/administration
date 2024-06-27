@@ -24,7 +24,6 @@ import { useSportModal } from "./SportForm";
 import { sportCreate, sportDelete, sportUpdate } from "../../Service/sport";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
-import { useGroupStore } from "../../store/group";
 
 type TSportColumn = TSport;
 

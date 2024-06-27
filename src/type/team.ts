@@ -6,4 +6,5 @@ export interface TTeam {
   has_army: boolean;
   sport_id: string;
   org_name: string;
+  lst_member_id: string[]; // list of teammembers' ids
 }

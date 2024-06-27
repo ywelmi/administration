@@ -1,26 +1,22 @@
 import { TGroup } from "../type/group";
-import { baseGetParams } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
-export const groupsGet = async (params = baseGetParams) => {
-  return httpPost("/groups/padding_filter", {
-    ...params,
-    columns: ["groupname", "fullname", "id"],
-  });
+export const groupsGet = async () => {
+  return httpGet("/orggroups/");
 };
 
 export const groupGet = (id: string) => {
-  return httpGet(`/groups/${id}`);
+  return httpGet(`/orggroups/${id}`);
 };
 
 export const groupCreate = (group: Omit<TGroup, "id">) => {
-  return httpPost("/groups", group);
+  return httpPost("/orggroups", group);
 };
 
 export const groupUpdate = (group: TGroup) => {
-  return httpPut(`groups/${group.id}`, group);
+  return httpPut(`orggroups/${group.id}`, group);
 };
 
 export const groupDelete = (id: string) => {
-  return httpDel(`groups/${id}`);
+  return httpDel(`orggroups/${id}`);
 };

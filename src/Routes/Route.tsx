@@ -1,6 +1,7 @@
 import Default from "../Pages/Dashboard/Default/Default";
 import { ListOrg } from "../Pages/Org/ListOrg";
 import { ListSport } from "../Pages/Sport/ListSport";
+import { ListTeam } from "../Pages/Team/ListTeam";
 import { ListTeammember } from "../Pages/Teammember/ListTeammember";
 import { ListUser } from "../Pages/User/ListUser";
 // import ApexChart from "../Pages/Charts/Apexchart/ApexChart";
@@ -148,6 +149,10 @@ const Routes = [
   {
     path: "/teammember/list",
     Component: <ListTeammember />,
+  },
+  {
+    path: "/team/list",
+    Component: <ListTeam />,
   },
   // {
   //   path: `${import.meta.env.VITE_PUBLIC_URL}/dashboard/ecommerce`,

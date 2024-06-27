@@ -43,6 +43,12 @@ export const MenuList: MenuItem[] = [
         lanClass: "lan-3",
         children: [
           {
+            path: "/team/list",
+            title: "Đăng ký thi",
+            type: "link",
+            lanClass: "lan-4",
+          },
+          {
             path: "/sport/list",
             title: "Môn thi",
             type: "link",

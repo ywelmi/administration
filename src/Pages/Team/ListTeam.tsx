@@ -17,33 +17,30 @@ import {
 import { LI, UL } from "../../AbstractElements";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
-import { TTeammember } from "../../type/teammember";
-import { useTeammemberStore } from "../../store/teammember";
+import { TTeam } from "../../type/team";
+import { useTeamStore } from "../../store/team";
 import { useMemo, useState } from "react";
-import { useTeammemberModal } from "./TeammemberForm";
-import {
-  teammemberCreate,
-  teammemberDelete,
-  teammemberUpdate,
-} from "../../Service/teammember";
+import { useTeamModal } from "./TeamForm";
+import { teamCreate, teamDelete, teamUpdate } from "../../Service/team";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
-import { DGender, DRank } from "../../type/enum";
+import { useGroupStore } from "../../store/group";
+import { useCompetitionStore } from "../../store/competition";
+import { useSportStore } from "../../store/sport";
+import { useTeammemberStore } from "../../store/teammember";
 
-type TTeammemberColumn = TTeammember;
+type TTeamColumn = TTeam;
 
-const TeammemberTableAction = (
-  { teammember }: { teammember: TTeammemberColumn },
-) => {
-  const { updateTeammember, deleteTeammember } = useTeammemberStore();
+const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
+  const { updateTeam, deleteTeam } = useTeamStore();
   const { t } = useTranslation();
-  const handleUpdateTeammember = (teammember: TTeammember) => {
-    console.log({ handleUpdateTeammember: teammember });
-    teammemberUpdate(teammember).then(
+  const handleUpdateTeam = (team: TTeam) => {
+    console.log({ handleUpdateTeam: team });
+    teamUpdate(team).then(
       (res) => {
         const { status, data } = res;
         if (status === 200) {
-          updateTeammember(data as TTeammember);
+          updateTeam(data as TTeam);
           toast.success(t("success"));
           return;
         }
@@ -55,20 +52,18 @@ const TeammemberTableAction = (
       console.log({ err });
     });
   };
-  const {
-    handleToggle: handleToggleUpdateModal,
-    TeammemberModal: TeammemberUpdateModal,
-  } = useTeammemberModal({ onSubmit: handleUpdateTeammember, teammember });
+  const { handleToggle: handleToggleUpdateModal, TeamModal: TeamUpdateModal } =
+    useTeamModal({ onSubmit: handleUpdateTeam, team });
 
   const handleConfirmDel = () => {
     const { confirm } = useConfirmModal();
     if (confirm) {
-      teammemberDelete(teammember.id).then((res) => {
+      teamDelete(team.id).then((res) => {
         const { status, data } = res;
         console.log({ status, data });
         if (status === 200) {
           toast.success(t("success"));
-          deleteTeammember(teammember.id);
+          deleteTeam(team.id);
           return;
         }
         return Promise.reject(status);
@@ -82,13 +77,13 @@ const TeammemberTableAction = (
   };
 
   return (
-    <UL className="action simple-list flex-row" id={teammember.id}>
+    <UL className="action simple-list flex-row" id={team.id}>
       <LI className="edit btn">
         <i
           className="icon-pencil-alt"
           onClick={handleToggleUpdateModal}
         />
-        <TeammemberUpdateModal />
+        <TeamUpdateModal />
       </LI>
       <LI className="delete btn">
         <i className="icon-trash cursor-pointer" onClick={handleConfirmDel} />
@@ -97,50 +92,61 @@ const TeammemberTableAction = (
   );
 };
 
-const ListTeammember = () => {
+const ListTeam = () => {
   const [filterText, setFilterText] = useState("");
   const { t } = useTranslation();
-  const { teammembers, addTeammember } = useTeammemberStore();
-  const filteredItems = teammembers.filter((item) =>
-    item.name &&
-    item.name.toLowerCase().includes(filterText.toLowerCase())
+  const { competitions } = useCompetitionStore();
+  const { sports } = useSportStore();
+  const { teammembers } = useTeammemberStore();
+  const { teams, addTeam } = useTeamStore();
+  const filteredItems = teams.filter((item) =>
+    item.org_name &&
+    item.org_name.toLowerCase().includes(filterText.toLowerCase())
   );
 
-  const columns: TableColumn<TTeammemberColumn>[] = [
-    ...["name", "gender", "rank", "team_name"].map((c) => ({
-      "name": t(c),
-      selector: (row: TTeammemberColumn) => {
-        if (c == "gender") {
-          const i = row[c as keyof TTeammemberColumn];
-          return DGender[parseInt(i as string)];
-        }
-        if (c == "rank") {
-          const i = row[c as keyof TTeammemberColumn];
-          return DRank[parseInt(i as string)];
-        }
-        return row[c as keyof TTeammemberColumn];
-      },
-    })),
-  ];
+  const columns: TableColumn<TTeamColumn>[] = [
+    "competition_id",
+    "org_id",
+    "sport_id",
+    "org_name",
+    "lst_member_id",
+  ].map((c) => ({
+    "name": t(c),
+    selector: (row: TTeamColumn) => {
+      const col = c as keyof TTeamColumn;
+      switch (col) {
+        case "competition_id":
+          return competitions.find((i) => i.id === row[col])?.name || "";
+        case "org_name":
+          return row[col];
+        case "sport_id":
+          return sports.find((i) => i.id === row[col])?.name || "";
+        case "lst_member_id":
+          return teammembers.filter((m) => row[col].includes(m.id)).join(",") ||
+            "";
+        default:
+          return "";
+      }
+    },
+  }));
+
   if (columns.length > 0) {
     columns.push(
       {
         name: "#",
-        cell: (row: TTeammemberColumn) => (
-          <TeammemberTableAction teammember={row} />
-        ),
+        cell: (row: TTeamColumn) => <TeamTableAction team={row} />,
         sortable: true,
       },
     );
   }
 
-  const handleAddTeammember = (teammember: TTeammember) => {
-    console.log({ handleAddTeammember: teammember });
-    const { id, ...rests } = teammember;
-    teammemberCreate(rests).then((res) => {
+  const handleAddTeam = (team: TTeam) => {
+    console.log({ handleAddTeam: team });
+    const { id, ...rests } = team;
+    teamCreate(rests).then((res) => {
       const { status, data } = res;
       if (status === 200) {
-        addTeammember(data as TTeammember);
+        addTeam(data as TTeam);
         toast.info(t("success"));
         return;
       }
@@ -150,10 +156,8 @@ const ListTeammember = () => {
       console.log({ err });
     });
   };
-  const {
-    handleToggle: handleToggleAddModal,
-    TeammemberModal: TeammemberAddModal,
-  } = useTeammemberModal({ onSubmit: handleAddTeammember });
+  const { handleToggle: handleToggleAddModal, TeamModal: TeamAddModal } =
+    useTeamModal({ onSubmit: handleAddTeam });
 
   const subHeaderComponentMemo = useMemo(() => {
     return (
@@ -184,7 +188,7 @@ const ListTeammember = () => {
                   <i className="fa fa-plus" />
                   {"Thêm mới"}
                 </div>
-                <TeammemberAddModal />
+                <TeamAddModal />
               </CardHeader>
               <CardBody>
                 <div className="table-responsive">
@@ -208,4 +212,4 @@ const ListTeammember = () => {
   );
 };
 
-export { ListTeammember };
+export { ListTeam };

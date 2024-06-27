@@ -8,10 +8,12 @@ export default function useGetGroup() {
   const fetch = () => {
     groupsGet().then((res) => {
       const { data, status } = res;
-      console.log({ data, status });
-      if (!data.data) return;
-      const groups = data.data as TGroup[];
-      addGroups(groups);
+      console.log({ groupsFetch: data });
+      if (!data) return;
+      if (Array.isArray(data)) {
+        const groups = data as TGroup[];
+        addGroups(groups);
+      }
     });
   };
 

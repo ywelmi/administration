@@ -8,7 +8,6 @@ export default function useGetSport() {
   const fetch = () => {
     sportsGet().then((res) => {
       const { data, status } = res;
-      console.log({ data, status });
       if (!data.data) return;
       const sports = data.data as TSport[];
       addSports(sports);

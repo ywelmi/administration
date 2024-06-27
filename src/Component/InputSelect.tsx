@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 import { Input, InputGroup, InputGroupText } from "reactstrap";
 
 interface IInputSelect<T> {
@@ -5,7 +6,10 @@ interface IInputSelect<T> {
   data: (T & { [ki: string]: any })[];
   k: keyof T;
   v: keyof T;
-  handleChange: (v: string) => void;
+  // handleChange: (v: string) => void;
+  handleChange: (e: ChangeEvent<any>) => void;
+  value: any;
+  name: string;
 }
 
 const InputSelect = <T,>(
@@ -20,7 +24,7 @@ const InputSelect = <T,>(
       <InputGroupText>{title}</InputGroupText>
       <Input
         type="select"
-        onChange={({ target: { value } }) => onChange(value)}
+        onChange={onChange}
         {...rest}
       >
         {inputData.map(({ k: k, v: v }) => (

@@ -1,12 +1,13 @@
-import { Col, InputGroup, InputGroupText, Label, Row } from "reactstrap";
+import { Col, Input, Label, Row } from "reactstrap";
 import { TTeammember } from "../../type/teammember";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, useFormik } from "formik";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useState } from "react";
 import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
 import { useTeamStore } from "../../store/team";
 import { DGender, DRank } from "../../type/enum";
+import { InputSelect } from "../../Component/InputSelect";
 
 interface ITeammemberForm {
   teammember?: TTeammember;
@@ -21,79 +22,86 @@ const TeammemberForm = (
 ) => {
   const teammember: Partial<TTeammember> = initTeammember
     ? initTeammember
-    : { name: "", team_id: undefined, gender: 0, rank: "0" };
+    : { name: "", team_id: undefined, gender: 0, rank: 0 };
   const { teams } = useTeamStore();
+  console.log({ teams });
 
+  const formik = useFormik({
+    initialValues: { ...teammember },
+    onSubmit: (value) => {
+      console.log({ submitValue: value });
+
+      let submitValue = { ...value } as TTeammember;
+      if (hasOwnProperty(value, "id")) {
+        submitValue["id"] = value.id as string;
+      }
+
+      if (submitValue) onSubmit(submitValue);
+    },
+  });
   return (
-    <Formik
-      initialValues={{ ...teammember }}
-      onSubmit={(value) => {
-        console.log({ submitValue: value });
-
-        let submitValue = { ...value } as TTeammember;
-        if (hasOwnProperty(value, "id")) {
-          submitValue["id"] = value.id as string;
-        }
-
-        if (submitValue) onSubmit(submitValue);
-      }}
-    >
-      {() => (
-        <Form>
-          <Row className="g-3">
+    <form onSubmit={formik.handleSubmit}>
+      <Row className="g-3">
+        <Col md="12">
+          <Label>Tên</Label>
+          <Input
+            className="form-control"
+            name="name"
+            type="text"
+            placeholder={teammember.name}
+          />
+        </Col>
+        {(teams?.length)
+          ? (
             <Col md="12">
-              <Label>Tên</Label>
-              <Field
-                className="form-control"
-                name="name"
-                type="text"
-                placeholder={teammember.name}
+              <InputSelect
+                title="Đội"
+                data={teams}
+                k="org_name"
+                name="teams"
+                v="id"
+                handleChange={(e) => {
+                  formik.handleChange(e);
+                }}
+                value={formik.values.team_id}
               />
             </Col>
-            {(teams?.length)
-              ? (
-                <Col md="12">
-                  <InputGroup>
-                    <InputGroupText>Đội</InputGroupText>
-                    <Field name="team_id" as="select">
-                      {teams.map(({ id, org_name }) => (
-                        <option value={id}>{org_name}</option>
-                      ))}
-                    </Field>
-                  </InputGroup>
-                </Col>
-              )
-              : null}
+          )
+          : null}
 
-            <Col md="12">
-              <InputGroup>
-                <InputGroupText>Cấp bậc</InputGroupText>
-                <Field name="rank" as="select">
-                  {DRank.map((item, i) => {
-                    return <option value={i}>{item}</option>;
-                  })}
-                </Field>
-              </InputGroup>
-            </Col>
-            <Col md="12">
-              <InputGroup>
-                <InputGroupText>Giới tính</InputGroupText>
-                <Field name="gender" as="select">
-                  {DGender.map((item, i) => {
-                    return <option value={i}>{item}</option>;
-                  })}
-                </Field>
-              </InputGroup>
-            </Col>
-            <Col xs="12">
-              <Btn color="primary" type="submit">
-                Xác nhận
-              </Btn>
-            </Col>
-          </Row>
-        </Form>
-      )}
-    </Formik>
+        <Col md="12">
+          <InputSelect
+            title="Cấp bậc"
+            data={DRank.map((item, i) => ({ item, i }))}
+            k="item"
+            name="rank"
+            v="i"
+            handleChange={(e) => {
+              formik.handleChange(e);
+            }}
+            value={formik.values.rank}
+          />
+        </Col>
+        <Col md="12">
+          <InputSelect
+            title="Giới tính"
+            data={DGender.map((item, i) => ({ item, i }))}
+            k="item"
+            name="gender"
+            v="i"
+            handleChange={(e) => {
+              formik.handleChange(e);
+            }}
+            value={formik.values.gender}
+          />
+        </Col>
+        <Col xs="12">
+          <Btn color="primary" type="submit">
+            Xác nhận
+          </Btn>
+        </Col>
+      </Row>
+    </form>
   );
 };
 

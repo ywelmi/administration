@@ -1,11 +1,12 @@
-import { Col, InputGroup, InputGroupText, Label, Row } from "reactstrap";
+import { Col, Input, InputGroup, InputGroupText, Label, Row } from "reactstrap";
 import { TSport } from "../../type/sport";
-import { Field, Form, Formik } from "formik";
+import { Field, Form as form, Formik, useFormik } from "formik";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useState } from "react";
 import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
 import { useCompetitionStore } from "../../store/competition";
+import { InputSelect } from "../../Component/InputSelect";
 
 interface ISportForm {
   sport?: TSport;
@@ -16,63 +17,67 @@ interface ISportModal extends ISportForm {
 }
 
 const SportForm = ({ sport: initSport, onSubmit }: ISportForm) => {
-  const sport = initSport ? initSport : { name: "", competition_id: null };
   const { competitions } = useCompetitionStore();
-  console.log({ competitions });
+  const sport = initSport
+    ? initSport
+    : { name: "", competition_id: competitions?.[0].id ?? "" };
+  // console.log({ competitions });
+  const formik = useFormik({
+    initialValues: { ...sport },
+    onSubmit: (value) => {
+      console.log({ submitValue: value });
+
+      let submitValue = { ...value } as TSport;
+      if (hasOwnProperty(value, "id")) {
+        submitValue["id"] = value.id as string;
+      }
+
+      if (submitValue) onSubmit(submitValue);
+    },
+  });
 
   return (
-    <Formik
-      initialValues={{ ...sport }}
-      onSubmit={(value) => {
-        console.log({ submitValue: value });
-
-        let submitValue = { ...value } as TSport;
-        if (hasOwnProperty(value, "id")) {
-          submitValue["id"] = value.id as string;
-        }
-
-        if (submitValue) onSubmit(submitValue);
-      }}
-    >
-      {() => (
-        <Form>
-          <Row className="g-3">
+    <form onSubmit={formik.handleSubmit}>
+      <Row className="g-3">
+        <Col md="12">
+          <Label>Môn thi</Label>
+          <Input
+            type="text"
+            className="form-control"
+            name="name"
+            placeholder={sport.name}
+            onChange={(e) => {
+              console.log({ inputE: e });
+              formik.handleChange(e);
+            }}
+          />
+        </Col>
+        {(competitions?.length)
+          ? (
             <Col md="12">
-              <Label>Môn thi</Label>
-              <Field
-                className="form-control"
-                name="name"
-                type="text"
-                placeholder={sport.name}
+              <InputSelect
+                title="Cuộc thi"
+                data={competitions}
+                k="name"
+                name="competition_id"
+                v="id"
+                handleChange={(e) => {
+                  console.log({ selelctE: e });
+                  formik.handleChange(e);
+                }}
+                value={formik.values.competition_id}
               />
             </Col>
-            {(competitions?.length)
-              ? (
-                <Col md="12">
-                  <InputGroup>
-                    <InputGroupText>Cuộc thi</InputGroupText>
-                    <Field
-                      name="competition_id"
-                      as="select"
-                    >
-                      {competitions.map(({ id, name }) => (
-                        <option value={id}>{name}</option>
-                      ))}
-                    </Field>
-                  </InputGroup>
-                </Col>
-              )
-              : null}
+          )
+          : null}
 
-            <Col xs="12">
-              <Btn color="primary" type="submit">
-                Xác nhận
-              </Btn>
-            </Col>
-          </Row>
-        </Form>
-      )}
-    </Formik>
+        <Col xs="12">
+          <Btn color="primary" type="submit">
+            Xác nhận
+          </Btn>
+        </Col>
+      </Row>
+    </form>
   );
 };
 

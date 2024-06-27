@@ -8,7 +8,6 @@ export default function useGetCompetition() {
   const fetch = () => {
     competitionsGet().then((res) => {
       const { data, status } = res;
-      console.log({ data, status });
       if (!data) return;
       const competitions = data as TCompetition[];
       addCompetitions(competitions);

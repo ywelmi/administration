@@ -8,7 +8,6 @@ export default function useGetOrg() {
   const fetch = () => {
     orgsGet().then((res) => {
       const { data, status } = res;
-      console.log({ data, status });
       if (!data.data) return;
       const orgs = data.data as TOrg[];
       addOrgs(orgs);
