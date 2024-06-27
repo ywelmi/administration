@@ -10,7 +10,7 @@ pipeline {
 
     stage('dev'){
       steps{
-        // bat "npm run dev" // serve at 3030
+        // bat "npm run dev -- --host" // serve at 3030
       }
     }
   }
