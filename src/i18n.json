@@ -5,5 +5,19 @@
   "error": "Thất bại",
   "failed": "Đã xảy ra lỗi",
   "group_id": "Nhóm",
-  "group": "Nhóm"
+  "group": "Nhóm",
+    "competition_id": "Hội thi",
+  "competition_name": "Hội thi",
+    "org_id": "Đơn vị",
+    "sport_id": "Môn thi",
+    "org_name": "Đơn vị",
+  "list_member_name":"Danh sách thành viên",
+    "list_member_id": "Danh sách thành viên",
+  "has_militia": "Lực lượng thường trực",
+  "has_army": "Dân quân tự vệ",
+  "name":"Tên",
+  "gender": "Giới tính",
+  "rank": "Cấp bậc",
+  "team_name": "Đội"
+
 }

@@ -18,28 +18,6 @@ interface IOrgModal extends IOrgForm {
 const OrgForm = ({ org: initOrg, onSubmit }: IOrgForm) => {
   const org = initOrg ? initOrg : { name: "", group_id: null };
   const { groups } = useGroupStore();
-  // const groups = [
-  //   {
-  //     "id": 1,
-  //     "name": "Quân khu",
-  //   },
-  //   {
-  //     "id": 2,
-  //     "name": "Quân doàn, quân chủng, Bộ đội biên phòng",
-  //   },
-  //   {
-  //     "id": 3,
-  //     "name": "Binh chủng, Bộ Tư lệnh",
-  //   },
-  //   {
-  //     "id": 4,
-  //     "name": "Học viện, nhà trường",
-  //   },
-  //   {
-  //     "id": 5,
-  //     "name": "Cơ quan, trung tâm, viện, bệnh viện",
-  //   },
-  // ];
 
   return (
     <Formik

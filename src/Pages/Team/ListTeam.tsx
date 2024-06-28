@@ -24,18 +24,15 @@ import { useTeamModal } from "./TeamForm";
 import { teamCreate, teamDelete, teamUpdate } from "../../Service/team";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
-import { useGroupStore } from "../../store/group";
-import { useCompetitionStore } from "../../store/competition";
-import { useSportStore } from "../../store/sport";
-import { useTeammemberStore } from "../../store/teammember";
+import { NAME_CONVERSION } from "../../name-conversion";
 
-type TTeamColumn = TTeam;
+type TTeamColumn = Omit<TTeam, "list_member_id">;
 
 const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
   const { updateTeam, deleteTeam } = useTeamStore();
   const { t } = useTranslation();
   const handleUpdateTeam = (team: TTeam) => {
-    console.log({ handleUpdateTeam: team });
+    // console.log({ handleUpdateTeam: team });
     teamUpdate(team).then(
       (res) => {
         const { status, data } = res;
@@ -69,7 +66,7 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
         return Promise.reject(status);
       })
         .catch((err) => {
-          toast.error(t("error"));
+          toast.error(t(err?.response?.data || "error"));
           console.log({ err });
         });
     }
@@ -92,45 +89,41 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
   );
 };
 
-const ListTeam = () => {
+interface IListTeam {
+  showAction?: boolean;
+  selectableRows?: boolean;
+  onRowSelect?: (row: TTeam, e: React.MouseEvent<Element, MouseEvent>) => void;
+  onSelectedRowsChange?: (
+    v: { allSelected: boolean; selectedCount: number; selectedRows: TTeam[] },
+  ) => void;
+  columns?: TableColumn<TTeamColumn>[];
+}
+
+const tableColumns = ([
+  "competition_name",
+  "org_name",
+  "list_member_name",
+] as (keyof TTeamColumn)[]).map((c) => ({
+  "name": NAME_CONVERSION[c],
+  selector: (row: TTeamColumn) => {
+    const col = c as keyof TTeamColumn;
+    return row?.[col] ? (row[col as keyof TTeamColumn] || "") : "";
+  },
+}));
+
+const ListTeam = (
+  {
+    showAction,
+    onRowSelect,
+    onSelectedRowsChange,
+    columns = [...tableColumns],
+  }: IListTeam,
+) => {
   const [filterText, setFilterText] = useState("");
-  const { t } = useTranslation();
-  const { competitions } = useCompetitionStore();
-  const { sports } = useSportStore();
-  const { teammembers } = useTeammemberStore();
-  const { teams, addTeam } = useTeamStore();
-  const filteredItems = teams.filter((item) =>
-    item.org_name &&
-    item.org_name.toLowerCase().includes(filterText.toLowerCase())
-  );
+  const { teams } = useTeamStore();
+  const filteredItems = teams.filter((item) => item);
 
-  const columns: TableColumn<TTeamColumn>[] = [
-    "competition_id",
-    "org_id",
-    "sport_id",
-    "org_name",
-    "lst_member_id",
-  ].map((c) => ({
-    "name": t(c),
-    selector: (row: TTeamColumn) => {
-      const col = c as keyof TTeamColumn;
-      switch (col) {
-        case "competition_id":
-          return competitions.find((i) => i.id === row[col])?.name || "";
-        case "org_name":
-          return row[col];
-        case "sport_id":
-          return sports.find((i) => i.id === row[col])?.name || "";
-        case "lst_member_id":
-          return teammembers.filter((m) => row[col].includes(m.id)).join(",") ||
-            "";
-        default:
-          return "";
-      }
-    },
-  }));
-
-  if (columns.length > 0) {
+  if (columns.length > 0 && showAction) {
     columns.push(
       {
         name: "#",
@@ -139,25 +132,6 @@ const ListTeam = () => {
       },
     );
   }
-
-  const handleAddTeam = (team: TTeam) => {
-    console.log({ handleAddTeam: team });
-    const { id, ...rests } = team;
-    teamCreate(rests).then((res) => {
-      const { status, data } = res;
-      if (status === 200) {
-        addTeam(data as TTeam);
-        toast.info(t("success"));
-        return;
-      }
-      return Promise.reject(status);
-    }).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
-  };
-  const { handleToggle: handleToggleAddModal, TeamModal: TeamAddModal } =
-    useTeamModal({ onSubmit: handleAddTeam });
 
   const subHeaderComponentMemo = useMemo(() => {
     return (
@@ -177,6 +151,49 @@ const ListTeam = () => {
   }, [filterText]);
 
   return (
+    <div className="table-responsive">
+      <DataTable
+        columns={columns}
+        data={filteredItems}
+        pagination
+        subHeader
+        subHeaderComponent={subHeaderComponentMemo}
+        highlightOnHover
+        striped
+        persistTableHead
+        selectableRowsHighlight
+        onRowClicked={onRowSelect}
+        onSelectedRowsChange={onSelectedRowsChange}
+        selectableRows={!!onRowSelect || !!onSelectedRowsChange}
+      />
+    </div>
+  );
+};
+
+const PageTeam = () => {
+  const { t } = useTranslation();
+  const { addTeam } = useTeamStore();
+  const handleAddTeam = (team: TTeam) => {
+    console.log({ handleAddTeam: team });
+    const { id, ...rests } = team;
+    teamCreate(rests).then((res) => {
+      const { status, data } = res;
+      console.log({ addTeamResult: data });
+      if (status === 200) {
+        addTeam(data as TTeam);
+        toast.info(t("success"));
+        return;
+      }
+      return Promise.reject(status);
+    }).catch((err) => {
+      toast.error(t("error"));
+      console.log({ err });
+    });
+  };
+  const { handleToggle: handleToggleAddModal, TeamModal: TeamAddModal } =
+    useTeamModal({ onSubmit: handleAddTeam });
+
+  return (
     <div className="page-body">
       <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
       <Container fluid>
@@ -191,18 +208,7 @@ const ListTeam = () => {
                 <TeamAddModal />
               </CardHeader>
               <CardBody>
-                <div className="table-responsive">
-                  <DataTable
-                    columns={columns}
-                    data={filteredItems}
-                    pagination
-                    subHeader
-                    subHeaderComponent={subHeaderComponentMemo}
-                    highlightOnHover
-                    striped
-                    persistTableHead
-                  />
-                </div>
+                <ListTeam showAction />
               </CardBody>
             </Card>
           </Col>
@@ -211,5 +217,4 @@ const ListTeam = () => {
     </div>
   );
 };
-
-export { ListTeam };
+export { ListTeam, PageTeam };

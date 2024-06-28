@@ -25,11 +25,13 @@ const InputSelect = <T,>(
       <Input
         type="select"
         onChange={onChange}
+        defaultValue={"null"}
         {...rest}
       >
+        <option value={"null"} selected hidden></option>
         {inputData.map(({ k: k, v: v }) => (
           <option
-            key={k}
+            key={v}
             value={v}
           >
             {k}

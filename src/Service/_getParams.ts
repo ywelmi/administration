@@ -9,7 +9,7 @@ export interface IGetParams {
 
 const baseGetParams: IGetParams = {
   skip: 0,
-  take: 20,
+  take: 100,
   sort: "",
   // filter: "",
   filter: [],

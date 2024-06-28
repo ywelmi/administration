@@ -1,9 +1,9 @@
 import { Col, Input, Label, Row } from "reactstrap";
 import { TTeammember } from "../../type/teammember";
-import { Field, Form, Formik, useFormik } from "formik";
-import { Btn } from "../../AbstractElements";
+import { useFormik } from "formik";
+import { Btn, Popovers } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import { useState } from "react";
+import { FC, ReactElement, ReactNode, useState } from "react";
 import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
 import { useTeamStore } from "../../store/team";
 import { DGender, DRank } from "../../type/enum";
@@ -17,6 +17,8 @@ interface ITeammemberForm {
 interface ITeammemberModal extends ITeammemberForm {
 }
 
+interface ITeammemberPopover extends ITeammemberForm {
+}
 const TeammemberForm = (
   { teammember: initTeammember, onSubmit }: ITeammemberForm,
 ) => {
@@ -58,7 +60,7 @@ const TeammemberForm = (
                 title="Đội"
                 data={teams}
                 k="org_name"
-                name="teams"
+                name="team_id"
                 v="id"
                 handleChange={(e) => {
                   formik.handleChange(e);
@@ -129,4 +131,34 @@ const useTeammemberModal = ({ onSubmit, ...rest }: ITeammemberModal) => {
   return { TeammemberModal, handleToggle };
 };
 
-export { TeammemberForm, useTeammemberModal };
+const useTeammemberPopover = ({ onSubmit, ...rest }: ITeammemberPopover) => {
+  const [opened, setOpened] = useState(false);
+  const handleToggle = () => {
+    setOpened((s) => !s);
+  };
+
+  const handleSubmit = (teammember: TTeammember) => {
+    onSubmit(teammember);
+    setOpened(false);
+  };
+
+  const TeammemberPopover = (
+    { children, target }: React.PropsWithChildren<{ target: string }>,
+  ) => (
+    <div>
+      {children}
+      <Popovers
+        isOpen={opened}
+        placement="auto"
+        target={target}
+        trigger="click"
+      >
+        <TeammemberForm onSubmit={handleSubmit} {...rest} />
+      </Popovers>
+    </div>
+  );
+
+  return { TeammemberPopover, handleToggle };
+};
+
+export { TeammemberForm, useTeammemberModal, useTeammemberPopover };

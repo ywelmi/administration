@@ -5,6 +5,8 @@ export interface TTeam {
   has_militia: boolean;
   has_army: boolean;
   sport_id: string;
+  sport_name?: string;
   org_name: string;
-  lst_member_id: string[]; // list of teammembers' ids
+  list_member_id?: string[]; // list of teammembers' ids
+  list_member_name?: string;
 }

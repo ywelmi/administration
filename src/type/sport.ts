@@ -8,6 +8,6 @@ export interface TSport {
   // win_type: number;
   // index: number;
   // base_point?: number;
-  // point_unit: 1;
+  point_unit: number;
   // for_type?: number;
 }
