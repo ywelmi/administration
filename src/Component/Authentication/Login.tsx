@@ -21,10 +21,12 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const SimpleLoginHandle = (event: React.FormEvent<HTMLFormElement>) => {
+  const simpleLoginHandle = (event: React.FormEvent<HTMLFormElement>) => {
+    console.log({ event });
     event.preventDefault();
+    console.log({ username, password });
     signIn({ username, password }).then(() => {
-      navigate("/dashboard/");
+      setTimeout(() => navigate("/dashboard/"), 2000);
     }).catch((error) => {
       console.log({ loginError: error });
       toast.error("Please Enter valid email or password...!");
@@ -39,7 +41,7 @@ const Login = () => {
               <div className="login-main">
                 <Form
                   className="theme-form"
-                  onSubmit={(e) => SimpleLoginHandle(e)}
+                  onSubmit={(e) => simpleLoginHandle(e)}
                 >
                   <H4>{SignInAccount}</H4>
                   <P>{"Enter your email & password to login"}</P>
@@ -70,20 +72,25 @@ const Login = () => {
                     </div>
                   </FormGroup>
                   <FormGroup className="mb-0 form-sub-title position-relative">
-                    <div className="checkbox p-0">
-                      <Input id="checkbox1" type="checkbox" />
-                      <Label className="text-muted" htmlFor="checkbox1">
-                        {RememberPassword}
-                      </Label>
-                    </div>
-                    <Link
-                      className="forgot-link"
-                      to={`${import.meta.env.VITE_PUBLIC_URL}/authentication/forgetpassword`}
-                    >
-                      {ForgotPassword}
-                    </Link>
+                    {/* <div className="checkbox p-0"> */}
+                    {/*   <Input id="checkbox1" type="checkbox" /> */}
+                    {/*   <Label className="text-muted" htmlFor="checkbox1"> */}
+                    {/*     {RememberPassword} */}
+                    {/*   </Label> */}
+                    {/* </div> */}
+                    {/* <Link */}
+                    {/*   className="forgot-link" */}
+                    {/*   to={`${import.meta.env.VITE_PUBLIC_URL}/authentication/forgetpassword`} */}
+                    {/* > */}
+                    {/*   {ForgotPassword} */}
+                    {/* </Link> */}
                     <div className="text-end mt-3">
-                      <Btn color="primary" block className="w-100">
+                      <Btn
+                        color="primary"
+                        block
+                        className="w-100"
+                        type="submit"
+                      >
                         {SignIn}
                       </Btn>
                     </div>

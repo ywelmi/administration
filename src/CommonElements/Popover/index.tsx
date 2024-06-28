@@ -1,7 +1,7 @@
-import type { Placement } from '@popperjs/core';
+import type { Placement } from "@popperjs/core";
 import { Popover, PopoverBody, PopoverHeader } from "reactstrap";
 
-interface PropsTypes{
+interface PropsTypes {
   title?: string;
   children: React.ReactNode;
   placement: Placement;
@@ -12,9 +12,14 @@ interface PropsTypes{
 }
 
 const Popovers = (props: PropsTypes) => {
-  const { title , children , placement , isOpen , target , toggle   } = props;
+  const { title, children, placement, isOpen, target, toggle } = props;
   return (
-    <Popover placement={placement} isOpen={isOpen} target={target} toggle={toggle}>
+    <Popover
+      placement={placement}
+      isOpen={isOpen}
+      target={target}
+      toggle={toggle}
+    >
       {title ? <PopoverHeader>{title}</PopoverHeader> : ""}
       <PopoverBody>{children}</PopoverBody>
     </Popover>
@@ -22,3 +27,4 @@ const Popovers = (props: PropsTypes) => {
 };
 
 export default Popovers;
+

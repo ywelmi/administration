@@ -1,8 +1,8 @@
 import Default from "../Pages/Dashboard/Default/Default";
 import { ListOrg } from "../Pages/Org/ListOrg";
 import { ListSport } from "../Pages/Sport/ListSport";
-import { ListTeam, PageTeam } from "../Pages/Team/ListTeam";
-import { ListTeammember } from "../Pages/Teammember/ListTeammember";
+import { PageTeam } from "../Pages/Team/ListTeam";
+import { PageTeammember } from "../Pages/Teammember/ListTeammember";
 import { ListUser } from "../Pages/User/ListUser";
 // import ApexChart from "../Pages/Charts/Apexchart/ApexChart";
 // import ChartJs from "../Pages/Charts/ChartJs/ChartJs";
@@ -148,7 +148,7 @@ const Routes = [
   },
   {
     path: "/teammember/list",
-    Component: <ListTeammember />,
+    Component: <PageTeammember />,
   },
   {
     path: "/team/list",

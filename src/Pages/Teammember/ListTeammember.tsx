@@ -29,9 +29,46 @@ import {
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { DGender, DRank } from "../../type/enum";
+import { NAME_CONVERSION } from "../../name-conversion";
 
 type TTeammemberColumn = TTeammember;
 
+interface IListTeammember {
+  showAction?: boolean;
+  selectableRows?: boolean;
+  onRowSelect?: (
+    row: TTeammember,
+    e: React.MouseEvent<Element, MouseEvent>,
+  ) => void;
+  onSelectedRowsChange?: (
+    v: {
+      allSelected: boolean;
+      selectedCount: number;
+      selectedRows: TTeammember[];
+    },
+  ) => void;
+  columns?: TableColumn<TTeammemberColumn>[];
+}
+
+const tableColumns = ([
+  "name",
+  "gender",
+  "rank",
+  "team_name",
+] as (keyof TTeammemberColumn)[]).map((c) => ({
+  "name": NAME_CONVERSION[c],
+  selector: (row: TTeammemberColumn) => {
+    if (c == "gender") {
+      const i = row[c as keyof TTeammemberColumn];
+      return DGender[parseInt(i as string)];
+    }
+    if (c == "rank") {
+      const i = row[c as keyof TTeammemberColumn];
+      return DRank[parseInt(i as string)];
+    }
+    return row[c as keyof TTeammemberColumn];
+  },
+}));
 const TeammemberTableAction = (
   { teammember }: { teammember: TTeammemberColumn },
 ) => {
@@ -97,32 +134,22 @@ const TeammemberTableAction = (
   );
 };
 
-const ListTeammember = () => {
+const ListTeammember = (
+  {
+    showAction,
+    onRowSelect,
+    onSelectedRowsChange,
+    columns = [...tableColumns],
+  }: IListTeammember,
+) => {
   const [filterText, setFilterText] = useState("");
-  const { t } = useTranslation();
-  const { teammembers, addTeammember } = useTeammemberStore();
+  const { teammembers } = useTeammemberStore();
   const filteredItems = teammembers.filter((item) =>
     item.name &&
     item.name.toLowerCase().includes(filterText.toLowerCase())
   );
 
-  const columns: TableColumn<TTeammemberColumn>[] = [
-    ...["name", "gender", "rank", "team_name"].map((c) => ({
-      "name": t(c),
-      selector: (row: TTeammemberColumn) => {
-        if (c == "gender") {
-          const i = row[c as keyof TTeammemberColumn];
-          return DGender[parseInt(i as string)];
-        }
-        if (c == "rank") {
-          const i = row[c as keyof TTeammemberColumn];
-          return DRank[parseInt(i as string)];
-        }
-        return row[c as keyof TTeammemberColumn];
-      },
-    })),
-  ];
-  if (columns.length > 0) {
+  if (columns.length > 0 && showAction) {
     columns.push(
       {
         name: "#",
@@ -134,6 +161,46 @@ const ListTeammember = () => {
     );
   }
 
+  const subHeaderComponentMemo = useMemo(() => {
+    return (
+      <div
+        id="basic-1_filter"
+        className="dataTables_filter d-flex align-items-center"
+      >
+        <Label className="me-2">{SearchTableButton}:</Label>
+        <Input
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setFilterText(e.target.value)}
+          type="search"
+          value={filterText}
+        />
+      </div>
+    );
+  }, [filterText]);
+
+  return (
+    <div className="table-responsive">
+      <DataTable
+        columns={columns}
+        data={filteredItems}
+        pagination
+        subHeader
+        subHeaderComponent={subHeaderComponentMemo}
+        highlightOnHover
+        striped
+        persistTableHead
+        selectableRowsHighlight
+        onRowClicked={onRowSelect}
+        onSelectedRowsChange={onSelectedRowsChange}
+        selectableRows={!!onRowSelect || !!onSelectedRowsChange}
+      />
+    </div>
+  );
+};
+
+const PageTeammember = () => {
+  const { t } = useTranslation();
+  const { addTeammember } = useTeammemberStore();
   const handleAddTeammember = (teammember: TTeammember) => {
     console.log({ handleAddTeammember: teammember });
     const { id, ...rests } = teammember;
@@ -154,24 +221,6 @@ const ListTeammember = () => {
     handleToggle: handleToggleAddModal,
     TeammemberModal: TeammemberAddModal,
   } = useTeammemberModal({ onSubmit: handleAddTeammember });
-
-  const subHeaderComponentMemo = useMemo(() => {
-    return (
-      <div
-        id="basic-1_filter"
-        className="dataTables_filter d-flex align-items-center"
-      >
-        <Label className="me-2">{SearchTableButton}:</Label>
-        <Input
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)}
-          type="search"
-          value={filterText}
-        />
-      </div>
-    );
-  }, [filterText]);
-
   return (
     <div className="page-body">
       <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
@@ -187,18 +236,6 @@ const ListTeammember = () => {
                 <TeammemberAddModal />
               </CardHeader>
               <CardBody>
-                <div className="table-responsive">
-                  <DataTable
-                    columns={columns}
-                    data={filteredItems}
-                    pagination
-                    subHeader
-                    subHeaderComponent={subHeaderComponentMemo}
-                    highlightOnHover
-                    striped
-                    persistTableHead
-                  />
-                </div>
               </CardBody>
             </Card>
           </Col>
@@ -208,4 +245,4 @@ const ListTeammember = () => {
   );
 };
 
-export { ListTeammember };
+export { ListTeammember, PageTeammember };

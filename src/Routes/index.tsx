@@ -1,7 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import LayoutRoutes from "./LayoutRoutes";
-// import { authRoutes } from './AuthRoutes';
 import Login from "../Component/Authentication/Login";
 import { getUser } from "../shared/localStorage/user";
 

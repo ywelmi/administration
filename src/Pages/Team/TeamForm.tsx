@@ -1,7 +1,7 @@
 import { Col, Input, Label, Row } from "reactstrap";
 import { TTeam } from "../../type/team";
 import { useFormik } from "formik";
-import { Btn, Popovers } from "../../AbstractElements";
+import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,10 +14,7 @@ import { useTeammemberPopover } from "../Teammember/TeammemberForm";
 import { TTeammember } from "../../type/teammember";
 import { teammemberCreate } from "../../Service/teammember";
 import { toast } from "react-toastify";
-import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
-import DataTable from "react-data-table-component";
-import { ListTeam } from "./ListTeam";
+import { ListTeammember } from "../Teammember/ListTeammember";
 
 interface ITeamForm {
   team?: TTeam;
@@ -194,7 +191,7 @@ const TeamForm = ({ team: initTeam, onSubmit }: ITeamForm) => {
         <Col md="12" className="form-check checkbox-primary">
           <Label for="list_member_id" check>{t("teammember")}</Label>
 
-          <ListTeam
+          <ListTeammember
             onSelectedRowsChange={({ selectedRows }) => {
               formik.setFieldValue(
                 "list_member_id",

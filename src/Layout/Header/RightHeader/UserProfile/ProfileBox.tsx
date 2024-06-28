@@ -2,12 +2,13 @@ import { Btn, FeatherIcons, LI, UL } from "../../../../AbstractElements";
 import { Link, useNavigate } from "react-router-dom";
 import { profilesMessage } from "../../../../Data/Layout/Header";
 import { LogOut } from "../../../../utils/Constant";
+import { clearUser } from "../../../../shared/localStorage/user";
 
 const ProfileBox = () => {
   const navigate = useNavigate();
   const handleClick = () => {
-    localStorage.removeItem("login");
-    navigate(`${import.meta.env.VITE_PUBLIC_URL}/login`);
+    clearUser();
+    navigate("/sign-in");
   };
   return (
     <UL className="profile-dropdown onhover-show-div">

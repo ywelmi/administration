@@ -18,6 +18,7 @@
   "name":"Tên",
   "gender": "Giới tính",
   "rank": "Cấp bậc",
-  "team_name": "Đội"
+  "team_name": "Đội",
+  "teammember": "Thành viên"
 
 }

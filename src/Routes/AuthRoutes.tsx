@@ -1,6 +1,3 @@
-import ComingSoonSimple from "../Pages/OtherPages/ComingSoon/ComingSoonSimple/ComingSoonSimple";
-import ComingSoonWithBgImage from "../Pages/OtherPages/ComingSoon/ComingSoonWithBgImage/ComingSoonWithBgImage";
-import ComingWithBgVideo from "../Pages/OtherPages/ComingSoon/ComingWithBgVideo/ComingWithBgVideo";
 import ForgetPassword from "../Pages/OtherPages/Authentication/ForgetPassword/ForgetPassword";
 import LoginWithBackGroundImage from "../Pages/OtherPages/Authentication/LoginWithBackGroundImage/LoginWithBackGroundImage";
 import LoginWithImageTwo from "../Pages/OtherPages/Authentication/LoginWithImageTwo/LoginWithImageTwo";
@@ -106,19 +103,5 @@ export const authRoutes = [
   {
     path: `${import.meta.env.VITE_PUBLIC_URL}/authentication/maintenance`,
     Component: <Maintenance />,
-  },
-
-  //  ComingSoon
-  {
-    path: `${import.meta.env.VITE_PUBLIC_URL}/comingsoon/comingsoonsimple`,
-    Component: <ComingSoonSimple />,
-  },
-  {
-    path: `${import.meta.env.VITE_PUBLIC_URL}/comingsoon/comingbgvideo`,
-    Component: <ComingWithBgVideo />,
-  },
-  {
-    path: `${import.meta.env.VITE_PUBLIC_URL}/comingsoon/comingbgimg`,
-    Component: <ComingSoonWithBgImage />,
   },
 ];
