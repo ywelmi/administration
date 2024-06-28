@@ -51,6 +51,7 @@ const TeammemberForm = (
             name="name"
             type="text"
             placeholder={teammember.name}
+            onChange={formik.handleChange}
           />
         </Col>
         {(teams?.length)

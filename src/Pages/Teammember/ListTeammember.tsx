@@ -207,6 +207,7 @@ const PageTeammember = () => {
     teammemberCreate(rests).then((res) => {
       const { status, data } = res;
       if (status === 200) {
+        console.log({ addmember: data });
         addTeammember(data as TTeammember);
         toast.info(t("success"));
         return;
@@ -236,6 +237,7 @@ const PageTeammember = () => {
                 <TeammemberAddModal />
               </CardHeader>
               <CardBody>
+                <ListTeammember />
               </CardBody>
             </Card>
           </Col>
