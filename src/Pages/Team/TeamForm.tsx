@@ -3,7 +3,7 @@ import { TTeam } from "../../type/team";
 import { useFormik } from "formik";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useCompetitionStore } from "../../store/competition";
 import { useOrgStore } from "../../store/org";
@@ -33,86 +33,51 @@ const TeamForm = ({ team: initTeam, onSubmit }: ITeamForm) => {
     has_army: false,
     sport_id: "",
     org_name: "",
-    list_member_id: [], // list of teammembers' ids
+    list_team_member: [], // list of teammembers' ids
   };
   const { competitions } = useCompetitionStore();
   const { orgs } = useOrgStore();
   const { sports } = useSportStore();
-  const { teammembers, addTeammember } = useTeammemberStore();
+  const { teammembers } = useTeammemberStore();
 
   const { t } = useTranslation();
   const formik = useFormik<TTeam>({
     initialValues: { ...team },
     onSubmit: (value) => {
+      const { list_team_member } = value;
       console.log({ submitAddTeamValue: value });
-
-      let submitValue = { ...value } as TTeam;
-      // if (hasOwnProperty(value, "id")) {
-      //   submitValue["id"] = value.id as string;
-      // }
-
+      let submitValue = {
+        ...value,
+        list_team_member: list_team_member?.map(({ gender, name, rank }) => ({
+          gender,
+          name,
+          rank,
+        })),
+      } as TTeam;
       if (submitValue) onSubmit(submitValue);
     },
   });
 
-  const [newMember, setNewmember] = useState<{ label: string; value: string }>(
-    { label: "", value: "" },
-  );
+  const [newListMember, setNewListMember] = useState<TTeammember[]>([]);
 
-  const handleAddTeammember = (teammember: TTeammember) => {
-    const { id, ...rests } = teammember;
+  const handleAddTeammember = useCallback((newTeammember: TTeammember) => {
+    setNewListMember((prev) => [...prev, newTeammember]);
+    const newTeammembers = formik.values.list_team_member || [];
+    formik.setFieldValue("list_team_member", [
+      ...newTeammembers,
+      newTeammember,
+    ]);
+  }, []);
 
-    // test when no api works
-    // const _id = Date.now().toString();
-    // if (formik.values.lst_member_id) {
-    //   formik.setFieldValue("lst_member_id", [
-    //     ...formik.values.lst_member_id,
-    //     _id,
-    //   ]);
-    // }
-    // setNewmember({ value: _id, label: teammember.name });
-
-    teammemberCreate(rests).then((res) => {
-      const { status, data } = res;
-      if (status === 200) {
-        const resData = data as TTeammember;
-        addTeammember(resData);
-        if (formik.values.list_member_id) {
-          formik.setFieldValue("lst_member_id", [
-            ...formik.values.list_member_id,
-            resData.id,
-          ]);
-        }
-        setNewmember({ value: resData.id, label: resData.name });
-        toast.info(t("success"));
-        return;
-      }
-      return Promise.reject(status);
-    }).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
-  };
+  const displayedListTeammember: TTeammember[] = useMemo(() => [
+    ...newListMember,
+    ...teammembers,
+  ], [teammembers, newListMember]);
 
   const { TeammemberPopover, handleToggle } = useTeammemberPopover({
     onSubmit: handleAddTeammember,
+    omitColumns: ["teams"],
   });
-
-  // const selectableMembers = useMemo(() => {
-  //   const members = teammembers.filter(({ id }) =>
-  //     // !formik.values.lst_member_id?.includes(id)
-  //     id
-  //   ).map(({ id, name }) => ({
-  //     label: name,
-  //     value: id,
-  //   }));
-  //
-  //   members.push({ ...newMember });
-  //   return members;
-  // }, [newMember]);
-
-  // console.log({ selectableMembers });
-  // console.log({ formik: formik.values.list_member_id });
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -189,14 +154,28 @@ const TeamForm = ({ team: initTeam, onSubmit }: ITeamForm) => {
           )
           : null}
         <Col md="12" className="form-check checkbox-primary">
-          <Label for="list_member_id" check>{t("teammember")}</Label>
+          <Label for="list_team_member" check>{t("teammember")}</Label>
 
           <ListTeammember
+            data={displayedListTeammember}
             onSelectedRowsChange={({ selectedRows }) => {
+              console.log({ selectedRows });
+              console.log({ formikMembers: formik.values.list_team_member });
+              if (
+                selectedRows.length === formik.values.list_team_member?.length
+              ) {
+                return;
+              }
               formik.setFieldValue(
-                "list_member_id",
-                selectedRows.map(({ id }) => id),
+                "list_team_member",
+                selectedRows.map((row) => row),
               );
+            }}
+            selectableRowSelected={(r) => {
+              return !r?.id ||
+                !!formik.values.list_team_member?.map(({ id }) => id).includes(
+                  r.id,
+                );
             }}
           />
         </Col>
@@ -213,7 +192,7 @@ const TeamForm = ({ team: initTeam, onSubmit }: ITeamForm) => {
                   id="add_user"
                   onClick={handleToggle}
                 >
-                  Thêm vận động viên
+                  Bật/Tắt thêm vận động viên
                 </Btn>
               </TeammemberPopover>
             </div>

@@ -53,3 +53,10 @@ export const saveUserRefreshToken = (refreshToken: string) => {
   user.refreshToken = refreshToken;
   saveUser(user);
 };
+
+export const getUserRoleId = () => {
+  const user = getUser();
+  if (!user) return;
+  const { role } = user;
+  return role;
+};

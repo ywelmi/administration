@@ -36,6 +36,7 @@ type TTeammemberColumn = TTeammember;
 interface IListTeammember {
   showAction?: boolean;
   selectableRows?: boolean;
+  data?: TTeammember[];
   onRowSelect?: (
     row: TTeammember,
     e: React.MouseEvent<Element, MouseEvent>,
@@ -48,6 +49,7 @@ interface IListTeammember {
     },
   ) => void;
   columns?: TableColumn<TTeammemberColumn>[];
+  selectableRowSelected?: (row: TTeammember) => boolean;
 }
 
 const tableColumns = ([
@@ -136,15 +138,16 @@ const TeammemberTableAction = (
 
 const ListTeammember = (
   {
+    data = [],
     showAction,
     onRowSelect,
     onSelectedRowsChange,
     columns = [...tableColumns],
+    selectableRowSelected,
   }: IListTeammember,
 ) => {
   const [filterText, setFilterText] = useState("");
-  const { teammembers } = useTeammemberStore();
-  const filteredItems = teammembers.filter((item) =>
+  const filteredItems = data.filter((item) =>
     item.name &&
     item.name.toLowerCase().includes(filterText.toLowerCase())
   );
@@ -192,6 +195,7 @@ const ListTeammember = (
         selectableRowsHighlight
         onRowClicked={onRowSelect}
         onSelectedRowsChange={onSelectedRowsChange}
+        selectableRowSelected={selectableRowSelected}
         selectableRows={!!onRowSelect || !!onSelectedRowsChange}
       />
     </div>
@@ -201,6 +205,7 @@ const ListTeammember = (
 const PageTeammember = () => {
   const { t } = useTranslation();
   const { addTeammember } = useTeammemberStore();
+  const { teammembers } = useTeammemberStore();
   const handleAddTeammember = (teammember: TTeammember) => {
     console.log({ handleAddTeammember: teammember });
     const { id, ...rests } = teammember;
@@ -237,7 +242,7 @@ const PageTeammember = () => {
                 <TeammemberAddModal />
               </CardHeader>
               <CardBody>
-                <ListTeammember />
+                <ListTeammember data={teammembers} />
               </CardBody>
             </Card>
           </Col>

@@ -1,3 +1,5 @@
+import { TTeammember } from "./teammember";
+
 export interface TTeam {
   id: string;
   competition_id: string;
@@ -9,4 +11,5 @@ export interface TTeam {
   org_name: string;
   list_member_id?: string[]; // list of teammembers' ids
   list_member_name?: string;
+  list_team_member?: Partial<TTeammember>[];
 }

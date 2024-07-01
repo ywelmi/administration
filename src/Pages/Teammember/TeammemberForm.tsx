@@ -3,13 +3,14 @@ import { TTeammember } from "../../type/teammember";
 import { useFormik } from "formik";
 import { Btn, Popovers } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import { FC, ReactElement, ReactNode, useState } from "react";
+import { useState } from "react";
 import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
 import { useTeamStore } from "../../store/team";
 import { DGender, DRank } from "../../type/enum";
 import { InputSelect } from "../../Component/InputSelect";
 
 interface ITeammemberForm {
+  omitColumns?: ("teams" | "gender")[];
   teammember?: TTeammember;
   onSubmit: (teammember: TTeammember) => void;
 }
@@ -20,7 +21,7 @@ interface ITeammemberModal extends ITeammemberForm {
 interface ITeammemberPopover extends ITeammemberForm {
 }
 const TeammemberForm = (
-  { teammember: initTeammember, onSubmit }: ITeammemberForm,
+  { teammember: initTeammember, onSubmit, omitColumns }: ITeammemberForm,
 ) => {
   const teammember: Partial<TTeammember> = initTeammember
     ? initTeammember
@@ -54,7 +55,7 @@ const TeammemberForm = (
             onChange={formik.handleChange}
           />
         </Col>
-        {(teams?.length)
+        {(teams?.length && !omitColumns?.includes("teams"))
           ? (
             <Col md="12">
               <InputSelect
