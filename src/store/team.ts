@@ -1,17 +1,25 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { TTeam } from "../type/team";
+import { baseGetParams, IGetFilters } from "../Service/_getParams";
 
 export type TeamState = {
+  filters?: Partial<IGetFilters>;
   teams: TTeam[];
+  total?: number;
+  loading?: boolean;
   addTeams: (data: TTeam[]) => void;
   addTeam: (data: TTeam) => void;
   updateTeam: (data: TTeam) => void;
   deleteTeam: (id: string) => void;
+  updateGetFilter: (filter: Partial<IGetFilters>) => void;
+  updateTotal: (total: number) => void;
+  updateLoading: (v: boolean) => void;
 };
 
 export const useTeamStore = create<TeamState>()(
   immer((set) => ({
+    filters: baseGetParams,
     teams: [],
     addTeams: (data: TTeam[]) =>
       set((state: TeamState) => {
@@ -37,5 +45,21 @@ export const useTeamStore = create<TeamState>()(
           state.teams.splice(idx, 1);
         }
       }),
+    updateGetFilter: (filter: Partial<IGetFilters>) => {
+      set((state: TeamState) => {
+        state.filters = { ...state.filters, ...filter };
+      });
+    },
+    updateTotal: (total: number) => {
+      set((state: TeamState) => {
+        state.total = total;
+      });
+    },
+
+    updateLoading(v: boolean) {
+      set((state: TeamState) => {
+        state.loading = v;
+      });
+    },
   })),
 );

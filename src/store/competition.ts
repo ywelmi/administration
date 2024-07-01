@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { TCompetition } from "../type/competition";
+import { IGetFilters } from "../Service/_getParams";
 
-export type CompetitionState = {
+export type CompetitionState = Partial<IGetFilters> & {
   competitions: TCompetition[];
   addCompetitions: (data: TCompetition[]) => void;
   addCompetition: (data: TCompetition) => void;

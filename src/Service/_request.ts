@@ -46,7 +46,7 @@ instance.interceptors.response.use(
   },
   function (error) {
     const { response } = error;
-    if (response && response.status === 440) {
+    if (response && response.status === 401) {
       // if (isSessionExpired()) {
       //   messageError("Your session is expired. Please login again !");
       //   clearAllGoalieToken();
@@ -54,7 +54,7 @@ instance.interceptors.response.use(
       //   return;
       // }
       clearUser();
-      window.location.href = "/sign-in";
+      setTimeout(() => window.location.href = "/sign-in", 2000);
       return;
 
       // window.location.href = '/sign-out';

@@ -120,8 +120,22 @@ const ListTeam = (
   }: IListTeam,
 ) => {
   const [filterText, setFilterText] = useState("");
-  const { teams } = useTeamStore();
+  const { teams, updateGetFilter, total, loading, filters } = useTeamStore();
   const filteredItems = teams.filter((item) => item);
+
+  const handlePerRowsChange = (newPerPage: number, page: number) => {
+    const take = newPerPage;
+    const skip = page * take;
+    updateGetFilter({ take, skip });
+  };
+
+  const handlePageChange = (page: number) => {
+    if (!filters) return;
+    const { take } = filters;
+    if (take) {
+      updateGetFilter({ skip: page * take });
+    }
+  };
 
   if (columns.length > 0 && showAction) {
     columns.push(
@@ -165,6 +179,11 @@ const ListTeam = (
         onRowClicked={onRowSelect}
         onSelectedRowsChange={onSelectedRowsChange}
         selectableRows={!!onRowSelect || !!onSelectedRowsChange}
+        progressPending={loading}
+        paginationServer
+        paginationTotalRows={total}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
       />
     </div>
   );

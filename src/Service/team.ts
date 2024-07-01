@@ -1,12 +1,12 @@
 import { TTeam } from "../type/team";
-import { baseGetParams } from "./_getParams";
+import { baseGetParams, IListResponse } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
 // TODO: how to filter
 export const teamsGet = async (
   params = baseGetParams,
 ) => {
-  return httpPost("/teams/padding_filter", params);
+  return httpPost<IListResponse<TTeam>>("/teams/padding_filter", params);
 };
 
 export const teamGet = (id: string) => {
