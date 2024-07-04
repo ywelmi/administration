@@ -14,7 +14,7 @@ import {
   DataTables,
   SearchTableButton,
 } from "../../utils/Constant";
-import { LI, UL } from "../../AbstractElements";
+import { Btn, LI, UL } from "../../AbstractElements";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { TSport } from "../../type/sport";
@@ -24,6 +24,8 @@ import { useSportModal } from "./SportForm";
 import { sportCreate, sportDelete, sportUpdate } from "../../Service/sport";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
+import { NAME_CONVERSION } from "../../name-conversion";
+import { useNavigate } from "react-router-dom";
 
 type TSportColumn = TSport;
 
@@ -90,51 +92,61 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
   );
 };
 
-const ListSport = () => {
+interface IListSport {
+  showAction?: boolean;
+  selectableRows?: boolean;
+  onRowSelect?: (row: TSport, e: React.MouseEvent<Element, MouseEvent>) => void;
+  onSelectedRowsChange?: (
+    v: { allSelected: boolean; selectedCount: number; selectedRows: TSport[] },
+  ) => void;
+  columns?: TableColumn<TSportColumn>[];
+  data?: TSportColumn[];
+  selectableRowSelected?: (row: TSportColumn) => boolean;
+}
+
+const tableColumns = (["name", "competition_name"] as (keyof TSportColumn)[])
+  .map((c) => ({
+    "name": NAME_CONVERSION[c],
+    selector: (row: TSportColumn) => {
+      return row[c as keyof TSportColumn] as (string | number);
+    },
+  }));
+
+const ListSport = (
+  {
+    data = [],
+    showAction,
+    onRowSelect,
+    onSelectedRowsChange,
+    columns = [...tableColumns],
+    selectableRowSelected,
+  }: IListSport,
+) => {
   const [filterText, setFilterText] = useState("");
-  const { t } = useTranslation();
-  const { sports, addSport } = useSportStore();
-  const filteredItems = sports.filter((item) =>
-    item.name &&
-    item.name.toLowerCase().includes(filterText.toLowerCase())
-  );
+  const { updateGetFilter, total, loading, filters } = useSportStore();
+  const filteredItems = data.filter((item) => item);
 
-  const columns: TableColumn<TSportColumn>[] = [
-    ...["name", "competition_name"].map((c) => ({
-      "name": t(c),
-      selector: (row: TSportColumn) => {
-        return row[c as keyof TSportColumn];
-      },
-    })),
-  ];
-  if (columns.length > 0) {
-    columns.push(
-      {
-        name: "#",
-        cell: (row: TSportColumn) => <SportTableAction sport={row} />,
-        sortable: true,
-      },
-    );
-  }
-
-  const handleAddSport = (sport: TSport) => {
-    console.log({ handleAddSport: sport });
-    const { id, ...rests } = sport;
-    sportCreate(rests).then((res) => {
-      const { status, data } = res;
-      if (status === 200) {
-        addSport(data as TSport);
-        toast.info(t("success"));
-        return;
-      }
-      return Promise.reject(status);
-    }).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
+  const handlePerRowsChange = (newPerPage: number, page: number) => {
+    const take = newPerPage;
+    const skip = Math.max(page - 1, 0) * take;
+    updateGetFilter({ take, skip });
   };
-  const { handleToggle: handleToggleAddModal, SportModal: SportAddModal } =
-    useSportModal({ onSubmit: handleAddSport });
+
+  const handlePageChange = (page: number) => {
+    if (!filters) return;
+    const { take } = filters;
+    if (take) {
+      updateGetFilter({ skip: Math.max(page - 1, 0) * take });
+    }
+  };
+
+  if (columns.length > 0 && showAction) {
+    columns = [...columns, {
+      name: "#",
+      cell: (row: TSportColumn) => <SportTableAction sport={row} />,
+      sortable: true,
+    }];
+  }
 
   const subHeaderComponentMemo = useMemo(() => {
     return (
@@ -154,6 +166,56 @@ const ListSport = () => {
   }, [filterText]);
 
   return (
+    <div className="table-responsive">
+      <DataTable
+        columns={columns}
+        data={filteredItems}
+        pagination
+        subHeader
+        subHeaderComponent={subHeaderComponentMemo}
+        highlightOnHover
+        striped
+        persistTableHead
+        selectableRowsHighlight
+        onRowClicked={onRowSelect}
+        onSelectedRowsChange={onSelectedRowsChange}
+        selectableRows={!!onRowSelect || !!onSelectedRowsChange}
+        progressPending={loading}
+        paginationServer
+        paginationTotalRows={total}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+        selectableRowSelected={selectableRowSelected}
+      />
+    </div>
+  );
+};
+
+const PageSport = () => {
+  const { t } = useTranslation();
+  const { addSport, sports } = useSportStore();
+  const navivate = useNavigate();
+  const handleAddSport = (sport: TSport) => {
+    console.log({ handleAddSport: sport });
+    const { id, ...rests } = sport;
+    sportCreate(rests).then((res) => {
+      const { status, data } = res;
+      console.log({ addSportResult: data });
+      if (status === 200) {
+        addSport(data as TSport);
+        toast.info(t("success"));
+        return;
+      }
+      return Promise.reject(status);
+    }).catch((err) => {
+      toast.error(t("error"));
+      console.log({ err });
+    });
+  };
+  const { handleToggle: handleToggleAddModal, SportModal: SportAddModal } =
+    useSportModal({ onSubmit: handleAddSport });
+
+  return (
     <div className="page-body">
       <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
       <Container fluid>
@@ -168,18 +230,24 @@ const ListSport = () => {
                 <SportAddModal />
               </CardHeader>
               <CardBody>
-                <div className="table-responsive">
-                  <DataTable
-                    columns={columns}
-                    data={filteredItems}
-                    pagination
-                    subHeader
-                    subHeaderComponent={subHeaderComponentMemo}
-                    highlightOnHover
-                    striped
-                    persistTableHead
-                  />
-                </div>
+                <ListSport
+                  data={sports}
+                  showAction
+                  columns={[...tableColumns, {
+                    cell: (r) => (
+                      <Btn
+                        color="primary"
+                        type="button"
+                        onClick={() =>
+                          r.id
+                            ? navivate(`/tablequalifyings/list/${r.id}`)
+                            : undefined}
+                      >
+                        Tạo bảng đấu
+                      </Btn>
+                    ),
+                  }]}
+                />
               </CardBody>
             </Card>
           </Col>
@@ -189,4 +257,4 @@ const ListSport = () => {
   );
 };
 
-export { ListSport };
+export { ListSport, PageSport };

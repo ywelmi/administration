@@ -13,6 +13,7 @@ interface ITeammemberForm {
   omitColumns?: ("teams" | "gender")[];
   teammember?: TTeammember;
   onSubmit: (teammember: TTeammember) => void;
+  onCancel?: () => void;
 }
 
 interface ITeammemberModal extends ITeammemberForm {
@@ -21,7 +22,8 @@ interface ITeammemberModal extends ITeammemberForm {
 interface ITeammemberPopover extends ITeammemberForm {
 }
 const TeammemberForm = (
-  { teammember: initTeammember, onSubmit, omitColumns }: ITeammemberForm,
+  { teammember: initTeammember, onSubmit, omitColumns, onCancel }:
+    ITeammemberForm,
 ) => {
   const teammember: Partial<TTeammember> = initTeammember
     ? initTeammember
@@ -99,10 +101,13 @@ const TeammemberForm = (
             value={formik.values.gender}
           />
         </Col>
-        <Col xs="12">
+        <Col xs="12" className="gap-2" style={{ display: "flex" }}>
           <Btn color="primary" type="submit">
             Xác nhận
           </Btn>
+          {onCancel
+            ? <Btn color="primary" type="button" onClick={onCancel}>Hủy</Btn>
+            : null}
         </Col>
       </Row>
     </form>
@@ -126,7 +131,11 @@ const useTeammemberModal = ({ onSubmit, ...rest }: ITeammemberModal) => {
       isOpen={opened}
       toggle={handleToggle}
     >
-      <TeammemberForm onSubmit={handleSubmit} {...rest} />
+      <TeammemberForm
+        onSubmit={handleSubmit}
+        {...rest}
+        onCancel={() => setOpened(false)}
+      />
     </CommonModal>
   );
 
@@ -155,7 +164,11 @@ const useTeammemberPopover = ({ onSubmit, ...rest }: ITeammemberPopover) => {
         target={target}
         trigger="click"
       >
-        <TeammemberForm onSubmit={handleSubmit} {...rest} />
+        <TeammemberForm
+          onSubmit={handleSubmit}
+          {...rest}
+          onCancel={() => setOpened(false)}
+        />
       </Popovers>
     </div>
   );

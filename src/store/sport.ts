@@ -1,17 +1,26 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { TSport } from "../type/sport";
+import { baseGetParams, IGetFilters } from "../Service/_getParams";
+import _ from "lodash";
 
 export type SportState = {
+  filters?: Partial<IGetFilters>;
   sports: TSport[];
+  total?: number;
+  loading?: boolean;
   addSports: (data: TSport[]) => void;
   addSport: (data: TSport) => void;
   updateSport: (data: TSport) => void;
   deleteSport: (id: string) => void;
+  updateGetFilter: (filter: Partial<IGetFilters>) => void;
+  updateTotal: (total: number) => void;
+  updateLoading: (v: boolean) => void;
 };
 
 export const useSportStore = create<SportState>()(
   immer((set) => ({
+    filters: baseGetParams,
     sports: [],
     addSports: (data: TSport[]) =>
       set((state: SportState) => {
@@ -37,5 +46,23 @@ export const useSportStore = create<SportState>()(
           state.sports.splice(idx, 1);
         }
       }),
+    updateGetFilter: (filter: Partial<IGetFilters>) => {
+      set((state: SportState) => {
+        const newFilter = { ...state.filters, ...filter };
+        if (_.isEqual(state.filters, newFilter)) return;
+        state.filters = newFilter;
+      });
+    },
+    updateTotal: (total: number) => {
+      set((state: SportState) => {
+        state.total = total;
+      });
+    },
+
+    updateLoading(v: boolean) {
+      set((state: SportState) => {
+        state.loading = v;
+      });
+    },
   })),
 );

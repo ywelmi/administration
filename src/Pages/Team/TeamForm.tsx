@@ -12,25 +12,24 @@ import { InputSelect } from "../../Component/InputSelect";
 import { useTeammemberStore } from "../../store/teammember";
 import { useTeammemberPopover } from "../Teammember/TeammemberForm";
 import { TTeammember } from "../../type/teammember";
-import { teammemberCreate } from "../../Service/teammember";
-import { toast } from "react-toastify";
 import { ListTeammember } from "../Teammember/ListTeammember";
 
 interface ITeamForm {
   team?: TTeam;
   onSubmit: (team: TTeam) => void;
+  onCancel?: () => void;
 }
 
 interface ITeamModal extends ITeamForm {
 }
 
-const TeamForm = ({ team: initTeam, onSubmit }: ITeamForm) => {
+const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
   const team: TTeam = initTeam ? initTeam : {
     id: "",
     competition_id: "",
     org_id: "",
-    has_militia: false,
-    has_army: false,
+    // has_militia: false,
+    // has_army: false,
     sport_id: "",
     org_name: "",
     list_team_member: [], // list of teammembers' ids
@@ -82,26 +81,26 @@ const TeamForm = ({ team: initTeam, onSubmit }: ITeamForm) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Row className="g-3">
-        <Col md="12" className="form-check checkbox-primary">
-          <Label for="has_militia" check>{t("has_militia")}</Label>
-          <Input
-            id="has_militia"
-            type="checkbox"
-            defaultChecked
-            value={formik.values.has_militia}
-            onChange={formik.handleChange}
-          />
-        </Col>
-        <Col md="12" className="form-check checkbox-primary">
-          <Label for="has_army" check>{t("has_army")}</Label>
-          <Input
-            id="has_army"
-            type="checkbox"
-            defaultChecked
-            value={formik.values.has_army}
-            onChange={formik.handleChange}
-          />
-        </Col>
+        {/* <Col md="12" className="form-check checkbox-primary"> */}
+        {/*   <Label for="has_militia" check>{t("has_militia")}</Label> */}
+        {/*   <Input */}
+        {/*     id="has_militia" */}
+        {/*     type="checkbox" */}
+        {/*     defaultChecked */}
+        {/*     value={formik.values.has_militia} */}
+        {/*     onChange={formik.handleChange} */}
+        {/*   /> */}
+        {/* </Col> */}
+        {/* <Col md="12" className="form-check checkbox-primary"> */}
+        {/*   <Label for="has_army" check>{t("has_army")}</Label> */}
+        {/*   <Input */}
+        {/*     id="has_army" */}
+        {/*     type="checkbox" */}
+        {/*     defaultChecked */}
+        {/*     value={formik.values.has_army} */}
+        {/*     onChange={formik.handleChange} */}
+        {/*   /> */}
+        {/* </Col> */}
         {(competitions?.length)
           ? (
             <Col md="12">
@@ -199,10 +198,13 @@ const TeamForm = ({ team: initTeam, onSubmit }: ITeamForm) => {
           )
           : null}
 
-        <Col xs="12">
+        <Col xs="12" className="gap-2" style={{ display: "flex" }}>
           <Btn color="primary" type="submit">
             Xác nhận
           </Btn>
+          {onCancel
+            ? <Btn color="primary" type="button" onClick={onCancel}>Hủy</Btn>
+            : null}
         </Col>
       </Row>
     </form>
@@ -226,7 +228,11 @@ const useTeamModal = ({ onSubmit, ...rest }: ITeamModal) => {
       isOpen={opened}
       toggle={handleToggle}
     >
-      <TeamForm onSubmit={handleSubmit} {...rest} />
+      <TeamForm
+        onSubmit={handleSubmit}
+        {...rest}
+        onCancel={() => setOpened(false)}
+      />
     </CommonModal>
   );
 

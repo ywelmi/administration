@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { TTeam } from "../type/team";
 import { baseGetParams, IGetFilters } from "../Service/_getParams";
+import _ from "lodash";
 
 export type TeamState = {
   filters?: Partial<IGetFilters>;
@@ -47,7 +48,9 @@ export const useTeamStore = create<TeamState>()(
       }),
     updateGetFilter: (filter: Partial<IGetFilters>) => {
       set((state: TeamState) => {
-        state.filters = { ...state.filters, ...filter };
+        const newFilter = { ...state.filters, ...filter };
+        if (_.isEqual(state.filters, newFilter)) return;
+        state.filters = newFilter;
       });
     },
     updateTotal: (total: number) => {

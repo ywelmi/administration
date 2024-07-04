@@ -97,35 +97,41 @@ interface IListTeam {
     v: { allSelected: boolean; selectedCount: number; selectedRows: TTeam[] },
   ) => void;
   columns?: TableColumn<TTeamColumn>[];
+  data?: TTeam[];
+  selectableRowSelected?: (row: TTeam) => boolean;
 }
 
 const tableColumns = ([
   "competition_name",
   "org_name",
   "list_member_name",
-] as (keyof TTeamColumn)[]).map((c) => ({
+] as (keyof Omit<TTeamColumn, "list_team_member">)[]).map((c) => ({
   "name": NAME_CONVERSION[c],
   selector: (row: TTeamColumn) => {
     const col = c as keyof TTeamColumn;
-    return row?.[col] ? (row[col as keyof TTeamColumn] || "") : "";
+    return row?.[col]
+      ? (row[col as keyof TTeamColumn] || "")
+      : "" as (string | number);
   },
 }));
 
 const ListTeam = (
   {
+    data = [],
     showAction,
     onRowSelect,
     onSelectedRowsChange,
     columns = [...tableColumns],
+    selectableRowSelected,
   }: IListTeam,
 ) => {
   const [filterText, setFilterText] = useState("");
-  const { teams, updateGetFilter, total, loading, filters } = useTeamStore();
-  const filteredItems = teams.filter((item) => item);
+  const { updateGetFilter, total, loading, filters } = useTeamStore();
+  const filteredItems = data.filter((item) => item);
 
   const handlePerRowsChange = (newPerPage: number, page: number) => {
     const take = newPerPage;
-    const skip = page * take;
+    const skip = Math.max(page - 1, 0) * take;
     updateGetFilter({ take, skip });
   };
 
@@ -133,18 +139,16 @@ const ListTeam = (
     if (!filters) return;
     const { take } = filters;
     if (take) {
-      updateGetFilter({ skip: page * take });
+      updateGetFilter({ skip: Math.max(page - 1, 0) * take });
     }
   };
 
   if (columns.length > 0 && showAction) {
-    columns.push(
-      {
-        name: "#",
-        cell: (row: TTeamColumn) => <TeamTableAction team={row} />,
-        sortable: true,
-      },
-    );
+    columns = [...columns, {
+      name: "#",
+      cell: (row: TTeamColumn) => <TeamTableAction team={row} />,
+      sortable: true,
+    }];
   }
 
   const subHeaderComponentMemo = useMemo(() => {
@@ -184,6 +188,7 @@ const ListTeam = (
         paginationTotalRows={total}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        selectableRowSelected={selectableRowSelected}
       />
     </div>
   );

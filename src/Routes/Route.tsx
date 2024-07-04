@@ -1,6 +1,8 @@
 import Default from "../Pages/Dashboard/Default/Default";
 import { ListOrg } from "../Pages/Org/ListOrg";
-import { ListSport } from "../Pages/Sport/ListSport";
+import { PageSport } from "../Pages/Sport/ListSport";
+import { PageTablequalifying } from "../Pages/Tablequalifying/ListTablequalifying";
+import { PageTablequalifyingMatch } from "../Pages/TablequalifyingMatch/ListTablequalifyingMatch";
 import { PageTeam } from "../Pages/Team/ListTeam";
 import { PageTeammember } from "../Pages/Teammember/ListTeammember";
 import { ListUser } from "../Pages/User/ListUser";
@@ -144,7 +146,7 @@ const Routes = [
   },
   {
     path: "/sport/list",
-    Component: <ListSport />,
+    Component: <PageSport />,
   },
   {
     path: "/teammember/list",
@@ -154,6 +156,18 @@ const Routes = [
     path: "/team/list",
     Component: <PageTeam />,
   },
+  {
+    path: "/tablequalifyings/list/:sport_id?",
+    Component: <PageTablequalifying />,
+  },
+  {
+    path: "/tablequalifyings/match/:table_id?",
+    Component: <PageTablequalifyingMatch />,
+  },
+  // {
+  //   path: "/tablequalifyings/list",
+  //   Component: <PageTeam />,
+  // },
   // {
   //   path: `${import.meta.env.VITE_PUBLIC_URL}/dashboard/ecommerce`,
   //   Component: <Ecommerce />,

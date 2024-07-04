@@ -60,6 +60,12 @@ export const MenuList: MenuItem[] = [
             type: "link",
             lanClass: "lan-4",
           },
+          // {
+          //   path: "/tablequalifyings/list",
+          //   title: "Bảng thi đấu",
+          //   type: "link",
+          //   lanClass: "lan-4",
+          // },
         ],
       },
     ],

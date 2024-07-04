@@ -4,7 +4,7 @@ export interface IGetFilters {
   take?: number;
   columns?: string[];
   sort: string;
-  filter: unknown[];
+  filter: string;
   // filter: string;
 }
 
@@ -20,8 +20,16 @@ const baseGetParams: Partial<IGetFilters> = {
   take: 100,
   sort: "",
   // filter: "",
-  filter: [],
+  filter: "",
   columns: [],
 };
 
-export { baseGetParams };
+const getFilterByValue = (
+  field: string,
+  o: "=" | ">" | "<" = "=",
+  v: string,
+) => {
+  return `[{'f':'${field}','o':'${o}','v':'${v}'}]`;
+};
+
+export { baseGetParams, getFilterByValue };

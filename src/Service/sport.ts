@@ -1,5 +1,5 @@
 import { TSport } from "../type/sport";
-import { baseGetParams } from "./_getParams";
+import { baseGetParams, IListResponse } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
 // TODO: how to filter
@@ -7,7 +7,7 @@ import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 export const sportsGet = async (
   params = baseGetParams,
 ) => {
-  return httpPost("/sports/padding_filter", params);
+  return httpPost<IListResponse<TSport>>("/sports/padding_filter", params);
 };
 
 export const sportGet = (id: string) => {

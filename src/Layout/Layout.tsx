@@ -51,7 +51,7 @@ const Layout = () => {
           <Footer />
         </div>
       </div>
-      <ThemeCustomizer />
+      {/* <ThemeCustomizer /> */}
     </>
   );
 };
