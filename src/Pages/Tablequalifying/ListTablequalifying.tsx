@@ -43,7 +43,6 @@ const TablequalifyingTableAction = (
     useTablequalifyingStore();
   const { t } = useTranslation();
   const handleUpdateTablequalifying = (tablequalifying: TTablequalifying) => {
-    // console.log({ handleUpdateTablequalifying: tablequalifying });
     tablequalifyingUpdate(tablequalifying).then(
       (res) => {
         const { status, data } = res;
@@ -129,6 +128,8 @@ interface IListTablequalifying {
     },
   ) => void;
   columns?: TableColumn<TTablequalifyingColumn>[];
+  data?: TTablequalifying[];
+  selectableRowSelected?: (row: TTablequalifying) => boolean;
 }
 
 const tableColumns = ([
@@ -152,12 +153,14 @@ const ListTablequalifying = (
     onRowSelect,
     onSelectedRowsChange,
     columns = [...tableColumns],
+    data = [],
+    selectableRowSelected,
   }: IListTablequalifying,
 ) => {
   const [filterText, setFilterText] = useState("");
-  const { tablequalifyings, updateGetFilter, total, loading, filters } =
+  const { updateGetFilter, total, loading, filters } =
     useTablequalifyingStore();
-  const filteredItems = tablequalifyings.filter((item) => item);
+  const filteredItems = data.filter((item) => item);
 
   const handlePerRowsChange = (newPerPage: number, page: number) => {
     const take = newPerPage;
@@ -220,6 +223,7 @@ const ListTablequalifying = (
         paginationTotalRows={total}
         onChangeRowsPerPage={handlePerRowsChange}
         onChangePage={handlePageChange}
+        selectableRowSelected={selectableRowSelected}
       />
     </div>
   );
@@ -227,7 +231,7 @@ const ListTablequalifying = (
 
 const PageTablequalifying = () => {
   const { t } = useTranslation();
-  const { addTablequalifying, updateGetFilter, filters } =
+  const { tablequalifyings, addTablequalifying, updateGetFilter, filters } =
     useTablequalifyingStore();
 
   const { sport_id } = useParams();
@@ -240,6 +244,7 @@ const PageTablequalifying = () => {
       updateGetFilter({ ...filters, filter: "" });
     }
   }, [sport_id]);
+
   const handleAddTablequalifying = (
     tablequalifying: Partial<TTablequalifying>,
   ) => {
@@ -293,7 +298,7 @@ const PageTablequalifying = () => {
         <Row>
           <div className="btn btn-primary" onClick={toggleMatch}>
             <i className="fa fa-plus" />
-            {"Thêm mới jfksafjsa lk"}
+            {"Test thêm lịch thi đấu"}
           </div>
           <TablequalifyingMatchModal />
           <Col sm="12">
@@ -306,7 +311,7 @@ const PageTablequalifying = () => {
                 <TablequalifyingAddModal />
               </CardHeader>
               <CardBody>
-                <ListTablequalifying showAction />
+                <ListTablequalifying data={tablequalifyings} showAction />
               </CardBody>
             </Card>
           </Col>

@@ -196,7 +196,7 @@ const ListTeam = (
 
 const PageTeam = () => {
   const { t } = useTranslation();
-  const { addTeam } = useTeamStore();
+  const { addTeam, teams } = useTeamStore();
   const handleAddTeam = (team: TTeam) => {
     console.log({ handleAddTeam: team });
     const { id, ...rests } = team;
@@ -232,7 +232,7 @@ const PageTeam = () => {
                 <TeamAddModal />
               </CardHeader>
               <CardBody>
-                <ListTeam showAction />
+                <ListTeam data={teams} showAction />
               </CardBody>
             </Card>
           </Col>

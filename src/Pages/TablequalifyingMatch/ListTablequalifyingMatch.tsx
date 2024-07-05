@@ -222,7 +222,7 @@ const ListTablequalifyingMatch = (
         onSelectedRowsChange={onSelectedRowsChange}
         selectableRows={!!onRowSelect || !!onSelectedRowsChange}
         progressPending={loading}
-        paginationServer
+        // paginationServer
         // paginationTotalRows={total}
         // onChangeRowsPerPage={handlePerRowsChange}
         // onChangePage={handlePageChange}
@@ -234,7 +234,6 @@ const ListTablequalifyingMatch = (
 const PageTablequalifyingMatch = () => {
   const { t } = useTranslation();
   const {
-    loading,
     updateTableId,
     addTablequalifyingMatch,
     tablequalifyingMatchs,

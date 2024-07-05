@@ -72,40 +72,32 @@ const TablequalifyingMatchForm = (
             onChange={formik.handleChange}
           />
         </Col>
-        {(teams?.length)
-          ? (
-            <Col md="12">
-              <InputSelect
-                title={t("team1_name")}
-                data={teams}
-                k="org_name"
-                name="team1_id"
-                v="id"
-                handleChange={(e) => {
-                  formik.handleChange(e);
-                }}
-                value={formik.values.team1_id}
-              />
-            </Col>
-          )
-          : null}
-        {(teams?.length)
-          ? (
-            <Col md="12">
-              <InputSelect
-                title={t("team2_name")}
-                data={teams}
-                k="org_name"
-                name="team2_id"
-                v="id"
-                handleChange={(e) => {
-                  formik.handleChange(e);
-                }}
-                value={formik.values.team2_id}
-              />
-            </Col>
-          )
-          : null}
+        <Col md="12">
+          <InputSelect
+            title={t("team1_name")}
+            data={teams || []}
+            k="org_name"
+            name="team1_id"
+            v="id"
+            handleChange={(e) => {
+              formik.handleChange(e);
+            }}
+            value={formik.values.team1_id}
+          />
+        </Col>
+        <Col md="12">
+          <InputSelect
+            title={t("team2_name")}
+            data={teams || []}
+            k="org_name"
+            name="team2_id"
+            v="id"
+            handleChange={(e) => {
+              formik.handleChange(e);
+            }}
+            value={formik.values.team2_id}
+          />
+        </Col>
         <Col md="12">
           <Row className="gap-2" style={{ display: "flex" }}>
             <Col>

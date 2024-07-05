@@ -26,6 +26,7 @@ export const tablequalifyingUpdate = (tablequalifying: TTablequalifying) => {
   return httpPut(`tablequalifyings/${tablequalifying.id}`, tablequalifying);
 };
 
+// Xóa bảng đấu theo id
 export const tablequalifyingDelete = (id: string) => {
   return httpDel(`tablequalifyings/${id}`);
 };

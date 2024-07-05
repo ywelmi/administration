@@ -84,10 +84,10 @@ const TablequalifyingForm = (
           <Label for="listTeams" check>{t("Team")}</Label>
 
           <ListTeam
-            data={teams}
+            data={teams.filter(({ sport_id }) =>
+              sport_id === formik.values?.sport_id
+            )}
             onSelectedRowsChange={({ selectedRows }) => {
-              const lastSelected = selectedRows.pop();
-              if (lastSelected) selectedRows = [lastSelected];
               if (
                 selectedRows.length ===
                   formik.values.listTeams?.length
