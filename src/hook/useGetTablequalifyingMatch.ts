@@ -11,11 +11,10 @@ export default function useGetTablequalifyingMatch() {
     updateLoading(true);
     tablequalifyingMatchsGet(table_id).then((res) => {
       const { data, status } = res;
-      if (!data.data) return;
-      const { data: tablequalifyingMatchs, sumData: { total } } = data;
-      addTablequalifyingMatchs(tablequalifyingMatchs);
-      updateTotal(total);
-      console.log({ tablequalifyingMatchs });
+      console.log({ tablequalifyingMatchsGet: data });
+      if (!data?.length) return;
+      addTablequalifyingMatchs(data);
+      console.log({ tablequalifyingMatchs: data });
     }).finally(() => updateLoading(false));
   }, []);
 

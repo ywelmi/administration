@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { H6, LI } from "../../AbstractElements";
-import { MenuList } from "../../Data/Layout/Sidebar";
+import { useMenuList } from "../../Data/Layout/Sidebar";
 import { MenuItem } from "../../Types/Layout/Sidebar";
 import MenuLists from "./MenuLists";
 import { useTranslation } from "react-i18next";
@@ -16,10 +16,12 @@ const SidebarMenuList = () => {
     );
   };
 
+  const { menuList } = useMenuList();
+
   return (
     <>
-      {MenuList &&
-        MenuList.map((mainMenu: MenuItem, index) => (
+      {menuList &&
+        menuList.map((mainMenu: MenuItem, index) => (
           <Fragment key={index}>
             <LI
               className={`sidebar-main-title ${
@@ -45,4 +47,3 @@ const SidebarMenuList = () => {
 };
 
 export default SidebarMenuList;
-

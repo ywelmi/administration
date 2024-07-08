@@ -6,7 +6,7 @@ import {
   MenuItem,
   SearchSuggestionItem,
 } from "../../../../Types/Layout/Sidebar";
-import { MenuList } from "../../../../Data/Layout/Sidebar";
+import { useMenuList } from "../../../../Data/Layout/Sidebar";
 import SearchSuggestionList from "../ResponsiveSearchBar/SearchSuggestionList";
 import { useLayoutStore } from "../../../../store/layout";
 import { useBookmarkStore } from "../../../../store/bookmark";
@@ -23,6 +23,7 @@ const SearchBar = () => {
   useEffect(() => {
     const suggestionArray: SearchSuggestionItem[] = [];
     let num = 0;
+    const { menuList } = useMenuList();
     const getAllLink = (item: MenuItem, icon: string | undefined) => {
       if (item.children) {
         item.children.forEach((ele) => {
@@ -39,7 +40,7 @@ const SearchBar = () => {
         });
       }
     };
-    MenuList?.forEach((item) => {
+    menuList?.forEach((item) => {
       item.Items?.forEach((child) => {
         getAllLink(child, child.icon);
       });

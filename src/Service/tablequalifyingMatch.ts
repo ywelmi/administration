@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { TTablequalifyingMatch } from "../type/tablequalifyingMatch";
 import { baseGetParams, IListResponse } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
@@ -13,7 +14,7 @@ import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
 // lấy toàn lịch thi đấu của một bảng đấu  theo id bảng đấu
 export const tablequalifyingMatchsGet = (table_id: string) => {
-  return httpGet<IListResponse<TTablequalifyingMatch>>(
+  return httpGet<TTablequalifyingMatch[]>(
     `/tablequalifyings/${table_id}/TableQualifyingMatchs`,
   );
 };
@@ -22,7 +23,7 @@ export const tablequalifyingMatchsGet = (table_id: string) => {
 export const tablequalifyingMatchCreate = (
   tablequalifyingMatch: Omit<TTablequalifyingMatch, "id">,
 ) => {
-  return httpPost(
+  return httpPost<TTablequalifyingMatch>(
     "/tablequalifyings/create_table-qualifying-match",
     tablequalifyingMatch,
   );

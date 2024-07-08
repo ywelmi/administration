@@ -1,4 +1,4 @@
-import { Col, Input, Label, Row } from "reactstrap";
+import { Col, Label, Row } from "reactstrap";
 import { TTeam } from "../../type/team";
 import { useFormik } from "formik";
 import { Btn } from "../../AbstractElements";
@@ -34,6 +34,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
     org_name: "",
     list_team_member: [], // list of teammembers' ids
   };
+
   const { competitions } = useCompetitionStore();
   const { orgs } = useOrgStore();
   const { sports } = useSportStore();

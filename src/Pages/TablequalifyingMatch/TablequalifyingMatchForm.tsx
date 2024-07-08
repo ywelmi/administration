@@ -1,27 +1,25 @@
 import { Col, Input, Label, Row } from "reactstrap";
 import { useFormik } from "formik";
-import { Btn } from "../../AbstractElements";
+import { Btn, Popovers } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import { useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useCompetitionStore } from "../../store/competition";
-import { useOrgStore } from "../../store/org";
-import { useSportStore } from "../../store/sport";
 import { InputSelect } from "../../Component/InputSelect";
-import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
 import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 import { parseInt } from "lodash";
 import { useTeamStore } from "../../store/team";
 import ReactDatePicker from "react-datepicker";
 
-interface ITablequalifyingMatchForm {
+export interface ITablequalifyingMatchForm {
   tablequalifyingMatch?: Partial<TTablequalifyingMatch>;
   onSubmit: (tablequalifyingMatch: TTablequalifyingMatch) => void;
   onCancel?: () => void;
 }
 
-interface ITablequalifyingMatchModal extends ITablequalifyingMatchForm {
+export interface ITablequalifyingMatchModal extends ITablequalifyingMatchForm {
 }
+
+interface ITablequalifyingMatchPopover extends ITablequalifyingMatchForm {}
 
 const TablequalifyingMatchForm = (
   { tablequalifyingMatch: initTablequalifyingMatch, onSubmit, onCancel }:
@@ -161,6 +159,7 @@ const useTablequalifyingMatchModal = (
     onSubmit(tablequalifyingMatch);
     setOpened(false);
   };
+
   const TablequalifyingMatchModal = () => (
     <CommonModal
       backdrop="static"
@@ -179,4 +178,44 @@ const useTablequalifyingMatchModal = (
   return { TablequalifyingMatchModal, handleToggle };
 };
 
-export { TablequalifyingMatchForm, useTablequalifyingMatchModal };
+const useTablequalifyingMatchPopover = (
+  { onSubmit, ...rest }: ITablequalifyingMatchPopover,
+) => {
+  const [opened, setOpened] = useState(false);
+
+  const handleToggle = useCallback(() => {
+    setOpened((s) => !s);
+  }, []);
+
+  const handleSubmit = (teammember: TTablequalifyingMatch) => {
+    onSubmit(teammember);
+    setOpened(false);
+  };
+
+  const TablequalifyingMatchPopover = (
+    { children, target }: React.PropsWithChildren<{ target: string }>,
+  ) => (
+    <div>
+      {children}
+      <Popovers
+        isOpen={opened}
+        placement="auto"
+        target={target}
+        trigger="click"
+      >
+        <TablequalifyingMatchForm
+          onSubmit={handleSubmit}
+          {...rest}
+          onCancel={() => setOpened(false)}
+        />
+      </Popovers>
+    </div>
+  );
+
+  return { TablequalifyingMatchPopover, handleToggle: setOpened };
+};
+export {
+  TablequalifyingMatchForm,
+  useTablequalifyingMatchModal,
+  useTablequalifyingMatchPopover,
+};

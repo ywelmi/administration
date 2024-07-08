@@ -22,7 +22,11 @@ import { useTranslation } from "react-i18next";
 import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
 import { useMemo, useState } from "react";
-import { useTablequalifyingMatchModal } from "./TablequalifyingMatchForm";
+import {
+  ITablequalifyingMatchForm,
+  useTablequalifyingMatchModal,
+  useTablequalifyingMatchPopover,
+} from "./TablequalifyingMatchForm";
 import {
   tablequalifyingMatchCreate,
   // tablequalifyingMatchDelete,
@@ -31,6 +35,8 @@ import {
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { NAME_CONVERSION } from "../../name-conversion";
+import { Btn } from "../../AbstractElements";
+import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 
 type TTablequalifyingColumn = Omit<TTablequalifyingMatch, "list_member_id">;
 
@@ -248,6 +254,7 @@ const PageTablequalifyingMatch = () => {
       // updateGetFilter({ ...filters, filter: "" });
     }
   }, [table_id]);
+
   const handleAddTablequalifyingMatch = (
     tablequalifyingMatch: TTablequalifyingMatch,
   ) => {
@@ -257,7 +264,14 @@ const PageTablequalifyingMatch = () => {
       const { status, data } = res;
       console.log({ addTablequalifyingMatchResult: data });
       if (status === 200) {
-        addTablequalifyingMatch(data as TTablequalifyingMatch);
+        const newData = {
+          ...tablequalifyingMatch,
+          ...data,
+        } as TTablequalifyingMatch;
+        console.log({ tablequalifyingMatchCreate: newData });
+        addTablequalifyingMatch(
+          newData,
+        );
         toast.info(t("success"));
         return;
       }
@@ -310,4 +324,128 @@ const PageTablequalifyingMatch = () => {
     </div>
   );
 };
-export { ListTablequalifyingMatch, PageTablequalifyingMatch };
+
+interface IModalPageTablequalifyingMatch {
+  tableId: string;
+}
+
+const useModalPageTablequalifyingMatch = (
+  { tableId }: IModalPageTablequalifyingMatch,
+) => {
+  const { t } = useTranslation();
+  const {
+    updateTableId,
+    addTablequalifyingMatch,
+    tablequalifyingMatchs,
+  } = useTablequalifyingMatchStore();
+
+  const [opened, setOpened] = useState(false);
+
+  const handleToggle = () => {
+    setOpened((s) => !s);
+  };
+
+  useEffect(() => {
+    if (tableId && opened) {
+      console.log({ tableId });
+      updateTableId(tableId);
+    } else {
+    }
+  }, [opened]);
+
+  const handleAddTablequalifyingMatch = (
+    tablequalifyingMatch: TTablequalifyingMatch,
+  ) => {
+    console.log({ handleAddTablequalifyingMatch: tablequalifyingMatch });
+    const { id, ...rests } = tablequalifyingMatch;
+    tablequalifyingMatchCreate(rests).then((res) => {
+      const { status, data } = res;
+      console.log({ addTablequalifyingMatchResult: data });
+      if (status === 200) {
+        const newData = {
+          ...tablequalifyingMatch,
+          ...data,
+        } as TTablequalifyingMatch;
+        console.log({ tablequalifyingMatchCreate: newData });
+        addTablequalifyingMatch(
+          newData,
+        );
+        toast.info(t("success"));
+        return;
+      }
+      return Promise.reject(status);
+    }).catch((err) => {
+      toast.error(t("error"));
+      console.log({ err });
+    });
+  };
+
+  // const {
+  //   TablequalifyingMatchPopover,
+  //   handleToggle: handleToggleAddPopover,
+  // } = useTablequalifyingMatchPopover({
+  //   onSubmit: handleAddTablequalifyingMatch,
+  //   tablequalifyingMatch: {
+  //     table_id: tableId || "",
+  //     team1_id: "",
+  //     team2_id: "",
+  //     indexs: 0,
+  //     match_day: new Date().toISOString(),
+  //     match_hour: "",
+  //   },
+  // });
+
+  const TablequalifyingMatchModal = () => (
+    <CommonModal
+      backdrop="static"
+      modalBodyClassName="social-profile text-start"
+      isOpen={opened}
+      toggle={handleToggle}
+    >
+      <div>
+        {/* <div className="page-body"> */}
+        {/* <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} /> */}
+        <Container fluid>
+          <Row>
+            <Col sm="12">
+              <Card>
+                <CardHeader className="pb-0 card-no-border">
+                </CardHeader>
+                {/* <CardBody> */}
+                {/*   <ListTablequalifyingMatch */}
+                {/*     data={tablequalifyingMatchs} */}
+                {/*     showAction */}
+                {/*   /> */}
+                {/* </CardBody> */}
+                <Btn
+                  type="button"
+                  color="danger"
+                  onClick={handleToggle}
+                >
+                  Hủy
+                </Btn>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+        {/* <TablequalifyingMatchPopover target="add_match_123"> */}
+        {/*   <Btn */}
+        {/*     type="button" */}
+        {/*     color="secondary" */}
+        {/*     id="add_match_123" */}
+        {/*     onClick={() => handleToggleAddPopover(true)} */}
+        {/*   > */}
+        {/*     Thêm lịch thi đấu */}
+        {/*   </Btn> */}
+        {/* </TablequalifyingMatchPopover> */}
+      </div>
+    </CommonModal>
+  );
+  return { handleToggle, TablequalifyingMatchModal };
+};
+
+export {
+  ListTablequalifyingMatch,
+  PageTablequalifyingMatch,
+  useModalPageTablequalifyingMatch,
+};

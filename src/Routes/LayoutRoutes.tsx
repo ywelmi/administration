@@ -9,6 +9,7 @@ import useGetSport from "../hook/useGetSport";
 import useGetTeam from "../hook/useGetTeam";
 import useGetCompetition from "../hook/useGetCompetition";
 import useGetTablequalifying from "../hook/useGetTablequalifying";
+import useGetTablequalifyingMatch from "../hook/useGetTablequalifyingMatch";
 
 const LayoutRoutes = () => {
   useGetCompetition();
@@ -19,6 +20,7 @@ const LayoutRoutes = () => {
   useGetTeam();
   useGetTeammember();
   useGetTablequalifying();
+  useGetTablequalifyingMatch();
 
   return (
     <Routes>

@@ -1,7 +1,7 @@
 import { Col, Input, Label, Row } from "reactstrap";
 import { TTablequalifying } from "../../type/tablequalifying";
 import { useFormik } from "formik";
-import { Btn } from "../../AbstractElements";
+import { Btn, Popovers } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,7 @@ import { ListTeam } from "../Team/ListTeam";
 import { ListSport } from "../Sport/ListSport";
 import { useSportStore } from "../../store/sport";
 import { InputSelect } from "../../Component/InputSelect";
+import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 
 interface ITablequalifyingForm {
   tablequalifying?: Partial<TTablequalifying>;

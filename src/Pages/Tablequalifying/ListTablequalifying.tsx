@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { getFilterByValue } from "../../Service/_getParams";
 import {
@@ -32,7 +32,12 @@ import {
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { NAME_CONVERSION } from "../../name-conversion";
-import { useTablequalifyingMatchModal } from "../TablequalifyingMatch/TablequalifyingMatchForm";
+import { tablequalifyingMatchCreate } from "../../Service/tablequalifyingMatch";
+import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
+import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
+import { InputSelect } from "../../Component/InputSelect";
+import { useSportStore } from "../../store/sport";
+import { useModalPageTablequalifyingMatch } from "../TablequalifyingMatch/ListTablequalifyingMatch";
 
 type TTablequalifyingColumn = Omit<TTablequalifying, "list_member_id">;
 
@@ -41,7 +46,9 @@ const TablequalifyingTableAction = (
 ) => {
   const { updateTablequalifying, deleteTablequalifying } =
     useTablequalifyingStore();
+  const { addTablequalifyingMatch } = useTablequalifyingMatchStore();
   const { t } = useTranslation();
+
   const handleUpdateTablequalifying = (tablequalifying: TTablequalifying) => {
     tablequalifyingUpdate(tablequalifying).then(
       (res) => {
@@ -59,6 +66,7 @@ const TablequalifyingTableAction = (
       console.log({ err });
     });
   };
+
   const {
     handleToggle: handleToggleUpdateModal,
     TablequalifyingModal: TablequalifyingUpdateModal,
@@ -88,6 +96,33 @@ const TablequalifyingTableAction = (
     return;
   };
 
+  const handleAddTablequalifyingMatch = (
+    tablequalifyingMatch: Omit<TTablequalifyingMatch, "id">,
+  ) => {
+    tablequalifyingMatchCreate(tablequalifyingMatch).then(
+      (res) => {
+        const { status, data } = res;
+        if (status === 200) {
+          addTablequalifyingMatch(data);
+          toast.info(t("success"));
+          return;
+        }
+
+        return Promise.reject(status);
+      },
+    ).catch((err) => {
+      toast.error(t("error"));
+      console.log({ err });
+    });
+  };
+
+  // const { handleToggle: toggleMatch, TablequalifyingMatchModal } =
+  //   useModalPageTablequalifyingMatch({
+  //     tableId: tablequalifying.id,
+  //   });
+
+  const navigate = useNavigate();
+
   return (
     <UL className="action simple-list flex-row" id={tablequalifying.id}>
       <LI className="edit btn">
@@ -100,11 +135,15 @@ const TablequalifyingTableAction = (
       <LI className="delete btn">
         <i className="icon-trash cursor-pointer" onClick={handleConfirmDel} />
       </LI>
-      <LI className="btn">
-        <i className="icon-summernote cursor-pointer" />
-      </LI>
-      <LI className="btn">
-        <i className="icon-summernote cursor-pointer">Lập lịch</i>
+
+      <LI
+        className="edit btn"
+        onClick={() =>
+          navigate(`/tablequalifyings/match/${tablequalifying.id}`)}
+      >
+        <i className="icon-folder" />
+        Lập lịch
+        {/* <TablequalifyingMatchModal /> */}
       </LI>
       <LI className="btn">
         <i className="icon-square cursor-pointer">Nhập kết quả</i>
@@ -233,22 +272,31 @@ const PageTablequalifying = () => {
   const { t } = useTranslation();
   const { tablequalifyings, addTablequalifying, updateGetFilter, filters } =
     useTablequalifyingStore();
+  const { sports } = useSportStore();
+  const [sportId, setSportId] = useState("");
 
-  const { sport_id } = useParams();
+  console.log({ tablequalifyings });
+  const { sport_id: paramSportId } = useParams();
 
   useEffect(() => {
-    if (sport_id) {
-      const filterValue = getFilterByValue("sport_id", "=", sport_id);
+    if (paramSportId) {
+      setSportId(paramSportId);
+    }
+  }, [paramSportId]);
+
+  useEffect(() => {
+    if (sportId) {
+      const filterValue = getFilterByValue("sport_id", "=", sportId);
       updateGetFilter({ ...filters, filter: filterValue });
     } else {
       updateGetFilter({ ...filters, filter: "" });
     }
-  }, [sport_id]);
+  }, [sportId]);
 
   const handleAddTablequalifying = (
     tablequalifying: Partial<TTablequalifying>,
   ) => {
-    console.log({ handleAddTablequalifying: tablequalifying });
+    // console.log({ handleAddTablequalifying: tablequalifying });
     const { id, ...rests } = tablequalifying;
     tablequalifyingCreate(rests).then((res) => {
       const { status, data } = res;
@@ -265,26 +313,13 @@ const PageTablequalifying = () => {
     });
   };
 
-  const { handleToggle: toggleMatch, TablequalifyingMatchModal } =
-    useTablequalifyingMatchModal({
-      onSubmit: (v: any) => console.log({ submit: v }),
-      tablequalifyingMatch: {
-        table_id: "",
-        team1_id: "",
-        team2_id: "",
-        indexs: 0,
-        match_day: new Date().toISOString(),
-        match_hour: "",
-      },
-    });
-
   const {
     handleToggle: handleToggleAddModal,
     TablequalifyingModal: TablequalifyingAddModal,
   } = useTablequalifyingModal({
     onSubmit: handleAddTablequalifying,
     tablequalifying: {
-      "sport_id": sport_id || "",
+      "sport_id": sportId || "",
       "name": "",
       "index": 0,
       "listTeams": [],
@@ -296,11 +331,6 @@ const PageTablequalifying = () => {
       <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
       <Container fluid>
         <Row>
-          <div className="btn btn-primary" onClick={toggleMatch}>
-            <i className="fa fa-plus" />
-            {"Test thêm lịch thi đấu"}
-          </div>
-          <TablequalifyingMatchModal />
           <Col sm="12">
             <Card>
               <CardHeader className="pb-0 card-no-border">
@@ -309,6 +339,15 @@ const PageTablequalifying = () => {
                   {"Thêm mới"}
                 </div>
                 <TablequalifyingAddModal />
+                <InputSelect
+                  title={NAME_CONVERSION["sport"]}
+                  data={sports}
+                  k="name"
+                  v="id"
+                  name="sport"
+                  value={sportId}
+                  handleChange={(e) => setSportId(e.target.value)}
+                />
               </CardHeader>
               <CardBody>
                 <ListTablequalifying data={tablequalifyings} showAction />

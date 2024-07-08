@@ -31,6 +31,7 @@ type TTeamColumn = Omit<TTeam, "list_member_id">;
 const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
   const { updateTeam, deleteTeam } = useTeamStore();
   const { t } = useTranslation();
+
   const handleUpdateTeam = (team: TTeam) => {
     // console.log({ handleUpdateTeam: team });
     teamUpdate(team).then(
@@ -41,7 +42,6 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
           toast.success(t("success"));
           return;
         }
-
         return Promise.reject(status);
       },
     ).catch((err) => {
@@ -49,6 +49,7 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
       console.log({ err });
     });
   };
+
   const { handleToggle: handleToggleUpdateModal, TeamModal: TeamUpdateModal } =
     useTeamModal({ onSubmit: handleUpdateTeam, team });
 

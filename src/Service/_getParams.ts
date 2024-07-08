@@ -2,7 +2,7 @@ import { AxiosResponse } from "axios";
 export interface IGetFilters {
   skip?: number;
   take?: number;
-  columns?: string[];
+  columns?: string;
   sort: string;
   filter: string;
   // filter: string;
@@ -17,11 +17,11 @@ export interface IListResponse<T> extends AxiosResponse {
 
 const baseGetParams: Partial<IGetFilters> = {
   skip: 0,
-  take: 100,
+  take: 20,
   sort: "",
   // filter: "",
   filter: "",
-  columns: [],
+  columns: "",
 };
 
 const getFilterByValue = (

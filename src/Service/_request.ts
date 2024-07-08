@@ -81,25 +81,24 @@ const httpPost: <T = any, R = AxiosResponse<T, any>, D = any>(
 ) => {
   const interceptData =
     data as (D & { columns: string[] | string; filter: string[] | string });
-  if (
-    Object.prototype.hasOwnProperty.call(interceptData, "columns") &&
-    !!interceptData
-  ) {
-    const columns = interceptData["columns"];
-    if (Array.isArray(columns)) {
-      interceptData["columns"] = columns.join(",");
-    }
-  }
-  if (
-    Object.prototype.hasOwnProperty.call(interceptData, "filter") &&
-    !!interceptData
-  ) {
-    const filter = interceptData["filter"];
-    if (typeof filter !== "string") {
-      interceptData["filter"] = `[${filter.join(",")}]`;
-    }
-    // interceptData["filter"] = (filter);
-  }
+  // if (
+  //   Object.prototype.hasOwnProperty.call(interceptData, "columns") &&
+  //   !!interceptData
+  // ) {
+  //   const columns = interceptData["columns"];
+  //   if (Array.isArray(columns)) {
+  //     interceptData["columns"] = columns.join(",");
+  //   }
+  // }
+  // if (
+  //   Object.prototype.hasOwnProperty.call(interceptData, "filter") &&
+  //   !!interceptData
+  // ) {
+  //   const filter = interceptData["filter"];
+  //   if (typeof filter !== "string") {
+  //     interceptData["filter"] = `[${filter.join(",")}]`;
+  //   }
+  // }
 
   return req.post(url, interceptData, config) as Promise<R>;
 };
