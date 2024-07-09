@@ -14,7 +14,7 @@ const Header = () => {
     >
       <Row className="header-wrapper m-0">
         <HeaderLogo />
-        <LeftHeader />
+        {/* <LeftHeader /> */}
         <RightHeader />
       </Row>
     </div>

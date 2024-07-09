@@ -4,12 +4,7 @@ import { Btn, Popovers } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { InputSelect } from "../../Component/InputSelect";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import { parseInt } from "lodash";
-import { useTeamStore } from "../../store/team";
-import ReactDatePicker from "react-datepicker";
-import DataTable, { TableColumn } from "react-data-table-component";
 import { NAME_CONVERSION } from "../../name-conversion";
 import { ListSetReport, useSetReportPopover } from "./SetReport";
 
@@ -117,6 +112,7 @@ const useTablequalifyingMatchReportModal = (
   { onSubmit, ...rest }: ITablequalifyingMatchReportModal,
 ) => {
   const [opened, setOpened] = useState(false);
+
   const handleToggle = () => {
     setOpened((s) => !s);
   };

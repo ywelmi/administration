@@ -243,7 +243,7 @@ const PageSport = () => {
                             ? navivate(`/tablequalifyings/list/${r.id}`)
                             : undefined}
                       >
-                        Tạo bảng đấu
+                        Tạo bảng đấu Vòng loại
                       </Btn>
                     ),
                   }]}

@@ -8,12 +8,13 @@ import { useState } from "react";
 interface IUserForm {
   user?: Partial<TUser>;
   onSubmit: (user: TUser) => void;
+  onCancel?: () => void;
 }
 
 interface IUserModal extends IUserForm {
 }
 
-const UserForm = ({ user, onSubmit }: IUserForm) => {
+const UserForm = ({ user, onSubmit, onCancel }: IUserForm) => {
   if (!user) user = { username: "", fullname: "", password: "" };
 
   return (
@@ -54,10 +55,17 @@ const UserForm = ({ user, onSubmit }: IUserForm) => {
                 placeholder={user.password}
               />
             </Col>
-            <Col xs="12">
+            <Col xs="12" className="gap-2" style={{ display: "flex" }}>
               <Btn color="primary" type="submit">
                 Xác nhận
               </Btn>
+              {onCancel
+                ? (
+                  <Btn color="primary" type="button" onClick={onCancel}>
+                    Hủy
+                  </Btn>
+                )
+                : null}
             </Col>
           </Row>
         </Form>
@@ -83,7 +91,11 @@ const useUserModal = ({ onSubmit, ...rest }: IUserModal) => {
       isOpen={opened}
       toggle={handleToggle}
     >
-      <UserForm onSubmit={handleSubmit} {...rest} />
+      <UserForm
+        onSubmit={handleSubmit}
+        {...rest}
+        onCancel={() => setOpened(false)}
+      />
     </CommonModal>
   );
 

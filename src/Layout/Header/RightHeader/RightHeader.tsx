@@ -9,17 +9,21 @@ import UserProfile from "./UserProfile/UserProfile";
 import Language from "./Language/Language";
 import ZoomInOut from "./ZoomInOut/ZoomInOut";
 
-const RightHeader = () => { 
+const RightHeader = () => {
   return (
-    <Col xl="7"  xs="8" className="nav-right pull-right right-header p-0 ms-auto">
+    <Col
+      xl="7"
+      xs="8"
+      className="nav-right pull-right right-header p-0 ms-auto"
+    >
       <UL className="nav-menus simple-list flex-row">
-        <ResponsiveSearchBar />
-        <SearchBar />
-        <Language />
-        <ZoomInOut /> 
-        <HeaderBookmark /> 
-        <DarkMode /> 
-        <NotificationBox />
+        {/* <ResponsiveSearchBar /> */}
+        {/* <SearchBar /> */}
+        {/* <Language /> */}
+        <ZoomInOut />
+        {/* <HeaderBookmark />  */}
+        {/* <DarkMode />  */}
+        {/* <NotificationBox /> */}
         <UserProfile />
       </UL>
     </Col>

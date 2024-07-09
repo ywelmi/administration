@@ -96,25 +96,24 @@ const TablequalifyingTableAction = (
     return;
   };
 
-  const handleAddTablequalifyingMatch = (
-    tablequalifyingMatch: Omit<TTablequalifyingMatch, "id">,
-  ) => {
-    tablequalifyingMatchCreate(tablequalifyingMatch).then(
-      (res) => {
-        const { status, data } = res;
-        if (status === 200) {
-          addTablequalifyingMatch(data);
-          toast.info(t("success"));
-          return;
-        }
-
-        return Promise.reject(status);
-      },
-    ).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
-  };
+  // const handleAddTablequalifyingMatch = (
+  //   tablequalifyingMatch: Omit<TTablequalifyingMatch, "id">,
+  // ) => {
+  //   tablequalifyingMatchCreate(tablequalifyingMatch).then(
+  //     (res) => {
+  //       const { status, data } = res;
+  //       if (status === 200) {
+  //         addTablequalifyingMatch(data);
+  //         toast.info(t("success"));
+  //         return;
+  //       }
+  //       return Promise.reject(status);
+  //     },
+  //   ).catch((err) => {
+  //     toast.error(t("error"));
+  //     console.log({ err });
+  //   });
+  // };
 
   // const { handleToggle: toggleMatch, TablequalifyingMatchModal } =
   //   useModalPageTablequalifyingMatch({
@@ -339,11 +338,6 @@ const PageTablequalifying = () => {
           <Col sm="12">
             <Card>
               <CardHeader className="pb-0 card-no-border">
-                <div className="btn btn-primary" onClick={handleToggleAddModal}>
-                  <i className="fa fa-plus" />
-                  {"Thêm mới"}
-                </div>
-                <TablequalifyingAddModal />
                 <InputSelect
                   title={NAME_CONVERSION["sport"]}
                   data={sports}
@@ -353,6 +347,11 @@ const PageTablequalifying = () => {
                   value={sportId}
                   handleChange={(e) => setSportId(e.target.value)}
                 />
+                <div className="btn btn-primary" onClick={handleToggleAddModal}>
+                  <i className="fa fa-plus" />
+                  {"Thêm mới"}
+                </div>
+                <TablequalifyingAddModal />
               </CardHeader>
               <CardBody>
                 <ListTablequalifying data={tablequalifyings} showAction />
