@@ -26,5 +26,11 @@
   "match_day": "Ngày",
   "match_hour": "Giờ",
   "team1_name": "Đội 1",
-  "team2_name": "Đội 2"
+  "team1_point": "Điểm Đội 1",
+  "team2_name": "Đội 2",
+  "team2_point": "Điểm Đội 2",
+  "sets": "Séc đấu",
+  "team1_set_win_count": "Tỷ số đội 1",
+  "team2_set_win_count": "Tỷ số đội 2",
+  "stt": "Số thứ tự"
 }

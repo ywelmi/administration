@@ -3,6 +3,7 @@ import { ListOrg } from "../Pages/Org/ListOrg";
 import { PageSport } from "../Pages/Sport/ListSport";
 import { PageTablequalifying } from "../Pages/Tablequalifying/ListTablequalifying";
 import { PageTablequalifyingMatch } from "../Pages/TablequalifyingMatch/ListTablequalifyingMatch";
+import { PageTablequalifyingMatchReport } from "../Pages/TablequalifyingMatchReport/ListTablequalifyingMatchReport";
 import { PageTeam } from "../Pages/Team/ListTeam";
 import { PageTeammember } from "../Pages/Teammember/ListTeammember";
 import { ListUser } from "../Pages/User/ListUser";
@@ -163,6 +164,10 @@ const Routes = [
   {
     path: "/tablequalifyings/match/:table_id?",
     Component: <PageTablequalifyingMatch />,
+  },
+  {
+    path: "/tablequalifyings/match-report/:table_id?",
+    Component: <PageTablequalifyingMatchReport />,
   },
   // {
   //   path: "/tablequalifyings/list",

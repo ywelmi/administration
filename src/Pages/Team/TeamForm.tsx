@@ -185,11 +185,11 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
           )
           ? (
             <div>
-              <TeammemberPopover target="add_user">
+              <TeammemberPopover target="PopoverAddUser">
                 <Btn
                   type="button"
                   color="secondary"
-                  id="add_user"
+                  id="PopoverAddUser"
                   onClick={handleToggle}
                 >
                   Bật/Tắt thêm vận động viên

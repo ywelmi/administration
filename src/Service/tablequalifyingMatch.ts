@@ -1,5 +1,8 @@
 import { AxiosResponse } from "axios";
-import { TTablequalifyingMatch } from "../type/tablequalifyingMatch";
+import {
+  TTablequalifyingMatch,
+  TTablequalifyingMatchReport,
+} from "../type/tablequalifyingMatch";
 import { baseGetParams, IListResponse } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
@@ -29,10 +32,15 @@ export const tablequalifyingMatchCreate = (
   );
 };
 
-// export const tablequalifyingMatchUpdate = (tablequalifyingMatch: TTablequalifyingMatch) => {
-//   return httpPut(`tablequalifyingMatchs/${tablequalifyingMatch.id}`, tablequalifyingMatch);
-// };
-//
+export const tablequalifyingMatchReportUpdate = (
+  tablequalifyingMatchResult: TTablequalifyingMatchReport,
+) => {
+  return httpPut<TTablequalifyingMatch>(
+    `tablequalifyingMatchs/${tablequalifyingMatchResult.id}`,
+    tablequalifyingMatchResult,
+  );
+};
+
 // export const tablequalifyingMatchDelete = (id: string) => {
 //   return httpDel(`tablequalifyingMatchs/${id}`);
 // };

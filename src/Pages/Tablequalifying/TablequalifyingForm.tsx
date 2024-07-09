@@ -11,7 +11,6 @@ import { ListTeam } from "../Team/ListTeam";
 import { ListSport } from "../Sport/ListSport";
 import { useSportStore } from "../../store/sport";
 import { InputSelect } from "../../Component/InputSelect";
-import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 
 interface ITablequalifyingForm {
   tablequalifying?: Partial<TTablequalifying>;

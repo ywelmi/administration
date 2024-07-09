@@ -35,7 +35,10 @@ export const useTablequalifyingMatchStore = create<TablequalifyingMatchState>()(
           { id: tablequalifyingMatchId },
         ) => tablequalifyingMatchId === data.id);
         if (idx > -1) {
-          state.tablequalifyingMatchs[idx] = data;
+          state.tablequalifyingMatchs[idx] = {
+            ...state.tablequalifyingMatchs[idx],
+            ...data,
+          };
         }
       }),
     deleteTablequalifyingMatch: (id: string) =>

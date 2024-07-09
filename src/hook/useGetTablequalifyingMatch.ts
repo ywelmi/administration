@@ -3,7 +3,7 @@ import { tablequalifyingMatchsGet } from "../Service/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../store/tablequalifyingMatch";
 
 export default function useGetTablequalifyingMatch() {
-  const { addTablequalifyingMatchs, table_id, updateTotal, updateLoading } =
+  const { addTablequalifyingMatchs, table_id, updateLoading } =
     useTablequalifyingMatchStore();
   const fetch = useCallback((table_id?: string) => {
     console.log({ useGetTablequalifyingMatchfilters: table_id });
@@ -12,15 +12,13 @@ export default function useGetTablequalifyingMatch() {
     tablequalifyingMatchsGet(table_id).then((res) => {
       const { data, status } = res;
       console.log({ tablequalifyingMatchsGet: data });
-      if (!data?.length) return;
+      if (!data?.length) {
+        addTablequalifyingMatchs([]);
+        return;
+      }
       addTablequalifyingMatchs(data);
-      console.log({ tablequalifyingMatchs: data });
     }).finally(() => updateLoading(false));
   }, []);
-
-  // useEffect(() => {
-  //   fetch();
-  // }, []);
 
   useEffect(() => {
     fetch(table_id);

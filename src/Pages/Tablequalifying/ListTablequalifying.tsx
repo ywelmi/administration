@@ -143,10 +143,15 @@ const TablequalifyingTableAction = (
       >
         <i className="icon-folder" />
         Lập lịch
-        {/* <TablequalifyingMatchModal /> */}
       </LI>
-      <LI className="btn">
-        <i className="icon-square cursor-pointer">Nhập kết quả</i>
+      <LI
+        className="edit btn"
+        onClick={() =>
+          navigate(`/tablequalifyings/match-report/${tablequalifying.id}`)}
+      >
+        <i className="icon-slice cursor-pointer">
+        </i>
+        Nhập kết quả
       </LI>
     </UL>
   );

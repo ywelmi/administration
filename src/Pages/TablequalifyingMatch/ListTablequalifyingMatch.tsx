@@ -151,7 +151,7 @@ const tableColumns = ([
     selector: (row: TTablequalifyingColumn) => {
       const col = c as keyof TTablequalifyingColumn;
       return row?.[col]
-        ? (row[col as keyof TTablequalifyingColumn] || "")
+        ? (row[col as keyof TTablequalifyingColumn] || "").toString()
         : "" as (string | number);
     },
   }),
@@ -170,30 +170,6 @@ const ListTablequalifyingMatch = (
 ) => {
   const [filterText, setFilterText] = useState("");
   const filteredItems = data.filter((item) => item);
-
-  // const handlePerRowsChange = (newPerPage: number, page: number) => {
-  //   const take = newPerPage;
-  //   const skip = Math.max(page - 1, 0) * take;
-  //   updateGetFilter({ take, skip });
-  // };
-  //
-  // const handlePageChange = (page: number) => {
-  //   if (!filters) return;
-  //   const { take } = filters;
-  //   if (take) {
-  //     updateGetFilter({ skip: Math.max(page - 1, 0) * take });
-  //   }
-  // };
-
-  // if (columns.length > 0 && showAction) {
-  //   columns = [...columns, {
-  //     name: "#",
-  //     cell: (row: TTablequalifyingColumn) => (
-  //       <TablequalifyingTableAction tablequalifyingMatch={row} />
-  //     ),
-  //     sortable: true,
-  //   }];
-  // }
 
   const subHeaderComponentMemo = useMemo(() => {
     return (
@@ -228,10 +204,6 @@ const ListTablequalifyingMatch = (
         onSelectedRowsChange={onSelectedRowsChange}
         selectableRows={!!onRowSelect || !!onSelectedRowsChange}
         progressPending={loading}
-        // paginationServer
-        // paginationTotalRows={total}
-        // onChangeRowsPerPage={handlePerRowsChange}
-        // onChangePage={handlePageChange}
       />
     </div>
   );
