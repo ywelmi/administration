@@ -123,7 +123,7 @@ const TablequalifyingForm = (
   );
 };
 
-const useTablequalifyingModal = (
+const useTablequalifyingKnockoutModal = (
   { onSubmit, ...rest }: ITablequalifyingModal,
 ) => {
   const [opened, setOpened] = useState(false);
@@ -153,4 +153,4 @@ const useTablequalifyingModal = (
   return { TablequalifyingModal, handleToggle };
 };
 
-export { TablequalifyingForm, useTablequalifyingModal };
+export { TablequalifyingForm, useTablequalifyingKnockoutModal };

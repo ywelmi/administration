@@ -2,6 +2,7 @@ import Default from "../Pages/Dashboard/Default/Default";
 import { ListOrg } from "../Pages/Org/ListOrg";
 import { PageSport } from "../Pages/Sport/ListSport";
 import { PageTablequalifying } from "../Pages/Tablequalifying/ListTablequalifying";
+import { PageTablequalifyingKnockout } from "../Pages/TablequalifyingKnockout/ListTablequalifyingKnockout";
 import { PageTablequalifyingMatch } from "../Pages/TablequalifyingMatch/ListTablequalifyingMatch";
 import { PageTablequalifyingMatchReport } from "../Pages/TablequalifyingMatchReport/ListTablequalifyingMatchReport";
 import { PageTeam } from "../Pages/Team/ListTeam";
@@ -168,6 +169,10 @@ const Routes = [
   {
     path: "/tablequalifyings/match-report/:table_id?",
     Component: <PageTablequalifyingMatchReport />,
+  },
+  {
+    path: "/tablequalifyings/knockout/:sport_id",
+    Component: <PageTablequalifyingKnockout />,
   },
   // {
   //   path: "/tablequalifyings/list",

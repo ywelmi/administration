@@ -37,3 +37,25 @@ export interface TTablequalifyingMatchReport {
     note?: string;
   }[];
 }
+
+export interface TTableQualifyingMember {
+  id: string;
+  table_id: string;
+  sport_id: string;
+  team_id: string;
+  indexs?: number;
+  point?: number;
+  rating?: number;
+  match_win_count?: number;
+  match_lose_count?: number;
+  set_win_count?: number;
+  set_lose_count?: number;
+  point_win_count?: number;
+  point_lose_count?: number;
+  has_lucky_ticket?: number;
+  created?: Date;
+  modified?: Date;
+  rating_order?: number;
+  match_team_id?: string;
+  team_name: string;
+}

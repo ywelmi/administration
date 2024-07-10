@@ -23,6 +23,7 @@
     "photoswipe": "^5.4.4",
     "react": "^18.2.0",
     "react-bootstrap-typeahead": "^6.3.2",
+    "react-brackets": "^0.4.7",
     "react-calendar": "^5.0.0",
     "react-calendar-timeline": "^0.28.0",
     "react-copy-to-clipboard": "^5.1.0",

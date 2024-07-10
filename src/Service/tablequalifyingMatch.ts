@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import {
   TTablequalifyingMatch,
   TTablequalifyingMatchReport,
+  TTableQualifyingMember,
 } from "../type/tablequalifyingMatch";
 import { baseGetParams, IListResponse } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
@@ -38,6 +39,14 @@ export const tablequalifyingMatchReportUpdate = (
   return httpPut<TTablequalifyingMatch>(
     `tablequalifyingMatchs/${tablequalifyingMatchResult.id}`,
     tablequalifyingMatchResult,
+  );
+};
+
+export const tablequalifyingMatchMembersGet = (
+  tableId: string,
+) => {
+  return httpGet<TTableQualifyingMember[]>(
+    `tablequalifyings/${tableId}/TableQualifyingMembers`,
   );
 };
 

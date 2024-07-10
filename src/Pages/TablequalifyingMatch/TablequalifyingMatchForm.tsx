@@ -2,13 +2,18 @@ import { Col, Input, Label, Row } from "reactstrap";
 import { useFormik } from "formik";
 import { Btn, Popovers } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { InputSelect } from "../../Component/InputSelect";
-import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
+import {
+  TTablequalifyingMatch,
+  TTableQualifyingMember,
+} from "../../type/tablequalifyingMatch";
 import { parseInt } from "lodash";
 import { useTeamStore } from "../../store/team";
 import ReactDatePicker from "react-datepicker";
+import { TTeam } from "../../type/team";
+import { tablequalifyingMatchMembersGet } from "../../Service/tablequalifyingMatch";
 
 export interface ITablequalifyingMatchForm {
   tablequalifyingMatch?: Partial<TTablequalifyingMatch>;
@@ -36,7 +41,9 @@ const TablequalifyingMatchForm = (
       // team1_name: "",
       // team2_name: "",
     };
-  const { teams } = useTeamStore(); // take teams from same table
+
+  // const { teams } = useTeamStore(); // take teams from same table
+  const [teams, setTeams] = useState<TTableQualifyingMember[]>([]);
 
   const { t } = useTranslation();
   const formik = useFormik<Partial<TTablequalifyingMatch>>({
@@ -52,6 +59,18 @@ const TablequalifyingMatchForm = (
       if (submitValue) onSubmit(submitValue);
     },
   });
+
+  useEffect(() => {
+    const tableId = formik.values.table_id;
+    if (tableId) {
+      tablequalifyingMatchMembersGet(tableId).then((res) => {
+        const { data, status } = res;
+        if (status === 200) {
+          setTeams(data);
+        }
+      }).catch((err) => console.log({ err }));
+    }
+  }, [formik.values.table_id]);
 
   // const selectableTeams = teams.filter(({ id }) =>
   //   formik.values.team1_id !== id && formik.values.team2_id !== id
@@ -74,9 +93,9 @@ const TablequalifyingMatchForm = (
           <InputSelect
             title={t("team1_name")}
             data={teams || []}
-            k="org_name"
+            k="team_name"
             name="team1_id"
-            v="id"
+            v="team_id"
             handleChange={(e) => {
               formik.handleChange(e);
             }}
@@ -87,9 +106,9 @@ const TablequalifyingMatchForm = (
           <InputSelect
             title={t("team2_name")}
             data={teams || []}
-            k="org_name"
+            k="team_name"
             name="team2_id"
-            v="id"
+            v="team_id"
             handleChange={(e) => {
               formik.handleChange(e);
             }}
