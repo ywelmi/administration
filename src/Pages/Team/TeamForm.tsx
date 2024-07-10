@@ -72,6 +72,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
   const displayedListTeammember: TTeammember[] = useMemo(() => [
     ...newListMember,
     ...teammembers,
+    // ...teammembers.filter(m => m.name === formik.values.org_id),
   ], [teammembers, newListMember]);
 
   const { TeammemberPopover, handleToggle } = useTeammemberPopover({
@@ -160,9 +161,12 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
             data={displayedListTeammember}
             onSelectedRowsChange={({ selectedRows }) => {
               console.log({ selectedRows });
-              console.log({ formikMembers: formik.values.list_team_member });
+              console.log({
+                formikMembers: formik.values.list_team_member,
+              });
               if (
-                selectedRows.length === formik.values.list_team_member?.length
+                selectedRows.length ===
+                  formik.values.list_team_member?.length
               ) {
                 return;
               }
@@ -173,31 +177,24 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
             }}
             selectableRowSelected={(r) => {
               return !r?.id ||
-                !!formik.values.list_team_member?.map(({ id }) => id).includes(
-                  r.id,
-                );
+                !!formik.values.list_team_member?.map(({ id }) => id)
+                  .includes(
+                    r.id,
+                  );
             }}
           />
         </Col>
-        {![4, 5].includes(
-            sports.find(({ id }) => formik.values.sport_id === id)
-              ?.point_unit || -999,
-          )
-          ? (
-            <div>
-              <TeammemberPopover target="PopoverAddUser">
-                <Btn
-                  type="button"
-                  color="secondary"
-                  id="PopoverAddUser"
-                  onClick={handleToggle}
-                >
-                  Bật/Tắt thêm vận động viên
-                </Btn>
-              </TeammemberPopover>
-            </div>
-          )
-          : null}
+
+        <TeammemberPopover target="PopoverAddUser">
+          <Btn
+            type="button"
+            color="secondary"
+            id="PopoverAddUser"
+            onClick={handleToggle}
+          >
+            Bật/Tắt thêm vận động viên
+          </Btn>
+        </TeammemberPopover>
 
         <Col xs="12" className="gap-2" style={{ display: "flex" }}>
           <Btn color="primary" type="submit">

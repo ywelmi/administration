@@ -148,6 +148,7 @@ const tableColumns = ([
 ] as (keyof TTablequalifyingColumn)[]).map(
   (c) => ({
     "name": NAME_CONVERSION[c],
+    sortable: true,
     selector: (row: TTablequalifyingColumn) => {
       const col = c as keyof TTablequalifyingColumn;
       return row?.[col]

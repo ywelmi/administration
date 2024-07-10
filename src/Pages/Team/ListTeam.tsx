@@ -33,7 +33,6 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
   const { t } = useTranslation();
 
   const handleUpdateTeam = (team: TTeam) => {
-    // console.log({ handleUpdateTeam: team });
     teamUpdate(team).then(
       (res) => {
         const { status, data } = res;
@@ -108,6 +107,7 @@ const tableColumns = ([
   "list_member_name",
 ] as (keyof Omit<TTeamColumn, "list_team_member">)[]).map((c) => ({
   "name": NAME_CONVERSION[c],
+  sortable: true,
   selector: (row: TTeamColumn) => {
     const col = c as keyof TTeamColumn;
     return row?.[col]

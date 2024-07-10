@@ -1,74 +1,86 @@
-import { Col, InputGroup, InputGroupText, Label, Row } from "reactstrap";
+import { Col, Input, InputGroup, InputGroupText, Label, Row } from "reactstrap";
 import { TOrg } from "../../type/org";
-import { Field, Form, Formik } from "formik";
+import { useFormik } from "formik";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useState } from "react";
 import { useGroupStore } from "../../store/group";
 import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
+import { InputSelect } from "../../Component/InputSelect";
+import { useTranslation } from "react-i18next";
 
 interface IOrgForm {
   org?: TOrg;
   onSubmit: (org: TOrg) => void;
+  onCancel?: () => void;
 }
 
 interface IOrgModal extends IOrgForm {
 }
 
-const OrgForm = ({ org: initOrg, onSubmit }: IOrgForm) => {
+const OrgForm = ({ org: initOrg, onSubmit, onCancel }: IOrgForm) => {
   const org = initOrg ? initOrg : { name: "", group_id: null };
   const { groups } = useGroupStore();
+  const { t } = useTranslation();
+
+  const formik = useFormik({
+    initialValues: { ...org },
+    onSubmit: (value) => {
+      console.log({ submitValue: value });
+
+      let submitValue = { ...value } as TOrg;
+      if (hasOwnProperty(value, "id")) {
+        submitValue["id"] = value.id as string;
+      }
+
+      if (submitValue) onSubmit(submitValue);
+    },
+  });
 
   return (
-    <Formik
-      initialValues={{ ...org }}
-      onSubmit={(value) => {
-        console.log({ submitValue: value });
-
-        let submitValue = { ...value } as TOrg;
-        if (hasOwnProperty(value, "id")) {
-          submitValue["id"] = value.id as string;
-        }
-
-        if (submitValue) onSubmit(submitValue);
-      }}
-    >
-      {() => (
-        <Form>
-          <Row className="g-3">
+    <form onSubmit={formik.handleSubmit}>
+      <Row className="g-3">
+        <Col md="12">
+          <Label>Tên đơn vị</Label>
+          <Input
+            id="name"
+            type="text"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+          />
+        </Col>
+        {(groups?.length)
+          ? (
             <Col md="12">
-              <Label>Tên đơn vị</Label>
-              <Field
-                className="form-control"
-                name="name"
-                type="text"
-                placeholder={org.name}
+              <InputSelect
+                title={t("group_id")}
+                data={groups}
+                k="name"
+                name="group_id"
+                v="id"
+                handleChange={(e) => {
+                  formik.handleChange(e);
+                }}
+                value={formik.values.group_id}
               />
             </Col>
-            {(groups?.length)
-              ? (
-                <Col md="12">
-                  <InputGroup>
-                    <InputGroupText>Nhóm</InputGroupText>
-                    <Field name="group_id" as="select">
-                      {groups.map(({ id, name }) => (
-                        <option value={id}>{name}</option>
-                      ))}
-                    </Field>
-                  </InputGroup>
-                </Col>
-              )
-              : null}
+          )
+          : null}
 
-            <Col xs="12">
-              <Btn color="primary" type="submit">
-                Xác nhận
+        <Col xs="12" className="gap-2" style={{ display: "flex" }}>
+          <Btn color="primary" type="submit">
+            Xác nhận
+          </Btn>
+          {onCancel
+            ? (
+              <Btn color="primary" type="button" onClick={onCancel}>
+                Hủy
               </Btn>
-            </Col>
-          </Row>
-        </Form>
-      )}
-    </Formik>
+            )
+            : null}
+        </Col>
+      </Row>
+    </form>
   );
 };
 
@@ -89,7 +101,11 @@ const useOrgModal = ({ onSubmit, ...rest }: IOrgModal) => {
       isOpen={opened}
       toggle={handleToggle}
     >
-      <OrgForm onSubmit={handleSubmit} {...rest} />
+      <OrgForm
+        onSubmit={handleSubmit}
+        {...rest}
+        onCancel={() => setOpened(false)}
+      />
     </CommonModal>
   );
 

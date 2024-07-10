@@ -60,7 +60,6 @@ const UserTableAction = ({ user }: { user: TUser }) => {
           deleteUser(user.id);
           return;
         }
-        return Promise.reject(status);
       })
         .catch((err) => {
           toast.error(t("error"));
@@ -98,6 +97,7 @@ const ListUser = () => {
   const columns: TableColumn<TUser>[] = [
     ...["username", "fullname"].map((c) => ({
       "name": t(c),
+      sortable: true,
       selector: (row: TUser) => row[c as keyof TUser],
     })),
   ];

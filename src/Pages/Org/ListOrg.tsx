@@ -102,6 +102,7 @@ const ListOrg = () => {
   const columns: TableColumn<TOrgColumn>[] = [
     ...["name", "group_id"].map((c) => ({
       "name": t(c),
+      sortable: true,
       selector: (row: TOrgColumn) => {
         if (c == "group_id") {
           const group_id = row[c as keyof TOrgColumn];

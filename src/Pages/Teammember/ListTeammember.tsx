@@ -59,6 +59,7 @@ const tableColumns = ([
   "team_name",
 ] as (keyof TTeammemberColumn)[]).map((c) => ({
   "name": NAME_CONVERSION[c],
+  sortable: true,
   selector: (row: TTeammemberColumn) => {
     if (c == "gender") {
       const i = row[c as keyof TTeammemberColumn];

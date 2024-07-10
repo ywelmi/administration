@@ -107,6 +107,7 @@ interface IListSport {
 const tableColumns = (["name", "competition_name"] as (keyof TSportColumn)[])
   .map((c) => ({
     "name": NAME_CONVERSION[c],
+    sortable: true,
     selector: (row: TSportColumn) => {
       return row[c as keyof TSportColumn] as (string | number);
     },
