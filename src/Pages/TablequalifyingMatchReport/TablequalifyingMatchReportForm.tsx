@@ -5,7 +5,6 @@ import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import { NAME_CONVERSION } from "../../name-conversion";
 import { ListSetReport, useSetReportPopover } from "./SetReport";
 
 export interface ITablequalifyingMatchReportForm {

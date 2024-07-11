@@ -82,8 +82,8 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
         />
         <TeamUpdateModal />
       </LI>
-      <LI className="delete btn">
-        <i className="icon-trash cursor-pointer" onClick={handleConfirmDel} />
+      <LI className="delete btn" onClick={handleConfirmDel}>
+        <i className="icon-trash cursor-pointer" />
       </LI>
     </UL>
   );

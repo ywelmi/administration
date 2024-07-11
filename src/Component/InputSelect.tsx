@@ -13,19 +13,23 @@ interface IInputSelect<T> {
 }
 
 const InputSelect = <T,>(
-  { title, data, k, v, handleChange: onChange, ...rest }: IInputSelect<T>,
+  { title, data, k, v, handleChange: onChange, value, ...rest }: IInputSelect<
+    T
+  >,
 ) => {
   const inputData = data.map((item) => ({
     k: item[k],
     v: item[v],
   }));
+  const defaultValue = null ? value : "null";
   return (
     <InputGroup>
       <InputGroupText>{title}</InputGroupText>
       <Input
         type="select"
         onChange={onChange}
-        defaultValue={"null"}
+        defaultValue={defaultValue}
+        value={value}
         {...rest}
       >
         <option value={"null"} selected hidden></option>

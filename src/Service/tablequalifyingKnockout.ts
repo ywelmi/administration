@@ -1,4 +1,5 @@
 import {
+  IKnockoutCreate,
   TTablequalifyingKnockout,
   TTablequalifyingKnockoutMatchReport,
 } from "../type/tablequalifyingKnockout";
@@ -20,7 +21,16 @@ export const tablequalifyingKnockoutTreeCreate = async (
 };
 
 export const tablequalifyingKnockoutsGet = (sportId: string) => {
-  return httpGet(`/sports/${sportId}/TableKnockoutMatchs`);
+  return httpGet<TTablequalifyingKnockout[]>(
+    `/sports/${sportId}/TableKnockoutMatchs`,
+  );
+};
+
+export const tablequalifyingKnockoutGen = (config: IKnockoutCreate) => {
+  return httpPost(
+    `tableknockoutmatchs`,
+    config,
+  );
 };
 
 // export const tablequalifyingKnockoutCreate = (

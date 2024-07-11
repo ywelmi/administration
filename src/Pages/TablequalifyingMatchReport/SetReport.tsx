@@ -25,13 +25,15 @@ const ListSetReport = ({ items = [] }: IListSetReport) => {
   ] as (keyof TSetReport)[]).map((c) => ({
     name: NAME_CONVERSION[c],
     sortable: true,
-    sortable: true,
     selector: (row: TSetReport) => {
       return (row?.[c] ? row?.[c] : "") as string;
     },
   }));
 
-  const renderData = items.map((item, i) => ({ stt: i, ...item }));
+  const renderData = items.map((item, i) => ({
+    stt: (i + 1).toString(),
+    ...item,
+  }));
   // columns.push({name: NAME_CONVERSION['stt'], sortable: true, sortable: true, selector: (row) => row.id})
   return (
     <div className="table-responsive">

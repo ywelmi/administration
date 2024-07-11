@@ -1,113 +1,101 @@
-import { Col, Input, Label, Row } from "reactstrap";
-import { TTablequalifying } from "../../type/tablequalifying";
+import { Col, Input, Label, Media, Row } from "reactstrap";
+import { IKnockoutCreate } from "../../type/tablequalifyingKnockout";
 import { useFormik } from "formik";
-import { Btn, Popovers } from "../../AbstractElements";
+import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import { useState } from "react";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
-import { useTeamStore } from "../../store/team";
-// import { useTeamPopover } from "../Team/TeamForm";
-import { ListTeam } from "../Team/ListTeam";
-import { ListSport } from "../Sport/ListSport";
 import { useSportStore } from "../../store/sport";
 import { InputSelect } from "../../Component/InputSelect";
 
-interface ITablequalifyingForm {
-  tablequalifying?: Partial<TTablequalifying>;
-  onSubmit: (tablequalifying: Partial<TTablequalifying>) => void;
+interface ItablequalifyingKnockoutForm {
+  tablequalifyingKnockout?: IKnockoutCreate;
+  onSubmit: (
+    tablequalifyingKnockout: IKnockoutCreate,
+  ) => void;
   onCancel?: () => void;
 }
 
-interface ITablequalifyingModal extends ITablequalifyingForm {
+interface ItablequalifyingKnockoutModal extends ItablequalifyingKnockoutForm {
 }
 
-const TablequalifyingForm = (
-  { tablequalifying: initTablequalifying, onSubmit, onCancel }:
-    ITablequalifyingForm,
+const TablequalifyingKnockoutForm = (
+  {
+    tablequalifyingKnockout: initTablequalifyingKnockout,
+    onSubmit,
+    onCancel,
+  }: ItablequalifyingKnockoutForm,
 ) => {
-  const tablequalifying: Partial<TTablequalifying> = initTablequalifying
-    ? initTablequalifying
+  const tablequalifyingKnockout = initTablequalifyingKnockout
+    ? initTablequalifyingKnockout
     : {
+      "number_team": 0,
+      "has_grade_3rd": false,
       "sport_id": "",
-      "name": "",
-      "index": 0,
-      "listTeams": [],
     };
 
-  const { teams } = useTeamStore();
   const { sports } = useSportStore();
   const { t } = useTranslation();
-  const formik = useFormik<Partial<TTablequalifying>>({
-    initialValues: { ...tablequalifying },
+  const formik = useFormik<IKnockoutCreate>({
+    initialValues: { ...tablequalifyingKnockout },
     onSubmit: (value) => {
-      console.log({ submitAddTablequalifyingValue: value });
+      console.log({ submitAddtablequalifyingKnockoutKnockoutValue: value });
       let submitValue = {
         ...value,
-      } as TTablequalifying;
+      } as IKnockoutCreate;
       if (submitValue) onSubmit(submitValue);
     },
   });
-
-  console.log({ teams, sportId: formik.values.sport_id });
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <Row className="g-3">
         <Col md="12" className="form-check checkbox-primary">
-          <Label for="name" check>{t("name")}</Label>
+          <Label for="number_team" check>{t("number_team")}</Label>
           <Input
-            id="name"
+            id="number_team"
             type="text"
             defaultChecked
-            value={formik.values.name}
+            value={formik.values.number_team}
             onChange={formik.handleChange}
           />
         </Col>
-        {!initTablequalifying?.sport_id
-          ? (
-            <Col md="12" className="form-check checkbox-primary">
-              <Label for="sport" check>{t("sport")}</Label>
-              {/* <ListSport data={sports} /> */}
-              <InputSelect
-                title="Cuộc thi"
-                data={sports}
-                k="name"
-                name="sport_id"
-                v="id"
-                handleChange={(e) => {
-                  formik.handleChange(e);
+        <Col md="12" className="form-check">
+          <Media className="switch-outline align-items-center gap-3">
+            <Label for="has_grade_3rd">Có giải 3</Label>
+            <Label className="switch mb-0">
+              <Input
+                name="has_grade_3rd"
+                type="checkbox"
+                defaultChecked={false}
+                onChange={() => {
+                  const checked = formik.values.has_grade_3rd;
+                  formik.setFieldValue("has_grade_3rd", !checked);
                 }}
-                value={formik.values.sport_id}
               />
-            </Col>
-          )
-          : null}
-        <Col md="12" className="form-check checkbox-primary">
-          <Label for="listTeams" check>{t("Team")}</Label>
+              <span className={`switch-state bg-success`}></span>
+            </Label>
+          </Media>
+        </Col>
 
-          <ListTeam
-            data={teams.filter(({ sport_id }) =>
-              sport_id === formik.values?.sport_id
-            )}
-            onSelectedRowsChange={({ selectedRows }) => {
-              if (
-                selectedRows.length ===
-                  formik.values.listTeams?.length
-              ) {
-                return;
-              }
-              formik.setFieldValue(
-                "listTeams",
-                selectedRows.map((row) => row.id),
-              );
+        <Col md="12" className="form-check checkbox-primary">
+          <Label for="sport" check>{t("sport")}</Label>
+          {/* <ListSport data={sports} /> */}
+          <InputSelect
+            title="Cuộc thi"
+            data={sports}
+            k="name"
+            name="sport_id"
+            v="id"
+            handleChange={(e) => {
+              formik.handleChange(e);
             }}
-            selectableRowSelected={(r) => {
-              return !r?.id ||
-                !!formik.values.listTeams?.map((id) => id)
-                  .includes(
-                    r.id,
-                  );
-            }}
+            value={formik.values.sport_id}
           />
         </Col>
         <Col xs="12" className="gap-2" style={{ display: "flex" }}>
@@ -123,26 +111,28 @@ const TablequalifyingForm = (
   );
 };
 
-const useTablequalifyingKnockoutModal = (
-  { onSubmit, ...rest }: ITablequalifyingModal,
+const useTablequalifyingKnockout = (
+  { onSubmit, ...rest }: ItablequalifyingKnockoutModal,
 ) => {
   const [opened, setOpened] = useState(false);
   const handleToggle = () => {
     setOpened((s) => !s);
   };
 
-  const handleSubmit = (tablequalifying: Partial<TTablequalifying>) => {
-    onSubmit(tablequalifying);
+  const handleSubmit = (
+    tablequalifyingKnockout: IKnockoutCreate,
+  ) => {
+    onSubmit(tablequalifyingKnockout);
     setOpened(false);
   };
-  const TablequalifyingModal = () => (
+  const TablequalifyingKnockoutModal = () => (
     <CommonModal
       backdrop="static"
       modalBodyClassName="social-profile text-start"
       isOpen={opened}
       toggle={handleToggle}
     >
-      <TablequalifyingForm
+      <TablequalifyingKnockoutForm
         onSubmit={handleSubmit}
         {...rest}
         onCancel={() => setOpened(false)}
@@ -150,7 +140,171 @@ const useTablequalifyingKnockoutModal = (
     </CommonModal>
   );
 
-  return { TablequalifyingModal, handleToggle };
+  return { TablequalifyingKnockoutModal, handleToggle };
 };
 
-export { TablequalifyingForm, useTablequalifyingKnockoutModal };
+import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
+import {
+  ListSetReport,
+  useSetReportPopover,
+} from "../TablequalifyingMatchReport/SetReport";
+
+export interface ITablequalifyingKnockoutMatchReportForm {
+  tablequalifyingKnockoutMatchReport?: Partial<TTablequalifyingMatchReport>;
+  onSubmit: (tablequalifyingMatchReport: TTablequalifyingMatchReport) => void;
+  onCancel?: () => void;
+}
+
+export interface ITablequalifyingMatchReportModal
+  extends ITablequalifyingKnockoutMatchReportForm {
+}
+
+const TablequalifyingKnockoutMatchReportForm = (
+  {
+    tablequalifyingKnockoutMatchReport: initTablequalifyingMatchReport,
+    onSubmit,
+    onCancel,
+  }: ITablequalifyingKnockoutMatchReportForm,
+) => {
+  const tablequalifyingMatchReport: Partial<TTablequalifyingMatchReport> =
+    initTablequalifyingMatchReport ? initTablequalifyingMatchReport : {
+      "id": "",
+      "sets": [],
+    };
+
+  const { t } = useTranslation();
+  const formik = useFormik<Partial<TTablequalifyingMatchReport>>({
+    initialValues: { ...tablequalifyingMatchReport },
+    onSubmit: (value) => {
+      let submitValue = {
+        ...value,
+      } as TTablequalifyingMatchReport;
+      if (submitValue) onSubmit(submitValue);
+    },
+  });
+
+  const { SetReportPopover, handleToggle: handleToggleAddSetReport } =
+    useSetReportPopover({
+      onSubmit: (v) => {
+        const sets = formik.values.sets ?? [];
+        formik.setFieldValue("sets", [...sets, v]);
+      },
+    });
+
+  return (
+    <form onSubmit={formik.handleSubmit}>
+      <Row className="g-3">
+        <SetReportPopover target="PopoversSetReport">
+          <Btn
+            color="secondary"
+            type="button"
+            id="PopoversSetReport"
+            onClick={handleToggleAddSetReport}
+          >
+            Thêm mới séc
+          </Btn>
+        </SetReportPopover>
+        <Col md="12" className="form-check checkbox-primary">
+          <Label for="sets" check>{t("sets")}</Label>
+          <ListSetReport items={formik.values.sets} />
+        </Col>
+
+        <Col xs="12" className="gap-2" style={{ display: "flex" }}>
+          <Btn color="primary" type="submit">
+            Xác nhận
+          </Btn>
+          {onCancel
+            ? <Btn color="primary" type="button" onClick={onCancel}>Hủy</Btn>
+            : null}
+        </Col>
+      </Row>
+    </form>
+  );
+};
+
+const useTablequalifyingKnockoutMatchReportModal = (
+  { onSubmit, ...rest }: ITablequalifyingMatchReportModal,
+) => {
+  const [opened, setOpened] = useState(false);
+
+  const handleToggle = () => {
+    setOpened((s) => !s);
+  };
+
+  const handleSubmit = (
+    tablequalifyingMatchReport: TTablequalifyingMatchReport,
+  ) => {
+    onSubmit(tablequalifyingMatchReport);
+    setOpened(false);
+  };
+
+  const TablequalifyingKnockoutMatchReportModal = () => (
+    <CommonModal
+      backdrop="static"
+      modalBodyClassName="social-profile text-start"
+      isOpen={opened}
+      toggle={handleToggle}
+    >
+      <TablequalifyingKnockoutMatchReportForm
+        onSubmit={handleSubmit}
+        {...rest}
+        onCancel={() => setOpened(false)}
+      />
+    </CommonModal>
+  );
+
+  return { TablequalifyingKnockoutMatchReportModal, handleToggle };
+};
+
+export const TablequalifyingKnockoutMatchReportModal = forwardRef((
+  { onSubmit, ...rest }: ITablequalifyingMatchReportModal,
+  ref,
+) => {
+  const [opened, setOpened] = useState(false);
+
+  const handleToggle = () => {
+    setOpened((s) => !s);
+  };
+
+  useImperativeHandle(ref, () => ({ handleToggle }));
+
+  const handleSubmit = (
+    tablequalifyingMatchReport: TTablequalifyingMatchReport,
+  ) => {
+    onSubmit(tablequalifyingMatchReport);
+    setOpened(false);
+  };
+
+  return (
+    <div>
+      <Btn
+        color="secondary"
+        type="button"
+        size="xs"
+        style={{ fontSize: "10" }}
+        onClick={() => setOpened(true)}
+      >
+        <i className="icon-info-alt" />
+        {/* Cập nhật kết quả */}
+      </Btn>
+      <CommonModal
+        backdrop="static"
+        modalBodyClassName="social-profile text-start"
+        isOpen={opened}
+        toggle={handleToggle}
+      >
+        <TablequalifyingKnockoutMatchReportForm
+          onSubmit={handleSubmit}
+          {...rest}
+          onCancel={() => setOpened(false)}
+        />
+      </CommonModal>
+    </div>
+  );
+});
+
+export {
+  TablequalifyingKnockoutMatchReportForm,
+  useTablequalifyingKnockoutMatchReportModal,
+};
+export { TablequalifyingKnockoutForm, useTablequalifyingKnockout };

@@ -41,3 +41,9 @@ export interface TTablequalifyingKnockoutMatchReport {
     note?: string;
   }[];
 }
+
+export interface IKnockoutCreate {
+  "number_team": number;
+  "has_grade_3rd": boolean;
+  "sport_id": string;
+}

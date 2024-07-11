@@ -71,15 +71,12 @@ const UserTableAction = ({ user }: { user: TUser }) => {
 
   return (
     <UL className="action simple-list flex-row" id={user.id}>
-      <LI className="edit btn">
-        <i
-          className="icon-pencil-alt"
-          onClick={handleToggleUpdateModal}
-        />
+      <LI className="edit btn" onClick={handleToggleUpdateModal}>
+        <i className="icon-pencil-alt" />
         <UserUpdateModal />
       </LI>
-      <LI className="delete btn">
-        <i className="icon-trash cursor-pointer" onClick={handleConfirmDel} />
+      <LI className="delete btn" onClick={handleConfirmDel}>
+        <i className="icon-trash cursor-pointer" />
       </LI>
     </UL>
   );

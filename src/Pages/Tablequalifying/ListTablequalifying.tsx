@@ -131,8 +131,8 @@ const TablequalifyingTableAction = (
         />
         <TablequalifyingUpdateModal />
       </LI>
-      <LI className="delete btn">
-        <i className="icon-trash cursor-pointer" onClick={handleConfirmDel} />
+      <LI className="delete btn" onClick={handleConfirmDel}>
+        <i className="icon-trash cursor-pointer" />
       </LI>
 
       <LI
