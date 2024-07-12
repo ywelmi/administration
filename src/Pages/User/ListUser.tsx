@@ -171,7 +171,6 @@ const ListUser = () => {
                     persistTableHead
                   />
                 </div>
-                <Component />
               </CardBody>
             </Card>
           </Col>

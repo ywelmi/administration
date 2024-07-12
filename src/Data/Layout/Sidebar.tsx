@@ -1,127 +1,116 @@
-import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
-
-// const orgList =[    {
-//       title: "Quản trị",
-//       lanClass: "lan-1",
-//       Items: [
-//         {
-//           title: "Người dùng",
-//           id: 1,
-//           icon: "home",
-//           type: "sub",
-//           lanClass: "lan-3",
-//           children: [
-//             {
-//               path: "/user/list",
-//               title: "Danh sách người dùng",
-//               type: "link",
-//               lanClass: "lan-4",
-//             },
-//           ],
-//         },
-//         {
-//           title: "Đơn vị",
-//           id: 1,
-//           icon: "home",
-//           type: "sub",
-//           lanClass: "lan-3",
-//           children: [
-//             {
-//               path: "/org/list",
-//               title: "Danh sách đơn vị",
-//               type: "link",
-//               lanClass: "lan-4",
-//             },
-//           ],
-//         },
-//         {
-//           title: "Thi đấu",
-//           id: 1,
-//           icon: "home",
-//           type: "sub",
-//           lanClass: "lan-3",
-//           children: [
-//             {
-//               path: "/team/list",
-//               title: "Đăng ký thi",
-//               type: "link",
-//               lanClass: "lan-4",
-//             },
-//             {
-//               path: "/sport/list",
-//               title: "Môn thi",
-//               type: "link",
-//               lanClass: "lan-4",
-//             },
-//             {
-//               path: "/teammember/list",
-//               title: "Vận động viên",
-//               type: "link",
-//               lanClass: "lan-4",
-//             },
-//             {
-//               path: "/tablequalifyings/list",
-//               title: "Bảng thi đấu",
-//               type: "link",
-//               lanClass: "lan-4",
-//             },
-//             // {
-//             //   path: "/tablequalifyings/match/",
-//             //   title: "Lịch thi đấu",
-//             //   type: "link",
-//             //   lanClass: "lan-4",
-//             // },
-//           ],
-//         },
-//       ],
-//     },
-// ]
+// const menuList = [
+//   {
+//     Items: [
+//       {
+//         path: "/user/list",
+//         title: "Danh sách người dùng",
+//         type: "link",
+//         lanClass: "lan-4",
+//       },
+//       {
+//         path: "/org/list",
+//         title: "Danh sách đơn vị",
+//         type: "link",
+//         lanClass: "lan-4",
+//       },
+//       ,
+//       {
+//         path: "/team/list",
+//         title: "Đăng ký thi",
+//         type: "link",
+//         lanClass: "lan-4",
+//       },
+//       {
+//         path: "/sport/list",
+//         title: "Môn thi",
+//         type: "link",
+//         lanClass: "lan-4",
+//       },
+//       {
+//         path: "/teammember/list",
+//         title: "Vận động viên",
+//         type: "link",
+//         lanClass: "lan-4",
+//       },
+//       {
+//         path: "/tablequalifyings/list",
+//         title: "Bảng thi đấu",
+//         type: "link",
+//         lanClass: "lan-4",
+//       },
+//     ],
+//   },
+// ];
 export const useMenuList = () => {
-  // const { table_id } = useTablequalifyingMatchStore();
   const menuList = [
     {
-      // title: "Quản trị",
-      // lanClass: "lan-1",
       Items: [
         {
-          path: "/user/list",
-          title: "Danh sách người dùng",
-          type: "link",
-          lanClass: "lan-4",
+          title: "Quản trị người dùng",
+          lanClass: "lan-1",
+          children: [{
+            title: "Người dùng",
+            type: "sub",
+            lanClass: "lan-3",
+            path: "/user/list",
+          }, {
+            title: "Phân quyền - Not",
+            type: "sub",
+            lanClass: "lan-3",
+            // path: "/user/list",
+          }],
         },
         {
-          path: "/org/list",
-          title: "Danh sách đơn vị",
-          type: "link",
-          lanClass: "lan-4",
-        },
-        ,
-        {
-          path: "/team/list",
-          title: "Đăng ký thi",
-          type: "link",
-          lanClass: "lan-4",
-        },
-        {
+          title: "Danh mục môn thi",
+          lanClass: "lan-1",
           path: "/sport/list",
-          title: "Môn thi",
-          type: "link",
-          lanClass: "lan-4",
+          type: "sub",
         },
         {
+          title: "Danh mục đơn vị",
+          lanClass: "lan-1",
+          path: "/org/list",
+          type: "link",
+        },
+        {
+          title: "Nhập vận động viên cho đơn vị",
+          lanClass: "lan-1",
           path: "/teammember/list",
-          title: "Vận động viên",
           type: "link",
-          lanClass: "lan-4",
         },
         {
-          path: "/tablequalifyings/list",
-          title: "Bảng thi đấu",
-          type: "link",
-          lanClass: "lan-4",
+          title: "Quản trị thi lực lượng thường trực",
+          lanClass: "lan-1",
+          children: [
+            {
+              path: "/team/list",
+              title: "Đăng ký thi",
+              type: "link",
+              lanClass: "lan-4",
+            },
+            {
+              path: "/tablequalifyings/list",
+              title: "Lập lịch thi đấu",
+              type: "link",
+              lanClass: "lan-4",
+            },
+            {
+              path: "#",
+              title: "Xuất phiếu điểm - Not",
+              type: "link",
+              lanClass: "lan-4",
+            },
+            {
+              path: "#",
+              title: "Nhập điểm - Not",
+              type: "link",
+              lanClass: "lan-4",
+            },
+          ],
         },
       ],
     },
   ];
+
   return { menuList };
 };
