@@ -3,7 +3,7 @@ import { TTeam } from "../../type/team";
 import { useFormik } from "formik";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useCompetitionStore } from "../../store/competition";
 import { useOrgStore } from "../../store/org";
@@ -16,6 +16,8 @@ import { ListTeammember } from "../Teammember/ListTeammember";
 import { DGender, DRank } from "../../type/enum";
 import { convertToDate } from "../../utils/date";
 import { N } from "../../name-conversion";
+import { getFilterByValue } from "../../Service/_getParams";
+import { teammembersGet } from "../../Service/teammember";
 
 interface ITeamForm {
   team?: TTeam;
@@ -99,6 +101,8 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
 
   const [newListMember, setNewListMember] = useState<TTeammember[]>([]);
 
+  const [orgMembers, setOrgMembers] = useState<TTeammember[]>([]);
+
   const handleAddTeammember = useCallback((newTeammember: TTeammember) => {
     setNewListMember((prev) => [...prev, newTeammember]);
     const newTeammembers = formik.values.list_team_member || [];
@@ -108,19 +112,29 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
     ]);
   }, []);
 
-  const displayedListTeammember: TTeammember[] = useMemo(() => {
+  useEffect(() => {
+    (async () => {
+      const { org_id: f_org_id } = formik.values;
+      if (f_org_id) {
+        const memberFilter = getFilterByValue("org_id", "=", f_org_id);
+        const members = await teammembersGet({ filter: memberFilter }).then(
+          (res) => {
+            const { data: { data } } = res;
+            return data;
+          },
+        );
+        setOrgMembers(members);
+      }
+    })();
+  }, [formik.values.org_id]);
+
+  const displayedListTeammember = useMemo(() => {
     let availMembers: TTeammember[] = [];
-    const { competition_id: f_competition_id, org_id: f_org_id } =
-      formik.values;
-    availMembers.push(...teammembers.filter(({ competition_id, org_id }) => {
-      if (f_competition_id && f_competition_id !== competition_id) {
-        return false;
-      }
-      if (f_org_id && f_org_id !== org_id) {
-        return false;
-      }
-      return true;
-    }));
+    if (!orgMembers?.length) {
+      // availMembers.push(...teammembers);
+    } else {
+      availMembers.push(...orgMembers);
+    }
     return [
       ...newListMember,
       ...availMembers,
@@ -128,8 +142,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
   }, [
     teammembers,
     newListMember,
-    formik.values.competition_id,
-    formik.values.org_id,
+    orgMembers,
   ]);
 
   const { TeammemberPopover, handleToggle } = useTeammemberPopover({
@@ -238,7 +251,8 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                 !!formik.values.list_team_member?.map(({ id }) => id)
                   .includes(
                     r.id,
-                  );
+                  ) ||
+                !!formik.values.list_member_id?.includes(r.id);
             }}
           />
         </Col>
