@@ -17,7 +17,7 @@ import {
 import { LI, UL } from "../../AbstractElements";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
-import { TTeammember } from "../../type/teammember";
+import { TKeyTeammember, TTeammember } from "../../type/teammember";
 import { useTeammemberStore } from "../../store/teammember";
 import { useMemo, useState } from "react";
 import { useTeammemberModal } from "./TeammemberForm";
@@ -29,7 +29,8 @@ import {
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { DGender, DRank } from "../../type/enum";
-import { NAME_CONVERSION } from "../../name-conversion";
+import { N } from "../../name-conversion";
+import { convertToDate } from "../../utils/date";
 
 type TTeammemberColumn = TTeammember;
 
@@ -54,24 +55,43 @@ interface IListTeammember {
 
 const tableColumns = ([
   "name",
-  "gender",
   "rank",
+  "gender",
+  "created",
+  "dob",
   "team_name",
-] as (keyof TTeammemberColumn)[]).map((c) => ({
-  "name": NAME_CONVERSION[c],
+  "date_join_army",
+  "org_name",
+  "weights",
+  "competition_name",
+] as TKeyTeammember[]).map((c) => ({
+  "name": N[c],
   sortable: true,
   selector: (row: TTeammemberColumn) => {
-    if (c == "gender") {
-      const i = row[c as keyof TTeammemberColumn];
-      return DGender[parseInt(i as string)];
+    const v = row?.[c as TKeyTeammember];
+    if (v == null) return "";
+    switch (c) {
+      case "gender" as TKeyTeammember: {
+        return DGender[parseInt(v.toString())];
+      }
+      case "rank": {
+        return DRank[parseInt(v.toString())];
+      }
+      case "created": {
+        return convertToDate(v);
+      }
+      case "dob": {
+        return convertToDate(v);
+      }
+      case "date_join_army": {
+        return convertToDate(v);
+      }
+      default:
+        return row[c as TKeyTeammember] || "";
     }
-    if (c == "rank") {
-      const i = row[c as keyof TTeammemberColumn];
-      return DRank[parseInt(i as string)];
-    }
-    return row[c as keyof TTeammemberColumn];
   },
 }));
+
 const TeammemberTableAction = (
   { teammember }: { teammember: TTeammemberColumn },
 ) => {
@@ -163,6 +183,8 @@ const ListTeammember = (
         sortable: true,
       },
     );
+
+    columns = [...columns];
   }
 
   const subHeaderComponentMemo = useMemo(() => {
@@ -228,6 +250,7 @@ const PageTeammember = () => {
     handleToggle: handleToggleAddModal,
     TeammemberModal: TeammemberAddModal,
   } = useTeammemberModal({ onSubmit: handleAddTeammember });
+
   return (
     <div className="page-body">
       <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />

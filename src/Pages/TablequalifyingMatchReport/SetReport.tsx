@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import { Col, Input, Label, Row } from "reactstrap";
 import { Btn, Popovers } from "../../AbstractElements";
-import { NAME_CONVERSION } from "../../name-conversion";
+import { N } from "../../name-conversion";
 import DataTable from "react-data-table-component";
 import { useState } from "react";
 
@@ -23,7 +23,7 @@ const ListSetReport = ({ items = [] }: IListSetReport) => {
     "team2_point",
     "note",
   ] as (keyof TSetReport)[]).map((c) => ({
-    name: NAME_CONVERSION[c],
+    name: N[c],
     sortable: true,
     selector: (row: TSetReport) => {
       return (row?.[c] ? row?.[c] : "") as string;

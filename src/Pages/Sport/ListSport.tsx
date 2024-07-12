@@ -24,7 +24,7 @@ import { useSportModal } from "./SportForm";
 import { sportCreate, sportDelete, sportUpdate } from "../../Service/sport";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
-import { NAME_CONVERSION } from "../../name-conversion";
+import { N } from "../../name-conversion";
 import { useNavigate } from "react-router-dom";
 
 type TSportColumn = TSport;
@@ -131,7 +131,7 @@ interface IListSport {
 
 const tableColumns = (["name", "competition_name"] as (keyof TSportColumn)[])
   .map((c) => ({
-    "name": NAME_CONVERSION[c],
+    "name": N[c],
     sortable: true,
     selector: (row: TSportColumn) => {
       return row[c as keyof TSportColumn] as (string | number);

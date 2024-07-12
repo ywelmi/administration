@@ -17,7 +17,7 @@ export interface IListResponse<T> extends AxiosResponse {
 
 const baseGetParams: Partial<IGetFilters> = {
   skip: 0,
-  take: 20,
+  take: 100,
   sort: "",
   // filter: "",
   filter: "",

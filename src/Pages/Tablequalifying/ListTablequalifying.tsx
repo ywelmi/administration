@@ -31,7 +31,7 @@ import {
 } from "../../Service/tablequalifying";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
-import { NAME_CONVERSION } from "../../name-conversion";
+import { N } from "../../name-conversion";
 import { tablequalifyingMatchCreate } from "../../Service/tablequalifyingMatch";
 import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
@@ -180,7 +180,7 @@ const tableColumns = ([
   "list_team",
 ] as (keyof TTablequalifyingColumn)[]).map(
   (c) => ({
-    "name": NAME_CONVERSION[c],
+    "name": N[c],
     sortable: true,
     selector: (row: TTablequalifyingColumn) => {
       const col = c as keyof TTablequalifyingColumn;
@@ -340,7 +340,7 @@ const PageTablequalifying = () => {
             <Card>
               <CardHeader className="pb-0 card-no-border">
                 <InputSelect
-                  title={NAME_CONVERSION["sport"]}
+                  title={N["sport"]}
                   data={sports}
                   k="name"
                   v="id"

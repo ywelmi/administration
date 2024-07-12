@@ -10,7 +10,7 @@ import {
   useTablequalifyingKnockout,
 } from "./TablequalifyingKnockoutForm";
 import { toast } from "react-toastify";
-import { NAME_CONVERSION } from "../../name-conversion";
+import { N } from "../../name-conversion";
 import { InputSelect } from "../../Component/InputSelect";
 import { useSportStore } from "../../store/sport";
 import {
@@ -228,7 +228,7 @@ const PageTablequalifyingKnockout = () => {
             <Card>
               <CardHeader className="pb-0 card-no-border">
                 <InputSelect
-                  title={NAME_CONVERSION["sport"]}
+                  title={N["sport"]}
                   data={sports}
                   k="name"
                   v="id"

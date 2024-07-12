@@ -24,7 +24,7 @@ import { useTeamModal } from "./TeamForm";
 import { teamCreate, teamDelete, teamUpdate } from "../../Service/team";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
-import { NAME_CONVERSION } from "../../name-conversion";
+import { N } from "../../name-conversion";
 
 type TTeamColumn = Omit<TTeam, "list_member_id">;
 
@@ -78,7 +78,10 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
       <LI className="edit btn">
         <i
           className="icon-pencil-alt"
-          onClick={handleToggleUpdateModal}
+          onClick={() => {
+            console.log({ team });
+            handleToggleUpdateModal();
+          }}
         />
         <TeamUpdateModal />
       </LI>
@@ -104,14 +107,15 @@ interface IListTeam {
 const tableColumns = ([
   "competition_name",
   "org_name",
+  "sport_name",
   "list_member_name",
 ] as (keyof Omit<TTeamColumn, "list_team_member">)[]).map((c) => ({
-  "name": NAME_CONVERSION[c],
+  "name": N[c],
   sortable: true,
   selector: (row: TTeamColumn) => {
     const col = c as keyof TTeamColumn;
     return row?.[col]
-      ? (row[col as keyof TTeamColumn] || "")
+      ? (row[col as keyof TTeamColumn])
       : "" as (string | number);
   },
 }));

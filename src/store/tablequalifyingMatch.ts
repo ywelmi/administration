@@ -5,6 +5,7 @@ import { baseGetParams, IGetFilters } from "../Service/_getParams";
 import _ from "lodash";
 
 export type TablequalifyingMatchState = {
+  counter: number;
   table_id?: string;
   tablequalifyingMatchs: TTablequalifyingMatch[];
   total?: number;
@@ -16,10 +17,12 @@ export type TablequalifyingMatchState = {
   updateTableId: (table_id: string) => void;
   updateTotal: (total: number) => void;
   updateLoading: (v: boolean) => void;
+  increaseCounter: () => void;
 };
 
 export const useTablequalifyingMatchStore = create<TablequalifyingMatchState>()(
   immer((set) => ({
+    counter: 0,
     tablequalifyingMatchs: [],
     addTablequalifyingMatchs: (data: TTablequalifyingMatch[]) =>
       set((state: TablequalifyingMatchState) => {
@@ -66,6 +69,11 @@ export const useTablequalifyingMatchStore = create<TablequalifyingMatchState>()(
     updateLoading(v: boolean) {
       set((state: TablequalifyingMatchState) => {
         state.loading = v;
+      });
+    },
+    increaseCounter() {
+      set((state: TablequalifyingMatchState) => {
+        state.counter += 1;
       });
     },
   })),

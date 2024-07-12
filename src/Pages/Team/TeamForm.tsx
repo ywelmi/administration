@@ -11,8 +11,11 @@ import { useSportStore } from "../../store/sport";
 import { InputSelect } from "../../Component/InputSelect";
 import { useTeammemberStore } from "../../store/teammember";
 import { useTeammemberPopover } from "../Teammember/TeammemberForm";
-import { TTeammember } from "../../type/teammember";
+import { TKeyTeammember, TTeammember } from "../../type/teammember";
 import { ListTeammember } from "../Teammember/ListTeammember";
+import { DGender, DRank } from "../../type/enum";
+import { convertToDate } from "../../utils/date";
+import { N } from "../../name-conversion";
 
 interface ITeamForm {
   team?: TTeam;
@@ -23,8 +26,44 @@ interface ITeamForm {
 interface ITeamModal extends ITeamForm {
 }
 
+const tableTeammemberColumns = ([
+  "name",
+  "rank",
+  "gender",
+  "dob",
+  "date_join_army",
+  // "org_name",
+  "weights",
+] as TKeyTeammember[]).map((c) => ({
+  "name": N[c],
+  sortable: true,
+  selector: (row: TTeammember) => {
+    const v = row?.[c as TKeyTeammember];
+    if (v == null) return "";
+    switch (c) {
+      case "gender" as TKeyTeammember: {
+        return DGender[parseInt(v as string)];
+      }
+      case "rank": {
+        return DRank[parseInt(v as string)];
+      }
+      case "created": {
+        return convertToDate(v);
+      }
+      case "dob": {
+        return convertToDate(v);
+      }
+      case "date_join_army": {
+        return convertToDate(v);
+      }
+      default:
+        return row[c as TKeyTeammember] || "";
+    }
+  },
+}));
+
 const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
-  const team: TTeam = initTeam ? initTeam : {
+  const team: Partial<TTeam> = initTeam ? initTeam : {
     id: "",
     competition_id: "",
     org_id: "",
@@ -41,7 +80,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
   const { teammembers } = useTeammemberStore();
 
   const { t } = useTranslation();
-  const formik = useFormik<TTeam>({
+  const formik = useFormik<Partial<TTeam>>({
     initialValues: { ...team },
     onSubmit: (value) => {
       const { list_team_member } = value;
@@ -69,15 +108,33 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
     ]);
   }, []);
 
-  const displayedListTeammember: TTeammember[] = useMemo(() => [
-    ...newListMember,
-    ...teammembers,
-    // ...teammembers.filter(m => m.name === formik.values.org_id),
-  ], [teammembers, newListMember]);
+  const displayedListTeammember: TTeammember[] = useMemo(() => {
+    let availMembers: TTeammember[] = [];
+    const { competition_id: f_competition_id, org_id: f_org_id } =
+      formik.values;
+    availMembers.push(...teammembers.filter(({ competition_id, org_id }) => {
+      if (f_competition_id && f_competition_id !== competition_id) {
+        return false;
+      }
+      if (f_org_id && f_org_id !== org_id) {
+        return false;
+      }
+      return true;
+    }));
+    return [
+      ...newListMember,
+      ...availMembers,
+    ];
+  }, [
+    teammembers,
+    newListMember,
+    formik.values.competition_id,
+    formik.values.org_id,
+  ]);
 
   const { TeammemberPopover, handleToggle } = useTeammemberPopover({
     onSubmit: handleAddTeammember,
-    omitColumns: ["teams"],
+    omitColumns: ["teams", "competitions", "orgs"],
   });
 
   return (
@@ -159,6 +216,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
 
           <ListTeammember
             data={displayedListTeammember}
+            columns={tableTeammemberColumns}
             onSelectedRowsChange={({ selectedRows }) => {
               console.log({ selectedRows });
               console.log({

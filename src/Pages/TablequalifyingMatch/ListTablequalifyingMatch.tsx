@@ -34,7 +34,7 @@ import {
 } from "../../Service/tablequalifyingMatch";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
-import { NAME_CONVERSION } from "../../name-conversion";
+import { N } from "../../name-conversion";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 
@@ -147,7 +147,7 @@ const tableColumns = ([
   "team2_name",
 ] as (keyof TTablequalifyingColumn)[]).map(
   (c) => ({
-    "name": NAME_CONVERSION[c],
+    "name": N[c],
     sortable: true,
     selector: (row: TTablequalifyingColumn) => {
       const col = c as keyof TTablequalifyingColumn;

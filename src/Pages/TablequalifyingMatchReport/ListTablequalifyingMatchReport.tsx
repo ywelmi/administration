@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { getFilterByValue } from "../../Service/_getParams";
 import {
   Card,
@@ -39,7 +39,7 @@ import {
 } from "../../Service/tablequalifyingMatch";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
-import { NAME_CONVERSION } from "../../name-conversion";
+import { N } from "../../name-conversion";
 import { Btn, LI, UL } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 
@@ -48,7 +48,8 @@ type TTablequalifyingColumn = TTablequalifyingMatch;
 const TablequalifyingTableAction = (
   { tablequalifyingMatch }: { tablequalifyingMatch: TTablequalifyingColumn },
 ) => {
-  const { updateTablequalifyingMatch } = useTablequalifyingMatchStore();
+  const { updateTablequalifyingMatch, increaseCounter } =
+    useTablequalifyingMatchStore();
   const { t } = useTranslation();
 
   const handleUpdateTablequalifyingMatchReport = (
@@ -60,6 +61,7 @@ const TablequalifyingTableAction = (
         const { status, data } = res;
         if (status === 200) {
           updateTablequalifyingMatch(data as TTablequalifyingMatch);
+          increaseCounter();
           toast.success(t("success"));
           return;
         }
@@ -118,22 +120,22 @@ interface IListTablequalifyingMatchReport {
 
 const tableColumns = ([
   "indexs",
-  // "created?",
-  "team1_name",
-  "team2_name",
   "match_day",
-  // "match_hour",
+  "team1_name",
   "team1_set_win_count",
+  "team2_name",
+  // "match_hour",
   "team2_set_win_count",
 ] as (keyof TTablequalifyingColumn)[]).map(
   (c) => ({
-    "name": NAME_CONVERSION[c],
+    "name": N[c],
     sortable: true,
     selector: (row: TTablequalifyingColumn) => {
       const col = c as keyof TTablequalifyingColumn;
-      return row?.[col]
-        ? (row[col as keyof TTablequalifyingColumn] || "")
+      const v = row?.[col] !== null
+        ? (row[col as keyof TTablequalifyingColumn])
         : "" as (string | number);
+      return v;
     },
   }),
 );
@@ -209,7 +211,16 @@ const PageTablequalifyingMatchReport = () => {
   const [tablequalifyingMatchReports, setTablequalifyingMatchReports] =
     useState<TTablequalifyingMatch[]>([]);
 
+  const { counter } = useTablequalifyingMatchStore();
   useEffect(() => {
+    refreshMatchReports();
+  }, []);
+
+  useEffect(() => {
+    refreshMatchReports();
+  }, [counter]);
+
+  const refreshMatchReports = useCallback(() => {
     console.log({ tableId });
     if (tableId) {
       tablequalifyingMatchsGet(tableId).then((res) => {
@@ -219,13 +230,11 @@ const PageTablequalifyingMatchReport = () => {
           setTablequalifyingMatchReports(data);
           return;
         }
-
-        // return Promise.reject(status);
       }).catch((err) => {
         console.log({ err });
       });
     }
-  }, []);
+  }, [tableId]);
 
   return (
     <div className="page-body">
