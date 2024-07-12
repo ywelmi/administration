@@ -89,11 +89,9 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
       console.log({ submitAddTeamValue: value });
       let submitValue = {
         ...value,
-        list_team_member: list_team_member?.map(({ gender, name, rank }) => ({
-          gender,
-          name,
-          rank,
-        })),
+        list_team_member: list_team_member?.map((
+          { gender, name, rank, id },
+        ) => id),
       } as TTeam;
       if (submitValue) onSubmit(submitValue);
     },
@@ -257,16 +255,16 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
           />
         </Col>
 
-        <TeammemberPopover target="PopoverAddUser">
-          <Btn
-            type="button"
-            color="secondary"
-            id="PopoverAddUser"
-            onClick={handleToggle}
-          >
-            Bật/Tắt thêm vận động viên
-          </Btn>
-        </TeammemberPopover>
+        {/* <TeammemberPopover target="PopoverAddUser"> */}
+        {/*   <Btn */}
+        {/*     type="button" */}
+        {/*     color="secondary" */}
+        {/*     id="PopoverAddUser" */}
+        {/*     onClick={handleToggle} */}
+        {/*   > */}
+        {/*     Bật/Tắt thêm vận động viên */}
+        {/*   </Btn> */}
+        {/* </TeammemberPopover> */}
 
         <Col xs="12" className="gap-2" style={{ display: "flex" }}>
           <Btn color="primary" type="submit">
