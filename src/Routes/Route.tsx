@@ -7,7 +7,7 @@ import { PageTablequalifyingMatch } from "../Pages/TablequalifyingMatch/ListTabl
 import { PageTablequalifyingMatchReport } from "../Pages/TablequalifyingMatchReport/ListTablequalifyingMatchReport";
 import { PageTeam } from "../Pages/Team/ListTeam";
 import { PageTeammember } from "../Pages/Teammember/ListTeammember";
-import { ListUser } from "../Pages/User/ListUser";
+import { ListUser, PageUser } from "../Pages/User/ListUser";
 // import ApexChart from "../Pages/Charts/Apexchart/ApexChart";
 // import ChartJs from "../Pages/Charts/ChartJs/ChartJs";
 // import GoogleChart from "../Pages/Charts/GoogleChart/GoogleChart";
@@ -140,7 +140,7 @@ const Routes = [
   },
   {
     path: "/user/list",
-    Component: <ListUser />,
+    Component: <PageUser />,
   },
   {
     path: "/org/list",
