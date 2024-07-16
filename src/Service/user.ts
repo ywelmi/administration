@@ -18,7 +18,7 @@ export const userCreate = (user: Omit<TUser, "id">) => {
 };
 
 export const userUpdate = (user: TUser) => {
-  return httpPut(`users/${user.id}`, user);
+  return httpPut<TUser>(`users/${user.id}`, user);
 };
 
 export const userDelete = (id: string) => {
