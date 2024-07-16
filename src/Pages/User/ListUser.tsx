@@ -25,147 +25,127 @@ import { userCreate, userDelete, userUpdate } from "../../Service/user";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
+import { TanTable } from "../../Component/Tables/TanTable/TanTble";
+import { ColumnDef } from "@tanstack/react-table";
 
 type TUserColumn = TUser;
 interface IListUser {
   showAction?: boolean;
   selectableRows?: boolean;
-  onRowSelect?: (row: TUser, e: React.MouseEvent<Element, MouseEvent>) => void;
   onSelectedRowsChange?: (
     v: { allSelected: boolean; selectedCount: number; selectedRows: TUser[] },
   ) => void;
-  columns?: TableColumn<TUserColumn>[];
+  columns?: ColumnDef<TUser>[];
   data?: TUserColumn[];
   selectableRowSelected?: (row: TUserColumn) => boolean;
 }
 
-const UserTableAction = ({ user }: { user: TUser }) => {
-  const { updateUser, deleteUser } = useUserStore();
-  const { t } = useTranslation();
-  const handleUpdateUser = (user: TUser) => {
-    console.log({ handleUpdateUser: user });
-    userUpdate(user).then(
-      (res) => {
-        const { status, data } = res;
-        if (status === 200) {
-          updateUser(data as TUser);
-          toast.success(t("success"));
-          return;
-        }
+// const userAction: () => ColumnDef<TUser> = () => ({
+const userAction: ColumnDef<TUser> = {
+  id: "actions",
+  header: "#",
+  cell(props) {
+    const { row: { original: user } } = props;
+    const { updateUser, deleteUser } = useUserStore();
+    const { t } = useTranslation();
+    const handleUpdateUser = (user: TUser) => {
+      console.log({ handleUpdateUser: user });
+      userUpdate(user).then(
+        (res) => {
+          const { status, data } = res;
+          if (status === 200) {
+            updateUser({ ...user, ...data });
+            toast.success(t("success"));
+            return;
+          }
 
-        return Promise.reject(status);
-      },
-    ).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
-  };
+          return Promise.reject(status);
+        },
+      ).catch((err) => {
+        toast.error(t("error"));
+        console.log({ err });
+      });
+    };
 
-  const { handleToggle: handleToggleUpdateModal, UserModal: UserUpdateModal } =
-    useUserModal({ onSubmit: handleUpdateUser, user });
+    const {
+      handleToggle: handleToggleUpdateModal,
+      UserModal: UserUpdateModal,
+    } = useUserModal({ onSubmit: handleUpdateUser, user });
 
-  const handleConfirmDel = () => {
-    const { confirm } = useConfirmModal();
-    if (confirm) {
-      userDelete(user.id).then((res) => {
-        const { status, data } = res;
-        console.log({ status, data });
-        if (status === 200) {
-          toast.success(t("success"));
-          deleteUser(user.id);
-          return;
-        }
-      })
-        .catch((err) => {
-          toast.error(t("error"));
-          console.log({ err });
-        });
-    }
-    return;
-  };
+    const handleConfirmDel = () => {
+      const { confirm } = useConfirmModal();
+      if (confirm) {
+        userDelete(user.id).then((res) => {
+          const { status, data } = res;
+          console.log({ status, data });
+          if (status === 200) {
+            toast.success(t("success"));
+            deleteUser(user.id);
+            return;
+          }
+        })
+          .catch((err) => {
+            toast.error(t("error"));
+            console.log({ err });
+          });
+      }
+      return;
+    };
 
-  return (
-    <UL className="action simple-list flex-row" id={user.id}>
-      <LI className="edit btn" onClick={handleToggleUpdateModal}>
-        <i className="icon-pencil-alt" />
-        <UserUpdateModal />
-      </LI>
-      <LI className="delete btn" onClick={handleConfirmDel}>
-        <i className="icon-trash cursor-pointer" />
-      </LI>
-    </UL>
-  );
+    return (
+      <UL className="action simple-list flex-row" id={user.id}>
+        <LI className="edit btn" onClick={handleToggleUpdateModal}>
+          <i className="icon-pencil-alt" />
+          <UserUpdateModal />
+        </LI>
+        <LI className="delete btn" onClick={handleConfirmDel}>
+          <i className="icon-trash cursor-pointer" />
+        </LI>
+        <LI className="edit btn" onClick={() => handleUpdateUser(user)}>
+          <i className="icon-signal cursor-pointer" />
+          Lưu
+        </LI>
+      </UL>
+    );
+  },
 };
 
-const tableColumns = (["username", "fullname"] as (keyof TUserColumn)[])
-  .map((c) => ({
-    "name": N[c],
-    sortable: true,
-    selector: (row: TUserColumn) => {
-      return row[c as keyof TUserColumn] as (string | number);
+const defaultColumns: ColumnDef<TUser>[] = [
+  {
+    accessorKey: "username",
+    footer: (props) => props.column.id,
+    header: N["username"],
+    cell(props) {
+      return props.getValue();
     },
-  }));
+  },
+  {
+    accessorKey: "fullname",
+    footer: (props) => props.column.id,
+    header: N["fullname"],
+  },
+];
 
 const ListUser = ({
   data = [],
   showAction,
-  onRowSelect,
   onSelectedRowsChange,
-  columns = [...tableColumns],
+  columns = [...defaultColumns],
   selectableRowSelected,
 }: IListUser) => {
-  const [filterText, setFilterText] = useState("");
-  const filteredItems = data.filter((item) =>
-    item.fullname &&
-    item.fullname.toLowerCase().includes(filterText.toLowerCase())
-  );
-
-  if (columns.length > 0 && showAction) {
-    columns = [...columns, {
-      name: "#",
-      cell: (row: TUser) => <UserTableAction user={row} />,
-      sortable: true,
-    }];
+  let displayColumns = [...columns];
+  if (showAction) {
+    displayColumns = [...displayColumns, userAction];
   }
-
-  const subHeaderComponentMemo = useMemo(() => {
-    return (
-      <div
-        id="basic-1_filter"
-        className="dataTables_filter d-flex align-items-center"
-      >
-        <Label className="me-2">{SearchTableButton}:</Label>
-        <Input
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)}
-          type="search"
-          value={filterText}
-        />
-      </div>
-    );
-  }, [filterText]);
 
   return (
     <div className="table-responsive">
-      <DataTable
-        columns={columns}
-        data={filteredItems}
-        pagination
-        subHeader
-        subHeaderComponent={subHeaderComponentMemo}
-        highlightOnHover
-        striped
-        persistTableHead
-        selectableRowsHighlight
-        onRowClicked={onRowSelect}
+      <TanTable
+        data={data}
+        columns={displayColumns}
         onSelectedRowsChange={onSelectedRowsChange}
-        selectableRows={!!onRowSelect || !!onSelectedRowsChange}
-        // progressPending={loading}
-        paginationServer
-        // paginationTotalRows={total}
-        // onChangeRowsPerPage={handlePerRowsChange}
-        // onChangePage={handlePageChange}
         selectableRowSelected={selectableRowSelected}
+        getRowId={(r) => r.id}
       />
     </div>
   );
@@ -211,7 +191,11 @@ const PageUser = () => {
                 <ListUser
                   data={users}
                   showAction
-                  columns={[...tableColumns]}
+                  columns={[...defaultColumns]}
+                  onSelectedRowsChange={(selectedRows) =>
+                    console.log({ selectedRows })}
+                  selectableRowSelected={(row) =>
+                    row.fullname.includes("admin")}
                 />
               </CardBody>
             </Card>
