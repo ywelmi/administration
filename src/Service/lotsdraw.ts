@@ -1,5 +1,9 @@
-import { TLotsDraw } from "../type/lotsdraw";
-import { IListResponse } from "./_getParams";
+import {
+  ILotsDrawResultTemplate,
+  TLotsDraw,
+  TLotsDrawMember,
+  TLotsDrawResult,
+} from "../type/lotsdraw";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
 // Lấy danh sách đội thi bốc thăm
@@ -11,16 +15,6 @@ export const lotsdrawsGet = async (
   );
 };
 
-// export const lotsdrawGet = (id: string) => {
-//   return httpGet(`/lotsdraws/${id}`);
-// };
-//
-// export const lotsdrawCreate = (
-//   lotsdraw: Omit<TLotsDraw, "id">,
-// ) => {
-//   return httpPost("/lotsdraws", lotsdraw);
-// };
-//
 // Cập nhật bốc thăm môn thi
 export const lotsdrawUpdate = (
   sportId: string,
@@ -28,8 +22,19 @@ export const lotsdrawUpdate = (
 ) => {
   return httpPut(`/sports/${sportId}/TeamSports`, lotsdraw);
 };
-//
-// // Xóa bảng đấu theo id
-// export const lotsdrawDelete = (id: string) => {
-//   return httpDel(`lotsdraws/${id}`);
-// };
+
+// lấy danh sách Cập nhật điểm cho đơn vị theo môn thi
+export const lotsdrawResultTableGet = (org_id: string, sport_id: string) => {
+  return httpPost<ILotsDrawResultTemplate>(`orgs/yolo/SportTicketMembers`, {
+    org_id,
+    sport_id,
+  });
+};
+
+// Thực hiện Cập nhật điểm cho đơn vị theo môn thi bốc thăm
+export const lotsdrawResultUpdate = (
+  orgId: string,
+  lotsdrawResult: Partial<TLotsDrawMember>[],
+) => {
+  return httpPut(`/orgs/${orgId}/SportTicketMembers`, lotsdrawResult);
+};

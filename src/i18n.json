@@ -44,5 +44,11 @@
   "ticket_index": "Thăm",
   "match_hour": "Giờ",
   "match_date": "Ngày",
-  "locations": "Địa điểm"
+  "locations": "Địa điểm",
+
+  "clothers_number": "Số áo",
+  "content1_record_value": "Thành tích",
+  "content1_point_value": "Điểm",
+  "content2_record_value": "Thành tích",
+  "content2_point_value": "Điểm"
 }

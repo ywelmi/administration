@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Ref, useEffect, useRef } from "react";
+import { Ref, useCallback, useEffect, useRef } from "react";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { BasicDataTables, DataTables } from "../../utils/Constant";
@@ -22,6 +22,8 @@ import {
   ITanTableRef,
   TanTable,
 } from "../../Component/Tables/TanTable/TanTble";
+import { LI } from "../../AbstractElements";
+import { useLotsDrawSubmitModal } from "../LotsDrawSubmit/LotsDrawSubmitForm";
 
 // const LotsDrawTableAction = (
 //   { lotsdraw }: { lotsdraw: TLotsDrawColumn },
@@ -224,6 +226,27 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [{
   accessorKey: "locations",
   footer: (props) => props.column.id,
   header: N["locations"],
+}, {
+  // accessorKey: "locations",
+  header: "Nhập kết quả",
+  footer: (props) => props.column.id,
+  cell({ getValue, row: { index, original }, column: { id }, table }) {
+    let hasEmptyFiled = false;
+    const idx = Object.values(original).findIndex((v) => v == null);
+    if (idx !== -1) hasEmptyFiled = true;
+    if (hasEmptyFiled) return null;
+    const { LotsDrawSubmitModal, handleToggle } = useLotsDrawSubmitModal({
+      sportId: original.sport_id,
+      orgId: original.org_id,
+    });
+    return (
+      <LI className="edit btn" onClick={handleToggle}>
+        <i className="icon-pencil-alt" />
+        Cập nhật
+        <LotsDrawSubmitModal />
+      </LI>
+    );
+  },
 }];
 
 const ListLotsDraw = (
@@ -284,6 +307,23 @@ const PageLotsDraw = () => {
 
   const ref = useRef<ITanTableRef<TLotsDraw>>(null);
 
+  const handleUpdate = useCallback(() => {
+    const newData = ref.current?.getData();
+    if (newData) {
+      lotsdrawUpdate(sportId, newData).then((res) => {
+        const { data, status } = res;
+        if (status === 200) {
+          toast.success(N["success"]);
+        }
+      }).catch((err) => {
+        toast.error(N["failed"]);
+        console.log({ err });
+      });
+      return;
+    }
+    toast.error(N["failed"]);
+  }, []);
+
   return (
     <div className="page-body">
       <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
@@ -305,10 +345,7 @@ const PageLotsDraw = () => {
                 />
                 <div
                   className="btn btn-primary"
-                  onClick={() => {
-                    const newData = ref.current?.getData();
-                    console.log({ newData });
-                  }}
+                  onClick={handleUpdate}
                 >
                   <i className="fa fa-plus" />
                   {"Cập nhật"}
