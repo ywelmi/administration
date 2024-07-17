@@ -23,15 +23,16 @@ import { useMemo, useState } from "react";
 import { useSportModal } from "./SportForm";
 import { sportCreate, sportDelete, sportUpdate } from "../../Service/sport";
 import { toast } from "react-toastify";
-import { useConfirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
 import { useNavigate } from "react-router-dom";
+import { useLotsDrawModal } from "../LotsDraw/LotsDrawForm";
 
 type TSportColumn = TSport;
 
 const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
   const { updateSport, deleteSport } = useSportStore();
   const { t } = useTranslation();
+
   const handleUpdateSport = (sport: TSport) => {
     console.log({ handleUpdateSport: sport });
     sportUpdate(sport).then(
@@ -50,59 +51,96 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
       console.log({ err });
     });
   };
+
   const {
     handleToggle: handleToggleUpdateModal,
     SportModal: SportUpdateModal,
   } = useSportModal({ onSubmit: handleUpdateSport, sport });
 
-  const handleConfirmDel = () => {
-    const { confirm } = useConfirmModal();
-    if (confirm) {
-      sportDelete(sport.id).then((res) => {
-        const { status, data } = res;
-        console.log({ status, data });
-        if (status === 200) {
-          toast.success(t("success"));
-          deleteSport(sport.id);
-          return;
-        }
-        return Promise.reject(status);
-      })
-        .catch((err) => {
-          toast.error(t("error"));
-          console.log({ err });
-        });
-    }
-    return;
-  };
+  const { handleToggle: toggleLotsDrawModal, LotsDrawModal } = useLotsDrawModal(
+    { sportId: sport.id },
+  );
+
+  // const handleConfirmDel = () => {
+  //   const { confirm } = useConfirmModal();
+  //   if (confirm) {
+  //     sportDelete(sport.id).then((res) => {
+  //       const { status, data } = res;
+  //       console.log({ status, data });
+  //       if (status === 200) {
+  //         toast.success(t("success"));
+  //         deleteSport(sport.id);
+  //         return;
+  //       }
+  //       return Promise.reject(status);
+  //     })
+  //       .catch((err) => {
+  //         toast.error(t("error"));
+  //         console.log({ err });
+  //       });
+  //   }
+  //   return;
+  // };
 
   const navigate = useNavigate();
   return (
     <UL className="action simple-list flex-row" id={sport.id}>
-      <LI className="edit btn">
-        <Btn
-          color="primary"
-          type="button"
-          onClick={() =>
-            sport.id
-              ? navigate(`/tablequalifyings/list/${sport.id}`)
-              : undefined}
-        >
-          Xem Vòng Bảng
-        </Btn>
-      </LI>
+      {sport.point_unit === 1
+        ? (
+          <>
+            <LI className="edit btn">
+              <Btn
+                color="info"
+                type="button"
+                onClick={toggleLotsDrawModal}
+              >
+                Xem Bốc Thăm
+              </Btn>
+              <LotsDrawModal />
+            </LI>
+            <LI className="edit btn">
+              <Btn
+                color="light"
+                type="button"
+                onClick={() =>
+                  sport.id
+                    ? navigate(`/tablequalifyings/list/${sport.id}`)
+                    : undefined}
+              >
+                Lập lịch
+              </Btn>
+            </LI>
+          </>
+        )
+        : (
+          <>
+            <LI className="edit btn">
+              <Btn
+                color="primary"
+                type="button"
+                onClick={() =>
+                  sport.id
+                    ? navigate(`/tablequalifyings/list/${sport.id}`)
+                    : undefined}
+              >
+                Xem Vòng Bảng
+              </Btn>
+            </LI>
+            <LI className="edit btn">
+              <Btn
+                color="secondary"
+                type="button"
+                onClick={() =>
+                  sport.id
+                    ? navigate(`/tablequalifyings/knockout/${sport.id}`)
+                    : undefined}
+              >
+                Xem Vòng Loại
+              </Btn>
+            </LI>
+          </>
+        )}
 
-      <LI className="edit btn">
-        <Btn
-          color="secondary"
-          type="button"
-          onClick={() => sport.id
-            ? navigate(`/tablequalifyings/knockout/${sport.id}`)
-            : undefined}
-        >
-          Xem Vòng Loại
-        </Btn>
-      </LI>
       <LI className="edit btn">
         <i
           className="icon-pencil-alt"
@@ -110,9 +148,6 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
         />
         <SportUpdateModal />
       </LI>
-      {/* <LI className="delete btn"> */}
-      {/*   <i className="icon-trash cursor-pointer" onClick={handleConfirmDel} /> */}
-      {/* </LI> */}
     </UL>
   );
 };
@@ -260,7 +295,7 @@ const PageSport = () => {
                 <ListSport
                   data={sports}
                   showAction
-                  columns={[...tableColumns]}
+                  // columns={[...tableColumns]}
                 />
               </CardBody>
             </Card>

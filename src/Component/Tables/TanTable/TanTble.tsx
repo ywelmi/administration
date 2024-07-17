@@ -1,4 +1,14 @@
-import { HTMLProps, useEffect, useMemo, useState } from "react";
+import {
+  CSSProperties,
+  forwardRef,
+  HTMLProps,
+  ReactElement,
+  Ref,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 import {
   Column,
   ColumnDef,
@@ -6,6 +16,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  Row,
   RowData,
   RowSelectionState,
   Table,
@@ -13,13 +24,16 @@ import {
 } from "@tanstack/react-table";
 import React from "react";
 
+import _ from "lodash";
+
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+    getRowStyles: (row: Row<TData>) => CSSProperties;
   }
 }
 
-interface ITanTable<T> {
+interface ITable<T> {
   showAction?: boolean;
   selectableRows?: boolean;
   onSelectedRowsChange?: (
@@ -123,14 +137,18 @@ function getSelectableColumn<T>() {
   } as ColumnDef<T>;
 }
 
-const TanTable = <T,>({
+export interface ITanTableRef<T> {
+  getData: () => T[];
+}
+
+const TanTableComponent = <T,>({
   data: srcData = [],
   // onRowSelect,
   onSelectedRowsChange,
   getRowId,
   columns,
   selectableRowSelected,
-}: ITanTable<T>) => {
+}: ITable<T>, ref: Ref<ITanTableRef<T>>) => {
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
   const [data, setData] = useState(srcData);
   const [globalFilter, setGlobalFilter] = React.useState("");
@@ -143,7 +161,9 @@ const TanTable = <T,>({
       : {},
   );
 
-  console.log({ rowSelection });
+  useImperativeHandle(ref, () => ({
+    getData: () => data,
+  }), [data]);
 
   const tableColumns = useMemo<ColumnDef<T>[]>(() => {
     let cols = [...columns];
@@ -189,6 +209,7 @@ const TanTable = <T,>({
     enableRowSelection: true, //enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     onRowSelectionChange: setRowSelection,
+    // onStateChange
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -210,6 +231,18 @@ const TanTable = <T,>({
           })
         );
       },
+      getRowStyles: (row) => ({
+        opacity: (() => {
+          let same = false;
+          const tableRow = row.original;
+          const srcRecord = srcData.find((d) =>
+            getRowId(d) === getRowId(tableRow)
+          );
+          if (!srcRecord) same = false;
+          else same = _.isEqual(tableRow, srcRecord);
+          return same ? "0.5" : "1.0";
+        })(),
+      }),
     },
     debugTable: true,
   });
@@ -224,7 +257,7 @@ const TanTable = <T,>({
           value={globalFilter ?? ""}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="p-2 font-lg shadow border border-block"
-          placeholder="Search all columns..."
+          placeholder="Tìm kiếm"
         />
       </div>
       <table>
@@ -258,7 +291,7 @@ const TanTable = <T,>({
         <tbody>
           {table.getRowModel().rows.map((row) => {
             return (
-              <tr key={row.id}>
+              <tr key={row.id} style={table.options.meta?.getRowStyles(row)}>
                 {row.getVisibleCells().map((cell) => {
                   return (
                     <td key={cell.id}>
@@ -397,4 +430,8 @@ function Filter({
     );
 }
 
+export type TTanTable = <T>(
+  p: ITable<T> & { ref?: Ref<ITanTableRef<T>> },
+) => ReactElement;
+const TanTable = forwardRef(TanTableComponent) as TTanTable;
 export { TanTable };

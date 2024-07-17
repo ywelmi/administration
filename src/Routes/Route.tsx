@@ -1,3 +1,4 @@
+import { PageCompetitionRegister } from "../Pages/CompetitionRegister/ListCompetitionRegister";
 import Default from "../Pages/Dashboard/Default/Default";
 import { ListOrg } from "../Pages/Org/ListOrg";
 import { PageSport } from "../Pages/Sport/ListSport";
@@ -149,6 +150,10 @@ const Routes = [
   {
     path: "/sport/list",
     Component: <PageSport />,
+  },
+  {
+    path: "/sport/register",
+    Component: <PageCompetitionRegister />,
   },
   {
     path: "/teammember/list",

@@ -11,12 +11,13 @@ import { InputSelect } from "../../Component/InputSelect";
 interface ISportForm {
   sport?: TSport;
   onSubmit: (sport: TSport) => void;
+  onCancel?: () => void;
 }
 
 interface ISportModal extends ISportForm {
 }
 
-const SportForm = ({ sport: initSport, onSubmit }: ISportForm) => {
+const SportForm = ({ sport: initSport, onSubmit, onCancel }: ISportForm) => {
   const { competitions } = useCompetitionStore();
   const sport = initSport
     ? initSport
@@ -71,10 +72,17 @@ const SportForm = ({ sport: initSport, onSubmit }: ISportForm) => {
           )
           : null}
 
-        <Col xs="12">
+        <Col xs="12" className="gap-2" style={{ display: "flex" }}>
           <Btn color="primary" type="submit">
             Xác nhận
           </Btn>
+          {onCancel
+            ? (
+              <Btn color="primary" type="button" onClick={onCancel}>
+                Hủy
+              </Btn>
+            )
+            : null}
         </Col>
       </Row>
     </form>
@@ -98,7 +106,11 @@ const useSportModal = ({ onSubmit, ...rest }: ISportModal) => {
       isOpen={opened}
       toggle={handleToggle}
     >
-      <SportForm onSubmit={handleSubmit} {...rest} />
+      <SportForm
+        onSubmit={handleSubmit}
+        {...rest}
+        onCancel={() => setOpened(false)}
+      />
     </CommonModal>
   );
 
