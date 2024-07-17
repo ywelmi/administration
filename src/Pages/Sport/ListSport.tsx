@@ -103,9 +103,7 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
                 color="light"
                 type="button"
                 onClick={() =>
-                  sport.id
-                    ? navigate(`/tablequalifyings/list/${sport.id}`)
-                    : undefined}
+                  sport.id ? navigate(`/lotsdraw/list/${sport.id}`) : undefined}
               >
                 Lập lịch
               </Btn>

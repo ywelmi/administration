@@ -341,7 +341,9 @@ const PageTablequalifying = () => {
               <CardHeader className="pb-0 card-no-border">
                 <InputSelect
                   title={N["sport"]}
-                  data={sports}
+                  data={sports.filter(({ point_unit }) => {
+                    return point_unit !== 1;
+                  })}
                   k="name"
                   v="id"
                   name="sport"

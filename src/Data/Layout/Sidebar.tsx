@@ -90,7 +90,13 @@ export const useMenuList = () => {
             },
             {
               path: "/tablequalifyings/list",
-              title: "Lập lịch thi đấu",
+              title: "Lập lịch thi đấu vòng bảng",
+              type: "link",
+              lanClass: "lan-4",
+            },
+            {
+              path: "/lotsdraw/list/",
+              title: "Lập lịch thi đấu bốc thăm",
               type: "link",
               lanClass: "lan-4",
             },

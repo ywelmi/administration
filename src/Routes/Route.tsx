@@ -1,5 +1,6 @@
 import { PageCompetitionRegister } from "../Pages/CompetitionRegister/ListCompetitionRegister";
 import Default from "../Pages/Dashboard/Default/Default";
+import { PageLotsDraw } from "../Pages/LotsDraw/ListLotsDraw";
 import { ListOrg } from "../Pages/Org/ListOrg";
 import { PageSport } from "../Pages/Sport/ListSport";
 import { PageTablequalifying } from "../Pages/Tablequalifying/ListTablequalifying";
@@ -178,6 +179,10 @@ const Routes = [
   {
     path: "/tablequalifyings/knockout/:sport_id",
     Component: <PageTablequalifyingKnockout />,
+  },
+  {
+    path: "/lotsdraw/list/:sport_id?",
+    Component: <PageLotsDraw />,
   },
   // {
   //   path: "/tablequalifyings/list",

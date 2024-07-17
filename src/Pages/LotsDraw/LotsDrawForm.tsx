@@ -1,20 +1,11 @@
-import { Col, Input, Label, Row } from "reactstrap";
+import { Col } from "reactstrap";
 import { TLotsDraw } from "../../type/lotsdraw";
-import { useFormik } from "formik";
 import { Btn, Popovers } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useTeamStore } from "../../store/team";
-// import { useTeamPopover } from "../Team/TeamForm";
-import { ListTeam } from "../Team/ListTeam";
-import { ListSport } from "../Sport/ListSport";
-import { useSportStore } from "../../store/sport";
-import { InputSelect } from "../../Component/InputSelect";
 import {
   ITanTableRef,
   TanTable,
-  TTanTable,
 } from "../../Component/Tables/TanTable/TanTble";
 import { ColumnDef } from "@tanstack/react-table";
 import { lotsdrawsGet, lotsdrawUpdate } from "../../Service/lotsdraw";

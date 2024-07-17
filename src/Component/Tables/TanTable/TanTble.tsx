@@ -232,7 +232,7 @@ const TanTableComponent = <T,>({
         );
       },
       getRowStyles: (row) => ({
-        opacity: (() => {
+        background: (() => {
           let same = false;
           const tableRow = row.original;
           const srcRecord = srcData.find((d) =>
@@ -240,7 +240,7 @@ const TanTableComponent = <T,>({
           );
           if (!srcRecord) same = false;
           else same = _.isEqual(tableRow, srcRecord);
-          return same ? "0.5" : "1.0";
+          return same ? "#fafafa" : "#fff";
         })(),
       }),
     },
@@ -394,7 +394,10 @@ function Filter({
 
   return typeof firstValue === "number"
     ? (
-      <div className="flex space-x-2">
+      <div
+        className="flex space-x-2"
+        style={{ display: "flex", flexDirection: "column" }}
+      >
         <input
           type="number"
           value={(columnFilterValue as [number, number])?.[0] ?? ""}

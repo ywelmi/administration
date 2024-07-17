@@ -21,6 +21,7 @@ export const lotsdrawsGet = async (
 //   return httpPost("/lotsdraws", lotsdraw);
 // };
 //
+// Cập nhật bốc thăm môn thi
 export const lotsdrawUpdate = (
   sportId: string,
   lotsdraw: Partial<TLotsDraw>[],

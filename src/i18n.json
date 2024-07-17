@@ -41,5 +41,8 @@
   "username": "Tên đăng nhập",
   "weights": "Cân nặng",
   "sport_name": "Môn thi",
-  "ticket_index": "Thăm"
+  "ticket_index": "Thăm",
+  "match_hour": "Giờ",
+  "match_date": "Ngày",
+  "locations": "Địa điểm"
 }
