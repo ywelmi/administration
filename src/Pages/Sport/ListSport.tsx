@@ -21,7 +21,7 @@ import { TSport } from "../../type/sport";
 import { useSportStore } from "../../store/sport";
 import { useMemo, useState } from "react";
 import { useSportModal } from "./SportForm";
-import { sportCreate, sportDelete, sportUpdate } from "../../Service/sport";
+import { sportCreate, sportDelete, sportUpdate, sportXuatPhieuDiem } from "../../Service/sport";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
@@ -32,6 +32,7 @@ type TSportColumn = TSport;
 const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
   const { updateSport, deleteSport } = useSportStore();
   const { t } = useTranslation();
+  
   const handleUpdateSport = (sport: TSport) => {
     console.log({ handleUpdateSport: sport });
     sportUpdate(sport).then(
@@ -77,8 +78,25 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
   };
 
   const navigate = useNavigate();
+
+  const handleDownloadClick = () => {
+    sportXuatPhieuDiem(sport.id);
+  };
+
+
   return (
     <UL className="action simple-list flex-row" id={sport.id}>
+    
+      <LI className="edit btn">
+        <Btn
+          color="warning"
+          type="button"
+          onClick={handleDownloadClick}
+        >
+          Phiểu Điểm
+        </Btn>
+      </LI>
+    
       <LI className="edit btn">
         <Btn
           color="primary"
