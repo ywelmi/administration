@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tanstack/react-table": "^8.19.3",
+    "@rollup/rollup-linux-x64-gnu": "^4.18.1",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "date-fns": "^3.6.0",
@@ -19,6 +20,7 @@
     "flag-icons": "^7.2.3",
     "font-awesome": "^4.7.0",
     "formik": "^2.4.6",
+    "i18next": "^23.11.5",
     "immer": "^10.1.1",
     "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
@@ -45,6 +47,7 @@
     "reactstrap": "^9.2.2",
     "simplebar-react": "^3.2.6",
     "slick-carousel": "^1.8.1",
+    "styled-components": "^6.1.11",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
