@@ -69,10 +69,6 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
 
     const navigate = useNavigate();
 
-    const handleDownloadClick = () => {
-        sportXuatPhieuDiem(sport.id);
-    };
-
     return (
         <UL className="action simple-list flex-row" id={sport.id}>
             {sport.point_unit === 1 ? (
@@ -115,22 +111,6 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
                     </LI>
                 </>
             )}
-
-            <LI className="edit btn">
-                <Btn color="warning" type="button" onClick={handleDownloadClick}>
-                    Phiểu Điểm
-                </Btn>
-            </LI>
-
-            <LI className="edit btn">
-                <Btn
-                    color="primary"
-                    type="button"
-                    onClick={() => (sport.id ? navigate(`/tablequalifyings/list/${sport.id}`) : undefined)}
-                >
-                    Xem Vòng Bảng
-                </Btn>
-            </LI>
 
             <LI className="edit btn">
                 <i className="icon-pencil-alt" onClick={handleToggleUpdateModal} />
