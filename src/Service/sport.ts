@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { TSport } from "../type/sport";
 import { baseGetParams, IListResponse } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
@@ -25,3 +26,22 @@ export const sportUpdate = (sport: TSport) => {
 export const sportDelete = (id: string) => {
   return httpDel(`sports/${id}`);
 };
+export const sportXuatPhieuDiem = async (id: string): Promise<void> => {
+  try {
+    const response = await httpGet(`sports/${id}/export/transcript`, {
+      responseType: 'blob'  
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `PhieuDiem_${id}.xlsx`); 
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error('Download failed:', error);
+    toast.error('Không có Hội thi');
+  }
+};
+
