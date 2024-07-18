@@ -101,6 +101,7 @@ function getDefaultColumn<T>() {
 
       return (
         <input
+          className="w-full"
           value={value as string}
           onChange={(e) => setValue(e.target.value)}
           onBlur={onBlur}
@@ -260,13 +261,17 @@ const TanTableComponent = <T,>({
           placeholder="Tìm kiếm"
         />
       </div>
-      <table>
-        <thead>
+      <table className="table-fixed w-full border-collapse border">
+        <thead className="text-center">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    className="align-top border border-slate-300"
+                  >
                     {header.isPlaceholder ? null : (
                       <div>
                         {flexRender(
@@ -294,7 +299,10 @@ const TanTableComponent = <T,>({
               <tr key={row.id} style={table.options.meta?.getRowStyles(row)}>
                 {row.getVisibleCells().map((cell) => {
                   return (
-                    <td key={cell.id}>
+                    <td
+                      key={cell.id}
+                      className="border border-slate-300"
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -369,13 +377,13 @@ const TanTableComponent = <T,>({
           ))}
         </select>
       </div>
-      <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
+      {/* <div>{table.getRowModel().rows.length} Rows</div> */}
+      {/* <div> */}
+      {/*   <button onClick={() => rerender()}>Force Rerender</button> */}
+      {/* </div> */}
+      {/* <div> */}
+      {/*   <button onClick={() => refreshData()}>Refresh Data</button> */}
+      {/* </div> */}
     </div>
   );
 };
@@ -394,10 +402,7 @@ function Filter({
 
   return typeof firstValue === "number"
     ? (
-      <div
-        className="flex space-x-2"
-        style={{ display: "flex", flexDirection: "column" }}
-      >
+      <div className="flex-col gap-1">
         <input
           type="number"
           value={(columnFilterValue as [number, number])?.[0] ?? ""}
@@ -407,7 +412,7 @@ function Filter({
               old?.[1],
             ])}
           placeholder={`Min`}
-          className="w-24 border shadow rounded"
+          className="w-full border shadow rounded"
         />
         <input
           type="number"
@@ -418,7 +423,7 @@ function Filter({
               e.target.value,
             ])}
           placeholder={`Max`}
-          className="w-24 border shadow rounded"
+          className="w-full border shadow rounded"
         />
       </div>
     )
@@ -428,7 +433,7 @@ function Filter({
         value={(columnFilterValue ?? "") as string}
         onChange={(e) => column.setFilterValue(e.target.value)}
         placeholder={`Search...`}
-        className="w-36 border shadow rounded"
+        className="w-full border shadow rounded"
       />
     );
 }

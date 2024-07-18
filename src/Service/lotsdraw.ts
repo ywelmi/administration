@@ -25,10 +25,13 @@ export const lotsdrawUpdate = (
 
 // lấy danh sách Cập nhật điểm cho đơn vị theo môn thi
 export const lotsdrawResultTableGet = (org_id: string, sport_id: string) => {
-  return httpPost<ILotsDrawResultTemplate>(`orgs/yolo/SportTicketMembers`, {
-    org_id,
-    sport_id,
-  });
+  return httpPost<ILotsDrawResultTemplate>(
+    `orgs/${org_id}/SportTicketMembers`,
+    {
+      org_id,
+      sport_id,
+    },
+  );
 };
 
 // Thực hiện Cập nhật điểm cho đơn vị theo môn thi bốc thăm

@@ -18,40 +18,39 @@ interface ILotsDrawSubmitForm {
   // lotsdraw: TLotsDrawMember[];
   onCancel?: () => void;
   sportId: string;
-  // onSubmit: (lotsdraw: TLotsDraw[]) => void;
+  // onSubmit: () => void;
   orgId: string;
 }
 
 const defaultColumns: ColumnDef<TLotsDrawMember>[] = [
   {
-    accessorKey: "name",
-    footer: (props) => props.column.id,
-    header: N["name"],
-    cell(props) {
-      return props.getValue();
-    },
-  },
-
-  {
-    accessorKey: "org_name",
-    footer: (props) => props.column.id,
-    header: N["org_name"],
-    cell(props) {
-      return props.getValue();
-    },
-  },
-  {
-    accessorKey: "clothers_number",
-    footer: (props) => props.column.id,
-    header: N["clothers_number"],
-  },
-  {
-    accessorKey: "ticket_index",
-    footer: (props) => props.column.id,
-    header: N["ticket_index"],
-    cell(props) {
-      return props.getValue();
-    },
+    header: "Vận động viên",
+    columns: [{
+      accessorKey: "name",
+      footer: (props) => props.column.id,
+      header: N["name"],
+      cell(props) {
+        return props.getValue();
+      },
+    }, {
+      accessorKey: "org_name",
+      footer: (props) => props.column.id,
+      header: N["org_name"],
+      cell(props) {
+        return props.getValue();
+      },
+    }, {
+      accessorKey: "clothers_number",
+      footer: (props) => props.column.id,
+      header: N["clothers_number"],
+    }, {
+      accessorKey: "ticket_index",
+      footer: (props) => props.column.id,
+      header: N["ticket_index"],
+      cell(props) {
+        return props.getValue();
+      },
+    }],
   },
 ];
 

@@ -1,25 +1,10 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Container,
-  Input,
-  Label,
-  Row,
-} from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import {
-  BasicDataTables,
-  DataTables,
-  SearchTableButton,
-} from "../../utils/Constant";
+import { BasicDataTables, DataTables } from "../../utils/Constant";
 import { LI, UL } from "../../AbstractElements";
-import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { TUser } from "../../type/user";
 import { useUserStore } from "../../store/user";
-import { useMemo, useState } from "react";
 import { useUserModal } from "./UserForm";
 import { userCreate, userDelete, userUpdate } from "../../Service/user";
 import { toast } from "react-toastify";
@@ -180,7 +165,7 @@ const PageUser = () => {
         <Row>
           <Col sm="12">
             <Card>
-              <CardHeader className="pb-0 card-no-border">
+              <CardHeader className="pb-0 card-no-border ">
                 <div className="btn btn-primary" onClick={handleToggleAddModal}>
                   <i className="fa fa-plus" />
                   {"Thêm mới"}

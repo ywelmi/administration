@@ -16,6 +16,7 @@ const CommonModal: React.FC<CommonModalType> = (
     fullTitle,
     modalBodyClassName,
     children,
+    fullscreen,
   },
 ) => {
   return (
@@ -26,6 +27,7 @@ const CommonModal: React.FC<CommonModalType> = (
       isOpen={isOpen}
       toggle={toggle}
       onClosed={onClosed}
+      fullscreen={fullscreen}
     >
       {(title || sizeTitle || fullTitle) && (
         <div className="modal-header" onClick={toggle}>
@@ -49,4 +51,3 @@ const CommonModal: React.FC<CommonModalType> = (
 };
 
 export default CommonModal;
-

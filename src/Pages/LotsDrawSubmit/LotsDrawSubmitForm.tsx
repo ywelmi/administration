@@ -8,13 +8,14 @@ interface ILotsDrawSubmitModal {
   onCancel?: () => void;
   sportId: string;
   orgId: string;
+  title?: string;
   // onSubmit: (lotsdraw: TLotsDraw[]) => void;
 }
 
 const getLotDrawId = (d: TLotsDraw) => d.id;
 
 const useLotsDrawSubmitModal = (
-  { sportId, orgId }: ILotsDrawSubmitModal,
+  { sportId, orgId, title }: ILotsDrawSubmitModal,
 ) => {
   const [opened, setOpened] = useState(false);
   const handleToggle = () => {
@@ -27,9 +28,11 @@ const useLotsDrawSubmitModal = (
       modalBodyClassName="social-profile text-start"
       isOpen={opened}
       toggle={handleToggle}
+      title={title}
     >
       <LotsDrawSubmitSwimForm
         sportId={sportId}
+        // onSubmit={() => setOpened(false)}
         orgId={orgId}
         onCancel={() => setOpened(false)}
       />
