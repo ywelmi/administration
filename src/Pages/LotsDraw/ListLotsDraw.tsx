@@ -309,7 +309,7 @@ const PageLotsDraw = () => {
 
   const handleUpdate = useCallback(() => {
     const newData = ref.current?.getData();
-    if (newData) {
+    if (newData && sportId) {
       lotsdrawUpdate(sportId, newData).then((res) => {
         const { data, status } = res;
         if (status === 200) {
