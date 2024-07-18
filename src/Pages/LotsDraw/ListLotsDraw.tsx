@@ -322,7 +322,7 @@ const PageLotsDraw = () => {
       return;
     }
     toast.error(N["failed"]);
-  }, []);
+  }, [sportId]);
 
   return (
     <div className="page-body">
