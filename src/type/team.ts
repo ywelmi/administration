@@ -9,9 +9,10 @@ export interface TTeam {
   sport_id: string;
   sport_name?: string;
   org_name: string;
-  list_member_id?: string[]; // list of teammembers' ids
+  list_member_id?: string[]; // PUT: list of teammembers' ids
   list_member_name?: string;
 
+  // GET by team id
   "competition_name": string;
   "member_ids"?: string[];
   "member_names"?: string[];

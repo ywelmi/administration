@@ -2,6 +2,7 @@ import { PageCompetitionRegister } from "../Pages/CompetitionRegister/ListCompet
 import Default from "../Pages/Dashboard/Default/Default";
 import { PageLotsDraw } from "../Pages/LotsDraw/ListLotsDraw";
 import { ListOrg } from "../Pages/Org/ListOrg";
+import { PageReportResult } from "../Pages/Report Result/ReportResult";
 import { PageSport } from "../Pages/Sport/ListSport";
 import { PageTablequalifying } from "../Pages/Tablequalifying/ListTablequalifying";
 import { PageTablequalifyingKnockout } from "../Pages/TablequalifyingKnockout/ListTablequalifyingKnockout";
@@ -136,547 +137,551 @@ import { ListUser, PageUser } from "../Pages/User/ListUser";
 // import InvoiceSix from "../Pages/Application/Ecommerce/Invoices/Invoice-6/Invoice-6";
 
 const Routes = [
-  {
-    path: "/dashboard",
-    Component: <Default />,
-  },
-  {
-    path: "/user/list",
-    Component: <PageUser />,
-  },
-  {
-    path: "/org/list",
-    Component: <ListOrg />,
-  },
-  {
-    path: "/sport/list",
-    Component: <PageSport />,
-  },
-  {
-    path: "/sport/register",
-    Component: <PageCompetitionRegister />,
-  },
-  {
-    path: "/teammember/list",
-    Component: <PageTeammember />,
-  },
-  {
-    path: "/team/list",
-    Component: <PageTeam />,
-  },
-  {
-    path: "/tablequalifyings/list/:sport_id?",
-    Component: <PageTablequalifying />,
-  },
-  {
-    path: "/tablequalifyings/match/:table_id?",
-    Component: <PageTablequalifyingMatch />,
-  },
-  {
-    path: "/tablequalifyings/match-report/:table_id?",
-    Component: <PageTablequalifyingMatchReport />,
-  },
-  {
-    path: "/tablequalifyings/knockout/:sport_id",
-    Component: <PageTablequalifyingKnockout />,
-  },
-  {
-    path: "/lotsdraw/list/:sport_id?",
-    Component: <PageLotsDraw />,
-  },
-  // {
-  //   path: "/tablequalifyings/list",
-  //   Component: <PageTeam />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/dashboard/ecommerce`,
-  //   Component: <Ecommerce />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/dashboard/onlinecourse`,
-  //   Component: <OnlineCourse />,
-  // },
-  //
-  // // Forms Widgets
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formswidget/datepicker`,
-  //   Component: <DatePicker />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formswidget/touchspin`,
-  //   Component: <TouchSpin />,
-  // },
-  //
-  // // Form Controls
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/megaoption`,
-  //   Component: <MegaOption />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/inputgroups`,
-  //   Component: <InputGroup />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/inputmask`,
-  //   Component: <InputMask />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/radiocheckbox`,
-  //   Component: <RadioCheckbox />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/formvalidation`,
-  //   Component: <FormsValidation />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/baseinput`,
-  //   Component: <BaseInput />,
-  // },
-  //
-  // // Maps
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/map/googlemap`, Component: <GoogleMap /> },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/map/leafletmap`,
-  //   Component: <LeafletMaps />,
-  // },
-  //
-  // // Editors
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/editor/ckeditor`,
-  //   Component: <CkEditor />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/editor/mdeeditor`,
-  //   Component: <MdeEditor />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/editor/aceeditor`,
-  //   Component: <AceEditor />,
-  // },
-  //
-  // // Learning
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/learning/learninglist`,
-  //   Component: <LearningList />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/learning/detailcourse`,
-  //   Component: <DetailsCourse />,
-  // },
-  //
-  // // Job Search
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/jobsearch/cardview`,
-  //   Component: <CardView />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/jobsearch/listview`,
-  //   Component: <ListView />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/jobsearch/jobdetail`,
-  //   Component: <JobDetails />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/jobsearch/jobapply`,
-  //   Component: <JobApply />,
-  // },
-  //
-  // // Faq
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/faq/faq`, Component: <Faq /> },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/knowledgebase/knowledgebase`,
-  //   Component: <Knowledgebase />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/supportticket/supportticket`,
-  //   Component: <SupportTicket />,
-  // },
-  //
-  // // Blog
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/blog/blogdetails`,
-  //   Component: <BlogDetails />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/blog/blogsingle`,
-  //   Component: <BlogSingle />,
-  // },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/blog/addpost`, Component: <AddPost /> },
-  //
-  // // Gallery
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/gallery/gallerygrids`,
-  //   Component: <GalleryGrid />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/gallery/gallerygriddesc`,
-  //   Component: <GalleryGridDesc />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/gallery/masonrygallery`,
-  //   Component: <MasonryGallery />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/gallery/masonrywithdesc`,
-  //   Component: <MasonryImageDesc />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/gallery/hovereffect`,
-  //   Component: <HoverEffect />,
-  // },
-  //
-  // // Charts
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/charts/apexchart`,
-  //   Component: <ApexChart />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/charts/googlechart`,
-  //   Component: <GoogleChart />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/charts/chartjschart`,
-  //   Component: <ChartJs />,
-  // },
-  //
-  // // Buttons
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/buttons/defaultstyle`,
-  //   Component: <DefaultStyle />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/buttons/flatstyle`,
-  //   Component: <FlatStyle />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/buttons/edgestyle`,
-  //   Component: <EdgeStyle />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/buttons/raisedstyle`,
-  //   Component: <RaisedStyle />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/buttons/buttongroup`,
-  //   Component: <ButtonGroup />,
-  // },
-  //
-  // // Icons
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/icons/flagicons`,
-  //   Component: <FlagIcons />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/icons/fontawesomeicon`,
-  //   Component: <FontAwesomeIcon />,
-  // },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/icons/icoicon`, Component: <ICOIcon /> },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/icons/themifyicon`,
-  //   Component: <ThemifyIcons />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/icons/feathericon`,
-  //   Component: <FeatherIcons />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/icons/wheathericon`,
-  //   Component: <WhetherIcon />,
-  // },
-  //
-  // // Bonus Ui
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/timeline`,
-  //   Component: <Timeline />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/basiccards`,
-  //   Component: <BasicCard />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/creativecards`,
-  //   Component: <CreativeCard />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/rangeslider`,
-  //   Component: <RangeSlider />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/imagecropper`,
-  //   Component: <ImageCropper />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/owlcarousel`,
-  //   Component: <OwlCarousel />,
-  // },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/ribbons`, Component: <Ribbons /> },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/sweetalert2`,
-  //   Component: <SweetAlert />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/pagination`,
-  //   Component: <Pagination />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/dropzone`,
-  //   Component: <Dropzone />,
-  // },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/tour`, Component: <Tour /> },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/toasts`, Component: <Toast /> },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/rating`, Component: <Rating /> },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/scrollable`,
-  //   Component: <Scrollable />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/treeview`,
-  //   Component: <TreeView />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/breadcrumb`,
-  //   Component: <Breadcrumb />,
-  // },
-  //
-  // // Ui-Kits
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/tabs`,
-  //   Component: <ReactstrapTabs />,
-  // },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/list`, Component: <Lists /> },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/accordion`,
-  //   Component: <Accordion />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/helperclass`,
-  //   Component: <HelperClasses />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/typography`,
-  //   Component: <Typography />,
-  // },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/avatars`, Component: <Avatars /> },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/dropdown`,
-  //   Component: <Dropdown />,
-  // },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/popover`, Component: <Popover /> },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/tooltip`, Component: <Tooltip /> },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/modal`, Component: <Modal /> },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/progress`,
-  //   Component: <Progress />,
-  // },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/alert`, Component: <Alert /> },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/grid`, Component: <Grid /> },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/tagpills`,
-  //   Component: <TagAndPills />,
-  // },
-  //
-  // // Page Layout
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/pagelayout/hidenavscroll`,
-  //   Component: <HideNavScrollContainer />,
-  // },
-  //
-  // // Widgets
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/widgets/general`, Component: <General /> },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/widgets/chart`, Component: <Charts /> },
-  //
-  // // Form Widgets
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formswidget/switch`,
-  //   Component: <Switch />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formswidget/typeahead`,
-  //   Component: <Typeahead />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formswidget/clipboard`,
-  //   Component: <ClipBoard />,
-  // },
-  //
-  // // Form Layout
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formslayout/formwizard1`,
-  //   Component: <FormWizardOne />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formslayout/formwizard2`,
-  //   Component: <FormWizardTwo />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formslayout/twofactor`,
-  //   Component: <TwoFactor />,
-  // },
-  //
-  // // Tables
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/reactstraptable/basictable`,
-  //   Component: <BasicTable />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/reactstraptable/tablecomponent`,
-  //   Component: <TableComponent />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/datatable/basicinit`,
-  //   Component: <BasicInit />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/datatable/advanceinit`,
-  //   Component: <AdvanceInit />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/datatable/api`,
-  //   Component: <ApiDataTable />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/datatable/datasources`,
-  //   Component: <DataSource />,
-  // },
-  //
-  // // Sample Page
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/pages/samplepage`,
-  //   Component: <SamplePage />,
-  // },
-  //
-  // // Applications
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/project/projectlist`,
-  //   Component: <ProjectList />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/project/createnew`,
-  //   Component: <ProjectCreate />,
-  // },
-  //
-  // // FileManager
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/app/filemanager`,
-  //   Component: <FileManager />,
-  // },
-  //
-  // // Email
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/email/letterbox`,
-  //   Component: <LetterBox />,
-  // },
-  //
-  // // Users
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/users/userprofile`,
-  //   Component: <UsersProfile />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/users/useredit`,
-  //   Component: <EditProfile />,
-  // },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/users/cards`, Component: <UserCards /> },
-  //
-  // // Todo
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/todo`, Component: <Todo /> },
-  //
-  // // Calender
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/calendar`, Component: <Calender /> },
-  //
-  // // Tasks
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/task`, Component: <Tasks /> },
-  //
-  // // Contacts
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/contacts`, Component: <Contacts /> },
-  //
-  // // Bookmark
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/bookmark`, Component: <Bookmark /> },
-  //
-  // // Search Result
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/app/searchresult`,
-  //   Component: <SearchResult />,
-  // },
-  //
-  // // Chat
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/chat/privatechats`,
-  //   Component: <PrivateChat />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/chat/groupchat`,
-  //   Component: <GroupChat />,
-  // },
-  //
-  // // Social App
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/socialapp`, Component: <SocialApp /> },
-  //
-  // // Ecommerce
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/addproduct`,
-  //   Component: <AddProduct />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/products`,
-  //   Component: <Products />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/productlist`,
-  //   Component: <ProductList />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/paymentdetails`,
-  //   Component: <PaymentDetails />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/productpage`,
-  //   Component: <ProductPage />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/orderhistory`,
-  //   Component: <OrderHistory />,
-  // },
-  //
-  // // Invoices
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice1`,
-  //   Component: <InvoiceOne />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice2`,
-  //   Component: <InvoiceTwo />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice3`,
-  //   Component: <InvoiceThree />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice4`,
-  //   Component: <InvoiceFour />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice5`,
-  //   Component: <InvoiceFive />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice6`,
-  //   Component: <InvoiceSix />,
-  // },
-  // { path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/cart`, Component: <Cart /> },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/wishlist`,
-  //   Component: <WishList />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/checkout`,
-  //   Component: <Checkout />,
-  // },
-  // {
-  //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/pricing`,
-  //   Component: <Pricing />,
-  // },
+    {
+        path: "/dashboard",
+        Component: <Default />,
+    },
+    {
+        path: "/user/list",
+        Component: <PageUser />,
+    },
+    {
+        path: "/org/list",
+        Component: <ListOrg />,
+    },
+    {
+        path: "/sport/list",
+        Component: <PageSport />,
+    },
+    {
+        path: "/sport/register",
+        Component: <PageCompetitionRegister />,
+    },
+    {
+        path: "/teammember/list",
+        Component: <PageTeammember />,
+    },
+    {
+        path: "/team/list",
+        Component: <PageTeam />,
+    },
+    {
+        path: "/tablequalifyings/list/:sport_id?",
+        Component: <PageTablequalifying />,
+    },
+    {
+        path: "/tablequalifyings/match/:table_id?",
+        Component: <PageTablequalifyingMatch />,
+    },
+    {
+        path: "/tablequalifyings/match-report/:table_id?",
+        Component: <PageTablequalifyingMatchReport />,
+    },
+    {
+        path: "/tablequalifyings/knockout/:sport_id",
+        Component: <PageTablequalifyingKnockout />,
+    },
+    {
+        path: "/lotsdraw/list/:sport_id?",
+        Component: <PageLotsDraw />,
+    },
+    {
+        path: "/reportresult",
+        Component: <PageReportResult />,
+    },
+    // {
+    //   path: "/tablequalifyings/list",
+    //   Component: <PageTeam />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/dashboard/ecommerce`,
+    //   Component: <Ecommerce />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/dashboard/onlinecourse`,
+    //   Component: <OnlineCourse />,
+    // },
+    //
+    // // Forms Widgets
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formswidget/datepicker`,
+    //   Component: <DatePicker />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formswidget/touchspin`,
+    //   Component: <TouchSpin />,
+    // },
+    //
+    // // Form Controls
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/megaoption`,
+    //   Component: <MegaOption />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/inputgroups`,
+    //   Component: <InputGroup />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/inputmask`,
+    //   Component: <InputMask />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/radiocheckbox`,
+    //   Component: <RadioCheckbox />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/formvalidation`,
+    //   Component: <FormsValidation />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formscontrols/baseinput`,
+    //   Component: <BaseInput />,
+    // },
+    //
+    // // Maps
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/map/googlemap`, Component: <GoogleMap /> },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/map/leafletmap`,
+    //   Component: <LeafletMaps />,
+    // },
+    //
+    // // Editors
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/editor/ckeditor`,
+    //   Component: <CkEditor />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/editor/mdeeditor`,
+    //   Component: <MdeEditor />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/editor/aceeditor`,
+    //   Component: <AceEditor />,
+    // },
+    //
+    // // Learning
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/learning/learninglist`,
+    //   Component: <LearningList />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/learning/detailcourse`,
+    //   Component: <DetailsCourse />,
+    // },
+    //
+    // // Job Search
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/jobsearch/cardview`,
+    //   Component: <CardView />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/jobsearch/listview`,
+    //   Component: <ListView />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/jobsearch/jobdetail`,
+    //   Component: <JobDetails />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/jobsearch/jobapply`,
+    //   Component: <JobApply />,
+    // },
+    //
+    // // Faq
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/faq/faq`, Component: <Faq /> },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/knowledgebase/knowledgebase`,
+    //   Component: <Knowledgebase />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/supportticket/supportticket`,
+    //   Component: <SupportTicket />,
+    // },
+    //
+    // // Blog
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/blog/blogdetails`,
+    //   Component: <BlogDetails />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/blog/blogsingle`,
+    //   Component: <BlogSingle />,
+    // },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/blog/addpost`, Component: <AddPost /> },
+    //
+    // // Gallery
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/gallery/gallerygrids`,
+    //   Component: <GalleryGrid />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/gallery/gallerygriddesc`,
+    //   Component: <GalleryGridDesc />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/gallery/masonrygallery`,
+    //   Component: <MasonryGallery />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/gallery/masonrywithdesc`,
+    //   Component: <MasonryImageDesc />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/gallery/hovereffect`,
+    //   Component: <HoverEffect />,
+    // },
+    //
+    // // Charts
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/charts/apexchart`,
+    //   Component: <ApexChart />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/charts/googlechart`,
+    //   Component: <GoogleChart />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/charts/chartjschart`,
+    //   Component: <ChartJs />,
+    // },
+    //
+    // // Buttons
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/buttons/defaultstyle`,
+    //   Component: <DefaultStyle />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/buttons/flatstyle`,
+    //   Component: <FlatStyle />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/buttons/edgestyle`,
+    //   Component: <EdgeStyle />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/buttons/raisedstyle`,
+    //   Component: <RaisedStyle />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/buttons/buttongroup`,
+    //   Component: <ButtonGroup />,
+    // },
+    //
+    // // Icons
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/icons/flagicons`,
+    //   Component: <FlagIcons />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/icons/fontawesomeicon`,
+    //   Component: <FontAwesomeIcon />,
+    // },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/icons/icoicon`, Component: <ICOIcon /> },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/icons/themifyicon`,
+    //   Component: <ThemifyIcons />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/icons/feathericon`,
+    //   Component: <FeatherIcons />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/icons/wheathericon`,
+    //   Component: <WhetherIcon />,
+    // },
+    //
+    // // Bonus Ui
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/timeline`,
+    //   Component: <Timeline />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/basiccards`,
+    //   Component: <BasicCard />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/creativecards`,
+    //   Component: <CreativeCard />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/rangeslider`,
+    //   Component: <RangeSlider />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/imagecropper`,
+    //   Component: <ImageCropper />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/owlcarousel`,
+    //   Component: <OwlCarousel />,
+    // },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/ribbons`, Component: <Ribbons /> },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/sweetalert2`,
+    //   Component: <SweetAlert />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/pagination`,
+    //   Component: <Pagination />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/dropzone`,
+    //   Component: <Dropzone />,
+    // },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/tour`, Component: <Tour /> },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/toasts`, Component: <Toast /> },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/rating`, Component: <Rating /> },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/scrollable`,
+    //   Component: <Scrollable />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/treeview`,
+    //   Component: <TreeView />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/bonusui/breadcrumb`,
+    //   Component: <Breadcrumb />,
+    // },
+    //
+    // // Ui-Kits
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/tabs`,
+    //   Component: <ReactstrapTabs />,
+    // },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/list`, Component: <Lists /> },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/accordion`,
+    //   Component: <Accordion />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/helperclass`,
+    //   Component: <HelperClasses />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/typography`,
+    //   Component: <Typography />,
+    // },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/avatars`, Component: <Avatars /> },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/dropdown`,
+    //   Component: <Dropdown />,
+    // },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/popover`, Component: <Popover /> },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/tooltip`, Component: <Tooltip /> },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/modal`, Component: <Modal /> },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/progress`,
+    //   Component: <Progress />,
+    // },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/alert`, Component: <Alert /> },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/grid`, Component: <Grid /> },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/uikits/tagpills`,
+    //   Component: <TagAndPills />,
+    // },
+    //
+    // // Page Layout
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/pagelayout/hidenavscroll`,
+    //   Component: <HideNavScrollContainer />,
+    // },
+    //
+    // // Widgets
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/widgets/general`, Component: <General /> },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/widgets/chart`, Component: <Charts /> },
+    //
+    // // Form Widgets
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formswidget/switch`,
+    //   Component: <Switch />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formswidget/typeahead`,
+    //   Component: <Typeahead />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formswidget/clipboard`,
+    //   Component: <ClipBoard />,
+    // },
+    //
+    // // Form Layout
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formslayout/formwizard1`,
+    //   Component: <FormWizardOne />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formslayout/formwizard2`,
+    //   Component: <FormWizardTwo />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/forms/formslayout/twofactor`,
+    //   Component: <TwoFactor />,
+    // },
+    //
+    // // Tables
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/reactstraptable/basictable`,
+    //   Component: <BasicTable />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/reactstraptable/tablecomponent`,
+    //   Component: <TableComponent />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/datatable/basicinit`,
+    //   Component: <BasicInit />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/datatable/advanceinit`,
+    //   Component: <AdvanceInit />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/datatable/api`,
+    //   Component: <ApiDataTable />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/table/datatable/datasources`,
+    //   Component: <DataSource />,
+    // },
+    //
+    // // Sample Page
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/pages/samplepage`,
+    //   Component: <SamplePage />,
+    // },
+    //
+    // // Applications
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/project/projectlist`,
+    //   Component: <ProjectList />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/project/createnew`,
+    //   Component: <ProjectCreate />,
+    // },
+    //
+    // // FileManager
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/app/filemanager`,
+    //   Component: <FileManager />,
+    // },
+    //
+    // // Email
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/email/letterbox`,
+    //   Component: <LetterBox />,
+    // },
+    //
+    // // Users
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/users/userprofile`,
+    //   Component: <UsersProfile />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/users/useredit`,
+    //   Component: <EditProfile />,
+    // },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/users/cards`, Component: <UserCards /> },
+    //
+    // // Todo
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/todo`, Component: <Todo /> },
+    //
+    // // Calender
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/calendar`, Component: <Calender /> },
+    //
+    // // Tasks
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/task`, Component: <Tasks /> },
+    //
+    // // Contacts
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/contacts`, Component: <Contacts /> },
+    //
+    // // Bookmark
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/bookmark`, Component: <Bookmark /> },
+    //
+    // // Search Result
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/app/searchresult`,
+    //   Component: <SearchResult />,
+    // },
+    //
+    // // Chat
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/chat/privatechats`,
+    //   Component: <PrivateChat />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/chat/groupchat`,
+    //   Component: <GroupChat />,
+    // },
+    //
+    // // Social App
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/app/socialapp`, Component: <SocialApp /> },
+    //
+    // // Ecommerce
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/addproduct`,
+    //   Component: <AddProduct />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/products`,
+    //   Component: <Products />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/productlist`,
+    //   Component: <ProductList />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/paymentdetails`,
+    //   Component: <PaymentDetails />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/productpage`,
+    //   Component: <ProductPage />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/orderhistory`,
+    //   Component: <OrderHistory />,
+    // },
+    //
+    // // Invoices
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice1`,
+    //   Component: <InvoiceOne />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice2`,
+    //   Component: <InvoiceTwo />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice3`,
+    //   Component: <InvoiceThree />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice4`,
+    //   Component: <InvoiceFour />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice5`,
+    //   Component: <InvoiceFive />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/invoice/invoice6`,
+    //   Component: <InvoiceSix />,
+    // },
+    // { path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/cart`, Component: <Cart /> },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/wishlist`,
+    //   Component: <WishList />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/checkout`,
+    //   Component: <Checkout />,
+    // },
+    // {
+    //   path: `${import.meta.env.VITE_PUBLIC_URL}/ecommerce/pricing`,
+    //   Component: <Pricing />,
+    // },
 ];
 
 export default Routes;

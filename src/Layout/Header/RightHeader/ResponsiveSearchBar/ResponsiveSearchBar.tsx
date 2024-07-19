@@ -34,7 +34,7 @@ const ResponsiveSearchBar = () => {
         num = num + 1;
         suggestionArray.push({
           icon: icon,
-          title: item.title,
+          title: item?.title || "",
           path: item.path ? item.path : "",
           bookmarked: false,
           id: num,

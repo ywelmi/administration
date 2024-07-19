@@ -1,3 +1,5 @@
+import { MenuItem } from "../../Types/Layout/Sidebar";
+
 // const menuList = [
 //   {
 //     Items: [
@@ -41,6 +43,7 @@
 //     ],
 //   },
 // ];
+
 export const useMenuList = () => {
   const menuList = [
     {
@@ -48,17 +51,20 @@ export const useMenuList = () => {
         {
           title: "Quản trị người dùng",
           lanClass: "lan-1",
-          children: [{
-            title: "Người dùng",
-            type: "sub",
-            lanClass: "lan-3",
-            path: "/user/list",
-          }, {
-            title: "Phân quyền - Not",
-            type: "sub",
-            lanClass: "lan-3",
-            // path: "/user/list",
-          }],
+          children: [
+            {
+              title: "Người dùng",
+              type: "sub",
+              lanClass: "lan-3",
+              path: "/user/list",
+            },
+            {
+              title: "Phân quyền - Not",
+              type: "sub",
+              lanClass: "lan-3",
+              // path: "/user/list",
+            },
+          ],
         },
         {
           title: "Danh mục môn thi",
@@ -90,19 +96,19 @@ export const useMenuList = () => {
             },
             {
               path: "/tablequalifyings/list",
-              title: "Lập đấu vòng bảng",
+              title: "Lập lịch thi đấu vòng bảng",
               type: "link",
               lanClass: "lan-4",
             },
             {
               path: "/lotsdraw/list/",
-              title: "Lập đấu bốc thăm",
+              title: "Lập lịch thi đấu bốc thăm",
               type: "link",
               lanClass: "lan-4",
             },
             {
-              path: "#",
-              title: "Xuất phiếu điểm - Not",
+              path: "/reportresult",
+              title: "Xuất phiếu điểm",
               type: "link",
               lanClass: "lan-4",
             },

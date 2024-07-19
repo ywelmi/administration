@@ -210,7 +210,7 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [{
         className="form-control"
         name="date_join_army"
         showYearDropdown
-        selected={new Date(getValue() as string || new Date())}
+        // selected={new Date(getValue() as string || new Date())}
         value={original.match_date
           ? convertToDate(original.match_date)
           : undefined}
@@ -231,10 +231,11 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [{
   header: "Nhập kết quả",
   footer: (props) => props.column.id,
   cell({ getValue, row: { index, original }, column: { id }, table }) {
-    let hasEmptyFiled = false;
-    const idx = Object.values(original).findIndex((v) => v == null);
-    if (idx !== -1) hasEmptyFiled = true;
-    if (hasEmptyFiled) return null;
+    // let hasEmptyFiled = false;
+    // const idx = Object.values(original).findIndex((v) => v == null);
+    // if (idx !== -1) hasEmptyFiled = true;
+    // if (hasEmptyFiled) return null;
+    if (!original.isDetail) return null;
     const { LotsDrawSubmitModal, handleToggle } = useLotsDrawSubmitModal({
       sportId: original.sport_id,
       orgId: original.org_id,
@@ -248,6 +249,21 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [{
     );
   },
 }];
+
+const isUpdated = (d: TLotsDraw) => {
+  const detailCols: (keyof TLotsDraw)[] = [
+    "ticket_index",
+    "match_hour",
+    "match_date",
+    "locations",
+  ];
+  for (const c of detailCols) {
+    if (!Object.keys(d).includes(c)) {
+      return false;
+    }
+  }
+  return true;
+};
 
 const ListLotsDraw = (
   {
@@ -268,12 +284,15 @@ const ListLotsDraw = (
   //   }];
   // }
   //
+  //
+  const tableData = data.map((d) => ({ ...d, isDetail: isUpdated(d) }));
 
+  console.log({ tableData });
   return (
     <div className="table-responsive">
       <TanTable
         ref={tableRef}
-        data={data}
+        data={tableData}
         getRowId={getLotDrawId}
         columns={columns}
       />
@@ -295,13 +314,17 @@ const PageLotsDraw = () => {
   }, [paramSportId]);
 
   const [data, setData] = useState<TLotsDraw[]>([]);
+
+  const fetchData = useCallback((sportId: string) => {
+    lotsdrawsGet(sportId).then((res) => {
+      const { data, status } = res;
+      console.log({ data });
+      if (status === 200) setData(data);
+    }).catch((err) => console.log({ err }));
+  }, []);
   useEffect(() => {
     if (sportId) {
-      lotsdrawsGet(sportId).then((res) => {
-        const { data, status } = res;
-        console.log({ data });
-        if (status === 200) setData(data);
-      }).catch((err) => console.log({ err }));
+      fetchData(sportId);
     }
   }, [sportId]);
 
@@ -314,6 +337,7 @@ const PageLotsDraw = () => {
         const { data, status } = res;
         if (status === 200) {
           toast.success(N["success"]);
+          fetchData(sportId);
         }
       }).catch((err) => {
         toast.error(N["failed"]);

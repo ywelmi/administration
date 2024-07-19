@@ -10,6 +10,7 @@ export interface TLotsDraw {
   org_id: string;
   row_num?: number;
   team_name?: string;
+  "isDetail"?: boolean;
 }
 
 export interface TLotsDrawMember {

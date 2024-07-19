@@ -3,12 +3,10 @@ import { H6, LI } from "../../AbstractElements";
 import { useMenuList } from "../../Data/Layout/Sidebar";
 import { MenuItem } from "../../Types/Layout/Sidebar";
 import MenuLists from "./MenuLists";
-import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "../../store/layout";
 
 const SidebarMenuList = () => {
   const [activeMenu, setActiveMenu] = useState<string[]>([]);
-  const { t } = useTranslation();
   const { pinedMenus } = useLayoutStore();
   const shouldHideMenu = (mainMenu: MenuItem) => {
     return mainMenu?.Items?.map((data) => data.title).every((titles) =>
@@ -30,7 +28,7 @@ const SidebarMenuList = () => {
             >
               <div>
                 <H6 className={mainMenu.lanClass && mainMenu.lanClass}>
-                  {t(mainMenu.title)}
+                  {mainMenu.title}
                 </H6>
               </div>
             </LI>

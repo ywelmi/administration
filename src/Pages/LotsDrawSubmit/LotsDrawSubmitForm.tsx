@@ -12,8 +12,6 @@ interface ILotsDrawSubmitModal {
   // onSubmit: (lotsdraw: TLotsDraw[]) => void;
 }
 
-const getLotDrawId = (d: TLotsDraw) => d.id;
-
 const useLotsDrawSubmitModal = (
   { sportId, orgId, title }: ILotsDrawSubmitModal,
 ) => {

@@ -89,26 +89,26 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
       console.log({ submitAddTeamValue: value });
       let submitValue = {
         ...value,
-        list_team_member: list_team_member?.map((
-          { gender, name, rank, id },
-        ) => id),
+        // list_team_member: list_team_member?.map((
+        //   { gender, name, rank, id },
+        // ) => id),
       } as TTeam;
       if (submitValue) onSubmit(submitValue);
     },
   });
 
-  const [newListMember, setNewListMember] = useState<TTeammember[]>([]);
+  // const [newListMember, setNewListMember] = useState<TTeammember[]>([]);
 
   const [orgMembers, setOrgMembers] = useState<TTeammember[]>([]);
 
-  const handleAddTeammember = useCallback((newTeammember: TTeammember) => {
-    setNewListMember((prev) => [...prev, newTeammember]);
-    const newTeammembers = formik.values.list_team_member || [];
-    formik.setFieldValue("list_team_member", [
-      ...newTeammembers,
-      newTeammember,
-    ]);
-  }, []);
+  // const handleAddTeammember = useCallback((newTeammember: TTeammember) => {
+  //   setNewListMember((prev) => [...prev, newTeammember]);
+  //   const newTeammembers = formik.values.list_team_member || [];
+  //   formik.setFieldValue("list_team_member", [
+  //     ...newTeammembers,
+  //     newTeammember,
+  //   ]);
+  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -134,43 +134,25 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
       availMembers.push(...orgMembers);
     }
     return [
-      ...newListMember,
+      // ...newListMember,
       ...availMembers,
     ];
   }, [
     teammembers,
-    newListMember,
+    // newListMember,
     orgMembers,
   ]);
 
-  const { TeammemberPopover, handleToggle } = useTeammemberPopover({
-    onSubmit: handleAddTeammember,
-    omitColumns: ["teams", "competitions", "orgs"],
-  });
+  // const { TeammemberPopover, handleToggle } = useTeammemberPopover({
+  //   onSubmit: handleAddTeammember,
+  //   omitColumns: ["teams", "competitions", "orgs"],
+  // });
+  //
+  console.log({ form: formik.values, displayedListTeammember });
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <Row className="g-3">
-        {/* <Col md="12" className="form-check checkbox-primary"> */}
-        {/*   <Label for="has_militia" check>{t("has_militia")}</Label> */}
-        {/*   <Input */}
-        {/*     id="has_militia" */}
-        {/*     type="checkbox" */}
-        {/*     defaultChecked */}
-        {/*     value={formik.values.has_militia} */}
-        {/*     onChange={formik.handleChange} */}
-        {/*   /> */}
-        {/* </Col> */}
-        {/* <Col md="12" className="form-check checkbox-primary"> */}
-        {/*   <Label for="has_army" check>{t("has_army")}</Label> */}
-        {/*   <Input */}
-        {/*     id="has_army" */}
-        {/*     type="checkbox" */}
-        {/*     defaultChecked */}
-        {/*     value={formik.values.has_army} */}
-        {/*     onChange={formik.handleChange} */}
-        {/*   /> */}
-        {/* </Col> */}
         {(competitions?.length)
           ? (
             <Col md="12">
@@ -229,28 +211,27 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
             data={displayedListTeammember}
             columns={tableTeammemberColumns}
             onSelectedRowsChange={({ selectedRows }) => {
-              console.log({ selectedRows });
-              console.log({
-                formikMembers: formik.values.list_team_member,
-              });
               if (
                 selectedRows.length ===
                   formik.values.list_team_member?.length
               ) {
                 return;
               }
+              // Add new
               formik.setFieldValue(
                 "list_team_member",
-                selectedRows.map((row) => row),
+                selectedRows.map((row) => row.id),
+              );
+              // Update
+              formik.setFieldValue(
+                "list_member_id",
+                selectedRows.map((row) => row.id),
               );
             }}
             selectableRowSelected={(r) => {
-              return !r?.id ||
-                !!formik.values.list_team_member?.map(({ id }) => id)
-                  .includes(
-                    r.id,
-                  ) ||
-                !!formik.values.list_member_id?.includes(r.id);
+              return !!formik.values.list_member_id?.includes(
+                r.id,
+              ) || !!formik.values.member_ids?.includes(r.id);
             }}
           />
         </Col>
