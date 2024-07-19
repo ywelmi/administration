@@ -24,6 +24,7 @@ import {
 } from "../../Component/Tables/TanTable/TanTble";
 import { LI } from "../../AbstractElements";
 import { useLotsDrawSubmitModal } from "../LotsDrawSubmit/LotsDrawSubmitForm";
+import { useLotsDrawModal } from "./LotsDrawForm";
 
 // const LotsDrawTableAction = (
 //   { lotsdraw }: { lotsdraw: TLotsDrawColumn },
@@ -59,8 +60,8 @@ import { useLotsDrawSubmitModal } from "../LotsDrawSubmit/LotsDrawSubmitForm";
 //     lotsdraw,
 //   });
 //
-//   const handleConfirmDel = () => {
-//     const { confirm } = useConfirmModal();
+//   const handleConfirmDel =  async () => {
+//     if (confirm) {
 //     if (confirm) {
 //       lotsdrawDelete(lotsdraw.id).then((res) => {
 //         const { status, data } = res;
@@ -145,110 +146,116 @@ interface IListLotsDraw {
   selectableRows?: boolean;
   onRowSelect?: (
     row: TLotsDraw,
-    e: React.MouseEvent<Element, MouseEvent>,
+    e: React.MouseEvent<Element, MouseEvent>
   ) => void;
-  onSelectedRowsChange?: (
-    v: {
-      allSelected: boolean;
-      selectedCount: number;
-      selectedRows: TLotsDraw[];
-    },
-  ) => void;
+  onSelectedRowsChange?: (v: {
+    allSelected: boolean;
+    selectedCount: number;
+    selectedRows: TLotsDraw[];
+  }) => void;
   columns?: ColumnDef<TLotsDraw>[];
   data?: TLotsDraw[];
   selectableRowSelected?: (row: TLotsDraw) => boolean;
   tableRef?: Ref<ITanTableRef<TLotsDraw>>;
 }
 
-const tableColumns: ColumnDef<TLotsDraw>[] = [{
-  accessorKey: "team_name",
-  footer: (props) => props.column.id,
-  header: N["team_name"],
-  cell(props) {
-    return <div className="form-control">{props.getValue() as string}</div>;
+const tableColumns: ColumnDef<TLotsDraw>[] = [
+  {
+    accessorKey: "team_name",
+    footer: (props) => props.column.id,
+    header: N["team_name"],
+    cell(props) {
+      return <div className="form-control">{props.getValue() as string}</div>;
+    },
   },
-}, {
-  accessorKey: "ticket_index",
-  footer: (props) => props.column.id,
-  header: N["ticket_index"],
-  cell(props) {
-    return <div className="form-control">{props.getValue() as string}</div>;
+  {
+    accessorKey: "ticket_index",
+    footer: (props) => props.column.id,
+    header: N["ticket_index"],
+    cell(props) {
+      return <div className="form-control">{props.getValue() as string}</div>;
+    },
   },
-}, {
-  accessorKey: "match_hour",
-  footer: (props) => props.column.id,
-  header: N["match_hour"],
-  cell({ getValue, row: { index, original }, column: { id }, table }) {
-    return (
-      <ReactDatePicker
-        className="form-control"
-        name="match_hour"
-        // selected={new Date(original.match_date as string || new Date())}
-        value={original.match_hour}
-        onChange={(date) =>
-          table.options.meta?.updateData(
-            index,
-            id,
-            `${date?.getHours()}:${date?.getMinutes()}`,
-          )}
-        showTimeSelect
-        showTimeSelectOnly
-        timeFormat="HH:mm"
-        timeIntervals={15}
-        timeCaption="Giờ"
-        locale={"vi"}
-      />
-    );
+  {
+    accessorKey: "match_hour",
+    footer: (props) => props.column.id,
+    header: N["match_hour"],
+    cell({ getValue, row: { index, original }, column: { id }, table }) {
+      return (
+        <ReactDatePicker
+          className="form-control"
+          name="match_hour"
+          // selected={new Date(original.match_date as string || new Date())}
+          value={original.match_hour}
+          onChange={(date) =>
+            table.options.meta?.updateData(
+              index,
+              id,
+              `${date?.getHours()}:${date?.getMinutes()}`
+            )
+          }
+          showTimeSelect
+          showTimeSelectOnly
+          timeFormat="HH:mm"
+          timeIntervals={15}
+          timeCaption="Giờ"
+          locale={"vi"}
+        />
+      );
+    },
   },
-}, {
-  accessorKey: "match_date",
-  footer: (props) => props.column.id,
-  header: N["match_date"],
-  cell({ getValue, row: { index, original }, column: { id }, table }) {
-    return (
-      <ReactDatePicker
-        className="form-control"
-        name="date_join_army"
-        showYearDropdown
-        // selected={new Date(getValue() as string || new Date())}
-        value={original.match_date
-          ? convertToDate(original.match_date)
-          : undefined}
-        onChange={(date) => {
-          table.options.meta?.updateData(index, id, date?.toISOString());
-        }}
-        locale={"vi"}
-        dateFormat={"dd/MM/yyyy"}
-      />
-    );
+  {
+    accessorKey: "match_date",
+    footer: (props) => props.column.id,
+    header: N["match_date"],
+    cell({ getValue, row: { index, original }, column: { id }, table }) {
+      return (
+        <ReactDatePicker
+          className="form-control"
+          name="date_join_army"
+          showYearDropdown
+          // selected={new Date(getValue() as string || new Date())}
+          value={
+            original.match_date ? convertToDate(original.match_date) : undefined
+          }
+          onChange={(date) => {
+            table.options.meta?.updateData(index, id, date?.toISOString());
+          }}
+          locale={"vi"}
+          dateFormat={"dd/MM/yyyy"}
+        />
+      );
+    },
   },
-}, {
-  accessorKey: "locations",
-  footer: (props) => props.column.id,
-  header: N["locations"],
-}, {
-  // accessorKey: "locations",
-  header: "Nhập kết quả",
-  footer: (props) => props.column.id,
-  cell({ getValue, row: { index, original }, column: { id }, table }) {
-    // let hasEmptyFiled = false;
-    // const idx = Object.values(original).findIndex((v) => v == null);
-    // if (idx !== -1) hasEmptyFiled = true;
-    // if (hasEmptyFiled) return null;
-    if (!original.isDetail) return null;
-    const { LotsDrawSubmitModal, handleToggle } = useLotsDrawSubmitModal({
-      sportId: original.sport_id,
-      orgId: original.org_id,
-    });
-    return (
-      <LI className="edit btn" onClick={handleToggle}>
-        <i className="icon-pencil-alt" />
-        Cập nhật
-        <LotsDrawSubmitModal />
-      </LI>
-    );
+  {
+    accessorKey: "locations",
+    footer: (props) => props.column.id,
+    header: N["locations"],
   },
-}];
+  {
+    // accessorKey: "locations",
+    header: "Nhập kết quả",
+    footer: (props) => props.column.id,
+    cell({ getValue, row: { index, original }, column: { id }, table }) {
+      // let hasEmptyFiled = false;
+      // const idx = Object.values(original).findIndex((v) => v == null);
+      // if (idx !== -1) hasEmptyFiled = true;
+      // if (hasEmptyFiled) return null;
+      if (!original.isDetail) return null;
+      const { LotsDrawSubmitModal, handleToggle } = useLotsDrawSubmitModal({
+        sportId: original.sport_id,
+        orgId: original.org_id,
+      });
+      return (
+        <LI className="edit btn" onClick={handleToggle}>
+          <i className="icon-pencil-alt" />
+          Cập nhật
+          <LotsDrawSubmitModal />
+        </LI>
+      );
+    },
+  },
+];
 
 const isUpdated = (d: TLotsDraw) => {
   const detailCols: (keyof TLotsDraw)[] = [
@@ -265,17 +272,15 @@ const isUpdated = (d: TLotsDraw) => {
   return true;
 };
 
-const ListLotsDraw = (
-  {
-    showAction,
-    onRowSelect,
-    onSelectedRowsChange,
-    columns = [...tableColumns],
-    data = [],
-    tableRef,
-    selectableRowSelected,
-  }: IListLotsDraw,
-) => {
+const ListLotsDraw = ({
+  showAction,
+  onRowSelect,
+  onSelectedRowsChange,
+  columns = [...tableColumns],
+  data = [],
+  tableRef,
+  selectableRowSelected,
+}: IListLotsDraw) => {
   // if (columns.length > 0 && showAction) {
   //   columns = [...columns, {
   //     name: "#",
@@ -316,11 +321,13 @@ const PageLotsDraw = () => {
   const [data, setData] = useState<TLotsDraw[]>([]);
 
   const fetchData = useCallback((sportId: string) => {
-    lotsdrawsGet(sportId).then((res) => {
-      const { data, status } = res;
-      console.log({ data });
-      if (status === 200) setData(data);
-    }).catch((err) => console.log({ err }));
+    lotsdrawsGet(sportId)
+      .then((res) => {
+        const { data, status } = res;
+        console.log({ data });
+        if (status === 200) setData(data);
+      })
+      .catch((err) => console.log({ err }));
   }, []);
   useEffect(() => {
     if (sportId) {
@@ -333,21 +340,25 @@ const PageLotsDraw = () => {
   const handleUpdate = useCallback(() => {
     const newData = ref.current?.getData();
     if (newData && sportId) {
-      lotsdrawUpdate(sportId, newData).then((res) => {
-        const { data, status } = res;
-        if (status === 200) {
-          toast.success(N["success"]);
-          fetchData(sportId);
-        }
-      }).catch((err) => {
-        toast.error(N["failed"]);
-        console.log({ err });
-      });
+      lotsdrawUpdate(sportId, newData)
+        .then((res) => {
+          const { data, status } = res;
+          if (status === 200) {
+            toast.success(N["success"]);
+            fetchData(sportId);
+          }
+        })
+        .catch((err) => {
+          toast.error(N["failed"]);
+          console.log({ err });
+        });
       return;
     }
     toast.error(N["failed"]);
   }, [sportId]);
 
+  const { handleToggle: toggleLotsDrawModal, LotsDrawModal: LotsDrawAddModal } =
+    useLotsDrawModal({ sportId: sportId });
   return (
     <div className="page-body">
       <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
@@ -367,14 +378,36 @@ const PageLotsDraw = () => {
                   value={sportId}
                   handleChange={(e) => setSportId(e.target.value)}
                 />
-                <div
-                  className="btn btn-primary"
-                  onClick={handleUpdate}
-                >
-                  <i className="fa fa-plus" />
-                  {"Cập nhật"}
+                <div className="flex gap-2 mt-4">
+                  <div
+                    className="btn btn-primary"
+                    onClick={() => {
+                      if (sportId) handleUpdate();
+                      else {
+                        toast.warn("Mời chọn môn thi");
+                      }
+                    }}
+                  >
+                    <i className="fa fa-edit" />
+                    {"Cập nhật lịch"}
+                  </div>
+                  <div
+                    className="btn btn-danger"
+                    onClick={() => {
+                      if (sportId) {
+                        toggleLotsDrawModal();
+                        setTimeout(() => fetchData(sportId), 2000);
+                      } else {
+                        toast.warn("Mời chọn môn thi");
+                      }
+                    }}
+                  >
+                    <i className="fa fa-plus" />
+                    {"Xem thăm"}
+                  </div>
                 </div>
-                {/* <LotsDrawAddModal /> */}
+
+                <LotsDrawAddModal />
               </CardHeader>
               <CardBody>
                 <ListLotsDraw tableRef={ref} data={data} showAction />

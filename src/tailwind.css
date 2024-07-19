@@ -872,8 +872,8 @@ video {
   width: 4rem;
 }
 
-.w-2 {
-  width: 0.5rem;
+.w-8 {
+  width: 2rem;
 }
 
 .w-auto {
@@ -884,28 +884,12 @@ video {
   width: 100%;
 }
 
-.w-4 {
-  width: 1rem;
-}
-
-.w-8 {
-  width: 2rem;
-}
-
 .flex-shrink-0 {
   flex-shrink: 0;
 }
 
 .grow {
   flex-grow: 1;
-}
-
-.table-fixed {
-  table-layout: fixed;
-}
-
-.border-collapse {
-  border-collapse: collapse;
 }
 
 .transform {
@@ -1188,6 +1172,11 @@ video {
 
 .align-middle {
   vertical-align: middle;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 .text-sm {

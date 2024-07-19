@@ -254,7 +254,7 @@ const TanTableComponent = <T,>({
   const refreshData = () => setData([...srcData]);
 
   return (
-    <div>
+    <div className="table-responsive-sm">
       <div>
         <input
           value={globalFilter ?? ""}
@@ -263,7 +263,7 @@ const TanTableComponent = <T,>({
           placeholder="Tìm kiếm"
         />
       </div>
-      <table className="table-fixed w-full border-collapse border">
+      <table className="table">
         <thead className="text-center">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>

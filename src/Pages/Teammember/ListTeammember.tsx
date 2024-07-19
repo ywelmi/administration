@@ -40,32 +40,32 @@ interface IListTeammember {
   data?: TTeammember[];
   onRowSelect?: (
     row: TTeammember,
-    e: React.MouseEvent<Element, MouseEvent>,
+    e: React.MouseEvent<Element, MouseEvent>
   ) => void;
-  onSelectedRowsChange?: (
-    v: {
-      allSelected: boolean;
-      selectedCount: number;
-      selectedRows: TTeammember[];
-    },
-  ) => void;
+  onSelectedRowsChange?: (v: {
+    allSelected: boolean;
+    selectedCount: number;
+    selectedRows: TTeammember[];
+  }) => void;
   columns?: TableColumn<TTeammemberColumn>[];
   selectableRowSelected?: (row: TTeammember) => boolean;
 }
 
-const tableColumns = ([
-  "name",
-  "rank",
-  "gender",
-  "created",
-  "dob",
-  "team_name",
-  "date_join_army",
-  "org_name",
-  "weights",
-  "competition_name",
-] as TKeyTeammember[]).map((c) => ({
-  "name": N[c],
+const tableColumns = (
+  [
+    "name",
+    "rank",
+    "gender",
+    "created",
+    "dob",
+    "team_name",
+    "date_join_army",
+    "org_name",
+    "weights",
+    "competition_name",
+  ] as TKeyTeammember[]
+).map((c) => ({
+  name: N[c],
   sortable: true,
   selector: (row: TTeammemberColumn) => {
     const v = row?.[c as TKeyTeammember];
@@ -92,15 +92,17 @@ const tableColumns = ([
   },
 }));
 
-const TeammemberTableAction = (
-  { teammember }: { teammember: TTeammemberColumn },
-) => {
+const TeammemberTableAction = ({
+  teammember,
+}: {
+  teammember: TTeammemberColumn;
+}) => {
   const { updateTeammember, deleteTeammember } = useTeammemberStore();
   const { t } = useTranslation();
   const handleUpdateTeammember = (teammember: TTeammember) => {
     console.log({ handleUpdateTeammember: teammember });
-    teammemberUpdate(teammember).then(
-      (res) => {
+    teammemberUpdate(teammember)
+      .then((res) => {
         const { status, data } = res;
         if (status === 200) {
           updateTeammember(data as TTeammember);
@@ -109,32 +111,40 @@ const TeammemberTableAction = (
         }
 
         return Promise.reject(status);
-      },
-    ).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
+      })
+      .catch((err) => {
+        toast.error(t("error"));
+        console.log({ err });
+      });
   };
   const {
     handleToggle: handleToggleUpdateModal,
     TeammemberModal: TeammemberUpdateModal,
   } = useTeammemberModal({ onSubmit: handleUpdateTeammember, teammember });
 
-  const handleConfirmDel = () => {
-    const { confirm } = useConfirmModal();
+  const handleConfirmDel = async () => {
+    const { confirm } = await useConfirmModal();
+    console.log({ confirm });
     if (confirm) {
-      teammemberDelete(teammember.id).then((res) => {
-        const { status, data } = res;
-        console.log({ status, data });
-        if (status === 200) {
-          toast.success(t("success"));
-          deleteTeammember(teammember.id);
-          return;
-        }
-        return Promise.reject(status);
-      })
+      teammemberDelete(teammember.id)
+        .then((res) => {
+          const { status, data } = res;
+          console.log({ status, data });
+          if (status === 200) {
+            toast.success(t("success"));
+            deleteTeammember(teammember.id);
+            return;
+          }
+          return Promise.reject(status);
+        })
         .catch((err) => {
-          toast.error(t("error"));
+          const {
+            response: { data },
+          } = err;
+          if (data) toast.error(data);
+          else {
+            toast.error(t("error"));
+          }
           console.log({ err });
         });
     }
@@ -144,10 +154,7 @@ const TeammemberTableAction = (
   return (
     <UL className="action simple-list flex-row" id={teammember.id}>
       <LI className="edit btn">
-        <i
-          className="icon-pencil-alt"
-          onClick={handleToggleUpdateModal}
-        />
+        <i className="icon-pencil-alt" onClick={handleToggleUpdateModal} />
         <TeammemberUpdateModal />
       </LI>
       <LI className="delete btn" onClick={handleConfirmDel}>
@@ -157,32 +164,28 @@ const TeammemberTableAction = (
   );
 };
 
-const ListTeammember = (
-  {
-    data = [],
-    showAction,
-    onRowSelect,
-    onSelectedRowsChange,
-    columns = [...tableColumns],
-    selectableRowSelected,
-  }: IListTeammember,
-) => {
+const ListTeammember = ({
+  data = [],
+  showAction,
+  onRowSelect,
+  onSelectedRowsChange,
+  columns = [...tableColumns],
+  selectableRowSelected,
+}: IListTeammember) => {
   const [filterText, setFilterText] = useState("");
-  const filteredItems = data.filter((item) =>
-    item.name &&
-    item.name.toLowerCase().includes(filterText.toLowerCase())
+  const filteredItems = data.filter(
+    (item) =>
+      item.name && item.name.toLowerCase().includes(filterText.toLowerCase())
   );
 
   if (columns.length > 0 && showAction) {
-    columns.push(
-      {
-        name: "#",
-        cell: (row: TTeammemberColumn) => (
-          <TeammemberTableAction teammember={row} />
-        ),
-        sortable: true,
-      },
-    );
+    columns.push({
+      name: "#",
+      cell: (row: TTeammemberColumn) => (
+        <TeammemberTableAction teammember={row} />
+      ),
+      sortable: true,
+    });
 
     columns = [...columns];
   }
@@ -196,7 +199,8 @@ const ListTeammember = (
         <Label className="me-2">{SearchTableButton}:</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)}
+            setFilterText(e.target.value)
+          }
           type="search"
           value={filterText}
         />
@@ -232,19 +236,21 @@ const PageTeammember = () => {
   const handleAddTeammember = (teammember: TTeammember) => {
     console.log({ handleAddTeammember: teammember });
     const { id, ...rests } = teammember;
-    teammemberCreate(rests).then((res) => {
-      const { status, data } = res;
-      if (status === 200) {
-        console.log({ addmember: data });
-        addTeammember(data as TTeammember);
-        toast.info(t("success"));
-        return;
-      }
-      return Promise.reject(status);
-    }).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
+    teammemberCreate(rests)
+      .then((res) => {
+        const { status, data } = res;
+        if (status === 200) {
+          console.log({ addmember: data });
+          addTeammember(data as TTeammember);
+          toast.info(t("success"));
+          return;
+        }
+        return Promise.reject(status);
+      })
+      .catch((err) => {
+        toast.error(t("error"));
+        console.log({ err });
+      });
   };
   const {
     handleToggle: handleToggleAddModal,
@@ -266,7 +272,7 @@ const PageTeammember = () => {
                 <TeammemberAddModal />
               </CardHeader>
               <CardBody>
-                <ListTeammember data={teammembers} />
+                <ListTeammember data={teammembers} showAction />
               </CardBody>
             </Card>
           </Col>

@@ -180,7 +180,7 @@ const TeammemberForm = (
             Xác nhận
           </Btn>
           {onCancel
-            ? <Btn color="primary" type="button" onClick={onCancel}>Hủy</Btn>
+            ? <Btn color="primary" type="button" onClick={onCancel}>Đóng</Btn>
             : null}
         </Col>
       </Row>

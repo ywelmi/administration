@@ -17,9 +17,11 @@ type TUserColumn = TUser;
 interface IListUser {
   showAction?: boolean;
   selectableRows?: boolean;
-  onSelectedRowsChange?: (
-    v: { allSelected: boolean; selectedCount: number; selectedRows: TUser[] },
-  ) => void;
+  onSelectedRowsChange?: (v: {
+    allSelected: boolean;
+    selectedCount: number;
+    selectedRows: TUser[];
+  }) => void;
   columns?: ColumnDef<TUser>[];
   data?: TUserColumn[];
   selectableRowSelected?: (row: TUserColumn) => boolean;
@@ -30,13 +32,15 @@ const userAction: ColumnDef<TUser> = {
   id: "actions",
   header: "#",
   cell(props) {
-    const { row: { original: user } } = props;
+    const {
+      row: { original: user },
+    } = props;
     const { updateUser, deleteUser } = useUserStore();
     const { t } = useTranslation();
     const handleUpdateUser = (user: TUser) => {
       console.log({ handleUpdateUser: user });
-      userUpdate(user).then(
-        (res) => {
+      userUpdate(user)
+        .then((res) => {
           const { status, data } = res;
           if (status === 200) {
             updateUser({ ...user, ...data });
@@ -45,11 +49,11 @@ const userAction: ColumnDef<TUser> = {
           }
 
           return Promise.reject(status);
-        },
-      ).catch((err) => {
-        toast.error(t("error"));
-        console.log({ err });
-      });
+        })
+        .catch((err) => {
+          toast.error(t("error"));
+          console.log({ err });
+        });
     };
 
     const {
@@ -57,18 +61,19 @@ const userAction: ColumnDef<TUser> = {
       UserModal: UserUpdateModal,
     } = useUserModal({ onSubmit: handleUpdateUser, user });
 
-    const handleConfirmDel = () => {
-      const { confirm } = useConfirmModal();
+    const handleConfirmDel = async () => {
+      const { confirm } = await useConfirmModal();
       if (confirm) {
-        userDelete(user.id).then((res) => {
-          const { status, data } = res;
-          console.log({ status, data });
-          if (status === 200) {
-            toast.success(t("success"));
-            deleteUser(user.id);
-            return;
-          }
-        })
+        userDelete(user.id)
+          .then((res) => {
+            const { status, data } = res;
+            console.log({ status, data });
+            if (status === 200) {
+              toast.success(t("success"));
+              deleteUser(user.id);
+              return;
+            }
+          })
           .catch((err) => {
             toast.error(t("error"));
             console.log({ err });
@@ -142,18 +147,20 @@ const PageUser = () => {
   const handleAddUser = (user: TUser) => {
     console.log({ handleAddUser: user });
     const { id, ...rests } = user;
-    userCreate(rests).then((res) => {
-      const { status, data } = res;
-      if (status === 200) {
-        addUser(data as TUser);
-        toast.info(t("success"));
-        return;
-      }
-      return Promise.reject(status);
-    }).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
+    userCreate(rests)
+      .then((res) => {
+        const { status, data } = res;
+        if (status === 200) {
+          addUser(data as TUser);
+          toast.info(t("success"));
+          return;
+        }
+        return Promise.reject(status);
+      })
+      .catch((err) => {
+        toast.error(t("error"));
+        console.log({ err });
+      });
   };
   const { handleToggle: handleToggleAddModal, UserModal: UserAddModal } =
     useUserModal({ onSubmit: handleAddUser });
@@ -178,9 +185,11 @@ const PageUser = () => {
                   showAction
                   columns={[...defaultColumns]}
                   onSelectedRowsChange={(selectedRows) =>
-                    console.log({ selectedRows })}
+                    console.log({ selectedRows })
+                  }
                   selectableRowSelected={(row) =>
-                    row.fullname.includes("admin")}
+                    row.fullname.includes("admin")
+                  }
                 />
               </CardBody>
             </Card>

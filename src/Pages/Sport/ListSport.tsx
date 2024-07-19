@@ -61,11 +61,11 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
   });
 
   const { handleToggle: toggleLotsDrawModal, LotsDrawModal } = useLotsDrawModal(
-    { sportId: sport.id },
+    { sportId: sport.id }
   );
 
-  // const handleConfirmDel = () => {
-  //   const { confirm } = useConfirmModal();
+  // const handleConfirmDel =  async () => {
+  //   if (confirm) {
   //   if (confirm) {
   //     sportDelete(sport.id).then((res) => {
   //       const { status, data } = res;
@@ -89,54 +89,56 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
 
   return (
     <UL className="action simple-list flex-row" id={sport.id}>
-      {sport.point_unit === 1
-        ? (
-          <>
-            <LI className="edit btn">
-              <Btn color="info" type="button" onClick={toggleLotsDrawModal}>
-                Xem Bốc Thăm
-              </Btn>
-              <LotsDrawModal />
-            </LI>
-            <LI className="edit btn">
-              <Btn
-                color="light"
-                type="button"
-                onClick={() => (sport.id
-                  ? navigate(`/lotsdraw/list/${sport.id}`)
-                  : undefined)}
-              >
-                Lập lịch
-              </Btn>
-            </LI>
-          </>
-        )
-        : (
-          <>
-            <LI className="edit btn">
-              <Btn
-                color="primary"
-                type="button"
-                onClick={() => (sport.id
+      {sport.point_unit === 1 ? (
+        <>
+          <LI className="edit btn">
+            <Btn color="info" type="button" onClick={toggleLotsDrawModal}>
+              Xem Bốc Thăm
+            </Btn>
+            <LotsDrawModal />
+          </LI>
+          <LI className="edit btn">
+            <Btn
+              color="light"
+              type="button"
+              onClick={() =>
+                sport.id ? navigate(`/lotsdraw/list/${sport.id}`) : undefined
+              }
+            >
+              Lập lịch
+            </Btn>
+          </LI>
+        </>
+      ) : (
+        <>
+          <LI className="edit btn">
+            <Btn
+              color="primary"
+              type="button"
+              onClick={() =>
+                sport.id
                   ? navigate(`/tablequalifyings/list/${sport.id}`)
-                  : undefined)}
-              >
-                Xem Vòng Bảng
-              </Btn>
-            </LI>
-            <LI className="edit btn">
-              <Btn
-                color="secondary"
-                type="button"
-                onClick={() => (sport.id
+                  : undefined
+              }
+            >
+              Xem Vòng Bảng
+            </Btn>
+          </LI>
+          <LI className="edit btn">
+            <Btn
+              color="secondary"
+              type="button"
+              onClick={() =>
+                sport.id
                   ? navigate(`/tablequalifyings/knockout/${sport.id}`)
-                  : undefined)}
-              >
-                Xem Vòng Loại
-              </Btn>
-            </LI>
-          </>
-        )}
+                  : undefined
+              }
+            >
+              Xem Vòng Loại
+            </Btn>
+          </LI>
+        </>
+      )}
 
       <LI className="edit btn">
         <i className="icon-pencil-alt" onClick={handleToggleUpdateModal} />
@@ -150,9 +152,11 @@ interface IListSport {
   showAction?: boolean;
   selectableRows?: boolean;
   onRowSelect?: (row: TSport, e: React.MouseEvent<Element, MouseEvent>) => void;
-  onSelectedRowsChange?: (
-    v: { allSelected: boolean; selectedCount: number; selectedRows: TSport[] },
-  ) => void;
+  onSelectedRowsChange?: (v: {
+    allSelected: boolean;
+    selectedCount: number;
+    selectedRows: TSport[];
+  }) => void;
   columns?: TableColumn<TSportColumn>[];
   data?: TSportColumn[];
   selectableRowSelected?: (row: TSportColumn) => boolean;
@@ -212,7 +216,8 @@ const ListSport = ({
         <Label className="me-2">{SearchTableButton}:</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)}
+            setFilterText(e.target.value)
+          }
           type="search"
           value={filterText}
         />

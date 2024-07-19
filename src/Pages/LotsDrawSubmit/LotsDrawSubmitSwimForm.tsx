@@ -135,7 +135,7 @@ const LotsDrawSubmitSwimForm = (
         {onCancel
           ? (
             <Btn color="primary" type="button" onClick={onCancel}>
-              Hủy
+              Đóng
             </Btn>
           )
           : null}

@@ -72,8 +72,8 @@ type TTablequalifyingColumn = Omit<TTablequalifyingMatch, "list_member_id">;
 //     tablequalifyingMatch,
 //   });
 //
-//   const handleConfirmDel = () => {
-//     const { confirm } = useConfirmModal();
+//   const handleConfirmDel =  async () => {
+//     if (confirm) {
 //     if (confirm) {
 //       tablequalifyingDelete(tablequalifyingMatch.id).then((res) => {
 //         const { status, data } = res;
@@ -123,52 +123,48 @@ interface IListTablequalifyingMatch {
   selectableRows?: boolean;
   onRowSelect?: (
     row: TTablequalifyingMatch,
-    e: React.MouseEvent<Element, MouseEvent>,
+    e: React.MouseEvent<Element, MouseEvent>
   ) => void;
-  onSelectedRowsChange?: (
-    v: {
-      allSelected: boolean;
-      selectedCount: number;
-      selectedRows: TTablequalifyingMatch[];
-    },
-  ) => void;
+  onSelectedRowsChange?: (v: {
+    allSelected: boolean;
+    selectedCount: number;
+    selectedRows: TTablequalifyingMatch[];
+  }) => void;
   columns?: TableColumn<TTablequalifyingColumn>[];
   data?: TTablequalifyingMatch[];
   selectableRowSelected?: (row: TTablequalifyingMatch) => boolean;
   loading?: boolean;
 }
 
-const tableColumns = ([
-  "indexs",
-  // "created?",
-  "match_day",
-  "match_hour",
-  "team1_name",
-  "team2_name",
-] as (keyof TTablequalifyingColumn)[]).map(
-  (c) => ({
-    "name": N[c],
-    sortable: true,
-    selector: (row: TTablequalifyingColumn) => {
-      const col = c as keyof TTablequalifyingColumn;
-      return row?.[col]
-        ? (row[col as keyof TTablequalifyingColumn] || "").toString()
-        : "" as (string | number);
-    },
-  }),
-);
+const tableColumns = (
+  [
+    "indexs",
+    // "created?",
+    "match_day",
+    "match_hour",
+    "team1_name",
+    "team2_name",
+  ] as (keyof TTablequalifyingColumn)[]
+).map((c) => ({
+  name: N[c],
+  sortable: true,
+  selector: (row: TTablequalifyingColumn) => {
+    const col = c as keyof TTablequalifyingColumn;
+    return row?.[col]
+      ? (row[col as keyof TTablequalifyingColumn] || "").toString()
+      : ("" as string | number);
+  },
+}));
 
-const ListTablequalifyingMatch = (
-  {
-    showAction,
-    onRowSelect,
-    onSelectedRowsChange,
-    columns = [...tableColumns],
-    data = [],
-    selectableRowSelected,
-    loading,
-  }: IListTablequalifyingMatch,
-) => {
+const ListTablequalifyingMatch = ({
+  showAction,
+  onRowSelect,
+  onSelectedRowsChange,
+  columns = [...tableColumns],
+  data = [],
+  selectableRowSelected,
+  loading,
+}: IListTablequalifyingMatch) => {
   const [filterText, setFilterText] = useState("");
   const filteredItems = data.filter((item) => item);
 
@@ -181,7 +177,8 @@ const ListTablequalifyingMatch = (
         <Label className="me-2">{SearchTableButton}:</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)}
+            setFilterText(e.target.value)
+          }
           type="search"
           value={filterText}
         />
@@ -212,11 +209,8 @@ const ListTablequalifyingMatch = (
 
 const PageTablequalifyingMatch = () => {
   const { t } = useTranslation();
-  const {
-    updateTableId,
-    addTablequalifyingMatch,
-    tablequalifyingMatchs,
-  } = useTablequalifyingMatchStore();
+  const { updateTableId, addTablequalifyingMatch, tablequalifyingMatchs } =
+    useTablequalifyingMatchStore();
   const { table_id } = useParams();
 
   useEffect(() => {
@@ -229,30 +223,30 @@ const PageTablequalifyingMatch = () => {
   }, [table_id]);
 
   const handleAddTablequalifyingMatch = (
-    tablequalifyingMatch: TTablequalifyingMatch,
+    tablequalifyingMatch: TTablequalifyingMatch
   ) => {
     console.log({ handleAddTablequalifyingMatch: tablequalifyingMatch });
     const { id, ...rests } = tablequalifyingMatch;
-    tablequalifyingMatchCreate(rests).then((res) => {
-      const { status, data } = res;
-      console.log({ addTablequalifyingMatchResult: data });
-      if (status === 200) {
-        const newData = {
-          ...tablequalifyingMatch,
-          ...data,
-        } as TTablequalifyingMatch;
-        console.log({ tablequalifyingMatchCreate: newData });
-        addTablequalifyingMatch(
-          newData,
-        );
-        toast.info(t("success"));
-        return;
-      }
-      return Promise.reject(status);
-    }).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
+    tablequalifyingMatchCreate(rests)
+      .then((res) => {
+        const { status, data } = res;
+        console.log({ addTablequalifyingMatchResult: data });
+        if (status === 200) {
+          const newData = {
+            ...tablequalifyingMatch,
+            ...data,
+          } as TTablequalifyingMatch;
+          console.log({ tablequalifyingMatchCreate: newData });
+          addTablequalifyingMatch(newData);
+          toast.info(t("success"));
+          return;
+        }
+        return Promise.reject(status);
+      })
+      .catch((err) => {
+        toast.error(t("error"));
+        console.log({ err });
+      });
   };
 
   const {
@@ -302,15 +296,12 @@ interface IModalPageTablequalifyingMatch {
   tableId: string;
 }
 
-const useModalPageTablequalifyingMatch = (
-  { tableId }: IModalPageTablequalifyingMatch,
-) => {
+const useModalPageTablequalifyingMatch = ({
+  tableId,
+}: IModalPageTablequalifyingMatch) => {
   const { t } = useTranslation();
-  const {
-    updateTableId,
-    addTablequalifyingMatch,
-    tablequalifyingMatchs,
-  } = useTablequalifyingMatchStore();
+  const { updateTableId, addTablequalifyingMatch, tablequalifyingMatchs } =
+    useTablequalifyingMatchStore();
 
   const [opened, setOpened] = useState(false);
 
@@ -327,30 +318,30 @@ const useModalPageTablequalifyingMatch = (
   }, [opened]);
 
   const handleAddTablequalifyingMatch = (
-    tablequalifyingMatch: TTablequalifyingMatch,
+    tablequalifyingMatch: TTablequalifyingMatch
   ) => {
     console.log({ handleAddTablequalifyingMatch: tablequalifyingMatch });
     const { id, ...rests } = tablequalifyingMatch;
-    tablequalifyingMatchCreate(rests).then((res) => {
-      const { status, data } = res;
-      console.log({ addTablequalifyingMatchResult: data });
-      if (status === 200) {
-        const newData = {
-          ...tablequalifyingMatch,
-          ...data,
-        } as TTablequalifyingMatch;
-        console.log({ tablequalifyingMatchCreate: newData });
-        addTablequalifyingMatch(
-          newData,
-        );
-        toast.info(t("success"));
-        return;
-      }
-      return Promise.reject(status);
-    }).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
+    tablequalifyingMatchCreate(rests)
+      .then((res) => {
+        const { status, data } = res;
+        console.log({ addTablequalifyingMatchResult: data });
+        if (status === 200) {
+          const newData = {
+            ...tablequalifyingMatch,
+            ...data,
+          } as TTablequalifyingMatch;
+          console.log({ tablequalifyingMatchCreate: newData });
+          addTablequalifyingMatch(newData);
+          toast.info(t("success"));
+          return;
+        }
+        return Promise.reject(status);
+      })
+      .catch((err) => {
+        toast.error(t("error"));
+        console.log({ err });
+      });
   };
 
   // const {
@@ -382,20 +373,15 @@ const useModalPageTablequalifyingMatch = (
           <Row>
             <Col sm="12">
               <Card>
-                <CardHeader className="pb-0 card-no-border">
-                </CardHeader>
+                <CardHeader className="pb-0 card-no-border"></CardHeader>
                 {/* <CardBody> */}
                 {/*   <ListTablequalifyingMatch */}
                 {/*     data={tablequalifyingMatchs} */}
                 {/*     showAction */}
                 {/*   /> */}
                 {/* </CardBody> */}
-                <Btn
-                  type="button"
-                  color="danger"
-                  onClick={handleToggle}
-                >
-                  Hủy
+                <Btn type="button" color="danger" onClick={handleToggle}>
+                  Đóng
                 </Btn>
               </Card>
             </Col>

@@ -74,7 +74,7 @@ const OrgForm = ({ org: initOrg, onSubmit, onCancel }: IOrgForm) => {
           {onCancel
             ? (
               <Btn color="primary" type="button" onClick={onCancel}>
-                Hủy
+                Đóng
               </Btn>
             )
             : null}
