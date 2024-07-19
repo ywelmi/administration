@@ -1,6 +1,6 @@
-/* @import 'public/assets/scss/app.scss'; */
-
-/* ! tailwindcss v3.4.6 | MIT License | https://tailwindcss.com */
+/*
+! tailwindcss v3.4.6 | MIT License | https://tailwindcss.com
+*/
 
 /*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
@@ -872,12 +872,8 @@ video {
   width: 4rem;
 }
 
-.w-24 {
-  width: 6rem;
-}
-
-.w-36 {
-  width: 9rem;
+.w-2 {
+  width: 0.5rem;
 }
 
 .w-auto {
@@ -886,6 +882,14 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.w-4 {
+  width: 1rem;
+}
+
+.w-8 {
+  width: 2rem;
 }
 
 .flex-shrink-0 {
@@ -898,6 +902,10 @@ video {
 
 .table-fixed {
   table-layout: fixed;
+}
+
+.border-collapse {
+  border-collapse: collapse;
 }
 
 .transform {
@@ -952,12 +960,6 @@ video {
   gap: 0.75rem;
 }
 
-.space-y-2 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
-}
-
 .overflow-auto {
   overflow: auto;
 }
@@ -1000,6 +1002,11 @@ video {
 
 .border-solid {
   border-style: solid;
+}
+
+.border-slate-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(203 213 225 / var(--tw-border-opacity));
 }
 
 .bg-\[color\] {
@@ -1250,5 +1257,3 @@ video {
 .\[key\:string\] {
   key: string;
 }
-
-

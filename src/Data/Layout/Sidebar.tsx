@@ -112,12 +112,12 @@ export const useMenuList = () => {
               type: "link",
               lanClass: "lan-4",
             },
-            {
-              path: "#",
-              title: "Nhập điểm - Not",
-              type: "link",
-              lanClass: "lan-4",
-            },
+            // {
+            //   path: "#",
+            //   title: "Nhập điểm - Not",
+            //   type: "link",
+            //   lanClass: "lan-4",
+            // },
           ],
         },
       ],

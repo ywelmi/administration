@@ -101,7 +101,7 @@ const defaultColumns: ColumnDef<TUser>[] = [
     footer: (props) => props.column.id,
     header: N["username"],
     cell(props) {
-      return props.getValue();
+      return <div className="form-control">{props.getValue() as string}</div>;
     },
   },
   {

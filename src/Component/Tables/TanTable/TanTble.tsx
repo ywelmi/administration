@@ -1,6 +1,7 @@
 import {
   CSSProperties,
   forwardRef,
+  HTMLAttributes,
   HTMLProps,
   ReactElement,
   Ref,
@@ -25,6 +26,7 @@ import {
 import React from "react";
 
 import _ from "lodash";
+import { LastName } from "../../../utils/Constant";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
@@ -77,7 +79,7 @@ function IndeterminateCheckbox({
     <input
       type="checkbox"
       ref={ref}
-      className={className + " cursor-pointer"}
+      className={className + " cursor-pointer form-check-input"}
       {...rest}
     />
   );
@@ -101,7 +103,7 @@ function getDefaultColumn<T>() {
 
       return (
         <input
-          className="w-full"
+          className="w-full form-control"
           value={value as string}
           onChange={(e) => setValue(e.target.value)}
           onBlur={onBlur}
@@ -265,12 +267,16 @@ const TanTableComponent = <T,>({
         <thead className="text-center">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
+              {headerGroup.headers.map((header, i) => {
+                let className = "align-middle border border-slate-300";
+                if (i == 0 && onSelectedRowsChange) {
+                  className += " w-8";
+                }
                 return (
                   <th
                     key={header.id}
                     colSpan={header.colSpan}
-                    className="align-top border border-slate-300"
+                    className={className}
                   >
                     {header.isPlaceholder ? null : (
                       <div>
@@ -387,6 +393,7 @@ const TanTableComponent = <T,>({
     </div>
   );
 };
+
 function Filter({
   column,
   table,
@@ -411,7 +418,7 @@ function Filter({
               e.target.value,
               old?.[1],
             ])}
-          placeholder={`Min`}
+          placeholder={`Từ...`}
           className="w-full border shadow rounded"
         />
         <input
@@ -422,7 +429,7 @@ function Filter({
               old?.[0],
               e.target.value,
             ])}
-          placeholder={`Max`}
+          placeholder={`Đến...`}
           className="w-full border shadow rounded"
         />
       </div>
@@ -432,8 +439,8 @@ function Filter({
         type="text"
         value={(columnFilterValue ?? "") as string}
         onChange={(e) => column.setFilterValue(e.target.value)}
-        placeholder={`Search...`}
-        className="w-full border shadow rounded"
+        placeholder={`Tìm kiếm...`}
+        className="w-full form-control"
       />
     );
 }

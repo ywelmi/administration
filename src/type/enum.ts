@@ -1,2 +1,27 @@
 export const DGender = ["Nam", "Nữ"];
-export const DRank = ["Trung úy", "Thượng úy"];
+export const DRank = [
+  "Binh nhì",
+  "Hạ sĩ",
+  "Binh nhất",
+  "Trung sĩ",
+  "Thượng sĩ",
+  "Thiếu úy QNCN",
+  "Trung úy QNCN",
+  "Thượng úy QNCN",
+  "Đại úy QNCN",
+  "Thiếu tá QNCN",
+  "Trung tá QNCN",
+  "Thượng tá QNCN",
+  "Thiếu uý",
+  "Trung uý",
+  "Thượng uý",
+  "Đại uý",
+  "Thiếu tá",
+  "Trung tá",
+  "Thượng tá",
+  "Đại tá",
+  "Thiếu tướng",
+  "Trung tướng",
+  "Thượng tướng",
+  "Đại tướng",
+];

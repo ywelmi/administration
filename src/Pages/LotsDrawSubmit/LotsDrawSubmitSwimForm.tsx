@@ -30,14 +30,14 @@ const defaultColumns: ColumnDef<TLotsDrawMember>[] = [
       footer: (props) => props.column.id,
       header: N["name"],
       cell(props) {
-        return props.getValue();
+        return <div className="form-control">{props.getValue() as string}</div>;
       },
     }, {
       accessorKey: "org_name",
       footer: (props) => props.column.id,
       header: N["org_name"],
       cell(props) {
-        return props.getValue();
+        return <div className="form-control">{props.getValue() as string}</div>;
       },
     }, {
       accessorKey: "clothers_number",
@@ -48,7 +48,7 @@ const defaultColumns: ColumnDef<TLotsDrawMember>[] = [
       footer: (props) => props.column.id,
       header: N["ticket_index"],
       cell(props) {
-        return props.getValue();
+        return <div className="form-control">{props.getValue() as string}</div>;
       },
     }],
   },

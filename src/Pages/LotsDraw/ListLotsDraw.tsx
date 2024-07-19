@@ -165,14 +165,14 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [{
   footer: (props) => props.column.id,
   header: N["team_name"],
   cell(props) {
-    return props.getValue();
+    return <div className="form-control">{props.getValue() as string}</div>;
   },
 }, {
   accessorKey: "ticket_index",
   footer: (props) => props.column.id,
   header: N["ticket_index"],
   cell(props) {
-    return props.getValue();
+    return <div className="form-control">{props.getValue() as string}</div>;
   },
 }, {
   accessorKey: "match_hour",
