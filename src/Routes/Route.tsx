@@ -3,6 +3,7 @@ import Default from "../Pages/Dashboard/Default/Default";
 import { PageLotsDraw } from "../Pages/LotsDraw/ListLotsDraw";
 import { ListOrg } from "../Pages/Org/ListOrg";
 import { PageReportResult } from "../Pages/Report Result/ReportResult";
+import { PageResultExport } from "../Pages/ResultExport/ResultExport";
 import { PageSport } from "../Pages/Sport/ListSport";
 import { PageTablequalifying } from "../Pages/Tablequalifying/ListTablequalifying";
 import { PageTablequalifyingKnockout } from "../Pages/TablequalifyingKnockout/ListTablequalifyingKnockout";
@@ -188,6 +189,10 @@ const Routes = [
     {
         path: "/reportresult",
         Component: <PageReportResult />,
+    },
+    {
+        path: "/resultexport",
+        Component: <PageResultExport />,
     },
     // {
     //   path: "/tablequalifyings/list",

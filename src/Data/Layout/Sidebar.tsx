@@ -1,49 +1,3 @@
-import { MenuItem } from "../../Types/Layout/Sidebar";
-
-// const menuList = [
-//   {
-//     Items: [
-//       {
-//         path: "/user/list",
-//         title: "Danh sách người dùng",
-//         type: "link",
-//         lanClass: "lan-4",
-//       },
-//       {
-//         path: "/org/list",
-//         title: "Danh sách đơn vị",
-//         type: "link",
-//         lanClass: "lan-4",
-//       },
-//       ,
-//       {
-//         path: "/team/list",
-//         title: "Đăng ký thi",
-//         type: "link",
-//         lanClass: "lan-4",
-//       },
-//       {
-//         path: "/sport/list",
-//         title: "Môn thi",
-//         type: "link",
-//         lanClass: "lan-4",
-//       },
-//       {
-//         path: "/teammember/list",
-//         title: "Vận động viên",
-//         type: "link",
-//         lanClass: "lan-4",
-//       },
-//       {
-//         path: "/tablequalifyings/list",
-//         title: "Bảng thi đấu",
-//         type: "link",
-//         lanClass: "lan-4",
-//       },
-//     ],
-//   },
-// ];
-
 export const useMenuList = () => {
   const menuList = [
     {
@@ -109,6 +63,12 @@ export const useMenuList = () => {
             {
               path: "/reportresult",
               title: "Xuất phiếu điểm",
+              type: "link",
+              lanClass: "lan-4",
+            },
+            {
+              path: "/resultexport",
+              title: "Bảng xếp hạng",
               type: "link",
               lanClass: "lan-4",
             },
