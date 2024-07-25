@@ -146,7 +146,7 @@ interface IListLotsDraw {
   selectableRows?: boolean;
   onRowSelect?: (
     row: TLotsDraw,
-    e: React.MouseEvent<Element, MouseEvent>
+    e: React.MouseEvent<Element, MouseEvent>,
   ) => void;
   onSelectedRowsChange?: (v: {
     allSelected: boolean;
@@ -191,9 +191,8 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [
             table.options.meta?.updateData(
               index,
               id,
-              `${date?.getHours()}:${date?.getMinutes()}`
-            )
-          }
+              `${date?.getHours()}:${date?.getMinutes()}`,
+            )}
           showTimeSelect
           showTimeSelectOnly
           timeFormat="HH:mm"
@@ -215,9 +214,9 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [
           name="date_join_army"
           showYearDropdown
           // selected={new Date(getValue() as string || new Date())}
-          value={
-            original.match_date ? convertToDate(original.match_date) : undefined
-          }
+          value={original.match_date
+            ? convertToDate(original.match_date)
+            : undefined}
           onChange={(date) => {
             table.options.meta?.updateData(index, id, date?.toISOString());
           }}

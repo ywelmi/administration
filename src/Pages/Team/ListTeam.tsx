@@ -44,13 +44,17 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
         return Promise.reject(status);
       },
     ).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
+      const { response: { data } } = err;
+      toast.error(data || t("error"));
+      console.log({ err, data });
     });
   };
 
   const { handleToggle: handleToggleUpdateModal, TeamModal: TeamUpdateModal } =
-    useTeamModal({ onSubmit: handleUpdateTeam, team });
+    useTeamModal({
+      onSubmit: handleUpdateTeam,
+      team: { ...team, list_member_id: team.member_ids },
+    });
 
   const handleConfirmDel = async () => {
     const { confirm } = await useConfirmModal();
@@ -79,7 +83,6 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
         <i
           className="icon-pencil-alt"
           onClick={() => {
-            console.log({ team });
             handleToggleUpdateModal();
           }}
         />
@@ -189,10 +192,10 @@ const ListTeam = (
         onSelectedRowsChange={onSelectedRowsChange}
         selectableRows={!!onRowSelect || !!onSelectedRowsChange}
         progressPending={loading}
-        paginationServer
-        paginationTotalRows={total}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
+        // paginationServer
+        // paginationTotalRows={total}
+        // onChangeRowsPerPage={handlePerRowsChange}
+        // onChangePage={handlePageChange}
         selectableRowSelected={selectableRowSelected}
       />
     </div>
@@ -215,7 +218,8 @@ const PageTeam = () => {
       }
       return Promise.reject(status);
     }).catch((err) => {
-      toast.error(t("error"));
+      const { response: { data } } = err;
+      toast.error(data || t("error"));
       console.log({ err });
     });
   };

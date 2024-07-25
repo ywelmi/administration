@@ -10,7 +10,6 @@ import { DGender, DRank } from "../../type/enum";
 import { InputSelect } from "../../Component/InputSelect";
 import { N } from "../../name-conversion";
 import ReactDatePicker from "react-datepicker";
-import { useStore } from "zustand";
 import { useOrgStore } from "../../store/org";
 import { useCompetitionStore } from "../../store/competition";
 import { convertToDate } from "../../utils/date";
@@ -40,7 +39,7 @@ const TeammemberForm = (
     "dob": new Date("1/1/1980").toISOString(),
     "date_join_army": new Date().toISOString(),
     "org_id": "",
-    "competition_id": "",
+    "competition_id": competitions?.[0].id || "",
     "weights": "60",
   };
 
@@ -139,8 +138,8 @@ const TeammemberForm = (
                 k="name"
                 name="org_id"
                 v="id"
-                handleChange={(e) => {
-                  formik.handleChange(e);
+                handleChange={({ target: { value } }) => {
+                  formik.setFieldValue("org_id", value);
                 }}
                 value={formik.values.org_id}
               />

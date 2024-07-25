@@ -105,9 +105,7 @@ const defaultColumns: ColumnDef<TUser>[] = [
     accessorKey: "username",
     footer: (props) => props.column.id,
     header: N["username"],
-    cell(props) {
-      return <div className="form-control">{props.getValue() as string}</div>;
-    },
+    cell: (props) => props.getValue() as string,
   },
   {
     accessorKey: "fullname",
@@ -185,11 +183,9 @@ const PageUser = () => {
                   showAction
                   columns={[...defaultColumns]}
                   onSelectedRowsChange={(selectedRows) =>
-                    console.log({ selectedRows })
-                  }
+                    console.log({ selectedRows })}
                   selectableRowSelected={(row) =>
-                    row.fullname.includes("admin")
-                  }
+                    row.fullname.includes("admin")}
                 />
               </CardBody>
             </Card>

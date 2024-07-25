@@ -9,8 +9,6 @@ import { useCompetitionStore } from "../../store/competition";
 import { useOrgStore } from "../../store/org";
 import { useSportStore } from "../../store/sport";
 import { InputSelect } from "../../Component/InputSelect";
-import { useTeammemberStore } from "../../store/teammember";
-import { useTeammemberPopover } from "../Teammember/TeammemberForm";
 import { TKeyTeammember, TTeammember } from "../../type/teammember";
 import { ListTeammember } from "../Teammember/ListTeammember";
 import { DGender, DRank } from "../../type/enum";
@@ -75,40 +73,26 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
     org_name: "",
     list_team_member: [], // list of teammembers' ids
   };
+  console.log({ initTeam, team });
 
   const { competitions } = useCompetitionStore();
   const { orgs } = useOrgStore();
   const { sports } = useSportStore();
-  const { teammembers } = useTeammemberStore();
+  // const { teammembers } = useTeammemberStore();
 
   const { t } = useTranslation();
   const formik = useFormik<Partial<TTeam>>({
-    initialValues: { ...team },
+    initialValues: { ...initTeam },
     onSubmit: (value) => {
-      const { list_team_member } = value;
       console.log({ submitAddTeamValue: value });
       let submitValue = {
         ...value,
-        // list_team_member: list_team_member?.map((
-        //   { gender, name, rank, id },
-        // ) => id),
       } as TTeam;
       if (submitValue) onSubmit(submitValue);
     },
   });
 
-  // const [newListMember, setNewListMember] = useState<TTeammember[]>([]);
-
   const [orgMembers, setOrgMembers] = useState<TTeammember[]>([]);
-
-  // const handleAddTeammember = useCallback((newTeammember: TTeammember) => {
-  //   setNewListMember((prev) => [...prev, newTeammember]);
-  //   const newTeammembers = formik.values.list_team_member || [];
-  //   formik.setFieldValue("list_team_member", [
-  //     ...newTeammembers,
-  //     newTeammember,
-  //   ]);
-  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -138,7 +122,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
       ...availMembers,
     ];
   }, [
-    teammembers,
+    // teammembers,
     // newListMember,
     orgMembers,
   ]);
@@ -213,7 +197,9 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
             onSelectedRowsChange={({ selectedRows }) => {
               if (
                 selectedRows.length ===
-                  formik.values.list_team_member?.length
+                  formik.values.list_team_member?.length ||
+                selectedRows.length ===
+                  formik.values.list_member_id?.length
               ) {
                 return;
               }
@@ -229,9 +215,8 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
               );
             }}
             selectableRowSelected={(r) => {
-              return !!formik.values.list_member_id?.includes(
-                r.id,
-              ) || !!formik.values.member_ids?.includes(r.id);
+              return !!formik.values.list_member_id?.includes(r.id) ||
+                !!formik.values.list_team_member?.includes(r.id);
             }}
           />
         </Col>

@@ -1,13 +1,14 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, RefObject, useRef } from "react";
 import { Input, InputGroup, InputGroupText } from "reactstrap";
 
+type TEvent = ChangeEvent & { target: { value: string } };
 interface IInputSelect<T> {
-  title: string;
+  title?: string;
   data: (T & { [ki: string]: any })[];
   k: keyof T;
   v: keyof T;
   // handleChange: (v: string) => void;
-  handleChange: (e: ChangeEvent<any>) => void;
+  handleChange: (e: TEvent) => void;
   value: any;
   name: string;
 }
@@ -22,10 +23,14 @@ const InputSelect = <T,>(
     v: item[v],
   }));
   const defaultValue = null ? value : "null";
+
+  const ref = useRef<HTMLInputElement>(null);
   return (
     <InputGroup>
-      <InputGroupText>{title}</InputGroupText>
+      {title ? <InputGroupText>{title}</InputGroupText> : null}
       <Input
+        minLength={24}
+        innerRef={ref}
         type="select"
         onChange={onChange}
         defaultValue={defaultValue}
@@ -42,6 +47,19 @@ const InputSelect = <T,>(
           </option>
         ))}
       </Input>
+      <div className="flex items-center p-2 border-gray-400 rounded-md">
+        <i
+          className="icon-close cursor-pointer"
+          onClick={() => {
+            // console.log({ ref: ref.current }, "clicked");
+            if (ref.current) ref.current.value = "";
+            const event = {
+              target: { value: "" },
+            } as TEvent;
+            onChange(event);
+          }}
+        />
+      </div>
     </InputGroup>
   );
 };

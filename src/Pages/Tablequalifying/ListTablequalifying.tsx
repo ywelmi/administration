@@ -281,7 +281,6 @@ const PageTablequalifying = () => {
   const { sports } = useSportStore();
   const [sportId, setSportId] = useState("");
 
-  console.log({ tablequalifyings });
   const { sport_id: paramSportId } = useParams();
 
   useEffect(() => {

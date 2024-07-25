@@ -17,5 +17,5 @@ export interface TTeam {
   "member_ids"?: string[];
   "member_names"?: string[];
 
-  list_team_member?: Partial<TTeammember>[]; // POST: to create team with new members
+  list_team_member?: string[]; // POST: to create team with new members
 }
