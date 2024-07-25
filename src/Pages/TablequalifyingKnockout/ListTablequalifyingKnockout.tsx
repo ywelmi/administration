@@ -132,24 +132,27 @@ const PageTablequalifyingKnockout = () => {
     fetchTablequalifyingKnockout,
   } = useKnockoutContext();
 
-  const handleAddKnockoutBracket = useCallback(() =>
-  (
-    knockoutBracket: IKnockoutCreate,
-  ) => {
-    tablequalifyingKnockoutGen(knockoutBracket).then((res) => {
-      const { status, data } = res;
-      console.log({ addTablequalifyingResult: data });
-      if (status === 200) {
-        fetchTablequalifyingKnockout(sportId);
-        toast.info(t("success"));
-        return;
-      }
-      return Promise.reject(status);
-    }).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
-  }, []);
+  const handleAddKnockoutBracket = useCallback(
+    (
+      knockoutBracket: IKnockoutCreate,
+    ) => {
+      console.log({ knockoutBracket });
+      tablequalifyingKnockoutGen(knockoutBracket).then((res) => {
+        const { status, data } = res;
+        console.log({ addTablequalifyingResult: data });
+        if (status === 200) {
+          fetchTablequalifyingKnockout(sportId);
+          toast.info(t("success"));
+          return;
+        }
+        return Promise.reject(status);
+      }).catch((err) => {
+        toast.error(t("error"));
+        console.log({ err });
+      });
+    },
+    [],
+  );
 
   const {
     handleToggle: handleToggleAddModal,

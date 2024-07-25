@@ -44,11 +44,10 @@ const TablequalifyingKnockoutForm = (
   const { t } = useTranslation();
   const formik = useFormik<IKnockoutCreate>({
     initialValues: { ...tablequalifyingKnockout },
-    onSubmit: (value) => {
-      console.log({ submitAddtablequalifyingKnockoutKnockoutValue: value });
-      let submitValue = {
-        ...value,
-      } as IKnockoutCreate;
+    onSubmit: (submitValue) => {
+      console.log({
+        submitAddtablequalifyingKnockoutKnockoutValue: submitValue,
+      });
       if (submitValue) onSubmit(submitValue);
     },
   });
