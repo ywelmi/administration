@@ -39,7 +39,8 @@ const TablequalifyingKnockoutForm = (
       "sport_id": "",
     };
 
-  const { sports } = useSportStore();
+  // const { sports } = useSportStore();
+  const { knockoutSports: sports } = useKnockoutContext();
   const { t } = useTranslation();
   const formik = useFormik<IKnockoutCreate>({
     initialValues: { ...tablequalifyingKnockout },
@@ -148,6 +149,7 @@ import {
   ListSetReport,
   useSetReportPopover,
 } from "../TablequalifyingMatchReport/SetReport";
+import { useKnockoutContext } from "./context";
 
 export interface ITablequalifyingKnockoutMatchReportForm {
   tablequalifyingKnockoutMatchReport?: Partial<TTablequalifyingMatchReport>;

@@ -12,19 +12,15 @@ import {
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
 import { InputSelect } from "../../Component/InputSelect";
-import { useSportStore } from "../../store/sport";
 import {
   Bracket,
   IRenderSeedProps,
-  IRoundProps,
-  ISeedProps,
   Seed,
   SeedItem,
   SeedTeam,
 } from "react-brackets";
 import {
   tablequalifyingKnockoutGen,
-  tablequalifyingKnockoutsGet,
   tablequalifyingKnockoutUpdate,
 } from "../../Service/tablequalifyingKnockout";
 import {
@@ -32,34 +28,7 @@ import {
   TTablequalifyingKnockout,
   TTablequalifyingKnockoutMatchReport,
 } from "../../type/tablequalifyingKnockout";
-
-const fakeRounds: IRoundProps[] = [
-  {
-    title: "Round one",
-    seeds: [
-      {
-        id: 1,
-        date: new Date().toDateString(),
-        teams: [{ name: "Team A" }, { name: "Team B" }],
-      },
-      {
-        id: 2,
-        date: new Date().toDateString(),
-        teams: [{ name: "Team C" }, { name: "Team D" }],
-      },
-    ],
-  },
-  {
-    title: "Round two",
-    seeds: [
-      {
-        id: 3,
-        date: new Date().toDateString(),
-        teams: [{ name: "Team A" }, { name: "Team C" }],
-      },
-    ],
-  },
-];
+import { KnockoutContextProvider, useKnockoutContext } from "./context";
 
 const CustomSeed = (
   { seed, breakpoint, roundIndex, seedIndex, callback }: IRenderSeedProps & {
@@ -71,33 +40,80 @@ const CustomSeed = (
 
   // mobileBreakpoint is required to be passed down to a seed
 
+  const { updateMatch, fetchTablequalifyingKnockout, sportId, knockoutTeams } =
+    useKnockoutContext();
+
+  const refreshKnockoutBrackets = useCallback(() => {
+    console.log("reload brackets");
+    fetchTablequalifyingKnockout(sportId);
+  }, [sportId]);
+
   const handleUpdateKnockoutMatch = (
     v: TTablequalifyingKnockoutMatchReport,
   ) => {
     tablequalifyingKnockoutUpdate(v).then((res) => {
       const { data, status } = res;
       if (status === 200) {
-        callback?.();
+        refreshKnockoutBrackets();
       }
     }).catch((err) => {
       console.log({ err });
     });
     // .finally(() => callback?.());
   };
+
+  // console.log({ roundIndex, seedIndex, name: seed.teams[0]?.name });
+
+  // const showSelectTeam = (!seed.teams[0]?.name || !seed.teams[1]?.name) &&
+  //   roundIndex == 0;
+
+  const updateTeam = (id: string, t: Partial<TTablequalifyingKnockout>) => {
+    updateMatch({ id, ...t });
+  };
+
+  const showScoreUpdate = !!seed.teams[0]?.name && !!seed.teams[1]?.name;
   return (
     <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 14 }}>
       <SeedItem>
         <div>
-          <SeedTeam style={{ color: "red" }}>
-            {seed.teams[0]?.name || "NO TEAM "}
-          </SeedTeam>
-          <TablequalifyingKnockoutMatchReportModal
-            onSubmit={handleUpdateKnockoutMatch}
-            tablequalifyingKnockoutMatchReport={{
-              id: seed.id.toString(),
-              sets: [],
-            }}
-          />
+          {roundIndex == 0 && !seed.teams[0]?.name
+            ? (
+              <InputSelect
+                title={N["team"]}
+                data={knockoutTeams}
+                k="org_name"
+                v="id"
+                name="team"
+                // value={sportId}
+                handleChange={(e) => {
+                  const teamId = e.target.value;
+
+                  const team = knockoutTeams.find(({ id }) => id === teamId);
+                  if (team) {
+                    updateTeam(seed.id.toString(), {
+                      team1_id: team.id,
+                      team1_name: team.org_name,
+                    });
+                  }
+                }}
+              />
+            )
+            : (
+              <SeedTeam style={{ color: "red" }}>
+                {seed.teams[0]?.name || "NO TEAM "}
+              </SeedTeam>
+            )}
+          {showScoreUpdate
+            ? (
+              <TablequalifyingKnockoutMatchReportModal
+                onSubmit={handleUpdateKnockoutMatch}
+                tablequalifyingKnockoutMatchReport={{
+                  id: seed.id.toString(),
+                  sets: [],
+                }}
+              />
+            )
+            : <div>Mời chọn đội</div>}
           <SeedTeam>{seed.teams[1]?.name || "NO TEAM "}</SeedTeam>
         </div>
       </SeedItem>
@@ -105,84 +121,19 @@ const CustomSeed = (
   );
 };
 
-const convertKnockoutsToBrackets = (data: TTablequalifyingKnockout[]) => {
-  const newRounds = data.reduce<IRoundProps[]>(
-    (
-      rounds: IRoundProps[],
-      bracket: TTablequalifyingKnockout,
-    ) => {
-      const idx = rounds.findIndex((r) => r.title === bracket.turn_name);
-      const bracketSeed: ISeedProps = {
-        id: bracket.id,
-        teams: [
-          {
-            name: bracket.team1_name,
-            winCount: bracket.team1_point_win_count,
-          },
-          {
-            name: bracket.team2_name,
-            winCount: bracket.team2_point_win_count,
-          },
-        ],
-      };
-      if (idx === -1) {
-        const newRound = {
-          title: bracket.turn_name,
-          seeds: [
-            bracketSeed,
-          ],
-        } as IRoundProps;
-        return [...rounds, newRound];
-      } else {
-        rounds[idx].seeds.push(bracketSeed);
-        return rounds;
-      }
-    },
-    [] as IRoundProps[],
-  );
-  return newRounds;
-};
-
 const PageTablequalifyingKnockout = () => {
   const { t } = useTranslation();
-  const { sports } = useSportStore();
-  const { sport_id: paramSportId } = useParams();
-  const [sportId, setSportId] = useState("");
 
-  const [rounds, setRounds] = useState<IRoundProps[]>([]);
+  const {
+    knockoutSports,
+    sportId,
+    setSportId,
+    rounds,
+    fetchTablequalifyingKnockout,
+  } = useKnockoutContext();
 
-  useEffect(() => {
-    if (paramSportId) {
-      setSportId(paramSportId);
-    }
-  }, [paramSportId]);
-
-  useEffect(() => {
-    if (sportId) {
-      fetchTablequalifyingKnockout(sportId);
-    }
-  }, [sportId]);
-
-  const fetchTablequalifyingKnockout = useCallback((sportId: string) => {
-    tablequalifyingKnockoutsGet(sportId).then((res) => {
-      const { data, status } = res;
-      console.log({ fetchTablequalifyingKnockout: data });
-      if (status === 200) {
-        if (data?.length) {
-          const newRounds = convertKnockoutsToBrackets(data);
-          if (newRounds?.length) {
-            setRounds(newRounds);
-          }
-        } else {
-          console.log("update empty rounds");
-          setRounds([]);
-          if (addBtnRef.current) addBtnRef.current.click();
-        }
-      }
-    }).catch((err) => console.log({ err }));
-  }, []);
-
-  const handleAddKnockoutBracket = (
+  const handleAddKnockoutBracket = useCallback(() =>
+  (
     knockoutBracket: IKnockoutCreate,
   ) => {
     tablequalifyingKnockoutGen(knockoutBracket).then((res) => {
@@ -198,7 +149,7 @@ const PageTablequalifyingKnockout = () => {
       toast.error(t("error"));
       console.log({ err });
     });
-  };
+  }, []);
 
   const {
     handleToggle: handleToggleAddModal,
@@ -212,12 +163,12 @@ const PageTablequalifyingKnockout = () => {
     },
   });
 
-  const refreshKnockoutBrackets = useCallback(() => {
-    console.log("reload brackets");
-    fetchTablequalifyingKnockout(sportId);
-  }, [sportId]);
-
   const addBtnRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (rounds?.length > 0) return;
+    if (addBtnRef.current) addBtnRef.current.click();
+  }, [rounds]);
 
   return (
     <div className="page-body">
@@ -229,7 +180,7 @@ const PageTablequalifyingKnockout = () => {
               <CardHeader className="pb-0 card-no-border">
                 <InputSelect
                   title={N["sport"]}
-                  data={sports}
+                  data={knockoutSports}
                   k="name"
                   v="id"
                   name="sport"
@@ -249,9 +200,7 @@ const PageTablequalifyingKnockout = () => {
               <CardBody>
                 <Bracket
                   rounds={rounds}
-                  renderSeedComponent={(props) => (
-                    <CustomSeed {...props} callback={refreshKnockoutBrackets} />
-                  )}
+                  renderSeedComponent={(props) => <CustomSeed {...props} />}
                 />
               </CardBody>
             </Card>
@@ -261,4 +210,12 @@ const PageTablequalifyingKnockout = () => {
     </div>
   );
 };
-export { PageTablequalifyingKnockout };
+
+const WrapperTablequalifyingKnockout = () => {
+  return (
+    <KnockoutContextProvider>
+      <PageTablequalifyingKnockout />
+    </KnockoutContextProvider>
+  );
+};
+export { WrapperTablequalifyingKnockout as PageTablequalifyingKnockout };

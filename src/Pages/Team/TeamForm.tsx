@@ -16,6 +16,7 @@ import { convertToDate } from "../../utils/date";
 import { N } from "../../name-conversion";
 import { getFilterByValue } from "../../Service/_getParams";
 import { teammembersGet } from "../../Service/teammember";
+import { ColumnDef } from "@tanstack/react-table";
 
 interface ITeamForm {
   team?: TTeam;
@@ -26,41 +27,66 @@ interface ITeamForm {
 interface ITeamModal extends ITeamForm {
 }
 
-const tableTeammemberColumns = ([
-  "name",
-  "rank",
-  "gender",
-  "dob",
-  "date_join_army",
-  // "org_name",
-  "weights",
-] as TKeyTeammember[]).map((c) => ({
-  "name": N[c],
-  sortable: true,
-  selector: (row: TTeammember) => {
-    const v = row?.[c as TKeyTeammember];
-    if (v == null) return "";
-    switch (c) {
-      case "gender" as TKeyTeammember: {
-        return DGender[parseInt(v as string)];
-      }
-      case "rank": {
-        return DRank[parseInt(v as string)];
-      }
-      case "created": {
-        return convertToDate(v);
-      }
-      case "dob": {
-        return convertToDate(v);
-      }
-      case "date_join_army": {
-        return convertToDate(v);
-      }
-      default:
-        return row[c as TKeyTeammember] || "";
-    }
+const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
+  {
+    accessorKey: "name",
+    footer: (props) => props.column.id,
+    header: N["name"],
+    cell: (props) => props.getValue() as string,
   },
-}));
+  {
+    accessorKey: "rank",
+    footer: (props) => props.column.id,
+    header: N["rank"],
+    cell: (props) => DRank[props.getValue() as number],
+  },
+  {
+    accessorKey: "gender",
+    footer: (props) => props.column.id,
+    header: N["gender"],
+    cell: (props) => {
+      return DGender[parseInt(props.getValue() as string)];
+    },
+    meta: { custom: { "gender": true } },
+  },
+  {
+    accessorKey: "created",
+    footer: (props) => props.column.id,
+    header: N["created"],
+    cell: (props) => convertToDate(props.getValue() as string),
+  },
+  {
+    accessorKey: "dob",
+    footer: (props) => props.column.id,
+    header: N["dob"],
+    cell: (props) => convertToDate(props.getValue() as string),
+    meta: { custom: { "date": true } },
+  },
+  {
+    accessorKey: "date_join_army",
+    footer: (props) => props.column.id,
+    header: N["date_join_army"],
+    cell: (props) => convertToDate(props.getValue() as string),
+  },
+  {
+    accessorKey: "org_name",
+    footer: (props) => props.column.id,
+    header: N["org_name"],
+    cell: (props) => props.getValue() as string,
+  },
+  {
+    accessorKey: "weights",
+    footer: (props) => props.column.id,
+    header: N["weights"],
+    cell: (props) => props.getValue() as string,
+  },
+  {
+    accessorKey: "competition_name",
+    footer: (props) => props.column.id,
+    header: N["competition_name"],
+    cell: (props) => props.getValue() as string,
+  },
+];
 
 const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
   const team: Partial<TTeam> = initTeam ? initTeam : {

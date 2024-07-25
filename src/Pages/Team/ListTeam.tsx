@@ -205,6 +205,7 @@ const ListTeam = (
 const PageTeam = () => {
   const { t } = useTranslation();
   const { addTeam, teams } = useTeamStore();
+
   const handleAddTeam = (team: TTeam) => {
     console.log({ handleAddTeam: team });
     const { id, ...rests } = team;

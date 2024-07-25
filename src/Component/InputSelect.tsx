@@ -9,7 +9,7 @@ interface IInputSelect<T> {
   v: keyof T;
   // handleChange: (v: string) => void;
   handleChange: (e: TEvent) => void;
-  value: any;
+  value?: any;
   name: string;
 }
 
@@ -34,7 +34,7 @@ const InputSelect = <T,>(
         type="select"
         onChange={onChange}
         defaultValue={defaultValue}
-        value={value}
+        value={value ? value : undefined}
         {...rest}
       >
         <option value={"null"} selected hidden></option>
