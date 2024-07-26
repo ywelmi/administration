@@ -26,7 +26,7 @@ const InputSelect = <T,>(
 
   const ref = useRef<HTMLInputElement>(null);
   return (
-    <InputGroup>
+    <InputGroup className="relative">
       {title ? <InputGroupText>{title}</InputGroupText> : null}
       <Input
         minLength={24}
@@ -47,18 +47,21 @@ const InputSelect = <T,>(
           </option>
         ))}
       </Input>
-      <div className="flex items-center p-2 border-gray-400 rounded-md">
-        <i
-          className="icon-close cursor-pointer"
-          onClick={() => {
-            // console.log({ ref: ref.current }, "clicked");
-            if (ref.current) ref.current.value = "";
-            const event = {
-              target: { value: "" },
-            } as TEvent;
-            onChange(event);
-          }}
-        />
+      <div
+        className="absolute right-8 flex items-center cursor-pointer z-1 text-slate-800 top-[50%] translate-y-[-50%]"
+        // style={{ backgroundColor: "red" }}
+        onClick={() => {
+          // console.log({ ref: ref.current }, "clicked");
+          if (ref.current) ref.current.value = "";
+          const event = {
+            target: { value: "" },
+          } as TEvent;
+          onChange(event);
+        }}
+      >
+        <div className="rounded-[50%] p-1">
+          <i className="icon-close " />
+        </div>
       </div>
     </InputGroup>
   );

@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { IRoundProps, ISeedProps } from "react-brackets";
+import { Bracket, IRoundProps, ISeedProps } from "react-brackets";
 import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
 import { tablequalifyingKnockoutsGet } from "../../Service/tablequalifyingKnockout";
 import { useParams } from "react-router-dom";
@@ -23,7 +23,7 @@ interface IKnockoutContext {
   fetchTablequalifyingKnockout: (s: string) => void;
   knockoutSports: TSport[];
   knockoutTeams: TTeam[];
-  updateMatch: (m: Partial<TTablequalifyingKnockout>) => void;
+  // updateMatch: (m: Partial<TTablequalifyingKnockout>) => void;
 }
 
 const KnockoutContext = createContext<IKnockoutContext>({
@@ -34,7 +34,7 @@ const KnockoutContext = createContext<IKnockoutContext>({
   fetchTablequalifyingKnockout: () => {},
   knockoutSports: [],
   knockoutTeams: [],
-  updateMatch: () => {},
+  // updateMatch: () => {},
 });
 
 const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
@@ -93,12 +93,12 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
     }
   }, [sportId]);
 
-  const updateMatch = () => {};
+  // const updateMatch = () => {};
 
   return (
     <KnockoutContext.Provider
       value={{
-        updateMatch,
+        // updateMatch,
         knockoutTeams,
         knockoutSports,
         sportId,
@@ -128,10 +128,12 @@ const convertKnockoutsToBrackets = (data: TTablequalifyingKnockout[]) => {
         id: bracket.id,
         teams: [
           {
+            id: bracket.team1_id,
             name: bracket.team1_name,
             winCount: bracket.team1_point_win_count,
           },
           {
+            id: bracket.team2_id,
             name: bracket.team2_name,
             winCount: bracket.team2_point_win_count,
           },
