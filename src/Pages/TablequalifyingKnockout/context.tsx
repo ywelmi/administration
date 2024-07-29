@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Bracket, IRoundProps, ISeedProps } from "react-brackets";
+import { IRoundProps, ISeedProps } from "react-brackets";
 import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
 import { tablequalifyingKnockoutsGet } from "../../Service/tablequalifyingKnockout";
 import { useParams } from "react-router-dom";
@@ -22,7 +22,7 @@ interface IKnockoutContext {
   setRounds: (rounds: IRoundProps[]) => void;
   fetchTablequalifyingKnockout: (s: string) => void;
   knockoutSports: TSport[];
-  knockoutTeams: TTeam[];
+  knockoutTeams: TTeam[]; // which can be selected to create a new pair
   // updateMatch: (m: Partial<TTablequalifyingKnockout>) => void;
 }
 

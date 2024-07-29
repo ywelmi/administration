@@ -32,12 +32,8 @@ import {
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
-import { tablequalifyingMatchCreate } from "../../Service/tablequalifyingMatch";
-import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
-import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
 import { InputSelect } from "../../Component/InputSelect";
 import { useSportStore } from "../../store/sport";
-import { useModalPageTablequalifyingMatch } from "../TablequalifyingMatch/ListTablequalifyingMatch";
 
 type TTablequalifyingColumn = Omit<TTablequalifying, "list_member_id">;
 
