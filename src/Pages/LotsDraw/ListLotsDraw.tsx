@@ -166,6 +166,7 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [
             return <div className="form-control">{props.getValue() as string}</div>;
         },
     },
+
     {
         accessorKey: "match_hour",
         footer: (props) => props.column.id,

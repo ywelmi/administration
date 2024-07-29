@@ -1,16 +1,17 @@
 import { Col, Input, Label, Row } from "reactstrap";
 import { TTablequalifying } from "../../type/tablequalifying";
 import { useFormik } from "formik";
-import { Btn, Popovers } from "../../AbstractElements";
+import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useTeamStore } from "../../store/team";
-// import { useTeamPopover } from "../Team/TeamForm";
 import { ListTeam } from "../Team/ListTeam";
-import { ListSport } from "../Sport/ListSport";
 import { useSportStore } from "../../store/sport";
 import { InputSelect } from "../../Component/InputSelect";
+import { tablequalifyingMembersGet } from "../../Service/tablequalifying";
+import { getFilterByValue } from "../../Service/_getParams";
+import { teamsGet } from "../../Service/team";
+import { TTeam } from "../../type/team";
 
 interface ITablequalifyingForm {
   tablequalifying?: Partial<TTablequalifying>;
@@ -34,7 +35,8 @@ const TablequalifyingForm = (
       "listTeams": [],
     };
 
-  const { teams } = useTeamStore();
+  // const { teams } = useTeamStore();
+  const [teams, setTeams] = useState<TTeam[]>([]);
   const { sports } = useSportStore();
   const { t } = useTranslation();
   const formik = useFormik<Partial<TTablequalifying>>({
@@ -48,7 +50,43 @@ const TablequalifyingForm = (
     },
   });
 
-  console.log({ teams, sportId: formik.values.sport_id });
+  useEffect(() => {
+    if (initTablequalifying?.id) {
+      const { id } = initTablequalifying;
+      tablequalifyingMembersGet(id).then(
+        (res) => {
+          const { data, status } = res;
+          if (status === 200) {
+            // console.log({
+            //   data,
+            //   initTablequalifying,
+            //   listTeams: formik.values.listTeams,
+            // });
+            setTimeout(() => {
+              formik.setFieldValue("listTeams", data.map((m) => m.team_id));
+            }, 1000);
+            // setPreSelectedTeams(data.map((m) => m.team_id));
+          }
+        },
+      );
+    }
+  }, [initTablequalifying?.id]);
+
+  useEffect(() => {
+    if (initTablequalifying?.sport_id) {
+      const { sport_id } = initTablequalifying;
+      if (sport_id) {
+        const filter = getFilterByValue("sport_id", "=", sport_id);
+        teamsGet({ filter }).then((res) => {
+          const { data: { data }, status } = res;
+          // console.log({ data });
+          if (status === 200) {
+            setTeams(data);
+          }
+        });
+      }
+    }
+  }, [initTablequalifying?.sport_id]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -86,10 +124,9 @@ const TablequalifyingForm = (
           <Label for="listTeams" check>{t("Team")}</Label>
 
           <ListTeam
-            data={teams.filter(({ sport_id }) =>
-              sport_id === formik.values?.sport_id
-            )}
+            data={teams}
             onSelectedRowsChange={({ selectedRows }) => {
+              console.log({ selectedRows });
               if (
                 selectedRows.length ===
                   formik.values.listTeams?.length
@@ -103,8 +140,10 @@ const TablequalifyingForm = (
             }}
             selectableRowSelected={(r) => {
               return !r?.id ||
-                !!formik.values.listTeams?.map((id) => id)
-                  .includes(
+                // !!formik.values.listTeams?.map((id) => id)
+                !!formik.values.listTeams
+                  // preSelectedTeams
+                  ?.includes(
                     r.id,
                   );
             }}

@@ -33,11 +33,14 @@ export const tablequalifyingKnockoutGen = (config: IKnockoutCreate) => {
   );
 };
 
-// export const tablequalifyingKnockoutCreate = (
-//   tablequalifyingKnockout: Omit<TtablequalifyingKnockoutKnockout, "id">,
-// ) => {
-//   return httpPost("/tablequalifyingKnockouts", tablequalifyingKnockout);
-// };
+export const tablequalifyingKnockoutPairUpdate = (
+  pair: Pick<TTablequalifyingKnockout, "id" | "team1_id" | "team2_id">,
+) => {
+  return httpPost(
+    `/tableknockoutmatchs/${pair.id}/updateTeam`,
+    pair,
+  );
+};
 
 // Cập nhật  kết quả bảng đấu
 export const tablequalifyingKnockoutUpdate = (

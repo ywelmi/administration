@@ -9,8 +9,6 @@ import { useCompetitionStore } from "../../store/competition";
 import { useOrgStore } from "../../store/org";
 import { useSportStore } from "../../store/sport";
 import { InputSelect } from "../../Component/InputSelect";
-import { useTeammemberStore } from "../../store/teammember";
-import { useTeammemberPopover } from "../Teammember/TeammemberForm";
 import { TKeyTeammember, TTeammember } from "../../type/teammember";
 import { ListTeammember } from "../Teammember/ListTeammember";
 import { DGender, DRank } from "../../type/enum";
@@ -18,6 +16,7 @@ import { convertToDate } from "../../utils/date";
 import { N } from "../../name-conversion";
 import { getFilterByValue } from "../../Service/_getParams";
 import { teammembersGet } from "../../Service/teammember";
+import { ColumnDef } from "@tanstack/react-table";
 
 interface ITeamForm {
   team?: TTeam;
@@ -28,41 +27,66 @@ interface ITeamForm {
 interface ITeamModal extends ITeamForm {
 }
 
-const tableTeammemberColumns = ([
-  "name",
-  "rank",
-  "gender",
-  "dob",
-  "date_join_army",
-  // "org_name",
-  "weights",
-] as TKeyTeammember[]).map((c) => ({
-  "name": N[c],
-  sortable: true,
-  selector: (row: TTeammember) => {
-    const v = row?.[c as TKeyTeammember];
-    if (v == null) return "";
-    switch (c) {
-      case "gender" as TKeyTeammember: {
-        return DGender[parseInt(v as string)];
-      }
-      case "rank": {
-        return DRank[parseInt(v as string)];
-      }
-      case "created": {
-        return convertToDate(v);
-      }
-      case "dob": {
-        return convertToDate(v);
-      }
-      case "date_join_army": {
-        return convertToDate(v);
-      }
-      default:
-        return row[c as TKeyTeammember] || "";
-    }
+const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
+  {
+    accessorKey: "name",
+    footer: (props) => props.column.id,
+    header: N["name"],
+    cell: (props) => props.getValue() as string,
   },
-}));
+  {
+    accessorKey: "rank",
+    footer: (props) => props.column.id,
+    header: N["rank"],
+    cell: (props) => DRank[props.getValue() as number],
+  },
+  {
+    accessorKey: "gender",
+    footer: (props) => props.column.id,
+    header: N["gender"],
+    cell: (props) => {
+      return DGender[parseInt(props.getValue() as string)];
+    },
+    meta: { custom: { "gender": true } },
+  },
+  {
+    accessorKey: "created",
+    footer: (props) => props.column.id,
+    header: N["created"],
+    cell: (props) => convertToDate(props.getValue() as string),
+  },
+  {
+    accessorKey: "dob",
+    footer: (props) => props.column.id,
+    header: N["dob"],
+    cell: (props) => convertToDate(props.getValue() as string),
+    meta: { custom: { "date": true } },
+  },
+  {
+    accessorKey: "date_join_army",
+    footer: (props) => props.column.id,
+    header: N["date_join_army"],
+    cell: (props) => convertToDate(props.getValue() as string),
+  },
+  {
+    accessorKey: "org_name",
+    footer: (props) => props.column.id,
+    header: N["org_name"],
+    cell: (props) => props.getValue() as string,
+  },
+  {
+    accessorKey: "weights",
+    footer: (props) => props.column.id,
+    header: N["weights"],
+    cell: (props) => props.getValue() as string,
+  },
+  {
+    accessorKey: "competition_name",
+    footer: (props) => props.column.id,
+    header: N["competition_name"],
+    cell: (props) => props.getValue() as string,
+  },
+];
 
 const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
   const team: Partial<TTeam> = initTeam ? initTeam : {
@@ -75,40 +99,26 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
     org_name: "",
     list_team_member: [], // list of teammembers' ids
   };
+  console.log({ initTeam, team });
 
   const { competitions } = useCompetitionStore();
   const { orgs } = useOrgStore();
   const { sports } = useSportStore();
-  const { teammembers } = useTeammemberStore();
+  // const { teammembers } = useTeammemberStore();
 
   const { t } = useTranslation();
   const formik = useFormik<Partial<TTeam>>({
-    initialValues: { ...team },
+    initialValues: { ...initTeam },
     onSubmit: (value) => {
-      const { list_team_member } = value;
       console.log({ submitAddTeamValue: value });
       let submitValue = {
         ...value,
-        // list_team_member: list_team_member?.map((
-        //   { gender, name, rank, id },
-        // ) => id),
       } as TTeam;
       if (submitValue) onSubmit(submitValue);
     },
   });
 
-  // const [newListMember, setNewListMember] = useState<TTeammember[]>([]);
-
   const [orgMembers, setOrgMembers] = useState<TTeammember[]>([]);
-
-  // const handleAddTeammember = useCallback((newTeammember: TTeammember) => {
-  //   setNewListMember((prev) => [...prev, newTeammember]);
-  //   const newTeammembers = formik.values.list_team_member || [];
-  //   formik.setFieldValue("list_team_member", [
-  //     ...newTeammembers,
-  //     newTeammember,
-  //   ]);
-  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -138,7 +148,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
       ...availMembers,
     ];
   }, [
-    teammembers,
+    // teammembers,
     // newListMember,
     orgMembers,
   ]);
@@ -213,7 +223,9 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
             onSelectedRowsChange={({ selectedRows }) => {
               if (
                 selectedRows.length ===
-                  formik.values.list_team_member?.length
+                  formik.values.list_team_member?.length ||
+                selectedRows.length ===
+                  formik.values.list_member_id?.length
               ) {
                 return;
               }
@@ -229,9 +241,8 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
               );
             }}
             selectableRowSelected={(r) => {
-              return !!formik.values.list_member_id?.includes(
-                r.id,
-              ) || !!formik.values.member_ids?.includes(r.id);
+              return !!formik.values.list_member_id?.includes(r.id) ||
+                !!formik.values.list_team_member?.includes(r.id);
             }}
           />
         </Col>

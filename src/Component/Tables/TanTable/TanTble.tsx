@@ -25,13 +25,19 @@ import {
 } from "@tanstack/react-table";
 import React from "react";
 
-import _ from "lodash";
-import { LastName } from "../../../utils/Constant";
+import _, { head } from "lodash";
+import { Filter, FilterDate, FilterGender } from "./Filter";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
     getRowStyles: (row: Row<TData>) => CSSProperties;
+  }
+  type TColumnMeta = "gender" | "rank" | "date";
+  interface ColumnMeta<TData extends RowData, TValue> {
+    custom: {
+      [k in TColumnMeta]?: boolean;
+    };
   }
 }
 
@@ -284,13 +290,34 @@ const TanTableComponent = <T,>({
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
-                        {header.column.getCanFilter()
-                          ? (
-                            <div>
-                              <Filter column={header.column} table={table} />
-                            </div>
-                          )
-                          : null}
+                        {(() => {
+                          if (!header.column.getCanFilter()) return null;
+                          if (header.column.columnDef.meta?.custom.gender) {
+                            return (
+                              <FilterGender
+                                column={header.column}
+                                table={table}
+                              />
+                            );
+                          }
+
+                          if (header.column.columnDef.meta?.custom.date) {
+                            console.log("true");
+                            return (
+                              <FilterDate
+                                column={header.column}
+                                table={table}
+                              />
+                            );
+                          }
+
+                          return (
+                            <Filter
+                              column={header.column}
+                              table={table}
+                            />
+                          );
+                        })()}
                       </div>
                     )}
                   </th>
@@ -393,57 +420,6 @@ const TanTableComponent = <T,>({
     </div>
   );
 };
-
-function Filter({
-  column,
-  table,
-}: {
-  column: Column<any, any>;
-  table: Table<any>;
-}) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id);
-
-  const columnFilterValue = column.getFilterValue();
-
-  return typeof firstValue === "number"
-    ? (
-      <div className="flex-col gap-1">
-        <input
-          type="number"
-          value={(columnFilterValue as [number, number])?.[0] ?? ""}
-          onChange={(e) =>
-            column.setFilterValue((old: [number, number]) => [
-              e.target.value,
-              old?.[1],
-            ])}
-          placeholder={`Từ...`}
-          className="w-full border shadow rounded"
-        />
-        <input
-          type="number"
-          value={(columnFilterValue as [number, number])?.[1] ?? ""}
-          onChange={(e) =>
-            column.setFilterValue((old: [number, number]) => [
-              old?.[0],
-              e.target.value,
-            ])}
-          placeholder={`Đến...`}
-          className="w-full border shadow rounded"
-        />
-      </div>
-    )
-    : (
-      <input
-        type="text"
-        value={(columnFilterValue ?? "") as string}
-        onChange={(e) => column.setFilterValue(e.target.value)}
-        placeholder={`Tìm kiếm...`}
-        className="w-full form-control"
-      />
-    );
-}
 
 export type TTanTable = <T>(
   p: ITable<T> & { ref?: Ref<ITanTableRef<T>> },

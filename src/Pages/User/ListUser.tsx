@@ -101,9 +101,7 @@ const defaultColumns: ColumnDef<TUser>[] = [
         accessorKey: "username",
         footer: (props) => props.column.id,
         header: N["username"],
-        cell(props) {
-            return <div className="form-control">{props.getValue() as string}</div>;
-        },
+        cell: (props) => props.getValue() as string,
     },
     {
         accessorKey: "fullname",
@@ -162,7 +160,7 @@ const PageUser = () => {
 
     return (
         <div className="page-body">
-            <Breadcrumbs mainTitle={"Danh sách người dùng"} parent={"HTTQ2024"} />
+            <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
             <Container fluid>
                 <Row>
                     <Col sm="12">

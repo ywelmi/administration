@@ -1,12 +1,10 @@
-import { Card, CardBody, CardHeader, Col, Container, Input, Label, Row } from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { BasicDataTables, DataTables, SearchTableButton } from "../../utils/Constant";
+import { BasicDataTables, DataTables } from "../../utils/Constant";
 import { LI, UL } from "../../AbstractElements";
-import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
-import { TKeyTeammember, TTeammember } from "../../type/teammember";
+import { TTeammember } from "../../type/teammember";
 import { useTeammemberStore } from "../../store/teammember";
-import { useMemo, useState } from "react";
 import { useTeammemberModal } from "./TeammemberForm";
 import { teammemberCreate, teammemberDelete, teammemberUpdate } from "../../Service/teammember";
 import { toast } from "react-toastify";
@@ -14,8 +12,8 @@ import { useConfirmModal } from "../../Component/confirmModal";
 import { DGender, DRank } from "../../type/enum";
 import { N } from "../../name-conversion";
 import { convertToDate } from "../../utils/date";
-
-type TTeammemberColumn = TTeammember;
+import { TanTable } from "../../Component/Tables/TanTable/TanTble";
+import { ColumnDef } from "@tanstack/react-table";
 
 interface IListTeammember {
     showAction?: boolean;
@@ -23,117 +21,146 @@ interface IListTeammember {
     data?: TTeammember[];
     onRowSelect?: (row: TTeammember, e: React.MouseEvent<Element, MouseEvent>) => void;
     onSelectedRowsChange?: (v: { allSelected: boolean; selectedCount: number; selectedRows: TTeammember[] }) => void;
-    columns?: TableColumn<TTeammemberColumn>[];
+    columns?: ColumnDef<TTeammember>[];
     selectableRowSelected?: (row: TTeammember) => boolean;
 }
 
-const tableColumns = (
-    [
-        "name",
-        "rank",
-        "gender",
-        "created",
-        "dob",
-        "team_name",
-        "date_join_army",
-        "org_name",
-        "weights",
-        "competition_name",
-    ] as TKeyTeammember[]
-).map((c) => ({
-    name: N[c],
-    sortable: true,
-    selector: (row: TTeammemberColumn) => {
-        const v = row?.[c as TKeyTeammember];
-        if (v == null) return "";
-        switch (c) {
-            case "gender" as TKeyTeammember: {
-                return DGender[parseInt(v.toString())];
-            }
-            case "rank": {
-                return DRank[parseInt(v.toString())];
-            }
-            case "created": {
-                return convertToDate(v);
-            }
-            case "dob": {
-                return convertToDate(v);
-            }
-            case "date_join_army": {
-                return convertToDate(v);
-            }
-            default:
-                return row[c as TKeyTeammember] || "";
-        }
+const tableColumns: ColumnDef<TTeammember>[] = [
+    {
+        accessorKey: "name",
+        footer: (props) => props.column.id,
+        header: N["name"],
+        cell: (props) => props.getValue() as string,
     },
-}));
+    {
+        accessorKey: "rank",
+        footer: (props) => props.column.id,
+        header: N["rank"],
+        cell: (props) => DRank[props.getValue() as number],
+    },
+    {
+        accessorKey: "gender",
+        footer: (props) => props.column.id,
+        header: N["gender"],
+        cell: (props) => {
+            return DGender[parseInt(props.getValue() as string)];
+        },
+        meta: { custom: { gender: true } },
+    },
+    {
+        accessorKey: "created",
+        footer: (props) => props.column.id,
+        header: N["created"],
+        cell: (props) => convertToDate(props.getValue() as string),
+    },
+    {
+        accessorKey: "dob",
+        footer: (props) => props.column.id,
+        header: N["dob"],
+        cell: (props) => convertToDate(props.getValue() as string),
+        meta: { custom: { date: true } },
+    },
+    {
+        accessorKey: "date_join_army",
+        footer: (props) => props.column.id,
+        header: N["date_join_army"],
+        cell: (props) => convertToDate(props.getValue() as string),
+    },
+    {
+        accessorKey: "org_name",
+        footer: (props) => props.column.id,
+        header: N["org_name"],
+        cell: (props) => props.getValue() as string,
+    },
+    {
+        accessorKey: "weights",
+        footer: (props) => props.column.id,
+        header: N["weights"],
+        cell: (props) => props.getValue() as string,
+    },
+    {
+        accessorKey: "competition_name",
+        footer: (props) => props.column.id,
+        header: N["competition_name"],
+        cell: (props) => props.getValue() as string,
+    },
+];
 
-const TeammemberTableAction = ({ teammember }: { teammember: TTeammemberColumn }) => {
-    const { updateTeammember, deleteTeammember } = useTeammemberStore();
-    const { t } = useTranslation();
-    const handleUpdateTeammember = (teammember: TTeammember) => {
-        console.log({ handleUpdateTeammember: teammember });
-        teammemberUpdate(teammember)
-            .then((res) => {
-                const { status, data } = res;
-                if (status === 200) {
-                    updateTeammember(data as TTeammember);
-                    toast.success(t("success"));
-                    return;
-                }
+const action: ColumnDef<TTeammember> = {
+    id: "actions",
+    header: "#",
+    cell(props) {
+        const {
+            row: { original: teammember },
+        } = props;
 
-                return Promise.reject(status);
-            })
-            .catch((err) => {
-                toast.error(t("error"));
-                console.log({ err });
-            });
-    };
-    const { handleToggle: handleToggleUpdateModal, TeammemberModal: TeammemberUpdateModal } = useTeammemberModal({
-        onSubmit: handleUpdateTeammember,
-        teammember,
-    });
-
-    const handleConfirmDel = async () => {
-        const { confirm } = await useConfirmModal();
-        console.log({ confirm });
-        if (confirm) {
-            teammemberDelete(teammember.id)
+        const { updateTeammember, deleteTeammember } = useTeammemberStore();
+        const { t } = useTranslation();
+        const handleUpdateTeammember = (teammember: TTeammember) => {
+            console.log({ handleUpdateTeammember: teammember });
+            teammemberUpdate(teammember)
                 .then((res) => {
                     const { status, data } = res;
-                    console.log({ status, data });
                     if (status === 200) {
+                        updateTeammember(data as TTeammember);
                         toast.success(t("success"));
-                        deleteTeammember(teammember.id);
                         return;
                     }
+
                     return Promise.reject(status);
                 })
                 .catch((err) => {
-                    const {
-                        response: { data },
-                    } = err;
-                    if (data) toast.error(data);
-                    else {
-                        toast.error(t("error"));
-                    }
+                    toast.error(t("error"));
                     console.log({ err });
                 });
-        }
-        return;
-    };
+        };
 
-    return (
-        <UL className="action simple-list flex-row" id={teammember.id}>
-            <LI className="edit btn">
-                <i className="icon-pencil-alt" onClick={handleToggleUpdateModal} />
-                <TeammemberUpdateModal />
-            </LI>
-            <LI className="delete btn" onClick={handleConfirmDel}>
-                <i className="icon-trash cursor-pointer" />
-            </LI>
-        </UL>
-    );
+        const { handleToggle: handleToggleUpdateModal, TeammemberModal: TeammemberUpdateModal } = useTeammemberModal({
+            onSubmit: handleUpdateTeammember,
+            teammember,
+        });
+
+        const handleConfirmDel = async () => {
+            const { confirm } = await useConfirmModal();
+            console.log({ confirm });
+            if (confirm) {
+                teammemberDelete(teammember.id)
+                    .then((res) => {
+                        const { status, data } = res;
+                        console.log({ status, data });
+                        if (status === 200) {
+                            toast.success(t("success"));
+                            deleteTeammember(teammember.id);
+                            return;
+                        }
+                        return Promise.reject(status);
+                    })
+                    .catch((err) => {
+                        const {
+                            response: { data },
+                        } = err;
+                        if (data) toast.error(data);
+                        else {
+                            toast.error(t("error"));
+                        }
+                        console.log({ err });
+                    });
+            }
+            return;
+        };
+
+        return (
+            <UL className="action simple-list flex-row" id={teammember.id}>
+                <LI className="edit btn">
+                    <i className="icon-pencil-alt" onClick={handleToggleUpdateModal} />
+                    <TeammemberUpdateModal />
+                </LI>
+                <LI className="delete btn" onClick={handleConfirmDel}>
+                    <i className="icon-trash cursor-pointer" />
+                </LI>
+            </UL>
+        );
+    },
 };
 
 const ListTeammember = ({
@@ -144,50 +171,20 @@ const ListTeammember = ({
     columns = [...tableColumns],
     selectableRowSelected,
 }: IListTeammember) => {
-    const [filterText, setFilterText] = useState("");
-    const filteredItems = data.filter(
-        (item) => item.name && item.name.toLowerCase().includes(filterText.toLowerCase())
-    );
+    let displayColumns = [...columns];
 
-    if (columns.length > 0 && showAction) {
-        columns.push({
-            name: "#",
-            cell: (row: TTeammemberColumn) => <TeammemberTableAction teammember={row} />,
-            sortable: true,
-        });
-
-        columns = [...columns];
+    if (showAction) {
+        displayColumns = [...displayColumns, action];
     }
-
-    const subHeaderComponentMemo = useMemo(() => {
-        return (
-            <div id="basic-1_filter" className="dataTables_filter d-flex align-items-center">
-                <Label className="me-2">{SearchTableButton}:</Label>
-                <Input
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
-                    type="search"
-                    value={filterText}
-                />
-            </div>
-        );
-    }, [filterText]);
 
     return (
         <div className="table-responsive">
-            <DataTable
-                columns={columns}
-                data={filteredItems}
-                pagination
-                subHeader
-                subHeaderComponent={subHeaderComponentMemo}
-                highlightOnHover
-                striped
-                persistTableHead
-                selectableRowsHighlight
-                onRowClicked={onRowSelect}
+            <TanTable
+                data={data}
+                columns={displayColumns}
                 onSelectedRowsChange={onSelectedRowsChange}
                 selectableRowSelected={selectableRowSelected}
-                selectableRows={!!onRowSelect || !!onSelectedRowsChange}
+                getRowId={(r) => r.id}
             />
         </div>
     );

@@ -26,8 +26,6 @@ import {
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
 import { useMemo, useState } from "react";
 import {
-  ITablequalifyingMatchForm,
-  useTablequalifyingMatchPopover,
   useTablequalifyingMatchReportModal,
 } from "./TablequalifyingMatchReportForm";
 import {
