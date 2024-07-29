@@ -31,14 +31,17 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
                 return Promise.reject(status);
             })
             .catch((err) => {
-                toast.error(t("error"));
-                console.log({ err });
+                const {
+                    response: { data },
+                } = err;
+                toast.error(data || t("error"));
+                console.log({ err, data });
             });
     };
 
     const { handleToggle: handleToggleUpdateModal, TeamModal: TeamUpdateModal } = useTeamModal({
         onSubmit: handleUpdateTeam,
-        team,
+        team: { ...team, list_member_id: team.member_ids },
     });
 
     const handleConfirmDel = async () => {
@@ -69,7 +72,6 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
                 <i
                     className="icon-pencil-alt"
                     onClick={() => {
-                        console.log({ team });
                         handleToggleUpdateModal();
                     }}
                 />
@@ -185,6 +187,7 @@ const ListTeam = ({
 const PageTeam = () => {
     const { t } = useTranslation();
     const { addTeam, teams } = useTeamStore();
+
     const handleAddTeam = (team: TTeam) => {
         console.log({ handleAddTeam: team });
         const { id, ...rests } = team;
@@ -200,7 +203,10 @@ const PageTeam = () => {
                 return Promise.reject(status);
             })
             .catch((err) => {
-                toast.error(t("error"));
+                const {
+                    response: { data },
+                } = err;
+                toast.error(data || t("error"));
                 console.log({ err });
             });
     };
@@ -208,7 +214,7 @@ const PageTeam = () => {
 
     return (
         <div className="page-body">
-            <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
+            <Breadcrumbs mainTitle={"Danh sách đội thi đấu"} parent={"HTTQ2024"} />
             <Container fluid>
                 <Row>
                     <Col sm="12">
