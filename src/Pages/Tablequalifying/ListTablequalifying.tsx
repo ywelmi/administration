@@ -1,22 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { getFilterByValue } from "../../Service/_getParams";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Container,
-  Input,
-  Label,
-  Row,
-} from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Container, Input, Label, Row } from "reactstrap";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import {
-  BasicDataTables,
-  DataTables,
-  SearchTableButton,
-} from "../../utils/Constant";
+import { BasicDataTables, DataTables, SearchTableButton } from "../../utils/Constant";
 import { LI, UL } from "../../AbstractElements";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
@@ -24,11 +11,7 @@ import { TTablequalifying } from "../../type/tablequalifying";
 import { useTablequalifyingStore } from "../../store/tablequalifying";
 import { useMemo, useState } from "react";
 import { useTablequalifyingModal } from "./TablequalifyingForm";
-import {
-  tablequalifyingCreate,
-  tablequalifyingDelete,
-  tablequalifyingUpdate,
-} from "../../Service/tablequalifying";
+import { tablequalifyingCreate, tablequalifyingDelete, tablequalifyingUpdate } from "../../Service/tablequalifying";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
@@ -41,329 +24,290 @@ import { useModalPageTablequalifyingMatch } from "../TablequalifyingMatch/ListTa
 
 type TTablequalifyingColumn = Omit<TTablequalifying, "list_member_id">;
 
-const TablequalifyingTableAction = (
-  { tablequalifying }: { tablequalifying: TTablequalifyingColumn },
-) => {
-  const { updateTablequalifying, deleteTablequalifying } =
-    useTablequalifyingStore();
-  const { t } = useTranslation();
+const TablequalifyingTableAction = ({ tablequalifying }: { tablequalifying: TTablequalifyingColumn }) => {
+    const { updateTablequalifying, deleteTablequalifying } = useTablequalifyingStore();
+    const { t } = useTranslation();
 
-  const handleUpdateTablequalifying = (
-    tablequalifying: Partial<TTablequalifying>,
-  ) => {
-    tablequalifyingUpdate(tablequalifying as TTablequalifying).then(
-      (res) => {
-        const { status, data } = res;
-        if (status === 200) {
-          updateTablequalifying(data as TTablequalifying);
-          toast.success(t("success"));
-          return;
-        }
+    const handleUpdateTablequalifying = (tablequalifying: Partial<TTablequalifying>) => {
+        tablequalifyingUpdate(tablequalifying as TTablequalifying)
+            .then((res) => {
+                const { status, data } = res;
+                if (status === 200) {
+                    updateTablequalifying(data as TTablequalifying);
+                    toast.success(t("success"));
+                    return;
+                }
 
-        return Promise.reject(status);
-      },
-    ).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
-  };
+                return Promise.reject(status);
+            })
+            .catch((err) => {
+                toast.error(t("error"));
+                console.log({ err });
+            });
+    };
 
-  const {
-    handleToggle: handleToggleUpdateModal,
-    TablequalifyingModal: TablequalifyingUpdateModal,
-  } = useTablequalifyingModal({
-    onSubmit: handleUpdateTablequalifying,
-    tablequalifying,
-  });
-
-  const handleConfirmDel = async () => {
-    const { confirm } = await useConfirmModal();
-    if (confirm) {
-      tablequalifyingDelete(tablequalifying.id).then((res) => {
-        const { status, data } = res;
-        console.log({ status, data });
-        if (status === 200) {
-          toast.success(t("success"));
-          deleteTablequalifying(tablequalifying.id);
-          return;
-        }
-        return Promise.reject(status);
-      })
-        .catch((err) => {
-          toast.error(t(err?.response?.data || "error"));
-          console.log({ err });
+    const { handleToggle: handleToggleUpdateModal, TablequalifyingModal: TablequalifyingUpdateModal } =
+        useTablequalifyingModal({
+            onSubmit: handleUpdateTablequalifying,
+            tablequalifying,
         });
-    }
-    return;
-  };
 
-  // const handleAddTablequalifyingMatch = (
-  //   tablequalifyingMatch: Omit<TTablequalifyingMatch, "id">,
-  // ) => {
-  //   tablequalifyingMatchCreate(tablequalifyingMatch).then(
-  //     (res) => {
-  //       const { status, data } = res;
-  //       if (status === 200) {
-  //         addTablequalifyingMatch(data);
-  //         toast.info(t("success"));
-  //         return;
-  //       }
-  //       return Promise.reject(status);
-  //     },
-  //   ).catch((err) => {
-  //     toast.error(t("error"));
-  //     console.log({ err });
-  //   });
-  // };
+    const handleConfirmDel = async () => {
+        const { confirm } = await useConfirmModal();
+        if (confirm) {
+            tablequalifyingDelete(tablequalifying.id)
+                .then((res) => {
+                    const { status, data } = res;
+                    console.log({ status, data });
+                    if (status === 200) {
+                        toast.success(t("success"));
+                        deleteTablequalifying(tablequalifying.id);
+                        return;
+                    }
+                    return Promise.reject(status);
+                })
+                .catch((err) => {
+                    toast.error(t(err?.response?.data || "error"));
+                    console.log({ err });
+                });
+        }
+        return;
+    };
 
-  // const { handleToggle: toggleMatch, TablequalifyingMatchModal } =
-  //   useModalPageTablequalifyingMatch({
-  //     tableId: tablequalifying.id,
-  //   });
+    // const handleAddTablequalifyingMatch = (
+    //   tablequalifyingMatch: Omit<TTablequalifyingMatch, "id">,
+    // ) => {
+    //   tablequalifyingMatchCreate(tablequalifyingMatch).then(
+    //     (res) => {
+    //       const { status, data } = res;
+    //       if (status === 200) {
+    //         addTablequalifyingMatch(data);
+    //         toast.info(t("success"));
+    //         return;
+    //       }
+    //       return Promise.reject(status);
+    //     },
+    //   ).catch((err) => {
+    //     toast.error(t("error"));
+    //     console.log({ err });
+    //   });
+    // };
 
-  const navigate = useNavigate();
+    // const { handleToggle: toggleMatch, TablequalifyingMatchModal } =
+    //   useModalPageTablequalifyingMatch({
+    //     tableId: tablequalifying.id,
+    //   });
 
-  return (
-    <UL className="action simple-list flex-row" id={tablequalifying.id}>
-      <LI className="edit btn">
-        <i
-          className="icon-pencil-alt"
-          onClick={handleToggleUpdateModal}
-        />
-        <TablequalifyingUpdateModal />
-      </LI>
-      <LI className="delete btn" onClick={handleConfirmDel}>
-        <i className="icon-trash cursor-pointer" />
-      </LI>
+    const navigate = useNavigate();
 
-      <LI
-        className="edit btn"
-        onClick={() =>
-          navigate(`/tablequalifyings/match/${tablequalifying.id}`)}
-      >
-        <i className="icon-folder" />
-        Lập lịch
-      </LI>
-      <LI
-        className="edit btn"
-        onClick={() =>
-          navigate(`/tablequalifyings/match-report/${tablequalifying.id}`)}
-      >
-        <i className="icon-slice cursor-pointer">
-        </i>
-        Nhập kết quả
-      </LI>
-    </UL>
-  );
+    return (
+        <UL className="action simple-list flex-row" id={tablequalifying.id}>
+            <LI className="edit btn">
+                <i className="icon-pencil-alt" onClick={handleToggleUpdateModal} />
+                <TablequalifyingUpdateModal />
+            </LI>
+            <LI className="delete btn" onClick={handleConfirmDel}>
+                <i className="icon-trash cursor-pointer" />
+            </LI>
+
+            <LI className="edit btn" onClick={() => navigate(`/tablequalifyings/match/${tablequalifying.id}`)}>
+                <i className="icon-folder" />
+                Lập lịch
+            </LI>
+            <LI className="edit btn" onClick={() => navigate(`/tablequalifyings/match-report/${tablequalifying.id}`)}>
+                <i className="icon-slice cursor-pointer"></i>
+                Nhập kết quả
+            </LI>
+        </UL>
+    );
 };
 
 interface IListTablequalifying {
-  showAction?: boolean;
-  selectableRows?: boolean;
-  onRowSelect?: (
-    row: TTablequalifying,
-    e: React.MouseEvent<Element, MouseEvent>,
-  ) => void;
-  onSelectedRowsChange?: (
-    v: {
-      allSelected: boolean;
-      selectedCount: number;
-      selectedRows: TTablequalifying[];
-    },
-  ) => void;
-  columns?: TableColumn<TTablequalifyingColumn>[];
-  data?: TTablequalifying[];
-  selectableRowSelected?: (row: TTablequalifying) => boolean;
+    showAction?: boolean;
+    selectableRows?: boolean;
+    onRowSelect?: (row: TTablequalifying, e: React.MouseEvent<Element, MouseEvent>) => void;
+    onSelectedRowsChange?: (v: {
+        allSelected: boolean;
+        selectedCount: number;
+        selectedRows: TTablequalifying[];
+    }) => void;
+    columns?: TableColumn<TTablequalifyingColumn>[];
+    data?: TTablequalifying[];
+    selectableRowSelected?: (row: TTablequalifying) => boolean;
 }
 
-const tableColumns = ([
-  "name",
-  "list_team",
-] as (keyof TTablequalifyingColumn)[]).map(
-  (c) => ({
-    "name": N[c],
+const tableColumns = (["name", "list_team"] as (keyof TTablequalifyingColumn)[]).map((c) => ({
+    name: N[c],
     sortable: true,
     selector: (row: TTablequalifyingColumn) => {
-      const col = c as keyof TTablequalifyingColumn;
-      return row?.[col]
-        ? (row[col as keyof TTablequalifyingColumn] || "")
-        : "" as (string | number);
+        const col = c as keyof TTablequalifyingColumn;
+        return row?.[col] ? row[col as keyof TTablequalifyingColumn] || "" : ("" as string | number);
     },
-  }),
-);
+}));
 
-const ListTablequalifying = (
-  {
+const ListTablequalifying = ({
     showAction,
     onRowSelect,
     onSelectedRowsChange,
     columns = [...tableColumns],
     data = [],
     selectableRowSelected,
-  }: IListTablequalifying,
-) => {
-  const [filterText, setFilterText] = useState("");
-  const { updateGetFilter, total, loading, filters } =
-    useTablequalifyingStore();
-  const filteredItems = data.filter((item) => item);
+}: IListTablequalifying) => {
+    const [filterText, setFilterText] = useState("");
+    const { updateGetFilter, total, loading, filters } = useTablequalifyingStore();
+    const filteredItems = data.filter((item) => item);
 
-  const handlePerRowsChange = (newPerPage: number, page: number) => {
-    const take = newPerPage;
-    const skip = Math.max(page - 1, 0) * take;
-    updateGetFilter({ take, skip });
-  };
+    const handlePerRowsChange = (newPerPage: number, page: number) => {
+        const take = newPerPage;
+        const skip = Math.max(page - 1, 0) * take;
+        updateGetFilter({ take, skip });
+    };
 
-  const handlePageChange = (page: number) => {
-    if (!filters) return;
-    const { take } = filters;
-    if (take) {
-      updateGetFilter({ skip: Math.max(page - 1, 0) * take });
+    const handlePageChange = (page: number) => {
+        if (!filters) return;
+        const { take } = filters;
+        if (take) {
+            updateGetFilter({ skip: Math.max(page - 1, 0) * take });
+        }
+    };
+
+    if (columns.length > 0 && showAction) {
+        columns = [
+            ...columns,
+            {
+                name: "#",
+                cell: (row: TTablequalifyingColumn) => <TablequalifyingTableAction tablequalifying={row} />,
+                sortable: true,
+            },
+        ];
     }
-  };
 
-  if (columns.length > 0 && showAction) {
-    columns = [...columns, {
-      name: "#",
-      cell: (row: TTablequalifyingColumn) => (
-        <TablequalifyingTableAction tablequalifying={row} />
-      ),
-      sortable: true,
-    }];
-  }
+    const subHeaderComponentMemo = useMemo(() => {
+        return (
+            <div id="basic-1_filter" className="dataTables_filter d-flex align-items-center">
+                <Label className="me-2">{SearchTableButton}:</Label>
+                <Input
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
+                    type="search"
+                    value={filterText}
+                />
+            </div>
+        );
+    }, [filterText]);
 
-  const subHeaderComponentMemo = useMemo(() => {
     return (
-      <div
-        id="basic-1_filter"
-        className="dataTables_filter d-flex align-items-center"
-      >
-        <Label className="me-2">{SearchTableButton}:</Label>
-        <Input
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)}
-          type="search"
-          value={filterText}
-        />
-      </div>
+        <div className="table-responsive">
+            <DataTable
+                columns={columns}
+                data={filteredItems}
+                pagination
+                subHeader
+                subHeaderComponent={subHeaderComponentMemo}
+                highlightOnHover
+                striped
+                persistTableHead
+                selectableRowsHighlight
+                onRowClicked={onRowSelect}
+                onSelectedRowsChange={onSelectedRowsChange}
+                selectableRows={!!onRowSelect || !!onSelectedRowsChange}
+                progressPending={loading}
+                paginationServer
+                paginationTotalRows={total}
+                onChangeRowsPerPage={handlePerRowsChange}
+                onChangePage={handlePageChange}
+                selectableRowSelected={selectableRowSelected}
+            />
+        </div>
     );
-  }, [filterText]);
-
-  return (
-    <div className="table-responsive">
-      <DataTable
-        columns={columns}
-        data={filteredItems}
-        pagination
-        subHeader
-        subHeaderComponent={subHeaderComponentMemo}
-        highlightOnHover
-        striped
-        persistTableHead
-        selectableRowsHighlight
-        onRowClicked={onRowSelect}
-        onSelectedRowsChange={onSelectedRowsChange}
-        selectableRows={!!onRowSelect || !!onSelectedRowsChange}
-        progressPending={loading}
-        paginationServer
-        paginationTotalRows={total}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
-        selectableRowSelected={selectableRowSelected}
-      />
-    </div>
-  );
 };
 
 const PageTablequalifying = () => {
-  const { t } = useTranslation();
-  const { tablequalifyings, addTablequalifying, updateGetFilter, filters } =
-    useTablequalifyingStore();
-  const { sports } = useSportStore();
-  const [sportId, setSportId] = useState("");
+    const { t } = useTranslation();
+    const { tablequalifyings, addTablequalifying, updateGetFilter, filters } = useTablequalifyingStore();
+    const { sports } = useSportStore();
+    const [sportId, setSportId] = useState("");
 
-  const { sport_id: paramSportId } = useParams();
+    const { sport_id: paramSportId } = useParams();
 
-  useEffect(() => {
-    if (paramSportId) {
-      setSportId(paramSportId);
-    }
-  }, [paramSportId]);
+    useEffect(() => {
+        if (paramSportId) {
+            setSportId(paramSportId);
+        }
+    }, [paramSportId]);
 
-  useEffect(() => {
-    if (sportId) {
-      const filterValue = getFilterByValue("sport_id", "=", sportId);
-      updateGetFilter({ ...filters, filter: filterValue });
-    } else {
-      updateGetFilter({ ...filters, filter: "" });
-    }
-  }, [sportId]);
+    useEffect(() => {
+        if (sportId) {
+            const filterValue = getFilterByValue("sport_id", "=", sportId);
+            updateGetFilter({ ...filters, filter: filterValue });
+        } else {
+            updateGetFilter({ ...filters, filter: "" });
+        }
+    }, [sportId]);
 
-  const handleAddTablequalifying = (
-    tablequalifying: Partial<TTablequalifying>,
-  ) => {
-    // console.log({ handleAddTablequalifying: tablequalifying });
-    const { id, ...rests } = tablequalifying;
-    tablequalifyingCreate(rests).then((res) => {
-      const { status, data } = res;
-      console.log({ addTablequalifyingResult: data });
-      if (status === 200) {
-        addTablequalifying(data as TTablequalifying);
-        toast.info(t("success"));
-        return;
-      }
-      return Promise.reject(status);
-    }).catch((err) => {
-      toast.error(t("error"));
-      console.log({ err });
-    });
-  };
+    const handleAddTablequalifying = (tablequalifying: Partial<TTablequalifying>) => {
+        // console.log({ handleAddTablequalifying: tablequalifying });
+        const { id, ...rests } = tablequalifying;
+        tablequalifyingCreate(rests)
+            .then((res) => {
+                const { status, data } = res;
+                console.log({ addTablequalifyingResult: data });
+                if (status === 200) {
+                    addTablequalifying(data as TTablequalifying);
+                    toast.info(t("success"));
+                    return;
+                }
+                return Promise.reject(status);
+            })
+            .catch((err) => {
+                toast.error(t("error"));
+                console.log({ err });
+            });
+    };
 
-  const {
-    handleToggle: handleToggleAddModal,
-    TablequalifyingModal: TablequalifyingAddModal,
-  } = useTablequalifyingModal({
-    onSubmit: handleAddTablequalifying,
-    tablequalifying: {
-      "sport_id": sportId || "",
-      "name": "",
-      "index": 0,
-      "listTeams": [],
-    },
-  });
+    const { handleToggle: handleToggleAddModal, TablequalifyingModal: TablequalifyingAddModal } =
+        useTablequalifyingModal({
+            onSubmit: handleAddTablequalifying,
+            tablequalifying: {
+                sport_id: sportId || "",
+                name: "",
+                index: 0,
+                listTeams: [],
+            },
+        });
 
-  return (
-    <div className="page-body">
-      <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
-      <Container fluid>
-        <Row>
-          <Col sm="12">
-            <Card>
-              <CardHeader className="pb-0 card-no-border">
-                <InputSelect
-                  title={N["sport"]}
-                  data={sports.filter(({ point_unit }) => {
-                    return point_unit !== 1;
-                  })}
-                  k="name"
-                  v="id"
-                  name="sport"
-                  value={sportId}
-                  handleChange={(e) => setSportId(e.target.value)}
-                />
-                <div className="btn btn-primary" onClick={handleToggleAddModal}>
-                  <i className="fa fa-plus" />
-                  {"Thêm mới"}
-                </div>
-                <TablequalifyingAddModal />
-              </CardHeader>
-              <CardBody>
-                <ListTablequalifying data={tablequalifyings} showAction />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
-    </div>
-  );
+    return (
+        <div className="page-body">
+            <Breadcrumbs mainTitle={"Thi đấu vòng bảng"} parent={"HTTQ2024"} />
+            <Container fluid>
+                <Row>
+                    <Col sm="12">
+                        <Card>
+                            <CardHeader className="pb-0 card-no-border">
+                                <InputSelect
+                                    title={N["sport"]}
+                                    data={sports.filter(({ point_unit }) => {
+                                        return point_unit !== 1;
+                                    })}
+                                    k="name"
+                                    v="id"
+                                    name="sport"
+                                    value={sportId}
+                                    handleChange={(e) => setSportId(e.target.value)}
+                                />
+                                <div className="btn btn-primary" onClick={handleToggleAddModal}>
+                                    <i className="fa fa-plus" />
+                                    {"Thêm mới"}
+                                </div>
+                                <TablequalifyingAddModal />
+                            </CardHeader>
+                            <CardBody>
+                                <ListTablequalifying data={tablequalifyings} showAction />
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
+        </div>
+    );
 };
 export { ListTablequalifying, PageTablequalifying };
