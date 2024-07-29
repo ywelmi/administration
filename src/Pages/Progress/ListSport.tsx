@@ -8,7 +8,7 @@ import { TSport } from "../../type/sport";
 import { useSportStore } from "../../store/sport";
 import { useMemo, useState } from "react";
 
-import { sportCreate, sportDelete, sportUpdate, sportXuatPhieuDiem } from "../../Service/sport";
+import { sportUpdate } from "../../Service/sport";
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +17,7 @@ import { useLotsDrawModal } from "../LotsDraw/LotsDrawForm";
 type TSportColumn = TSport;
 
 const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
-    const { updateSport, deleteSport } = useSportStore();
+    const { updateSport } = useSportStore();
     const { t } = useTranslation();
 
     const handleUpdateSport = (sport: TSport) => {
@@ -39,8 +39,15 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
             });
     };
 
-    // const handleConfirmDel = () => {
-    //   const { confirm } = useConfirmModal();
+    // const { handleToggle: handleToggleUpdateModal, SportModal: SportUpdateModal } = useSportModal({
+    //     onSubmit: handleUpdateSport,
+    //     sport,
+    // });
+
+    const { handleToggle: toggleLotsDrawModal, LotsDrawModal } = useLotsDrawModal({ sportId: sport.id });
+
+    // const handleConfirmDel =  async () => {
+    //   if (confirm) {
     //   if (confirm) {
     //     sportDelete(sport.id).then((res) => {
     //       const { status, data } = res;
@@ -62,23 +69,53 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
 
     const navigate = useNavigate();
 
-    const handleDownloadClick = () => {
-        sportXuatPhieuDiem(sport.id);
-    };
-
     return (
         <UL className="action simple-list flex-row" id={sport.id}>
             {sport.point_unit === 1 ? (
                 <>
                     <LI className="edit btn">
-                        <Btn color="warning" type="button" onClick={handleDownloadClick}>
-                            Phiểu Điểm
+                        <Btn color="info" type="button" onClick={toggleLotsDrawModal}>
+                            Xem Bốc Thăm
+                        </Btn>
+                        <LotsDrawModal />
+                    </LI>
+                    <LI className="edit btn">
+                        <Btn
+                            color="light"
+                            type="button"
+                            onClick={() => (sport.id ? navigate(`/lotsdraw/list/${sport.id}`) : undefined)}
+                        >
+                            Lập lịch
                         </Btn>
                     </LI>
                 </>
             ) : (
-                <></>
+                <>
+                    <LI className="edit btn">
+                        <Btn
+                            color="primary"
+                            type="button"
+                            onClick={() => (sport.id ? navigate(`/tablequalifyings/list/${sport.id}`) : undefined)}
+                        >
+                            Xem Vòng Bảng
+                        </Btn>
+                    </LI>
+                    <LI className="edit btn">
+                        <Btn
+                            color="secondary"
+                            type="button"
+                            onClick={() => (sport.id ? navigate(`/tablequalifyings/knockout/${sport.id}`) : undefined)}
+                        >
+                            Xem Vòng Loại
+                        </Btn>
+                    </LI>
+                </>
             )}
+
+            {/* <LI className="edit btn">
+        <i className="icon-pencil-alt" onClick={handleToggleUpdateModal} />
+        <SportUpdateModal />
+      </LI> */}
         </UL>
     );
 };
@@ -177,7 +214,7 @@ const ListSport = ({
     );
 };
 
-const PageReportResult = () => {
+const PageProgress = () => {
     const { t } = useTranslation();
     const { addSport, sports } = useSportStore();
 
@@ -204,7 +241,7 @@ const PageReportResult = () => {
 
     return (
         <div className="page-body">
-            <Breadcrumbs mainTitle={"Xuất phiếu điểm"} parent={"HTTQ2024"} />
+            <Breadcrumbs mainTitle={"Tiến độ thi đấu"} parent={"HTTQ2024"} />
             <Container fluid>
                 <Row>
                     <Col sm="12">
@@ -231,4 +268,4 @@ const PageReportResult = () => {
     );
 };
 
-export { ListSport, PageReportResult };
+export { ListSport, PageProgress };

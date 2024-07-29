@@ -2,6 +2,7 @@ import { PageCompetitionRegister } from "../Pages/CompetitionRegister/ListCompet
 import Default from "../Pages/Dashboard/Default/Default";
 import { PageLotsDraw } from "../Pages/LotsDraw/ListLotsDraw";
 import { ListOrg } from "../Pages/Org/ListOrg";
+import { PageProgress } from "../Pages/Progress/ListSport";
 import { PageReportResult } from "../Pages/Report Result/ReportResult";
 import { PageResultExport } from "../Pages/ResultExport/ResultExport";
 import { PageSport } from "../Pages/Sport/ListSport";
@@ -193,6 +194,10 @@ const Routes = [
     {
         path: "/resultexport",
         Component: <PageResultExport />,
+    },
+    {
+        path: "/progress",
+        Component: <PageProgress />,
     },
     // {
     //   path: "/tablequalifyings/list",
