@@ -20,6 +20,14 @@ export const teamsBySportGet = async (
   });
 };
 
+export const teamsNoTableGet = (sportId: string) => {
+  return httpGet<TTeam[]>(`/sports/${sportId}/GetListTeamNoTable`);
+};
+
+export const teamsHaveTableGet = (sportId: string) => {
+  return httpGet<TTeam[]>(`/sports/${sportId}/GetListTeamHasTable`);
+};
+
 export const teamGet = (id: string) => {
   return httpGet(`/teams/${id}`);
 };

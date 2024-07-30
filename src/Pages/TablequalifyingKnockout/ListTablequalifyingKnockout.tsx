@@ -127,7 +127,6 @@ const CustomSeed = (
     >
       <SeedItem className="seed">
         <div>
-          {/* {roundIndex == 0 && !pair.team1_name */}
           {roundIndex == 0 && !lockPick
             ? (
               <InputSelect

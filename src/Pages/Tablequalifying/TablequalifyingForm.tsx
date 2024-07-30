@@ -10,7 +10,11 @@ import { useSportStore } from "../../store/sport";
 import { InputSelect } from "../../Component/InputSelect";
 import { tablequalifyingMembersGet } from "../../Service/tablequalifying";
 import { getFilterByValue } from "../../Service/_getParams";
-import { teamsGet } from "../../Service/team";
+import {
+  teamsGet,
+  teamsHaveTableGet,
+  teamsNoTableGet,
+} from "../../Service/team";
 import { TTeam } from "../../type/team";
 
 interface ITablequalifyingForm {
@@ -57,15 +61,9 @@ const TablequalifyingForm = (
         (res) => {
           const { data, status } = res;
           if (status === 200) {
-            // console.log({
-            //   data,
-            //   initTablequalifying,
-            //   listTeams: formik.values.listTeams,
-            // });
             setTimeout(() => {
               formik.setFieldValue("listTeams", data.map((m) => m.team_id));
             }, 1000);
-            // setPreSelectedTeams(data.map((m) => m.team_id));
           }
         },
       );
@@ -73,19 +71,62 @@ const TablequalifyingForm = (
   }, [initTablequalifying?.id]);
 
   useEffect(() => {
-    if (initTablequalifying?.sport_id) {
-      const { sport_id } = initTablequalifying;
-      if (sport_id) {
-        const filter = getFilterByValue("sport_id", "=", sport_id);
-        teamsGet({ filter }).then((res) => {
-          const { data: { data }, status } = res;
-          // console.log({ data });
-          if (status === 200) {
-            setTeams(data);
+    (async () => {
+      if (initTablequalifying?.sport_id) {
+        const { sport_id } = initTablequalifying;
+        if (sport_id) {
+          const filter = getFilterByValue("sport_id", "=", sport_id);
+          const sportTeams = await teamsGet({ filter }).then((res) => {
+            const { data: { data }, status } = res;
+            if (status === 200) {
+              return data;
+            }
+          });
+
+          const noTableTeams = await teamsNoTableGet(sport_id).then((res) => {
+            const { data, status } = res;
+            if (status === 200) return data;
+          });
+
+          if (sportTeams?.length && noTableTeams?.length) {
+            const sportTeamIds = sportTeams.map((t) => t.id);
+            const noTableSportTeams = noTableTeams.filter((t) =>
+              sportTeamIds.includes(t.id)
+            );
+            if (!tablequalifying.list_team?.length && sportTeams) { // Case add new
+              setTeams(noTableSportTeams);
+              return;
+            }
+
+            if (tablequalifying.list_team?.length && sportTeams) { // Case update
+              const haveTableTeams =
+                await teamsHaveTableGet(sport_id).then((res) => {
+                  const { data, status } = res;
+                  if (status === 200) {
+                    return data;
+                  }
+                }) || [];
+
+              if (!tablequalifying.id) return;
+              const tablequalifyingMembers = await tablequalifyingMembersGet(
+                tablequalifying.id,
+              ).then((res) => {
+                const { data, status } = res;
+                if (status === 200) return data;
+              });
+              const tablequalifyingTeamIds = tablequalifyingMembers?.map(
+                (t) => t.team_id,
+              );
+              const haveTableSportTeams = haveTableTeams.filter((t) =>
+                tablequalifyingTeamIds?.includes(t.id)
+              );
+              setTeams([...haveTableSportTeams, ...noTableSportTeams]);
+              return;
+            }
           }
-        });
+        }
       }
-    }
+    })();
   }, [initTablequalifying?.sport_id]);
 
   return (

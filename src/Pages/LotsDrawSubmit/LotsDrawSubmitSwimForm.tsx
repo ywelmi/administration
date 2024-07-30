@@ -13,6 +13,7 @@ import {
   lotsdrawResultUpdate,
 } from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
+import { DRank } from "../../type/enum";
 
 interface ILotsDrawSubmitForm {
   // lotsdraw: TLotsDrawMember[];
@@ -32,12 +33,24 @@ const defaultColumns: ColumnDef<TLotsDrawMember>[] = [
       cell(props) {
         return <div className="form-control">{props.getValue() as string}</div>;
       },
-    }, {
-      accessorKey: "org_name",
+    }, //   {
+    //   accessorKey: "org_name",
+    //   footer: (props) => props.column.id,
+    //   header: N["org_name"],
+    //   cell(props) {
+    //     return <div className="form-control">{props.getValue() as string}</div>;
+    //   },
+    // },
+    {
+      accessorKey: "rank",
       footer: (props) => props.column.id,
-      header: N["org_name"],
+      header: N["rank"],
       cell(props) {
-        return <div className="form-control">{props.getValue() as string}</div>;
+        return (
+          <div className="form-control">
+            {DRank[parseInt(props.getValue() as string)]}
+          </div>
+        );
       },
     }, {
       accessorKey: "clothers_number",
@@ -93,6 +106,7 @@ const LotsDrawSubmitSwimForm = (
       });
       setColumns(newCols);
       setData(lst_ticket_member);
+      console.log({ lst_ticket_member });
     }).catch((err) => {
       console.log({ err });
     });
