@@ -22,21 +22,17 @@ import { useTranslation } from "react-i18next";
 import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
 import { useMemo, useState } from "react";
-import {
-  ITablequalifyingMatchForm,
-  useTablequalifyingMatchModal,
-  useTablequalifyingMatchPopover,
-} from "./TablequalifyingMatchForm";
+import { useTablequalifyingMatchModal } from "./TablequalifyingMatchForm";
 import {
   tablequalifyingMatchCreate,
   // tablequalifyingMatchDelete,
   // tablequalifyingMatchUpdate,
 } from "../../Service/tablequalifyingMatch";
 import { toast } from "react-toastify";
-import { useConfirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { convertToDate } from "../../utils/date";
 
 type TTablequalifyingColumn = Omit<TTablequalifyingMatch, "list_member_id">;
 
@@ -123,7 +119,7 @@ interface IListTablequalifyingMatch {
   selectableRows?: boolean;
   onRowSelect?: (
     row: TTablequalifyingMatch,
-    e: React.MouseEvent<Element, MouseEvent>
+    e: React.MouseEvent<Element, MouseEvent>,
   ) => void;
   onSelectedRowsChange?: (v: {
     allSelected: boolean;
@@ -150,6 +146,10 @@ const tableColumns = (
   sortable: true,
   selector: (row: TTablequalifyingColumn) => {
     const col = c as keyof TTablequalifyingColumn;
+    switch (col) {
+      case "match_day":
+        return convertToDate(row[col]);
+    }
     return row?.[col]
       ? (row[col as keyof TTablequalifyingColumn] || "").toString()
       : ("" as string | number);
@@ -177,8 +177,7 @@ const ListTablequalifyingMatch = ({
         <Label className="me-2">{SearchTableButton}:</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)
-          }
+            setFilterText(e.target.value)}
           type="search"
           value={filterText}
         />
@@ -223,7 +222,7 @@ const PageTablequalifyingMatch = () => {
   }, [table_id]);
 
   const handleAddTablequalifyingMatch = (
-    tablequalifyingMatch: TTablequalifyingMatch
+    tablequalifyingMatch: TTablequalifyingMatch,
   ) => {
     console.log({ handleAddTablequalifyingMatch: tablequalifyingMatch });
     const { id, ...rests } = tablequalifyingMatch;
@@ -318,7 +317,7 @@ const useModalPageTablequalifyingMatch = ({
   }, [opened]);
 
   const handleAddTablequalifyingMatch = (
-    tablequalifyingMatch: TTablequalifyingMatch
+    tablequalifyingMatch: TTablequalifyingMatch,
   ) => {
     console.log({ handleAddTablequalifyingMatch: tablequalifyingMatch });
     const { id, ...rests } = tablequalifyingMatch;
