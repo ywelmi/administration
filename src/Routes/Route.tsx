@@ -1,6 +1,8 @@
 import { PageCompetitionRegister } from "../Pages/CompetitionRegister/ListCompetitionRegister";
 import Default from "../Pages/Dashboard/Default/Default";
 import { PageLotsDraw } from "../Pages/LotsDraw/ListLotsDraw";
+import { PageMartialArt } from "../Pages/MartialArt/ListMartialArt";
+import { MartialArtKnockout } from "../Pages/MartialArt/MartialArtKnockout";
 import { ListOrg } from "../Pages/Org/ListOrg";
 import { PageProgress } from "../Pages/Progress/ListSport";
 import { PageReportResult } from "../Pages/Report Result/ReportResult";
@@ -62,6 +64,14 @@ const Routes = [
   {
     path: "/lotsdraw/list/:sport_id?",
     Component: <PageLotsDraw />,
+  },
+  {
+    path: "/martialart/list",
+    Component: <PageMartialArt />,
+  },
+  {
+    path: "/martialart/:sport_id/knockout/:content_id",
+    Component: <MartialArtKnockout />,
   },
   {
     path: "/reportresult",

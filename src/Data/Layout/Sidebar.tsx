@@ -68,6 +68,12 @@ export const useMenuList = () => {
               type: "link",
               lanClass: "lan-4",
             },
+            {
+              path: "/martialart/list",
+              title: "Võ chiến đấu",
+              type: "link",
+              lanClass: "lan-4",
+            },
             // {
             //   path: "/progress",
             //   title: "Tiến độ thi đấu",

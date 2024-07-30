@@ -46,4 +46,5 @@ export interface IKnockoutCreate {
   "number_team": number;
   "has_grade_3rd": boolean;
   "sport_id": string;
+  "content_id": string;
 }

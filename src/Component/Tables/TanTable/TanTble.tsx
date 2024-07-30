@@ -310,7 +310,6 @@ const TanTableComponent = <T,>({
                               />
                             );
                           }
-
                           return (
                             <Filter
                               column={header.column}
