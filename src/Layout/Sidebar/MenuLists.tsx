@@ -39,9 +39,7 @@ const MenuLists: React.FC<MenuListType> = (
   const handleClick = (item: string, unitType?: DUnitType) => {
     const temp = activeMenu;
     temp[level] = item !== temp[level] ? item : "";
-    console.log({ temp: temp[level], activeMenu });
     setActiveMenu([...temp]);
-    // console.log({ path: unitType });
     if (unitType) {
       updateSportByUnitType(unitType);
     }
