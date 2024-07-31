@@ -252,6 +252,7 @@ const PageTablequalifyingKnockout = () => {
       number_team: 0,
       has_grade_3rd: false,
       sport_id: sportId,
+      content_id: "",
     },
   });
 
