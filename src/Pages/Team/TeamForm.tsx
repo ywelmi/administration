@@ -9,7 +9,7 @@ import { useCompetitionStore } from "../../store/competition";
 import { useOrgStore } from "../../store/org";
 import { useSportStore } from "../../store/sport";
 import { InputSelect } from "../../Component/InputSelect";
-import { TKeyTeammember, TTeammember } from "../../type/teammember";
+import { TTeammember } from "../../type/teammember";
 import { ListTeammember } from "../Teammember/ListTeammember";
 import { DGender, DRank } from "../../type/enum";
 import { convertToDate } from "../../utils/date";
@@ -99,7 +99,6 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
     org_name: "",
     list_team_member: [], // list of teammembers' ids
   };
-  console.log({ initTeam, team });
 
   const { competitions } = useCompetitionStore();
   const { orgs } = useOrgStore();
@@ -108,7 +107,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
 
   const { t } = useTranslation();
   const formik = useFormik<Partial<TTeam>>({
-    initialValues: { ...initTeam },
+    initialValues: { ...team },
     onSubmit: (value) => {
       console.log({ submitAddTeamValue: value });
       let submitValue = {
@@ -152,13 +151,6 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
     // newListMember,
     orgMembers,
   ]);
-
-  // const { TeammemberPopover, handleToggle } = useTeammemberPopover({
-  //   onSubmit: handleAddTeammember,
-  //   omitColumns: ["teams", "competitions", "orgs"],
-  // });
-  //
-  console.log({ form: formik.values, displayedListTeammember });
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -241,8 +233,8 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
               );
             }}
             selectableRowSelected={(r) => {
-              return !!formik.values.list_member_id?.includes(r.id) ||
-                !!formik.values.list_team_member?.includes(r.id);
+              return !!team.list_member_id?.includes(r.id) ||
+                !!team.list_team_member?.includes(r.id);
             }}
           />
         </Col>

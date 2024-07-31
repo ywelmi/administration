@@ -5,10 +5,11 @@ import { LogOut } from "../../../../utils/Constant";
 import { clearUser } from "../../../../shared/localStorage/user";
 
 const ProfileBox = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const handleClick = () => {
     clearUser();
-    navigate("/sign-in");
+    // navigate("/sign-in");
+    setTimeout(() => window.location.href = "/sign-in", 1000);
   };
   return (
     <UL className="profile-dropdown onhover-show-div">

@@ -170,6 +170,17 @@ const TanTableComponent = <T,>({
       : {},
   );
 
+  useEffect(() => {
+    setRowSelection(
+      (selectableRowSelected && getRowId)
+        ? srcData.reduce((p, c) => ({
+          ...p,
+          [getRowId?.(c)]: selectableRowSelected(c),
+        }), {})
+        : {},
+    );
+  }, [srcData]);
+
   useImperativeHandle(ref, () => ({
     getData: () => data,
   }), [data]);
@@ -302,7 +313,6 @@ const TanTableComponent = <T,>({
                           }
 
                           if (header.column.columnDef.meta?.custom.date) {
-                            console.log("true");
                             return (
                               <FilterDate
                                 column={header.column}

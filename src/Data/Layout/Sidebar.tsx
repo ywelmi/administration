@@ -1,3 +1,5 @@
+import { DUnitType } from "../../type/enum";
+
 export const useMenuList = () => {
     const menuList = [
         {
@@ -117,7 +119,7 @@ export const useMenuList = () => {
                     lanClass: "lan-1",
                     children: [
                         {
-                            //path: "/team/list",
+                            path: "/team/list",
                             title: "Đăng ký thi",
                             type: "link",
                             lanClass: "lan-4",
@@ -128,13 +130,13 @@ export const useMenuList = () => {
                             lanClass: "lan-3",
                             children: [
                                 {
-                                    //path: "/tablequalifyings/list",
+                                    path: "/tablequalifyings/list",
                                     title: "Vòng bảng",
                                     type: "link",
                                     lanClass: "lan-4",
                                 },
                                 {
-                                    //path: "/tablequalifyings/knockout/:sport_id",
+                                    path: "/tablequalifyings/knockout/:sport_id",
                                     title: "Vòng loại",
                                     type: "link",
                                     lanClass: "lan-4",
@@ -142,7 +144,7 @@ export const useMenuList = () => {
                             ],
                         },
                         {
-                            //path: "/lotsdraw/list/",
+                            path: "/lotsdraw/list/",
                             title: "Môn bốc thăm",
                             type: "link",
                             lanClass: "lan-4",

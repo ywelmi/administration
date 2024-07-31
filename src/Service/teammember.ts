@@ -23,3 +23,9 @@ export const teammemberUpdate = (teammember: TTeammember) => {
 export const teammemberDelete = (id: string) => {
   return httpDel(`teammembers/${id}`);
 };
+
+export const teammembersByContent = (sportId: string, contentId: string) => {
+  return httpGet<TTeammember[]>(
+    `/teammembers/ListMemberByContentId?sportID=${sportId}&contentID=${contentId}`,
+  );
+};

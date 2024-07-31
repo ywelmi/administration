@@ -25,3 +25,17 @@ export const DRank = [
   "Thượng tướng",
   "Đại tướng",
 ];
+
+export enum DSportType {
+  LotDraw,
+  TableQualifying,
+  MartialArt,
+  PlayOff,
+}
+
+export const DUnit = {
+  LLTT: 1,
+  DQTV: 2,
+};
+
+export type DUnitType = keyof typeof DUnit;
