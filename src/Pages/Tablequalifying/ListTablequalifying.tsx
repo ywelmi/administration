@@ -329,7 +329,7 @@ const PageTablequalifying = () => {
                 <InputSelect
                   title={N["sport"]}
                   data={sports.filter(({ point_unit }) => {
-                    return point_unit !== 1;
+                    return point_unit !== 1 && point_unit !== 2;
                   })}
                   k="name"
                   v="id"

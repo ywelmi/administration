@@ -36,12 +36,11 @@ const SidebarMenuList = () => {
               menu={mainMenu.Items}
               activeMenu={activeMenu}
               setActiveMenu={setActiveMenu}
-              level={0}
+              level={index}
             />
           </Fragment>
         ))}
     </>
   );
 };
-
 export default SidebarMenuList;

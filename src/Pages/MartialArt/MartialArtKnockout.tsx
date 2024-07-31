@@ -50,7 +50,7 @@ const CustomSeed = (
     team1_point_win_count: seed.teams[0]?.winCount,
     team2_id: seed.teams[1]?.id || "",
     team2_name: seed.teams[1]?.name || "",
-    team2_point_win_count: seed.teams[0]?.winCount,
+    team2_point_win_count: seed.teams[1]?.winCount,
   }); // each team's id in pair
 
   const [lockPick, setLockPick] = useState(
@@ -64,7 +64,7 @@ const CustomSeed = (
       team1_point_win_count: seed.teams[0]?.winCount,
       team2_id: seed.teams[1]?.id || "",
       team2_name: seed.teams[1]?.name || "",
-      team2_point_win_count: seed.teams[0]?.winCount,
+      team2_point_win_count: seed.teams[1]?.winCount,
     });
   }, [seed]);
 

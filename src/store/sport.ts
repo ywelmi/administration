@@ -108,7 +108,6 @@ export const useSportStore = create<SportState>()(
     },
     updateSportByUnitType(t) {
       set((state: SportState) => {
-        console.log({ updateSport: t });
         state.sports = state.sportsAll.filter((s) => s.for_type === DUnit[t]);
       });
     },

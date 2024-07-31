@@ -4,7 +4,6 @@ import { LI, SVG, UL } from "../../AbstractElements";
 import { Href } from "../../utils/Constant";
 import { MenuListType, SidebarItemTypes } from "../../Types/Layout/Sidebar";
 import { useTranslation } from "react-i18next";
-import { useThemeStore } from "../../store/theme";
 import { useLayoutStore } from "../../store/layout";
 import { DUnit, DUnitType } from "../../type/enum";
 import { useSportStore } from "../../store/sport";
@@ -16,12 +15,18 @@ const MenuLists: React.FC<MenuListType> = (
   const location = useLocation();
   const { t } = useTranslation();
   const { updateSportByUnitType } = useSportStore();
-  const ActiveNavLinkUrl = (path?: string) => {
-    return location.pathname === path ? true : "";
+  const ActiveNavLinkUrl = (path?: string, title?: string) => {
+    return location.pathname === path && title === activeMenu[level]
+      ? true
+      : "";
   };
+
   const shouldSetActive = ({ item }: SidebarItemTypes) => {
+    const temp = activeMenu;
     var returnValue = false;
-    if (item?.path === location.pathname) returnValue = true;
+    if (item?.path === location.pathname && item.title === temp[level]) {
+      returnValue = true;
+    }
     if (!returnValue && item?.children) {
       item?.children.every((subItem) => {
         returnValue = shouldSetActive({ item: subItem });
@@ -30,15 +35,18 @@ const MenuLists: React.FC<MenuListType> = (
     }
     return returnValue;
   };
+
   const handleClick = (item: string, unitType?: DUnitType) => {
     const temp = activeMenu;
     temp[level] = item !== temp[level] ? item : "";
+    console.log({ temp: temp[level], activeMenu });
     setActiveMenu([...temp]);
     // console.log({ path: unitType });
     if (unitType) {
       updateSportByUnitType(unitType);
     }
   };
+
   useEffect(() => {
     menu?.forEach((item: any) => {
       let gotValue = shouldSetActive({ item });
@@ -61,9 +69,9 @@ const MenuLists: React.FC<MenuListType> = (
           ${
             (item.children
                 ? item.children.map((innerItem) =>
-                  ActiveNavLinkUrl(innerItem.path)
+                  ActiveNavLinkUrl(innerItem.path, innerItem.title)
                 ).includes(true)
-                : ActiveNavLinkUrl(item.path)) ||
+                : ActiveNavLinkUrl(item.path, item.title)) ||
               activeMenu[level] === item.title
               ? "active"
               : ""
@@ -77,9 +85,9 @@ const MenuLists: React.FC<MenuListType> = (
             ${
               (item.children
                   ? item.children.map((innerItem) =>
-                    ActiveNavLinkUrl(innerItem.path)
+                    ActiveNavLinkUrl(innerItem.path, innerItem.title)
                   ).includes(true)
-                  : ActiveNavLinkUrl(item.path)) ||
+                  : ActiveNavLinkUrl(item.path, item.title)) ||
                 activeMenu[level] === item.title
                 ? "active"
                 : ""
@@ -121,9 +129,11 @@ const MenuLists: React.FC<MenuListType> = (
                 display: `${
                   (item.children
                       ? item.children
-                        .map((innerItem) => ActiveNavLinkUrl(innerItem.path))
+                        .map((innerItem) =>
+                          ActiveNavLinkUrl(innerItem.path, innerItem.title)
+                        )
                         .includes(true)
-                      : ActiveNavLinkUrl(item.path)) ||
+                      : ActiveNavLinkUrl(item.path, item.title)) ||
                     activeMenu[level] === item.title
                     ? "block"
                     : "none"
