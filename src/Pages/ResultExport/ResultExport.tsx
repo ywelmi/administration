@@ -6,6 +6,7 @@ import { useSportStore } from "../../store/sport";
 import { Btn, H6 } from "../../AbstractElements";
 import { sportXuatXepHang } from "../../Service/sport";
 import { toast } from "react-toastify";
+import { exportResultAll } from "../../Service/result";
 
 const ListComboBox = () => {
     const { sports, sportsMain, sportsSub } = useSportStore();
@@ -33,7 +34,7 @@ const ListComboBox = () => {
     };
     const handleDownloadClick = () => {
         if (typeExport == "Toàn đoàn" || typeExport == "all") {
-            toast.error("Chưa có xếp hạng toàn đoàn");
+            block == "Thường trực" ? exportResultAll("army") : exportResultAll("militia");
         } else {
             filterText == "all" ? toast.error("Chưa lựa chọn môn thi") : sportXuatXepHang(filterText);
         }

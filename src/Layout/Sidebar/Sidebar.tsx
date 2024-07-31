@@ -15,7 +15,7 @@ const Sidebar = () => {
     return (
         <div className={`sidebar-wrapper ${toggleSidebar ? "close_icon" : ""}`} id="sidebarwrappers">
             <LogoWrapper />
-            <nav className="sidebar-main">
+            <nav className="sidebar-main m-t-30">
                 <div className={`left-arrow ${margin === 0 ? "disabled" : ""}`} onClick={() => scrollToLeft()}>
                     <ArrowLeft />
                 </div>
