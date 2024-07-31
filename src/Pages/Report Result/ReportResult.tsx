@@ -68,17 +68,13 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
 
     return (
         <UL className="action simple-list flex-row" id={sport.id}>
-            {sport.point_unit === 1 ? (
-                <>
-                    <LI className="edit btn">
-                        <Btn color="warning" type="button" onClick={handleDownloadClick}>
-                            Phiểu Điểm
-                        </Btn>
-                    </LI>
-                </>
-            ) : (
-                <></>
-            )}
+            <>
+                <LI className="edit btn">
+                    <Btn color="warning" type="button" onClick={handleDownloadClick}>
+                        Phiếu Điểm
+                    </Btn>
+                </LI>
+            </>
         </UL>
     );
 };

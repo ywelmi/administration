@@ -40,11 +40,15 @@ interface IPairId {
   team2_point_win_count?: string;
 }
 
-const CustomSeed = (
-  { seed, breakpoint, roundIndex, seedIndex, callback }: IRenderSeedProps & {
-    callback?: () => void;
-  },
-) => {
+const CustomSeed = ({
+  seed,
+  breakpoint,
+  roundIndex,
+  seedIndex,
+  callback,
+}: IRenderSeedProps & {
+  callback?: () => void;
+}) => {
   // breakpoint passed to Bracket component
   // to check if mobile view is triggered or not
 
@@ -97,8 +101,8 @@ const CustomSeed = (
     v: TTablequalifyingKnockoutMatchReport,
   ) => {
     const pairUpdate = { id: seed.id as string, ...pair };
-    tablequalifyingKnockoutPairUpdate(pairUpdate).then(
-      (res) => {
+    tablequalifyingKnockoutPairUpdate(pairUpdate)
+      .then((res) => {
         const { status } = res;
         if (status === 200) {
           return tablequalifyingKnockoutUpdate(v).then((res) => {
@@ -111,20 +115,19 @@ const CustomSeed = (
             }
           });
         }
-      },
-    ).catch((err) => {
-      const { response: { data } } = err;
-      toast.error(data || N["failed"]);
-      console.log({ err });
-    });
+      })
+      .catch((err) => {
+        const {
+          response: { data },
+        } = err;
+        toast.error(data || N["failed"]);
+        console.log({ err });
+      });
     // .finally(() => callback?.());
   };
 
   return (
-    <Seed
-      mobileBreakpoint={breakpoint}
-      style={{ fontSize: 14 }}
-    >
+    <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 14 }}>
       <SeedItem className="seed">
         <div>
           {roundIndex == 0 && !lockPick
@@ -220,23 +223,22 @@ const PageTablequalifyingKnockout = () => {
   }, [fetchedRounds]);
 
   const handleAddKnockoutBracket = useCallback(
-    (
-      knockoutBracket: IKnockoutCreate,
-    ) => {
-      console.log({ knockoutBracket });
-      tablequalifyingKnockoutGen(knockoutBracket).then((res) => {
-        const { status, data } = res;
-        console.log({ addTablequalifyingResult: data });
-        if (status === 200) {
-          fetchTablequalifyingKnockout(sportId);
-          toast.info(t("success"));
-          return;
-        }
-        return Promise.reject(status);
-      }).catch((err) => {
-        toast.error(t("error"));
-        console.log({ err });
-      });
+    (knockoutBracket: IKnockoutCreate) => {
+      tablequalifyingKnockoutGen(knockoutBracket)
+        .then((res) => {
+          const { status, data } = res;
+          console.log({ addTablequalifyingResult: data });
+          if (status === 200) {
+            fetchTablequalifyingKnockout(sportId);
+            toast.info(t("success"));
+            return;
+          }
+          return Promise.reject(status);
+        })
+        .catch((err) => {
+          toast.error(t("error"));
+          console.log({ err });
+        });
     },
     [],
   );
@@ -247,9 +249,9 @@ const PageTablequalifyingKnockout = () => {
   } = useTablequalifyingKnockout({
     onSubmit: handleAddKnockoutBracket,
     tablequalifyingKnockout: {
-      "number_team": 0,
-      "has_grade_3rd": false,
-      "sport_id": sportId,
+      number_team: 0,
+      has_grade_3rd: false,
+      sport_id: sportId,
     },
   });
 
@@ -262,7 +264,7 @@ const PageTablequalifyingKnockout = () => {
 
   return (
     <div className="page-body">
-      <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
+      <Breadcrumbs mainTitle={"Thi đấu vòng loại"} parent={"HTTQ2024"} />
       <Container fluid>
         <Row>
           <Col sm="12">
