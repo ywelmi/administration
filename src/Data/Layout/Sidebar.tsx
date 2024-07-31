@@ -43,7 +43,7 @@ export const useMenuList = () => {
                     type: "link",
                 },
                 {
-                    title: "Quản trị thi lực lượng thường trực",
+                    title: "Lực lượng thường trực",
                     icon: "icon-calendar",
                     lanClass: "lan-1",
                     children: [
@@ -74,13 +74,13 @@ export const useMenuList = () => {
                         },
                         {
                             path: "/martialart/list",
-                            title: "Các môn võ",
+                            title: "Môn võ chiến đấu",
                             type: "link",
                             lanClass: "lan-4",
                         },
                         {
                             path: "/lotsdraw/list/",
-                            title: "Thi đấu bốc thăm",
+                            title: "Môn bốc thăm",
                             type: "link",
                             lanClass: "lan-4",
                         },
@@ -112,7 +112,7 @@ export const useMenuList = () => {
                     ],
                 },
                 {
-                    title: "Quản trị thi lực lượng Dân quân tự vệ",
+                    title: "Lực lượng Dân quân tự vệ",
                     icon: "fa fa-th",
                     lanClass: "lan-1",
                     children: [
@@ -129,13 +129,13 @@ export const useMenuList = () => {
                             children: [
                                 {
                                     //path: "/tablequalifyings/list",
-                                    title: "Thi đấu vòng bảng",
+                                    title: "Vòng bảng",
                                     type: "link",
                                     lanClass: "lan-4",
                                 },
                                 {
                                     //path: "/tablequalifyings/knockout/:sport_id",
-                                    title: "Thi đấu vòng loại",
+                                    title: "Vòng loại",
                                     type: "link",
                                     lanClass: "lan-4",
                                 },
@@ -143,7 +143,7 @@ export const useMenuList = () => {
                         },
                         {
                             //path: "/lotsdraw/list/",
-                            title: "Thi đấu bốc thăm",
+                            title: "Môn bốc thăm",
                             type: "link",
                             lanClass: "lan-4",
                         },
@@ -175,14 +175,40 @@ export const useMenuList = () => {
                     ],
                 },
                 {
-                    title: "Báo cáo - Coming Soon",
+                    title: "Báo cáo",
                     icon: "fa fa-file",
                     lanClass: "lan-1",
                     //path: "/teammember/list",
                     type: "link",
+                    children: [
+                        {
+                            //path: "/resultexport",
+                            title: "Môn thi",
+                            type: "link",
+                            lanClass: "lan-4",
+                        },
+                        {
+                            //path: "/resultexport",
+                            title: "Đơn vị",
+                            type: "link",
+                            lanClass: "lan-4",
+                        },
+                        {
+                            //path: "/resultexport",
+                            title: "Vận động viên",
+                            type: "link",
+                            lanClass: "lan-4",
+                        },
+                        {
+                            //path: "/resultexport",
+                            title: "Bảng xếp hạng",
+                            type: "link",
+                            lanClass: "lan-4",
+                        },
+                    ],
                 },
                 {
-                    title: "Giới thiệu - Coming Soon",
+                    title: "Giới thiệu",
                     icon: "fa fa-info",
                     lanClass: "lan-1",
                     //path: "/teammember/list",
