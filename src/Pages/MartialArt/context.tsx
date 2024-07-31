@@ -8,47 +8,57 @@ import {
 } from "react";
 import { IRoundProps, ISeedProps } from "react-brackets";
 import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
-import { tablequalifyingKnockoutsGet } from "../../Service/tablequalifyingKnockout";
 import { useParams } from "react-router-dom";
-import { TSport } from "../../type/sport";
-import { useSportStore } from "../../store/sport";
-import { TTeam } from "../../type/team";
-import { teamsBySportGet } from "../../Service/team";
 import { getMartialArtTree } from "../../Service/martialArt";
 
 interface IKnockoutContext {
   sportId: string;
   setSportId: (s: string) => void;
+  contentId: string;
+  setContentId: (s: string) => void;
   rounds: IRoundProps[];
   setRounds: (rounds: IRoundProps[]) => void;
   fetchTablequalifyingKnockout: (s: string, v: string) => void;
-  knockoutTeams: TTeam[]; // which can be selected to create a new pair
+  refreshMartialArtKnockout: () => void;
+  // knockoutTeams: TTeam[]; // which can be selected to create a new pair
   // updateMatch: (m: Partial<TTablequalifyingKnockout>) => void;
 }
 
 const KnockoutContext = createContext<IKnockoutContext>({
   sportId: "",
   setSportId: () => {},
+  contentId: "",
+  setContentId: () => {},
   rounds: [],
   setRounds: () => {},
   fetchTablequalifyingKnockout: () => {},
-  knockoutTeams: [],
+  refreshMartialArtKnockout: () => {},
+  // knockoutTeams: [],
   // updateMatch: () => {},
 });
 
 const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
   const [sportId, setSportId] = useState("");
+  const [contentId, setContentId] = useState("");
 
   const [rounds, setRounds] = useState<IRoundProps[]>([]);
-  const { sport_id: paramSportId } = useParams();
+  const { sport_id: paramSportId, content_id: paramContentId } = useParams();
 
-  const [knockoutTeams, setKnockoutTeams] = useState<TTeam[]>([]);
+  // const [knockoutTeams, setKnockoutTeams] = useState<TTeam[]>([]);
+
+  // console.log({ sport_id: paramSportId, content_id: paramContentId });
 
   useEffect(() => {
     if (paramSportId) {
       setSportId(paramSportId);
     }
   }, [paramSportId]);
+
+  useEffect(() => {
+    if (paramContentId) {
+      setContentId(paramContentId);
+    }
+  }, [paramContentId]);
 
   const fetchTablequalifyingKnockout = useCallback(
     (sportId: string, contentId: string) => {
@@ -71,7 +81,18 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
     [],
   );
 
-  // const fetchKnockoutTeams = useCallback((sportId: string) => {
+  const refreshMartialArtKnockout = useCallback(() => {
+    console.log({ sportId, contentId });
+    if (sportId && contentId) {
+      fetchTablequalifyingKnockout(sportId, contentId);
+    }
+  }, [sportId, contentId]);
+
+  useEffect(() => {
+    refreshMartialArtKnockout();
+  }, [refreshMartialArtKnockout]);
+
+  // const fetchKnockouParticipants = useCallback((sportId: string) => {
   //   teamsBySportGet(sportId).then((res) => {
   //     const { data: { data }, status } = res;
   //     if (status === 200) {
@@ -81,26 +102,26 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
   //     console.log({ err });
   //   });
   // }, []);
-
+  //
   // useEffect(() => {
   //   if (sportId) {
-  //     fetchTablequalifyingKnockout(sportId);
-  //     fetchKnockoutTeams(sportId);
+  //     // fetchTablequalifyingKnockout(sportId);
+  //     fetchKnockouParticipants(sportId);
   //   }
   // }, [sportId]);
-
-  // const updateMatch = () => {};
 
   return (
     <KnockoutContext.Provider
       value={{
-        // updateMatch,
-        knockoutTeams,
+        // knockoutTeams,
         sportId,
+        contentId,
         setSportId,
+        setContentId,
         rounds,
         setRounds,
         fetchTablequalifyingKnockout,
+        refreshMartialArtKnockout,
       }}
     >
       {children}
@@ -151,34 +172,6 @@ const convertKnockoutsToBrackets = (data: TTablequalifyingKnockout[]) => {
   );
   return newRounds;
 };
-
-// const fakeRounds: IRoundProps[] = [
-//   {
-//     title: "Round one",
-//     seeds: [
-//       {
-//         id: 1,
-//         date: new Date().toDateString(),
-//         teams: [{ name: "Team A" }, { name: "Team B" }],
-//       },
-//       {
-//         id: 2,
-//         date: new Date().toDateString(),
-//         teams: [{ name: "Team C" }, { name: "Team D" }],
-//       },
-//     ],
-//   },
-//   {
-//     title: "Round two",
-//     seeds: [
-//       {
-//         id: 3,
-//         date: new Date().toDateString(),
-//         teams: [{ name: "Team A" }, { name: "Team C" }],
-//       },
-//     ],
-//   },
-// ];
 
 export {
   convertKnockoutsToBrackets,
