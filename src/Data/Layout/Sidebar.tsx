@@ -73,7 +73,7 @@ export const useMenuList = () => {
                             ],
                         },
                         {
-                            // path: "/lotsdraw/list/",
+                            path: "/martialart/list",
                             title: "Các môn võ - Coming soon",
                             type: "link",
                             lanClass: "lan-4",

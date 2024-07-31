@@ -1,31 +1,21 @@
-import { TMartialArt, TWeight } from "../type/martialArt";
-import { baseGetParams, IListResponse } from "./_getParams";
-import { httpDel, httpGet, httpPost, httpPut } from "./_request";
+import { TAge, TMartialArt, TWeigh } from "../type/martialArt";
+import { TTablequalifyingKnockout } from "../type/tablequalifyingKnockout";
+import { httpGet } from "./_request";
 
 export const martialArtsGet = async (sportId: string) => {
   return httpGet<TMartialArt[]>(`/sports/${sportId}/SportContents`);
 };
 
 export const weighGet = async () => {
-  return httpGet<TWeight[]>("/teammembers/ListWeightClass");
+  return httpGet<TWeigh[]>("/teammembers/ListWeightClass");
 };
 
 export const agesGet = async () => {
-  return httpGet<TWeight[]>("/teammembers/ListAgeClass");
+  return httpGet<TAge[]>("/teammembers/ListAgeClass");
 };
 
-// export const martialArtGet = (id: string) => {
-//   return httpGet(`/martialArts/${id}`);
-// };
-//
-// export const martialArtCreate = (martialArt: Omit<TMartialArt, "id">) => {
-//   return httpPost("/martialArts", martialArt);
-// };
-//
-// export const martialArtUpdate = (martialArt: TMartialArt) => {
-//   return httpPut(`martialArts/${martialArt.id}`, martialArt);
-// };
-//
-// export const martialArtDelete = (id: string) => {
-//   return httpDel(`martialArts/${id}`);
-// };
+export const getMartialArtTree = async (sportId: string, contentId: string) => {
+  return httpGet<TTablequalifyingKnockout[]>(
+    `/sports/${sportId}/SportContent/${contentId}/TableKnockoutMatchs`,
+  );
+};

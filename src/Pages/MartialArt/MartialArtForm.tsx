@@ -23,7 +23,7 @@ interface ItablequalifyingKnockoutForm {
 interface ItablequalifyingKnockoutModal extends ItablequalifyingKnockoutForm {
 }
 
-const TablequalifyingKnockoutForm = (
+const MartialArtForm = (
   {
     tablequalifyingKnockout: initTablequalifyingKnockout,
     onSubmit,
@@ -36,10 +36,10 @@ const TablequalifyingKnockoutForm = (
       "number_team": 0,
       "has_grade_3rd": false,
       "sport_id": "",
+      "content_id": "",
     };
 
   // const { sports } = useSportStore();
-  const { knockoutSports: sports } = useKnockoutContext();
   const { t } = useTranslation();
   const formik = useFormik<IKnockoutCreate>({
     initialValues: { ...tablequalifyingKnockout },
@@ -82,21 +82,20 @@ const TablequalifyingKnockoutForm = (
           </Media>
         </Col>
 
-        <Col md="12" className="form-check checkbox-primary">
-          <Label for="sport" check>{t("sport")}</Label>
-          {/* <ListSport data={sports} /> */}
-          <InputSelect
-            title="Cuộc thi"
-            data={sports}
-            k="name"
-            name="sport_id"
-            v="id"
-            handleChange={(e) => {
-              formik.handleChange(e);
-            }}
-            value={formik.values.sport_id}
-          />
-        </Col>
+        {/* <Col md="12" className="form-check checkbox-primary"> */}
+        {/*   <Label for="sport" check>{t("sport")}</Label> */}
+        {/*   <InputSelect */}
+        {/*     title="Cuộc thi" */}
+        {/*     data={sports} */}
+        {/*     k="name" */}
+        {/*     name="sport_id" */}
+        {/*     v="id" */}
+        {/*     handleChange={(e) => { */}
+        {/*       formik.handleChange(e); */}
+        {/*     }} */}
+        {/*     value={formik.values.sport_id} */}
+        {/*   /> */}
+        {/* </Col> */}
         <Col xs="12" className="gap-2" style={{ display: "flex" }}>
           <Btn color="primary" type="submit">
             Xác nhận
@@ -110,7 +109,7 @@ const TablequalifyingKnockoutForm = (
   );
 };
 
-const useTablequalifyingKnockout = (
+const useGenTreeMartialArt = (
   { onSubmit, ...rest }: ItablequalifyingKnockoutModal,
 ) => {
   const [opened, setOpened] = useState(false);
@@ -124,14 +123,14 @@ const useTablequalifyingKnockout = (
     onSubmit(tablequalifyingKnockout);
     setOpened(false);
   };
-  const TablequalifyingKnockoutModal = () => (
+  const GenTreeMartialArtModal = () => (
     <CommonModal
       backdrop="static"
       modalBodyClassName="social-profile text-start"
       isOpen={opened}
       toggle={handleToggle}
     >
-      <TablequalifyingKnockoutForm
+      <MartialArtForm
         onSubmit={handleSubmit}
         {...rest}
         onCancel={() => setOpened(false)}
@@ -139,7 +138,7 @@ const useTablequalifyingKnockout = (
     </CommonModal>
   );
 
-  return { TablequalifyingKnockoutModal, handleToggle };
+  return { GenTreeMartialArtModal, handleToggle };
 };
 
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
@@ -307,4 +306,4 @@ export {
   TablequalifyingKnockoutMatchReportForm,
   useTablequalifyingKnockoutMatchReportModal,
 };
-export { TablequalifyingKnockoutForm, useTablequalifyingKnockout };
+export { MartialArtForm, useGenTreeMartialArt };
