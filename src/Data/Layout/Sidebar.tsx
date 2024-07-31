@@ -48,6 +48,7 @@ export const useMenuList = () => {
                     title: "Lực lượng thường trực",
                     icon: "icon-calendar",
                     lanClass: "lan-1",
+                    unitType: "LLTT" as DUnitType,
                     children: [
                         {
                             path: "/team/list",
@@ -117,9 +118,10 @@ export const useMenuList = () => {
                     title: "Lực lượng Dân quân tự vệ",
                     icon: "fa fa-th",
                     lanClass: "lan-1",
+                    unitType: "DQTV" as DUnitType,
                     children: [
                         {
-                            path: "/team/list",
+                            //path: "/team/list",
                             title: "Đăng ký thi",
                             type: "link",
                             lanClass: "lan-4",
@@ -130,13 +132,13 @@ export const useMenuList = () => {
                             lanClass: "lan-3",
                             children: [
                                 {
-                                    path: "/tablequalifyings/list",
+                                    //path: "/tablequalifyings/list",
                                     title: "Vòng bảng",
                                     type: "link",
                                     lanClass: "lan-4",
                                 },
                                 {
-                                    path: "/tablequalifyings/knockout/:sport_id",
+                                    //path: "/tablequalifyings/knockout/:sport_id",
                                     title: "Vòng loại",
                                     type: "link",
                                     lanClass: "lan-4",
@@ -144,7 +146,7 @@ export const useMenuList = () => {
                             ],
                         },
                         {
-                            path: "/lotsdraw/list/",
+                            //path: "/lotsdraw/list/",
                             title: "Môn bốc thăm",
                             type: "link",
                             lanClass: "lan-4",
@@ -177,33 +179,26 @@ export const useMenuList = () => {
                     ],
                 },
                 {
-                    title: "Báo cáo",
+                    title: "Báo cáo ",
                     icon: "fa fa-file",
                     lanClass: "lan-1",
                     //path: "/teammember/list",
                     type: "link",
                     children: [
                         {
-                            //path: "/resultexport",
+                            //path: "/team/list",
                             title: "Môn thi",
                             type: "link",
                             lanClass: "lan-4",
                         },
                         {
-                            //path: "/resultexport",
                             title: "Đơn vị",
                             type: "link",
-                            lanClass: "lan-4",
+                            lanClass: "lan-3",
                         },
                         {
-                            //path: "/resultexport",
+                            //path: "/lotsdraw/list/",
                             title: "Vận động viên",
-                            type: "link",
-                            lanClass: "lan-4",
-                        },
-                        {
-                            //path: "/resultexport",
-                            title: "Bảng xếp hạng",
                             type: "link",
                             lanClass: "lan-4",
                         },
