@@ -10,6 +10,8 @@ import { IRoundProps, ISeedProps } from "react-brackets";
 import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
 import { useParams } from "react-router-dom";
 import { getMartialArtTree } from "../../Service/martialArt";
+import { TTeammember } from "../../type/teammember";
+import { teammembersByContent } from "../../Service/teammember";
 
 interface IKnockoutContext {
   sportId: string;
@@ -20,7 +22,7 @@ interface IKnockoutContext {
   setRounds: (rounds: IRoundProps[]) => void;
   fetchTablequalifyingKnockout: (s: string, v: string) => void;
   refreshMartialArtKnockout: () => void;
-  // knockoutTeams: TTeam[]; // which can be selected to create a new pair
+  knockoutTeams: TTeammember[]; // which can be selected to create a new pair
   // updateMatch: (m: Partial<TTablequalifyingKnockout>) => void;
 }
 
@@ -33,7 +35,7 @@ const KnockoutContext = createContext<IKnockoutContext>({
   setRounds: () => {},
   fetchTablequalifyingKnockout: () => {},
   refreshMartialArtKnockout: () => {},
-  // knockoutTeams: [],
+  knockoutTeams: [],
   // updateMatch: () => {},
 });
 
@@ -44,7 +46,7 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
   const [rounds, setRounds] = useState<IRoundProps[]>([]);
   const { sport_id: paramSportId, content_id: paramContentId } = useParams();
 
-  // const [knockoutTeams, setKnockoutTeams] = useState<TTeam[]>([]);
+  const [knockoutTeams, setKnockoutTeams] = useState<TTeammember[]>([]);
 
   // console.log({ sport_id: paramSportId, content_id: paramContentId });
 
@@ -69,6 +71,7 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
           if (data?.length) {
             const newRounds = convertKnockoutsToBrackets(data);
             if (newRounds?.length) {
+              console.log({ newRounds });
               setRounds(newRounds);
             }
           } else {
@@ -82,7 +85,7 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
   );
 
   const refreshMartialArtKnockout = useCallback(() => {
-    console.log({ sportId, contentId });
+    // console.log({ sportId, contentId });
     if (sportId && contentId) {
       fetchTablequalifyingKnockout(sportId, contentId);
     }
@@ -92,28 +95,32 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
     refreshMartialArtKnockout();
   }, [refreshMartialArtKnockout]);
 
-  // const fetchKnockouParticipants = useCallback((sportId: string) => {
-  //   teamsBySportGet(sportId).then((res) => {
-  //     const { data: { data }, status } = res;
-  //     if (status === 200) {
-  //       setKnockoutTeams(data);
-  //     }
-  //   }).catch((err) => {
-  //     console.log({ err });
-  //   });
-  // }, []);
-  //
-  // useEffect(() => {
-  //   if (sportId) {
-  //     // fetchTablequalifyingKnockout(sportId);
-  //     fetchKnockouParticipants(sportId);
-  //   }
-  // }, [sportId]);
+  const fetchKnockoutTeams = useCallback(
+    (sportId: string, contentId: string) => {
+      teammembersByContent(sportId, contentId).then((res) => {
+        const { data, status } = res;
+        console.log({ knockoutTeams: data });
+        if (status === 200) {
+          setKnockoutTeams(data);
+        }
+      }).catch((err) => {
+        console.log({ err });
+      });
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (sportId && contentId) {
+      fetchTablequalifyingKnockout(sportId, contentId);
+      fetchKnockoutTeams(sportId, contentId);
+    }
+  }, [sportId, contentId]);
 
   return (
     <KnockoutContext.Provider
       value={{
-        // knockoutTeams,
+        knockoutTeams,
         sportId,
         contentId,
         setSportId,
@@ -145,12 +152,12 @@ const convertKnockoutsToBrackets = (data: TTablequalifyingKnockout[]) => {
         teams: [
           {
             id: bracket.team1_id,
-            name: bracket.team1_name,
+            name: bracket.member1_name,
             winCount: bracket.team1_point_win_count,
           },
           {
             id: bracket.team2_id,
-            name: bracket.team2_name,
+            name: bracket.member2_name,
             winCount: bracket.team2_point_win_count,
           },
         ],

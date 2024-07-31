@@ -21,6 +21,7 @@ import {
   TTablequalifyingKnockoutMatchReport,
 } from "../../type/tablequalifyingKnockout";
 import { KnockoutContextProvider, useKnockoutContext } from "./context";
+import { InputSelect } from "../../Component/InputSelect";
 
 interface IPairId {
   team1_id: string;
@@ -41,7 +42,7 @@ const CustomSeed = (
 
   // mobileBreakpoint is required to be passed down to a seed
 
-  const { refreshMartialArtKnockout } = useKnockoutContext();
+  const { refreshMartialArtKnockout, knockoutTeams } = useKnockoutContext();
 
   const [pair, setPair] = useState<IPairId>({
     team1_id: seed.teams[0]?.id || "",
@@ -52,9 +53,9 @@ const CustomSeed = (
     team2_point_win_count: seed.teams[0]?.winCount,
   }); // each team's id in pair
 
-  // const [lockPick, setLockPick] = useState(
-  //   seed.teams[0]?.id && seed.teams[1]?.id,
-  // );
+  const [lockPick, setLockPick] = useState(
+    seed.teams[0]?.id && seed.teams[1]?.id,
+  );
 
   useEffect(() => {
     setPair({
@@ -86,7 +87,7 @@ const CustomSeed = (
             const { status } = res;
             if (status === 200) {
               toast.success(N["success"]);
-              // setLockPick(true);
+              setLockPick(true);
               setPair((prev) => ({ ...prev }));
               refreshMartialArtKnockout();
             }
@@ -106,13 +107,36 @@ const CustomSeed = (
       mobileBreakpoint={breakpoint}
       style={{ fontSize: 14 }}
     >
-      <SeedItem className="seed">
+      <SeedItem className="seed-martial">
         <div>
-          <SeedTeam className="team">
-            {pair.team1_name
-              ? `${pair.team1_name}: ${pair.team1_point_win_count || ""}`
-              : "Chưa có"}
-          </SeedTeam>
+          {roundIndex == 0 && !lockPick
+            ? (
+              <InputSelect
+                title={N["team"]}
+                data={knockoutTeams}
+                k="member_map_org"
+                v="id"
+                name="team1"
+                handleChange={(e) => {
+                  const teamId = e.target.value;
+                  const team = knockoutTeams.find(({ id }) => id === teamId);
+                  if (team) {
+                    setPair((prev) => ({
+                      ...prev,
+                      team1_id: team.id,
+                      team1_name: team.member_map_org || "",
+                    }));
+                  }
+                }}
+              />
+            )
+            : (
+              <SeedTeam className="team">
+                {pair.team1_name
+                  ? `${pair.team1_name}: ${pair.team1_point_win_count || ""}`
+                  : "Chưa có"}
+              </SeedTeam>
+            )}
           <div className="p-2">
             {isFilledPair
               ? (
@@ -126,11 +150,34 @@ const CustomSeed = (
               )
               : <div>Chưa đủ cặp đấu</div>}
           </div>
-          <SeedTeam className="team">
-            {pair.team2_name
-              ? `${pair.team2_name}: ${pair.team2_point_win_count || ""}`
-              : "Chưa có"}
-          </SeedTeam>
+          {roundIndex == 0 && !lockPick
+            ? (
+              <InputSelect
+                title={N["team"]}
+                data={knockoutTeams}
+                k="member_map_org"
+                v="id"
+                name="team1"
+                handleChange={(e) => {
+                  const teamId = e.target.value;
+                  const team = knockoutTeams.find(({ id }) => id === teamId);
+                  if (team) {
+                    setPair((prev) => ({
+                      ...prev,
+                      team2_id: team.id,
+                      team2_name: team.member_map_org || "",
+                    }));
+                  }
+                }}
+              />
+            )
+            : (
+              <SeedTeam className="team">
+                {pair.team2_name
+                  ? `${pair.team2_name}: ${pair.team2_point_win_count || ""}`
+                  : "Chưa có"}
+              </SeedTeam>
+            )}
         </div>
       </SeedItem>
     </Seed>

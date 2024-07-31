@@ -31,6 +31,10 @@ export interface TTablequalifyingKnockout {
   team2_name: string;
   turn_name: string;
   grade: number;
+
+  // Dành cho môn võ chiến đấu
+  member1_name?: string;
+  member2_name?: string;
 }
 
 export interface TTablequalifyingKnockoutMatchReport {
