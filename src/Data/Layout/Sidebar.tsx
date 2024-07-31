@@ -60,13 +60,13 @@ export const useMenuList = () => {
                             children: [
                                 {
                                     path: "/tablequalifyings/list",
-                                    title: "Thi đấu vòng bảng",
+                                    title: "Vòng bảng",
                                     type: "link",
                                     lanClass: "lan-4",
                                 },
                                 {
                                     path: "/tablequalifyings/knockout/:sport_id",
-                                    title: "Thi đấu vòng loại",
+                                    title: "Vòng loại",
                                     type: "link",
                                     lanClass: "lan-4",
                                 },
@@ -74,7 +74,7 @@ export const useMenuList = () => {
                         },
                         {
                             path: "/martialart/list",
-                            title: "Các môn võ - Coming soon",
+                            title: "Các môn võ",
                             type: "link",
                             lanClass: "lan-4",
                         },
