@@ -1,3 +1,5 @@
+import { DUnitType } from "../../type/enum";
+
 export interface HeaderTabContentType {
   tabs: string;
 }
@@ -68,6 +70,7 @@ export interface MenuItem {
   path?: string;
   mainTitle?: string;
   bookmark?: boolean;
+  unitType?: DUnitType;
 }
 
 export interface SearchSuggestionListType {
@@ -100,4 +103,3 @@ export interface BookmarkSliceType {
   linkItemsArray: BookmarkedDataType[] | [];
   bookmarkedData: BookmarkedDataType[];
 }
-
