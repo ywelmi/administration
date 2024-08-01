@@ -188,19 +188,19 @@ const ListTablequalifying = ({
     useTablequalifyingStore();
   const filteredItems = data.filter((item) => item);
 
-  const handlePerRowsChange = (newPerPage: number, page: number) => {
-    const take = newPerPage;
-    const skip = Math.max(page - 1, 0) * take;
-    updateGetFilter({ take, skip });
-  };
-
-  const handlePageChange = (page: number) => {
-    if (!filters) return;
-    const { take } = filters;
-    if (take) {
-      updateGetFilter({ skip: Math.max(page - 1, 0) * take });
-    }
-  };
+  // const handlePerRowsChange = (newPerPage: number, page: number) => {
+  //   const take = newPerPage;
+  //   const skip = Math.max(page - 1, 0) * take;
+  //   updateGetFilter({ take, skip });
+  // };
+  //
+  // const handlePageChange = (page: number) => {
+  //   if (!filters) return;
+  //   const { take } = filters;
+  //   if (take) {
+  //     updateGetFilter({ skip: Math.max(page - 1, 0) * take });
+  //   }
+  // };
 
   if (columns.length > 0 && showAction) {
     columns = [
@@ -248,10 +248,10 @@ const ListTablequalifying = ({
         onSelectedRowsChange={onSelectedRowsChange}
         selectableRows={!!onRowSelect || !!onSelectedRowsChange}
         progressPending={loading}
-        paginationServer
+        // paginationServer
         paginationTotalRows={total}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
+        // onChangeRowsPerPage={handlePerRowsChange}
+        // onChangePage={handlePageChange}
         selectableRowSelected={selectableRowSelected}
       />
     </div>
