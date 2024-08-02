@@ -3,6 +3,7 @@ import { immer } from "zustand/middleware/immer";
 import { TTeam } from "../type/team";
 import { baseGetParams, IGetFilters } from "../Service/_getParams";
 import _ from "lodash";
+import { useConfigStore } from "./config";
 
 export type TeamState = {
   filters?: Partial<IGetFilters>;
@@ -18,7 +19,22 @@ export type TeamState = {
   updateLoading: (v: boolean) => void;
 };
 
-export const useTeamStore = create<TeamState>()(
+const selector = (state: TeamState): TeamState => {
+  const { unitType } = useConfigStore.getState();
+  console.log({ unitType });
+
+  switch (unitType) {
+    case "DQTV":
+      return { ...state, teams: state.teams.filter((t) => t.has_army) };
+    case "LLTT":
+      return { ...state, teams: state.teams.filter((t) => t.has_militia) };
+
+    default:
+      return state;
+  }
+};
+
+const _useTeamStore = create<TeamState>()(
   immer((set) => ({
     filters: baseGetParams,
     teams: [],
@@ -32,8 +48,8 @@ export const useTeamStore = create<TeamState>()(
       }),
     updateTeam: (data: TTeam) =>
       set((state: TeamState) => {
-        const idx = state.teams.findIndex(({ id: teamId }) =>
-          teamId === data.id
+        const idx = state.teams.findIndex(
+          ({ id: teamId }) => teamId === data.id
         );
         if (idx > -1) {
           state.teams[idx] = data;
@@ -64,5 +80,7 @@ export const useTeamStore = create<TeamState>()(
         state.loading = v;
       });
     },
-  })),
+  }))
 );
+
+export const useTeamStore = () => _useTeamStore(selector);

@@ -1,9 +1,17 @@
-import { Col, Label, Row } from "reactstrap";
+import {
+  Button,
+  ButtonGroup,
+  Col,
+  FormGroup,
+  Input,
+  Label,
+  Row,
+} from "reactstrap";
 import { TTeam } from "../../type/team";
 import { useFormik } from "formik";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useCompetitionStore } from "../../store/competition";
 import { useOrgStore } from "../../store/org";
@@ -24,8 +32,7 @@ interface ITeamForm {
   onCancel?: () => void;
 }
 
-interface ITeamModal extends ITeamForm {
-}
+interface ITeamModal extends ITeamForm {}
 
 const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
   {
@@ -47,7 +54,7 @@ const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
     cell: (props) => {
       return DGender[parseInt(props.getValue() as string)];
     },
-    meta: { custom: { "gender": true } },
+    meta: { custom: { gender: true } },
   },
   {
     accessorKey: "created",
@@ -60,7 +67,7 @@ const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
     footer: (props) => props.column.id,
     header: N["dob"],
     cell: (props) => convertToDate(props.getValue() as string),
-    meta: { custom: { "date": true } },
+    meta: { custom: { date: true } },
   },
   {
     accessorKey: "date_join_army",
@@ -89,16 +96,18 @@ const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
 ];
 
 const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
-  const team: Partial<TTeam> = initTeam ? initTeam : {
-    id: "",
-    competition_id: "",
-    org_id: "",
-    // has_militia: false,
-    // has_army: false,
-    sport_id: "",
-    org_name: "",
-    list_team_member: [], // list of teammembers' ids
-  };
+  const team: Partial<TTeam> = initTeam
+    ? initTeam
+    : {
+        id: "",
+        competition_id: "",
+        org_id: "",
+        has_militia: true,
+        // has_army: false,
+        sport_id: "",
+        org_name: "",
+        list_team_member: [], // list of teammembers' ids
+      };
 
   const { competitions } = useCompetitionStore();
   const { orgs } = useOrgStore();
@@ -126,9 +135,11 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
         const memberFilter = getFilterByValue("org_id", "=", f_org_id);
         const members = await teammembersGet({ filter: memberFilter }).then(
           (res) => {
-            const { data: { data } } = res;
+            const {
+              data: { data },
+            } = res;
             return data;
-          },
+          }
         );
         setOrgMembers(members);
       }
@@ -136,7 +147,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
   }, [formik.values.org_id]);
 
   const displayedListTeammember = useMemo(() => {
-    let availMembers: TTeammember[] = [];
+    const availMembers: TTeammember[] = [];
     if (!orgMembers?.length) {
       // availMembers.push(...teammembers);
     } else {
@@ -155,59 +166,80 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Row className="g-3">
-        {(competitions?.length)
-          ? (
-            <Col md="12">
-              <InputSelect
-                title={t("competition_id")}
-                data={competitions}
-                k="name"
-                name="competition_id"
-                v="id"
-                handleChange={(e) => {
-                  formik.handleChange(e);
-                }}
-                value={formik.values.competition_id}
-              />
-            </Col>
-          )
-          : null}
-        {(orgs?.length)
-          ? (
-            <Col md="12">
-              <InputSelect
-                title={t("org_id")}
-                data={orgs}
-                k="name"
-                name="org_id"
-                v="id"
-                handleChange={(e) => {
-                  formik.handleChange(e);
-                }}
-                value={formik.values.org_id}
-              />
-            </Col>
-          )
-          : null}
-        {(sports?.length)
-          ? (
-            <Col md="12">
-              <InputSelect
-                title={t("sport_id")}
-                data={sports}
-                k="name"
-                name="sport_id"
-                v="id"
-                handleChange={(e) => {
-                  formik.handleChange(e);
-                }}
-                value={formik.values.sport_id}
-              />
-            </Col>
-          )
-          : null}
+        {competitions?.length ? (
+          <Col md="12">
+            <InputSelect
+              title={t("competition_id")}
+              data={competitions}
+              k="name"
+              name="competition_id"
+              v="id"
+              handleChange={(e) => {
+                formik.handleChange(e);
+              }}
+              value={formik.values.competition_id}
+            />
+          </Col>
+        ) : null}
+        {orgs?.length ? (
+          <Col md="12">
+            <InputSelect
+              title={t("org_id")}
+              data={orgs}
+              k="name"
+              name="org_id"
+              v="id"
+              handleChange={(e) => {
+                formik.handleChange(e);
+              }}
+              value={formik.values.org_id}
+            />
+          </Col>
+        ) : null}
+
+        <ButtonGroup>
+          <Button
+            color="primary"
+            outline
+            onClick={() => {
+              formik.setFieldValue("has_militia", true);
+              formik.setFieldValue("has_army", false);
+            }}
+            active={!!formik.values.has_militia}
+          >
+            Lực lượng thường trực
+          </Button>
+          <Button
+            outline
+            color="primary"
+            onClick={() => {
+              formik.setFieldValue("has_militia", false);
+              formik.setFieldValue("has_army", true);
+            }}
+            active={!!formik.values.has_army}
+          >
+            Dân quân tự vệ
+          </Button>
+        </ButtonGroup>
+        {sports?.length ? (
+          <Col md="12">
+            <InputSelect
+              title={t("sport_id")}
+              data={sports}
+              k="name"
+              name="sport_id"
+              v="id"
+              handleChange={(e) => {
+                formik.handleChange(e);
+              }}
+              value={formik.values.sport_id}
+            />
+          </Col>
+        ) : null}
         <Col md="12" className="form-check checkbox-primary">
-          <Label for="list_team_member" check>{t("teammember")}</Label>
+          <Label for="list_team_member" check>
+            {t("teammember")}
+          </Label>
 
           <ListTeammember
             data={displayedListTeammember}
@@ -216,25 +248,26 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
               if (
                 selectedRows.length ===
                   formik.values.list_team_member?.length ||
-                selectedRows.length ===
-                  formik.values.list_member_id?.length
+                selectedRows.length === formik.values.list_member_id?.length
               ) {
                 return;
               }
               // Add new
               formik.setFieldValue(
                 "list_team_member",
-                selectedRows.map((row) => row.id),
+                selectedRows.map((row) => row.id)
               );
               // Update
               formik.setFieldValue(
                 "list_member_id",
-                selectedRows.map((row) => row.id),
+                selectedRows.map((row) => row.id)
               );
             }}
             selectableRowSelected={(r) => {
-              return !!team.list_member_id?.includes(r.id) ||
-                !!team.list_team_member?.includes(r.id);
+              return (
+                !!team.list_member_id?.includes(r.id) ||
+                !!team.list_team_member?.includes(r.id)
+              );
             }}
           />
         </Col>
@@ -254,9 +287,11 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
           <Btn color="primary" type="submit">
             Xác nhận
           </Btn>
-          {onCancel
-            ? <Btn color="primary" type="button" onClick={onCancel}>Đóng</Btn>
-            : null}
+          {onCancel ? (
+            <Btn color="primary" type="button" onClick={onCancel}>
+              Đóng
+            </Btn>
+          ) : null}
         </Col>
       </Row>
     </form>

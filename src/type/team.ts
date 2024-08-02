@@ -1,4 +1,4 @@
-import { TTeammember } from "./teammember";
+// import { TTeammember } from "./teammember";
 
 export interface TTeam {
   id: string;
@@ -13,9 +13,9 @@ export interface TTeam {
   list_member_name?: string;
 
   // GET by team id
-  "competition_name": string;
-  "member_ids"?: string[];
-  "member_names"?: string[];
+  competition_name: string;
+  member_ids?: string[];
+  member_names?: string[];
 
   list_team_member?: string[]; // POST: to create team with new members
 }
