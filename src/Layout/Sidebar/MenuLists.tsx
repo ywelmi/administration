@@ -6,15 +6,19 @@ import { MenuListType, SidebarItemTypes } from "../../Types/Layout/Sidebar";
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "../../store/layout";
 import { DUnit, DUnitType } from "../../type/enum";
-import { useSportStore } from "../../store/sport";
+import { useConfigStore } from "../../store/config";
 
-const MenuLists: React.FC<MenuListType> = (
-  { menu, setActiveMenu, activeMenu, level, className },
-) => {
+const MenuLists: React.FC<MenuListType> = ({
+  menu,
+  setActiveMenu,
+  activeMenu,
+  level,
+  className,
+}) => {
   const { pinedMenus } = useLayoutStore();
   const location = useLocation();
   const { t } = useTranslation();
-  const { updateSportByUnitType } = useSportStore();
+  const { updateUnitType } = useConfigStore();
   const ActiveNavLinkUrl = (path?: string, title?: string) => {
     return location.pathname === path && title === activeMenu[level]
       ? true
@@ -41,7 +45,8 @@ const MenuLists: React.FC<MenuListType> = (
     temp[level] = item !== temp[level] ? item : "";
     setActiveMenu([...temp]);
     if (unitType) {
-      updateSportByUnitType(unitType);
+      // updateSportByUnitType(unitType);
+      updateUnitType(unitType);
     }
   };
 
@@ -66,11 +71,13 @@ const MenuLists: React.FC<MenuListType> = (
           }  
           ${
             (item.children
-                ? item.children.map((innerItem) =>
-                  ActiveNavLinkUrl(innerItem.path, innerItem.title)
-                ).includes(true)
-                : ActiveNavLinkUrl(item.path, item.title)) ||
-              activeMenu[level] === item.title
+              ? item.children
+                  .map((innerItem) =>
+                    ActiveNavLinkUrl(innerItem.path, innerItem.title)
+                  )
+                  .includes(true)
+              : ActiveNavLinkUrl(item.path, item.title)) ||
+            activeMenu[level] === item.title
               ? "active"
               : ""
           } `}
@@ -82,17 +89,20 @@ const MenuLists: React.FC<MenuListType> = (
             } 
             ${
               (item.children
-                  ? item.children.map((innerItem) =>
-                    ActiveNavLinkUrl(innerItem.path, innerItem.title)
-                  ).includes(true)
-                  : ActiveNavLinkUrl(item.path, item.title)) ||
-                activeMenu[level] === item.title
+                ? item.children
+                    .map((innerItem) =>
+                      ActiveNavLinkUrl(innerItem.path, innerItem.title)
+                    )
+                    .includes(true)
+                : ActiveNavLinkUrl(item.path, item.title)) ||
+              activeMenu[level] === item.title
                 ? "active"
                 : ""
             }`}
             to={item.path ? item.path : Href}
             onClick={() =>
-              item.title && handleClick(item.title, item?.unitType)}
+              item.title && handleClick(item.title, item?.unitType)
+            }
           >
             {item.icon && (
               // <SVG className={`${sidebarIconType}-icon`} iconId={`${sidebarIconType}-${item.icon}`} />
@@ -103,17 +113,15 @@ const MenuLists: React.FC<MenuListType> = (
             </span>
             <div className="ml-1">
               {item.children &&
-                (activeMenu[level] === item.title
-                  ? (
-                    <div className="according-menu">
-                      <i className="fa fa-angle-down" />
-                    </div>
-                  )
-                  : (
-                    <div className="according-menu">
-                      <i className="fa fa-angle-right" />
-                    </div>
-                  ))}
+                (activeMenu[level] === item.title ? (
+                  <div className="according-menu">
+                    <i className="fa fa-angle-down" />
+                  </div>
+                ) : (
+                  <div className="according-menu">
+                    <i className="fa fa-angle-right" />
+                  </div>
+                ))}
             </div>
           </Link>
           {item.children && (
@@ -126,13 +134,13 @@ const MenuLists: React.FC<MenuListType> = (
               style={{
                 display: `${
                   (item.children
-                      ? item.children
+                    ? item.children
                         .map((innerItem) =>
                           ActiveNavLinkUrl(innerItem.path, innerItem.title)
                         )
                         .includes(true)
-                      : ActiveNavLinkUrl(item.path, item.title)) ||
-                    activeMenu[level] === item.title
+                    : ActiveNavLinkUrl(item.path, item.title)) ||
+                  activeMenu[level] === item.title
                     ? "block"
                     : "none"
                 }`,
