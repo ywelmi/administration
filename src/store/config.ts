@@ -23,6 +23,6 @@ export const useConfigStore = create<ConfigState>()(
     })),
     {
       name: "config",
-    },
-  ),
+    }
+  )
 );

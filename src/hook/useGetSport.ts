@@ -5,7 +5,7 @@ import { IGetFilters } from "../Service/_getParams";
 
 export default function useGetSport() {
   const {
-    addSportsAll,
+    addSports,
     sportsAll,
     addSportsMain,
     addSportsSub,
@@ -23,7 +23,7 @@ export default function useGetSport() {
         data: sports,
         sumData: { total },
       } = data;
-      addSportsAll(sports);
+      addSports(sports);
       updateTotal(total);
       updateLoading(false);
       console.log({ sports, data, sportsAll });

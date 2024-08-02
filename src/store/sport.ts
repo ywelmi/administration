@@ -4,6 +4,7 @@ import { TSport } from "../type/sport";
 import { baseGetParams, IGetFilters } from "../Service/_getParams";
 import _ from "lodash";
 import { DSportType, DUnit, DUnitType } from "../type/enum";
+import { useConfigStore } from "./config";
 
 export type SportState = {
   filters?: Partial<IGetFilters>;
@@ -13,7 +14,7 @@ export type SportState = {
   total?: number;
   loading?: boolean;
   sportsAll: TSport[];
-  addSportsAll: (data: TSport[]) => void;
+  addSports: (data: TSport[]) => void;
   addSportsMain: (data: TSport[]) => void;
   addSportsSub: (data: TSport[]) => void;
   addSport: (data: TSport) => void;
@@ -26,7 +27,20 @@ export type SportState = {
   updateSportByUnitType: (t: DUnitType) => void;
 };
 
-export const useSportStore = create<SportState>()(
+const selector = (state: SportState): SportState => {
+  const { uniteType } = useConfigStore.getState();
+
+  if (uniteType) {
+    const filteredSports = state.sports.filter(
+      (s) => s.for_type === DUnit[uniteType]
+    );
+    if (filteredSports)
+      return { ...state, sports: filteredSports, sportsAll: state.sports };
+  }
+  return { ...state, sportsAll: state.sports };
+};
+
+const _useSportStore = create<SportState>()(
   immer((set) => ({
     filters: baseGetParams,
     sports: [],
@@ -35,12 +49,11 @@ export const useSportStore = create<SportState>()(
     sportsAll: [],
     addSports: (data: TSport[]) =>
       set((state: SportState) => {
-        state.sportsAll = data;
+        state.sports = data;
       }),
 
     addSportsAll: (data: TSport[]) =>
       set((state: SportState) => {
-        state.sportsAll = [...data];
         state.sports = [...data];
       }),
     addSportsSub: (data: TSport[]) =>
@@ -58,8 +71,8 @@ export const useSportStore = create<SportState>()(
 
     updateSport: (data: TSport) =>
       set((state: SportState) => {
-        const idx = state.sports.findIndex(({ id: sportId }) =>
-          sportId === data.id
+        const idx = state.sports.findIndex(
+          ({ id: sportId }) => sportId === data.id
         );
         if (idx > -1) {
           state.sports[idx] = data;
@@ -111,5 +124,6 @@ export const useSportStore = create<SportState>()(
         state.sports = state.sportsAll.filter((s) => s.for_type === DUnit[t]);
       });
     },
-  })),
+  }))
 );
+export const useSportStore = () => _useSportStore(selector);

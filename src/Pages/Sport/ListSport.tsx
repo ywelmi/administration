@@ -98,9 +98,11 @@ interface IListSport {
   showAction?: boolean;
   selectableRows?: boolean;
   onRowSelect?: (row: TSport, e: React.MouseEvent<Element, MouseEvent>) => void;
-  onSelectedRowsChange?: (
-    v: { allSelected: boolean; selectedCount: number; selectedRows: TSport[] },
-  ) => void;
+  onSelectedRowsChange?: (v: {
+    allSelected: boolean;
+    selectedCount: number;
+    selectedRows: TSport[];
+  }) => void;
   columns?: TableColumn<TSportColumn>[];
   data?: TSportColumn[];
   selectableRowSelected?: (row: TSportColumn) => boolean;
@@ -160,7 +162,8 @@ const ListSport = ({
         <Label className="me-2">{SearchTableButton}:</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)}
+            setFilterText(e.target.value)
+          }
           type="search"
           value={filterText}
         />
@@ -195,8 +198,7 @@ const ListSport = ({
 };
 
 const PageSport = () => {
-  const { t } = useTranslation();
-  const { sports } = useSportStore();
+  const { sportsAll } = useSportStore();
 
   // const handleAddSport = (sport: TSport) => {
   //   console.log({ handleAddSport: sport });
@@ -235,7 +237,7 @@ const PageSport = () => {
               {/* </CardHeader> */}
               <CardBody>
                 <ListSport
-                  data={sports}
+                  data={sportsAll}
                   showAction
                   // columns={[...tableColumns]}
                 />
