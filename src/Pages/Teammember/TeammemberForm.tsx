@@ -3,7 +3,7 @@ import { TTeammember } from "../../type/teammember";
 import { useFormik } from "formik";
 import { Btn, Popovers } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
 import { useTeamStore } from "../../store/team";
 import { DGender, DRank } from "../../type/enum";
@@ -13,6 +13,11 @@ import ReactDatePicker from "react-datepicker";
 import { useOrgStore } from "../../store/org";
 import { useCompetitionStore } from "../../store/competition";
 import { convertToDate } from "../../utils/date";
+import { ImageUpload } from "../../Component/Forms/FormsControl/ImageUpload";
+import { getTeammemberPhoto } from "../../Service/teammember";
+import { ImageListType, ImageType } from "react-images-uploading";
+import { uploadFile } from "../../Service/file";
+import { toast } from "react-toastify";
 
 interface ITeammemberForm {
   omitColumns?: ("teams" | "gender" | "competitions" | "orgs")[];
@@ -41,10 +46,13 @@ const TeammemberForm = (
     "org_id": "",
     "competition_id": competitions?.[0].id || "",
     "weights": "60",
+    photo: "",
   };
 
-  const { teams } = useTeamStore();
-  console.log({ teams });
+  // console.log({ teammember, initTeammember });
+  const [imgs, setImgs] = useState<ImageListType>([]);
+
+  // const { teams } = useTeamStore();
 
   const formik = useFormik({
     initialValues: { ...teammember },
@@ -57,6 +65,45 @@ const TeammemberForm = (
       if (submitValue) onSubmit(submitValue);
     },
   });
+
+  useEffect(() => {
+    if (!initTeammember?.photo) return;
+    getTeammemberPhoto(initTeammember.photo).then((res) => {
+      const { data } = res;
+      console.log({ imageData: data });
+      // const file = new File([data], "photo");
+      const reader = new FileReader();
+      reader.readAsDataURL(data);
+      reader.onloadend = () => {
+        const result = reader.result;
+        setImgs([{ dataURL: result as string }]);
+      };
+    });
+  }, [initTeammember]);
+
+  const handleUpdatePhoto = (im: ImageType, idx: number) => {
+    uploadFile({ file: im }).then((res) => {
+      // TODO: update current photo
+      console.log(`update image at ${idx} successfully`);
+    });
+  };
+
+  const handleAddPhoto = (im: ImageType) => {
+    uploadFile({ file: im.file }).then((res) => {
+      const { status, data } = res;
+      if (status === 200) {
+        formik.setFieldValue("photo", data);
+        toast.success(N["success"]);
+      }
+    }).catch((err) => {
+      toast.error(err);
+    });
+  };
+
+  const handleDeletePhoto = async (i: number) => {
+    // TODO: detele photo api
+    formik.setFieldValue("photo", "");
+  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -71,6 +118,19 @@ const TeammemberForm = (
             onChange={formik.handleChange}
           />
         </Col>
+        <Col md="12">
+          <ImageUpload
+            multiple={false}
+            values={imgs}
+            onUpdate={handleUpdatePhoto}
+            onAdd={handleAddPhoto}
+            onDelete={handleDeletePhoto}
+          />
+        </Col>
+
+        {/* <Col> */}
+        {/*   <input type="file" onChange={(e) => console.log({ tar: e.target })} /> */}
+        {/* </Col> */}
         <Col md="12">
           <InputSelect
             title="Cấp bậc"

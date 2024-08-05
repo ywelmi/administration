@@ -6,6 +6,7 @@ import { TTeammember } from "../../type/teammember";
 import { useTeammemberStore } from "../../store/teammember";
 import { useTeammemberModal } from "./TeammemberForm";
 import {
+  getTeammemberPhoto,
   teammemberCreate,
   teammemberDelete,
   teammemberUpdate,
@@ -17,6 +18,7 @@ import { N } from "../../name-conversion";
 import { convertToDate } from "../../utils/date";
 import { TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { ColumnDef } from "@tanstack/react-table";
+import { useEffect, useState } from "react";
 
 interface IListTeammember {
   showAction?: boolean;
@@ -38,6 +40,23 @@ interface IListTeammember {
 }
 
 const tableColumns: ColumnDef<TTeammember>[] = [
+  {
+    accessorKey: "photo",
+    footer: (props) => props.column.id,
+    header: N["photo"],
+    cell: (props) => {
+      const [src, setSrc] = useState("#");
+      useEffect(() => {
+        const photoId = props.getValue() as string;
+        if (!photoId) return;
+        getTeammemberPhoto(photoId).then((imSrc) => {
+          console.log({ imSrc });
+          setSrc(imSrc.url);
+        });
+      }, []);
+      return src ? <img src={src}></img> : null;
+    },
+  },
   {
     accessorKey: "name",
     footer: (props) => props.column.id,

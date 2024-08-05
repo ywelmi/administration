@@ -29,3 +29,15 @@ export const teammembersByContent = (sportId: string, contentId: string) => {
     `/teammembers/ListMemberByContentId?sportID=${sportId}&contentID=${contentId}`,
   );
 };
+
+export const getTeammemberPhoto = async (
+  fileId: string,
+  height: number = 100,
+) => {
+  return httpGet(`/files/image/5/${fileId}?height=${height}`, {
+    responseType: "blob",
+  }).then((res) => {
+    const imgUrl = URL.createObjectURL(res.data);
+    return { url: imgUrl, data: res.data };
+  });
+};
