@@ -14,6 +14,7 @@ import { useTeamStore } from "../../store/team";
 import ReactDatePicker from "react-datepicker";
 import { TTeam } from "../../type/team";
 import { tablequalifyingMatchMembersGet } from "../../Service/tablequalifyingMatch";
+import { DHour } from "../../type/enum";
 
 export interface ITablequalifyingMatchForm {
   tablequalifyingMatch?: Partial<TTablequalifyingMatch>;
@@ -132,23 +133,12 @@ const TablequalifyingMatchForm = (
             </Col>
             <Col>
               <Label for="match_hour" check>{t("match_hour")}</Label>
-              <ReactDatePicker
-                className="form-control"
+              <InputSelect
+                data={DHour.map((h, i) => ({ i, h }))}
+                k="h"
+                v="h"
                 name="match_hour"
-                selected={new Date(formik.values.match_day || new Date())}
-                // value={formik.values.match_day}
-                value={formik.values.match_hour}
-                onChange={(date) =>
-                  formik.setFieldValue(
-                    "match_hour",
-                    `${date?.getHours()}:${date?.getMinutes()}`,
-                  )}
-                showTimeSelect
-                showTimeSelectOnly
-                timeFormat="HH:mm"
-                timeIntervals={15}
-                timeCaption="Giờ"
-                locale={"vi"}
+                handleChange={formik.handleChange}
               />
             </Col>
           </Row>

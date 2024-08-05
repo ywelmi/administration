@@ -25,6 +25,8 @@ export interface TTablequalifyingMatch {
   modified?: string;
   recorded?: string;
   win_team_id?: string;
+  "match_location"?: string;
+  "match_location_chid"?: string;
 }
 
 export interface TTablequalifyingMatchReport {

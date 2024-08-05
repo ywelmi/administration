@@ -26,6 +26,11 @@ export const DRank = [
   "Đại tướng",
 ];
 
+export const DHour = [
+  "Sáng",
+  "Chiều",
+];
+
 export enum DSportType {
   LotDraw,
   TableQualifying,
