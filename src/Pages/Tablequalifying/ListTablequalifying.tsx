@@ -260,17 +260,27 @@ const ListTablequalifying = ({
 
 const PageTablequalifying = () => {
   const { t } = useTranslation();
-  const { tablequalifyings, addTablequalifying, updateGetFilter, filters } =
-    useTablequalifyingStore();
+  const {
+    tablequalifyings,
+    addTablequalifying,
+    updateGetFilter,
+    filters,
+  } = useTablequalifyingStore();
+  const { selectSport } = useSportStore();
   const { sports } = useSportStore();
   const [sportId, setSportId] = useState("");
   const navigate = useNavigate();
 
   const { sport_id: paramSportId } = useParams();
 
+  const updateSportId = (v: string) => {
+    selectSport(v);
+    setSportId(v);
+  };
+
   useEffect(() => {
     if (paramSportId) {
-      setSportId(paramSportId);
+      updateSportId(paramSportId);
     }
   }, [paramSportId]);
 
@@ -335,7 +345,7 @@ const PageTablequalifying = () => {
                   v="id"
                   name="sport"
                   value={sportId}
-                  handleChange={(e) => setSportId(e.target.value)}
+                  handleChange={(e) => updateSportId(e.target.value)}
                 />
                 <div className="flex gap-2 mt-2">
                   <div

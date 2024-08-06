@@ -15,6 +15,7 @@ export interface TTeammember {
   "weights": string;
   "competition_name"?: string;
   member_map_org?: string; // for martial art tree only
+  photo?: string; // file id
 }
 
 export type TKeyTeammember = keyof TTeammember;

@@ -21,7 +21,11 @@ import { TSport } from "../../type/sport";
 import { useSportStore } from "../../store/sport";
 import { useMemo, useState } from "react";
 import { useSportModal } from "./SportForm";
-import { sportUpdate } from "../../Service/sport";
+import {
+  sportLocationUpdate,
+  sportNameUpdate,
+  sportUpdate,
+} from "../../Service/sport";
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
 import { useNavigate } from "react-router-dom";
@@ -30,25 +34,21 @@ type TSportColumn = TSport;
 
 const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
   const { updateSport } = useSportStore();
-  const { t } = useTranslation();
 
   const handleUpdateSport = (sport: TSport) => {
     console.log({ handleUpdateSport: sport });
-    sportUpdate(sport)
-      .then((res) => {
-        const { status, data } = res;
-        if (status === 200) {
-          updateSport(data as TSport);
-          toast.success(t("success"));
-          return;
-        }
-
-        return Promise.reject(status);
-      })
-      .catch((err) => {
-        toast.error(t("error"));
-        console.log({ err });
-      });
+    Promise.all(
+      [
+        sportNameUpdate(sport),
+        sportLocationUpdate(sport),
+      ],
+    ).then(() => {
+      updateSport(sport);
+      toast.success(N["success"]);
+    }).catch((err) => {
+      toast.error(N["failed"]);
+      console.log({ handleUpdateSport: err });
+    });
   };
 
   const {
@@ -82,7 +82,7 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
   //   return;
   // };
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <UL className="action simple-list flex-row" id={sport.id}>
@@ -108,13 +108,15 @@ interface IListSport {
   selectableRowSelected?: (row: TSportColumn) => boolean;
 }
 
-const tableColumns = (["name"] as (keyof TSportColumn)[]).map((c) => ({
-  name: N[c],
-  sortable: true,
-  selector: (row: TSportColumn) => {
-    return row[c as keyof TSportColumn] as string | number;
-  },
-}));
+const tableColumns = (["name", "sport_location"] as (keyof TSportColumn)[]).map(
+  (c) => ({
+    name: N[c],
+    sortable: true,
+    selector: (row: TSportColumn) => {
+      return row[c as keyof TSportColumn] as string | number;
+    },
+  }),
+);
 
 const ListSport = ({
   data = [],
@@ -162,8 +164,7 @@ const ListSport = ({
         <Label className="me-2">{SearchTableButton}:</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)
-          }
+            setFilterText(e.target.value)}
           type="search"
           value={filterText}
         />
@@ -199,6 +200,7 @@ const ListSport = ({
 
 const PageSport = () => {
   const { sportsAll } = useSportStore();
+  console.log({ sportsAll });
 
   // const handleAddSport = (sport: TSport) => {
   //   console.log({ handleAddSport: sport });

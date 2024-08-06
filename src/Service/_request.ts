@@ -65,8 +65,8 @@ instance.interceptors.response.use(
       // }
       // window.location.href = `/sign-in?redirectUrl=${window.location.pathname}`;
     }
-    console.log("ERRIRIRIR", response);
-    return Promise.reject(error);
+    console.log("intercept_error", response);
+    return Promise.reject(response);
   },
 );
 
@@ -102,9 +102,46 @@ const httpPost: <T = any, R = AxiosResponse<T, any>, D = any>(
 
   return req.post(url, interceptData, config) as Promise<R>;
 };
+
+const parseDateObject = (a: any) => {
+  if (a instanceof Date) {
+    return a.toISOString();
+  }
+  return a;
+};
+
+const httpFormWrapper = (reqFunction: any) =>
+  function <T = any, R = AxiosResponse<T, any>, D = any>(
+    url: string,
+    data?: D | undefined,
+    config?: AxiosRequestConfig<FormData> | undefined,
+  ): Promise<R> {
+    const formData = new FormData();
+    if (!data) return reqFunction(url, formData, config);
+    for (const [key, value] of Object.entries(data)) {
+      if (Array.isArray(value)) {
+        const arrKey = `${key}`;
+        value.forEach((subValue) => {
+          formData.append(arrKey, parseDateObject(subValue));
+        });
+      } else {
+        if (value instanceof Blob || typeof value === "string") {
+          formData.append(key, value);
+        } else {
+          if (value == null) formData.append(key, "");
+          else {
+            formData.append(key, parseDateObject(value));
+          }
+        }
+      }
+    }
+    return reqFunction(url, formData, config);
+  };
+
 export const req = instance;
 export const httpGet = req.get;
 // export const httpPost = req.post;
 export { httpPost };
+export const httpPostForm = httpFormWrapper(req.postForm);
 export const httpPut = req.put;
 export const httpDel = req.delete;

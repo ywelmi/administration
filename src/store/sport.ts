@@ -25,6 +25,8 @@ export type SportState = {
   updateLoading: (v: boolean) => void;
   updateSportType: (t: DSportType) => void;
   updateSportByUnitType: (t: DUnitType) => void;
+  selectedSportId: string;
+  selectSport: (v: string) => void;
 };
 
 const selector = (state: SportState): SportState => {
@@ -32,16 +34,18 @@ const selector = (state: SportState): SportState => {
 
   if (uniteType) {
     const filteredSports = state.sports.filter(
-      (s) => s.for_type === DUnit[uniteType]
+      (s) => s.for_type === DUnit[uniteType],
     );
-    if (filteredSports)
+    if (filteredSports) {
       return { ...state, sports: filteredSports, sportsAll: state.sports };
+    }
   }
   return { ...state, sportsAll: state.sports };
 };
 
 const _useSportStore = create<SportState>()(
   immer((set) => ({
+    selectedSportId: "",
     filters: baseGetParams,
     sports: [],
     sportsMain: [],
@@ -72,7 +76,7 @@ const _useSportStore = create<SportState>()(
     updateSport: (data: TSport) =>
       set((state: SportState) => {
         const idx = state.sports.findIndex(
-          ({ id: sportId }) => sportId === data.id
+          ({ id: sportId }) => sportId === data.id,
         );
         if (idx > -1) {
           state.sports[idx] = data;
@@ -124,6 +128,11 @@ const _useSportStore = create<SportState>()(
         state.sports = state.sportsAll.filter((s) => s.for_type === DUnit[t]);
       });
     },
-  }))
+    selectSport: (v: string) => {
+      set((state: SportState) => {
+        state.selectedSportId = v;
+      });
+    },
+  })),
 );
 export const useSportStore = () => _useSportStore(selector);

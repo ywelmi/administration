@@ -72,6 +72,7 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
             const newRounds = convertKnockoutsToBrackets(data);
             if (newRounds?.length) {
               console.log({ newRounds });
+              newRounds[0].seeds.push(newRounds[0].seeds[0]);
               setRounds(newRounds);
             }
           } else {

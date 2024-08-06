@@ -21,7 +21,6 @@ export type TeamState = {
 
 const selector = (state: TeamState): TeamState => {
   const { unitType } = useConfigStore.getState();
-  console.log({ unitType });
 
   switch (unitType) {
     case "DQTV":
@@ -49,7 +48,7 @@ const _useTeamStore = create<TeamState>()(
     updateTeam: (data: TTeam) =>
       set((state: TeamState) => {
         const idx = state.teams.findIndex(
-          ({ id: teamId }) => teamId === data.id
+          ({ id: teamId }) => teamId === data.id,
         );
         if (idx > -1) {
           state.teams[idx] = data;
@@ -80,7 +79,7 @@ const _useTeamStore = create<TeamState>()(
         state.loading = v;
       });
     },
-  }))
+  })),
 );
 
 export const useTeamStore = () => _useTeamStore(selector);

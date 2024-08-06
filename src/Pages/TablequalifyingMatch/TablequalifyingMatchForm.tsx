@@ -14,6 +14,9 @@ import { useTeamStore } from "../../store/team";
 import ReactDatePicker from "react-datepicker";
 import { TTeam } from "../../type/team";
 import { tablequalifyingMatchMembersGet } from "../../Service/tablequalifyingMatch";
+import { DHour, DSportLocation } from "../../type/enum";
+import { useSportStore } from "../../store/sport";
+import { N } from "../../name-conversion";
 
 export interface ITablequalifyingMatchForm {
   tablequalifyingMatch?: Partial<TTablequalifyingMatch>;
@@ -38,9 +41,13 @@ const TablequalifyingMatchForm = (
       indexs: 0,
       match_day: new Date().toISOString(),
       match_hour: "",
+      match_location_chid: "",
       // team1_name: "",
       // team2_name: "",
     };
+
+  const { sports, selectedSportId } = useSportStore();
+  const selectedSport = sports.find(({ id }) => id === selectedSportId);
 
   // const { teams } = useTeamStore(); // take teams from same table
   const [teams, setTeams] = useState<TTableQualifyingMember[]>([]);
@@ -116,43 +123,46 @@ const TablequalifyingMatchForm = (
           />
         </Col>
         <Col md="12">
-          <Row className="gap-2" style={{ display: "flex" }}>
-            <Col>
-              <Label for="match_day" check>{t("match_day")}</Label>
-              <ReactDatePicker
-                className="form-control"
-                name="match_day"
-                selected={new Date(formik.values.match_day || new Date())}
-                // value={formik.values.match_day}
-                onChange={(date) =>
-                  formik.setFieldValue("match_day", date?.toISOString())}
-                locale={"vi"}
-                dateFormat={"dd/MM/yyyy"}
-              />
-            </Col>
-            <Col>
-              <Label for="match_hour" check>{t("match_hour")}</Label>
-              <ReactDatePicker
-                className="form-control"
-                name="match_hour"
-                selected={new Date(formik.values.match_day || new Date())}
-                // value={formik.values.match_day}
-                value={formik.values.match_hour}
-                onChange={(date) =>
-                  formik.setFieldValue(
-                    "match_hour",
-                    `${date?.getHours()}:${date?.getMinutes()}`,
-                  )}
-                showTimeSelect
-                showTimeSelectOnly
-                timeFormat="HH:mm"
-                timeIntervals={15}
-                timeCaption="Giờ"
-                locale={"vi"}
-              />
-            </Col>
-          </Row>
+          <Label for="indexs" check>{N["match_location"]}</Label>
+          <Input
+            name="match_location"
+            disabled
+            value={selectedSport?.sport_location}
+          />
         </Col>
+        <Col md="12">
+          <Label for="indexs" check>{N["match_location_chid"]}</Label>
+          <Input
+            name="match_location_chid"
+            value={formik.values.match_location_chid || ""}
+            onChange={formik.handleChange}
+          />
+        </Col>
+
+        <Col md="12">
+          <Label for="match_day" check>{t("match_day")}</Label>
+          <ReactDatePicker
+            className="form-control"
+            name="match_day"
+            selected={new Date(formik.values.match_day || new Date())}
+            // value={formik.values.match_day}
+            onChange={(date) =>
+              formik.setFieldValue("match_day", date?.toISOString())}
+            locale={"vi"}
+            dateFormat={"dd/MM/yyyy"}
+          />
+        </Col>
+        <Col>
+          <Label for="match_hour" check>{t("match_hour")}</Label>
+          <InputSelect
+            data={DHour.map((h, i) => ({ i, h }))}
+            k="h"
+            v="h"
+            name="match_hour"
+            handleChange={formik.handleChange}
+          />
+        </Col>
+
         <Col xs="12" className="gap-2" style={{ display: "flex" }}>
           <Btn color="primary" type="submit">
             Xác nhận
@@ -184,6 +194,7 @@ const useTablequalifyingMatchModal = (
       backdrop="static"
       modalBodyClassName="social-profile text-start"
       isOpen={opened}
+      size="md"
       toggle={handleToggle}
     >
       <TablequalifyingMatchForm
