@@ -1,43 +1,35 @@
-import {
-  ILotsDrawResultTemplate,
-  TLotsDraw,
-  TLotsDrawMember,
-  TLotsDrawResult,
-} from "../type/lotsdraw";
+import { ILotsDrawResultTemplate, TLotsDraw, TLotsDrawMember, TLotsDrawResult } from "../type/lotsdraw";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
 // Lấy danh sách đội thi bốc thăm
-export const lotsdrawsGet = async (
-  sportId: string,
-) => {
-  return httpGet<TLotsDraw[]>(
-    `/sports/${sportId}/TeamSports`,
-  );
+export const lotsdrawsGet = async (sportId: string) => {
+    return httpGet<TLotsDraw[]>(`/sports/${sportId}/TeamSports`);
+};
+
+// Lấy danh sách các nội dung thi của 1 môn
+export const getContentSport = async (sportId: string) => {
+    return httpGet<[]>(`/sports/${sportId}/SportContents`);
+};
+
+// Lấy số VĐV thi 1 môn
+export const getNumberAthele = async (sportId: string) => {
+    return httpGet<[]>(`/teammembers/list_member_by_sport_id?sportID=${sportId}`);
 };
 
 // Cập nhật bốc thăm môn thi
-export const lotsdrawUpdate = (
-  sportId: string,
-  lotsdraw: Partial<TLotsDraw>[],
-) => {
-  return httpPut(`/sports/${sportId}/TeamSports`, lotsdraw);
+export const lotsdrawUpdate = (sportId: string, lotsdraw: Partial<TLotsDraw>[]) => {
+    return httpPut(`/sports/${sportId}/TeamSports`, lotsdraw);
 };
 
 // lấy danh sách Cập nhật điểm cho đơn vị theo môn thi
 export const lotsdrawResultTableGet = (org_id: string, sport_id: string) => {
-  return httpPost<ILotsDrawResultTemplate>(
-    `orgs/${org_id}/SportTicketMembers`,
-    {
-      org_id,
-      sport_id,
-    },
-  );
+    return httpPost<ILotsDrawResultTemplate>(`orgs/${org_id}/SportTicketMembers`, {
+        org_id,
+        sport_id,
+    });
 };
 
 // Thực hiện Cập nhật điểm cho đơn vị theo môn thi bốc thăm
-export const lotsdrawResultUpdate = (
-  orgId: string,
-  lotsdrawResult: Partial<TLotsDrawMember>[],
-) => {
-  return httpPut(`/orgs/${orgId}/SportTicketMembers`, lotsdrawResult);
+export const lotsdrawResultUpdate = (orgId: string, lotsdrawResult: Partial<TLotsDrawMember>[]) => {
+    return httpPut(`/orgs/${orgId}/SportTicketMembers`, lotsdrawResult);
 };
