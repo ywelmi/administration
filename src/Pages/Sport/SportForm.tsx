@@ -7,6 +7,7 @@ import { useState } from "react";
 import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
 import { useCompetitionStore } from "../../store/competition";
 import { InputSelect } from "../../Component/InputSelect";
+import { DSportLocation } from "../../type/enum";
 
 interface ISportForm {
   sport?: TSport;
@@ -19,9 +20,11 @@ interface ISportModal extends ISportForm {
 
 const SportForm = ({ sport: initSport, onSubmit, onCancel }: ISportForm) => {
   const { competitions } = useCompetitionStore();
-  const sport = initSport
-    ? initSport
-    : { name: "", competition_id: competitions?.[0].id ?? "" };
+  const sport = initSport ? initSport : {
+    name: "",
+    competition_id: competitions?.[0].id ?? "",
+    sport_location: "",
+  };
   // console.log({ competitions });
   const formik = useFormik({
     initialValues: { ...sport },
@@ -48,11 +51,21 @@ const SportForm = ({ sport: initSport, onSubmit, onCancel }: ISportForm) => {
             name="name"
             placeholder={sport.name}
             onChange={(e) => {
-              console.log({ inputE: e });
               formik.handleChange(e);
             }}
           />
         </Col>
+        <Col md="12">
+          <Label>Địa điểm</Label>
+          <InputSelect
+            name="sport_location"
+            data={DSportLocation.map((l, i) => ({ l, i }))}
+            k="l"
+            v="l"
+            handleChange={formik.handleChange}
+          />
+        </Col>
+
         {(competitions?.length)
           ? (
             <Col md="12">

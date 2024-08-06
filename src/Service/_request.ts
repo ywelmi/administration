@@ -65,8 +65,8 @@ instance.interceptors.response.use(
       // }
       // window.location.href = `/sign-in?redirectUrl=${window.location.pathname}`;
     }
-    console.log("ERRIRIRIR", response);
-    return Promise.reject(error);
+    console.log("intercept_error", response);
+    return Promise.reject(response);
   },
 );
 

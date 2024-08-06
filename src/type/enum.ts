@@ -29,6 +29,7 @@ export const DRank = [
 export const DHour = [
   "Sáng",
   "Chiều",
+  "Tối",
 ];
 
 export enum DSportType {
@@ -37,6 +38,14 @@ export enum DSportType {
   MartialArt,
   PlayOff,
 }
+
+//1. Trung tấm Huấn luyện quân sự quốc gia (TTHLQSQG4): Bóng chuyền, Chiến sĩ khỏe, Chạy vũ trang 3000m vượt chướng ngại vật, vượt vật cản, bơi vũ trang, ba môn TTQSPH và bơi vũ trang DQTV. 2. Trường Sĩ quan Đặc công/BCĐC: thi đấu môn võ chiến đấu DQTV. 3. Trường Sĩ quan chính trị/SQCT: Thi đấu quần vợt, cầu lông, bóng bàn. 4. Trường Sĩ quan lục quân 1/SQLQ1: Thi đấu võ chiến đấu tay không LLTTQĐ.
+export const DSportLocation = [
+  "Trung tấm Huấn luyện quân sự quốc gia (TTHLQSQG4)",
+  "Trường Sĩ quan Đặc công/BCĐC",
+  "Trường Sĩ quan chính trị/SQCT",
+  "Trường Sĩ quan lục quân 1/SQLQ1",
+];
 
 export const DUnit = {
   LLTT: 1,

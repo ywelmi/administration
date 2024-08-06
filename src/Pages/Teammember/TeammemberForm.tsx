@@ -5,7 +5,6 @@ import { Btn, Popovers } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useEffect, useState } from "react";
 import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
-import { useTeamStore } from "../../store/team";
 import { DGender, DRank } from "../../type/enum";
 import { InputSelect } from "../../Component/InputSelect";
 import { N } from "../../name-conversion";

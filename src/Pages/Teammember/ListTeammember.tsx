@@ -228,6 +228,7 @@ const PageTeammember = () => {
   const { t } = useTranslation();
   const { addTeammember } = useTeammemberStore();
   const { teammembers } = useTeammemberStore();
+
   const handleAddTeammember = (teammember: TTeammember) => {
     console.log({ handleAddTeammember: teammember });
     const { id, ...rests } = teammember;
@@ -243,7 +244,7 @@ const PageTeammember = () => {
         return Promise.reject(status);
       })
       .catch((err) => {
-        toast.error(t("error"));
+        toast.error(err?.data || t("error"));
         console.log({ err });
       });
   };

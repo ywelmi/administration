@@ -57,5 +57,8 @@
   "content4_point_value": "Điểm",
   "age": "Tuổi",
   "weigh": "Cân nặng",
-  "photo": "Ảnh"
+  "photo": "Ảnh",
+  "sport_location": "Địa điểm lớn",
+  "match_location": "Địa điểm lớn",
+  "match_location_chid": "Nơi đấu"
 }
