@@ -32,7 +32,13 @@ const InputSelect = <T,>(
   const ref = useRef<HTMLInputElement>(null);
   return (
     <InputGroup className="relative">
-      {title ? <InputGroupText>{title}</InputGroupText> : null}
+      {title
+        ? (
+          <InputGroupText>
+            <strong>{title}</strong>
+          </InputGroupText>
+        )
+        : null}
       <Input
         minLength={24}
         innerRef={ref}

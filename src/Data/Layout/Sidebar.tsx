@@ -76,7 +76,6 @@ export const useMenuList = () => {
               ],
             },
             {
-              // path: "/martialart/list",
               title: "Môn loại trực tiếp",
               type: "link",
               lanClass: "lan-3",
