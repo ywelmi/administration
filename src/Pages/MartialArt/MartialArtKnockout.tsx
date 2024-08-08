@@ -21,7 +21,7 @@ import {
   TTablequalifyingKnockoutMatchReport,
 } from "../../type/tablequalifyingKnockout";
 import { KnockoutContextProvider, useKnockoutContext } from "./context";
-import { InputSelect } from "../../Component/InputSelect";
+import { InputSelect, InputSelectConfirm } from "../../Component/InputSelect";
 import { extend } from "lodash";
 
 interface ISeedTeam {
@@ -244,12 +244,13 @@ const UnfullfilledSeed = (
       <SeedItem className="seed-martial">
         {roundIndex == 0 && !lockPick
           ? (
-            <InputSelect
+            <InputSelectConfirm
               title={N["team"]}
               data={knockoutTeams}
               k="member_map_org"
               v="id"
               name="team1"
+              placeHolder={team.team1_name}
               handleChange={(e) => {
                 const teamId = e.target.value;
                 const team = knockoutTeams.find(({ id }) => id === teamId);

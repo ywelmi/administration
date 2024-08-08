@@ -1,5 +1,7 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Input, InputGroup, InputGroupText } from "reactstrap";
+
+import "./style.css";
 
 type TEvent = ChangeEvent & { target: { value: string } };
 interface IInputSelect<T> {
@@ -10,7 +12,10 @@ interface IInputSelect<T> {
   handleChange: (e: TEvent) => void;
   value?: any;
   name: string;
-  placeHolder?: string;
+}
+
+interface IInputSelectConfirm<T> extends IInputSelect<T> {
+  placeHolder: string;
 }
 
 const InputSelect = <T,>(
@@ -65,9 +70,70 @@ const InputSelect = <T,>(
   );
 };
 
-const InputSelectConfirm = () => {
+const InputSelectConfirm = <T,>(
+  { placeHolder, handleChange, ...rest }: IInputSelectConfirm<T>,
+) => {
   const [editing, setEditing] = useState<boolean>(false);
+  const [defaultValue, setDefaultValue] = useState(placeHolder);
+  useEffect(() => {
+    setDefaultValue(placeHolder);
+  }, [placeHolder]);
 
-  return <div></div>;
+  const [cacheEvent, setCacheEvent] = useState<TEvent>();
+
+  const confirm = () => {
+    if (cacheEvent) {
+      handleChange(cacheEvent);
+    }
+    setEditing(false);
+  };
+
+  const reset = () => {
+    setEditing(false);
+  };
+
+  const changeMiddleware = (e: TEvent) => {
+    setCacheEvent(e);
+  };
+
+  return (
+    <div className="input-select-confirm">
+      {editing
+        ? <InputSelect {...rest} handleChange={changeMiddleware} />
+        : <div className="default-value">{defaultValue}</div>}
+
+      {!editing
+        ? (
+          <div
+            className="input-icon"
+            onClick={() => setEditing(true)}
+            style={{ color: "greenyellow" }}
+          >
+            <i className="icon-pencil-alt" />
+          </div>
+        )
+        : null}
+      {editing
+        ? (
+          <>
+            <div
+              className="input-icon"
+              onClick={confirm}
+              style={{ color: "blueviolet" }}
+            >
+              <i className="icon-check-box" />
+            </div>
+            <div
+              className="input-icon"
+              onClick={reset}
+              style={{ color: "salmon" }}
+            >
+              <i className="icon-reload" />
+            </div>
+          </>
+        )
+        : null}
+    </div>
+  );
 };
 export { InputSelect, InputSelectConfirm };

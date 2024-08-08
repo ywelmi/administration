@@ -1,0 +1,29 @@
+.input-select-confirm{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  line-height: 1.5;
+  
+  /* min-height: 4rem; */
+}
+
+.default-value{
+  line-height: 1.5;
+  padding: .375rem 2.25rem .375rem .75rem;
+  font-size: 1rem;
+  letter-spacing: 0rem;
+  overflow: scroll;
+}
+
+.input-icon{
+
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  border-radius: 5rem;
+  border-width: 2px;
+}
