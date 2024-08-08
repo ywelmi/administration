@@ -22,29 +22,25 @@ import {
 } from "../../type/tablequalifyingKnockout";
 import { KnockoutContextProvider, useKnockoutContext } from "./context";
 import { InputSelect } from "../../Component/InputSelect";
+import { extend } from "lodash";
 
-interface IPairId {
+interface ISeedTeam {
   team1_id: string;
   team1_name: string;
   team1_point_win_count?: string;
+}
+interface ISeedPair extends ISeedTeam {
   team2_id: string;
   team2_name: string;
   team2_point_win_count?: string;
 }
 
-const CustomSeed = (
-  { seed, breakpoint, roundIndex, seedIndex, callback }: IRenderSeedProps & {
-    callback?: () => void;
-  },
+const FullSeed = (
+  { seed, breakpoint, roundIndex, seedIndex }: IRenderSeedProps,
 ) => {
-  // breakpoint passed to Bracket component
-  // to check if mobile view is triggered or not
-
-  // mobileBreakpoint is required to be passed down to a seed
-
   const { refreshMartialArtKnockout, knockoutTeams } = useKnockoutContext();
 
-  const [pair, setPair] = useState<IPairId>({
+  const [pair, setPair] = useState<ISeedPair>({
     team1_id: seed.teams[0]?.id || "",
     team1_name: seed.teams[0]?.name || "",
     team1_point_win_count: seed.teams[0]?.winCount,
@@ -54,7 +50,8 @@ const CustomSeed = (
   }); // each team's id in pair
 
   const [lockPick, setLockPick] = useState(
-    seed.teams[0]?.id && seed.teams[1]?.id,
+    // seed.teams[0]?.id && seed.teams[1]?.id,
+    pair.team1_point_win_count != null && pair.team2_point_win_count != null,
   );
 
   useEffect(() => {
@@ -182,6 +179,121 @@ const CustomSeed = (
       </SeedItem>
     </Seed>
   );
+};
+
+const UnfullfilledSeed = (
+  { seed, breakpoint, roundIndex, seedIndex }: IRenderSeedProps,
+) => {
+  const { refreshMartialArtKnockout, knockoutTeams } = useKnockoutContext();
+
+  const [team, setTeam] = useState<ISeedTeam>({
+    team1_id: seed.teams[0]?.id || "",
+    team1_name: seed.teams[0]?.name || "",
+    team1_point_win_count: seed.teams[0]?.winCount,
+  }); // each team's id in pair
+
+  const [lockPick, setLockPick] = useState(
+    // seed.teams[0]?.id && seed.teams[1]?.id,
+    team.team1_point_win_count != null,
+  );
+
+  useEffect(() => {
+    setTeam({
+      team1_id: seed.teams[0]?.id || "",
+      team1_name: seed.teams[0]?.name || "",
+      team1_point_win_count: seed.teams[0]?.winCount,
+    });
+  }, [seed]);
+
+  useEffect(() => {
+    setLockPick(team.team1_point_win_count != null);
+  }, [team.team1_point_win_count != null]);
+
+  const handleUpdateKnockoutMatch = (
+    v: TTablequalifyingKnockoutMatchReport,
+  ) => {
+    const pairUpdate = { id: seed.id as string, ...team };
+    tablequalifyingKnockoutPairUpdate(pairUpdate).then(
+      (res) => {
+        const { status } = res;
+        if (status === 200) {
+          return tablequalifyingKnockoutUpdate(v).then((res) => {
+            const { status } = res;
+            if (status === 200) {
+              toast.success(N["success"]);
+              // setLockPick(true);
+              setTeam((prev) => ({ ...prev }));
+              refreshMartialArtKnockout();
+            }
+          });
+        }
+      },
+    ).catch((err) => {
+      const { response: { data } } = err;
+      toast.error(data || N["failed"]);
+      console.log({ err });
+    });
+    // .finally(() => callback?.());
+  };
+
+  return (
+    <Seed
+      mobileBreakpoint={breakpoint}
+      style={{ fontSize: 14 }}
+    >
+      <SeedItem className="seed-martial">
+        {roundIndex == 0 && !lockPick
+          ? (
+            <InputSelect
+              title={N["team"]}
+              data={knockoutTeams}
+              k="member_map_org"
+              v="id"
+              name="team1"
+              handleChange={(e) => {
+                const teamId = e.target.value;
+                const team = knockoutTeams.find(({ id }) => id === teamId);
+                if (team) {
+                  setTeam((prev) => ({
+                    ...prev,
+                    team1_id: team.id,
+                    team1_name: team.member_map_org || "",
+                  }));
+                }
+              }}
+            />
+          )
+          : (
+            <SeedTeam className="team">
+              {team.team1_name
+                ? `${team.team1_name}: ${team.team1_point_win_count || ""}`
+                : "Chưa có"}
+            </SeedTeam>
+          )}
+        <SeedTeam className="flex justify-center">Được vào thẳng</SeedTeam>
+        <SeedTeam className="team">---</SeedTeam>
+      </SeedItem>
+    </Seed>
+  );
+};
+
+const CustomSeed = (
+  props: IRenderSeedProps,
+) => {
+  const { seed } = props;
+  return seed?.direct
+    ? <UnfullfilledSeed {...props} />
+    // ? (
+    //   <div style={{ border: "1px solid black", margin: "2px" }}>
+    //     unfullfilled
+    //   </div>
+    // )
+    // : (
+    //   <div style={{ border: "1px solid red", margin: "2px" }}>
+    //     {JSON.stringify(seed)}
+    //   </div>
+    // );
+    : <FullSeed {...props} />;
 };
 
 const MartialArtKnockout = () => {

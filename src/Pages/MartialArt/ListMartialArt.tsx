@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { BasicDataTables, DataTables } from "../../utils/Constant";
-import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
 import { InputSelect } from "../../Component/InputSelect";
@@ -15,11 +13,9 @@ import { useCategoryStore } from "../../store/categories";
 import { DGender } from "../../type/enum";
 import { TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { martialArtsGet } from "../../Service/martialArt";
-import { useGenTreeMartialArt } from "./MartialArtForm";
 import { LI, UL } from "../../AbstractElements";
-import { IKnockoutCreate } from "../../type/tablequalifyingKnockout";
-import { tablequalifyingKnockoutGen } from "../../Service/tablequalifyingKnockout";
 import { useNavigate } from "react-router-dom";
+import { useSportStore } from "../../store/sport";
 
 interface IListMartialArt {
   showAction?: boolean;
@@ -114,47 +110,47 @@ const action: ColumnDef<TMartialArt> = {
     } = props;
     const navigate = useNavigate();
 
-    const handleGenTree = useCallback(
-      (
-        knockoutBracket: IKnockoutCreate,
-      ) => {
-        console.log({ knockoutBracket });
-        tablequalifyingKnockoutGen(knockoutBracket).then((res) => {
-          const { status, data } = res;
-          console.log({ addTablequalifyingResult: data });
-          if (status === 200) {
-            // fetchTablequalifyingKnockout(sportId);
-            toast.info(N["success"]);
-            return;
-          }
-          // return Promise.reject(status);
-        }).catch((err) => {
-          toast.error(N["error"]);
-          console.log({ err });
-        });
-      },
-      [],
-    );
+    // const handleGenTree = useCallback(
+    //   (
+    //     knockoutBracket: IKnockoutCreate,
+    //   ) => {
+    //     console.log({ knockoutBracket });
+    //     tablequalifyingKnockoutGen(knockoutBracket).then((res) => {
+    //       const { status, data } = res;
+    //       console.log({ addTablequalifyingResult: data });
+    //       if (status === 200) {
+    //         // fetchTablequalifyingKnockout(sportId);
+    //         toast.info(N["success"]);
+    //         return;
+    //       }
+    //       // return Promise.reject(status);
+    //     }).catch((err) => {
+    //       toast.error(N["error"]);
+    //       console.log({ err });
+    //     });
+    //   },
+    //   [],
+    // );
 
-    const {
-      handleToggle: handleToggleGenTree,
-      GenTreeMartialArtModal: GenTreeMartialArtModal,
-    } = useGenTreeMartialArt({
-      onSubmit: handleGenTree,
-      tablequalifyingKnockout: {
-        "number_team": 0,
-        "has_grade_3rd": false,
-        "sport_id": martialArtContent.sport_id,
-        content_id: martialArtContent.id,
-      },
-    });
+    // const {
+    //   handleToggle: handleToggleGenTree,
+    //   GenTreeMartialArtModal: GenTreeMartialArtModal,
+    // } = useGenTreeMartialArt({
+    //   onSubmit: handleGenTree,
+    //   tablequalifyingKnockout: {
+    //     "number_team": 0,
+    //     "has_grade_3rd": false,
+    //     "sport_id": martialArtContent.sport_id,
+    //     content_id: martialArtContent.id,
+    //   },
+    // });
 
     return (
       <UL className="action simple-list flex-row" id={martialArtContent.id}>
-        <LI className="btn">
-          <i className="icon-pencil-alt" onClick={handleToggleGenTree} />
-          <GenTreeMartialArtModal />
-        </LI>
+        {/* <LI className="btn"> */}
+        {/*   <i className="icon-pencil-alt" onClick={handleToggleGenTree} /> */}
+        {/*   <GenTreeMartialArtModal /> */}
+        {/* </LI> */}
         <LI
           className="edit btn"
           onClick={() => {
@@ -197,12 +193,16 @@ const ListMartialArt = ({
   );
 };
 
-const sportId = "017358a8-fe81-45f6-914b-b8507987a343";
+// const sportId = "017358a8-fe81-45f6-914b-b8507987a343";
 const PageMartialArt = () => {
   const [data, setData] = useState<TMartialArt[]>([]);
 
+  const { sports } = useSportStore();
+  const sportMartialArt = sports.find((s) => s.point_unit === 3);
+
   useEffect(() => {
-    martialArtsGet(sportId).then((res) => {
+    if (!sportMartialArt) return;
+    martialArtsGet(sportMartialArt.id).then((res) => {
       const { data, status } = res;
       if (status === 200) {
         setData(data);

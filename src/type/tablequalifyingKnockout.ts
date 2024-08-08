@@ -3,7 +3,7 @@ export interface TTablequalifyingKnockout {
   turn_id: string;
   team1_id: string;
   team2_id: string;
-  indexs?: number;
+  indexs: number;
   result?: string;
   result_detail?: string;
   win_team_id?: string;
@@ -52,3 +52,5 @@ export interface IKnockoutCreate {
   "sport_id": string;
   "content_id": string;
 }
+
+export const DIRECT_KNOCKOUT_GRADE = 99;

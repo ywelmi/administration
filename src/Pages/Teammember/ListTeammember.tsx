@@ -50,10 +50,9 @@ const tableColumns: ColumnDef<TTeammember>[] = [
         const photoId = props.getValue() as string;
         if (!photoId) return;
         getTeammemberPhoto(photoId).then((imSrc) => {
-          console.log({ imSrc });
           setSrc(imSrc.url);
         });
-      }, []);
+      }, [props.getValue()]);
       return src ? <img src={src}></img> : null;
     },
   },

@@ -24,9 +24,9 @@ const selector = (state: TeamState): TeamState => {
 
   switch (unitType) {
     case "DQTV":
-      return { ...state, teams: state.teams.filter((t) => t.has_army) };
-    case "LLTT":
       return { ...state, teams: state.teams.filter((t) => t.has_militia) };
+    case "LLTT":
+      return { ...state, teams: state.teams.filter((t) => t.has_army) };
 
     default:
       return state;

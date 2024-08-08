@@ -96,18 +96,16 @@ const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
 ];
 
 const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
-  const team: Partial<TTeam> = initTeam
-    ? initTeam
-    : {
-        id: "",
-        competition_id: "",
-        org_id: "",
-        has_militia: true,
-        // has_army: false,
-        sport_id: "",
-        org_name: "",
-        list_team_member: [], // list of teammembers' ids
-      };
+  const team: Partial<TTeam> = initTeam ? initTeam : {
+    id: "",
+    competition_id: "",
+    org_id: "",
+    has_militia: true,
+    // has_army: false,
+    sport_id: "",
+    org_name: "",
+    list_team_member: [], // list of teammembers' ids
+  };
 
   const { competitions } = useCompetitionStore();
   const { orgs } = useOrgStore();
@@ -139,7 +137,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
               data: { data },
             } = res;
             return data;
-          }
+          },
         );
         setOrgMembers(members);
       }
@@ -166,46 +164,50 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Row className="g-3">
-        {competitions?.length ? (
-          <Col md="12">
-            <InputSelect
-              title={t("competition_id")}
-              data={competitions}
-              k="name"
-              name="competition_id"
-              v="id"
-              handleChange={(e) => {
-                formik.handleChange(e);
-              }}
-              value={formik.values.competition_id}
-            />
-          </Col>
-        ) : null}
-        {orgs?.length ? (
-          <Col md="12">
-            <InputSelect
-              title={t("org_id")}
-              data={orgs}
-              k="name"
-              name="org_id"
-              v="id"
-              handleChange={(e) => {
-                formik.handleChange(e);
-              }}
-              value={formik.values.org_id}
-            />
-          </Col>
-        ) : null}
+        {competitions?.length
+          ? (
+            <Col md="12">
+              <InputSelect
+                title={t("competition_id")}
+                data={competitions}
+                k="name"
+                name="competition_id"
+                v="id"
+                handleChange={(e) => {
+                  formik.handleChange(e);
+                }}
+                value={formik.values.competition_id}
+              />
+            </Col>
+          )
+          : null}
+        {orgs?.length
+          ? (
+            <Col md="12">
+              <InputSelect
+                title={t("org_id")}
+                data={orgs}
+                k="name"
+                name="org_id"
+                v="id"
+                handleChange={(e) => {
+                  formik.handleChange(e);
+                }}
+                value={formik.values.org_id}
+              />
+            </Col>
+          )
+          : null}
 
         <ButtonGroup>
           <Button
             color="primary"
             outline
             onClick={() => {
-              formik.setFieldValue("has_militia", true);
-              formik.setFieldValue("has_army", false);
+              formik.setFieldValue("has_militia", false);
+              formik.setFieldValue("has_army", true);
             }}
-            active={!!formik.values.has_militia}
+            active={!!formik.values.has_army}
           >
             Lực lượng thường trực
           </Button>
@@ -213,29 +215,31 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
             outline
             color="primary"
             onClick={() => {
-              formik.setFieldValue("has_militia", false);
-              formik.setFieldValue("has_army", true);
+              formik.setFieldValue("has_militia", true);
+              formik.setFieldValue("has_army", false);
             }}
-            active={!!formik.values.has_army}
+            active={!!formik.values.has_militia}
           >
             Dân quân tự vệ
           </Button>
         </ButtonGroup>
-        {sports?.length ? (
-          <Col md="12">
-            <InputSelect
-              title={t("sport_id")}
-              data={sports}
-              k="name"
-              name="sport_id"
-              v="id"
-              handleChange={(e) => {
-                formik.handleChange(e);
-              }}
-              value={formik.values.sport_id}
-            />
-          </Col>
-        ) : null}
+        {sports?.length
+          ? (
+            <Col md="12">
+              <InputSelect
+                title={t("sport_id")}
+                data={sports}
+                k="name"
+                name="sport_id"
+                v="id"
+                handleChange={(e) => {
+                  formik.handleChange(e);
+                }}
+                value={formik.values.sport_id}
+              />
+            </Col>
+          )
+          : null}
         <Col md="12" className="form-check checkbox-primary">
           <Label for="list_team_member" check>
             {t("teammember")}
@@ -255,12 +259,12 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
               // Add new
               formik.setFieldValue(
                 "list_team_member",
-                selectedRows.map((row) => row.id)
+                selectedRows.map((row) => row.id),
               );
               // Update
               formik.setFieldValue(
                 "list_member_id",
-                selectedRows.map((row) => row.id)
+                selectedRows.map((row) => row.id),
               );
             }}
             selectableRowSelected={(r) => {
@@ -287,11 +291,13 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
           <Btn color="primary" type="submit">
             Xác nhận
           </Btn>
-          {onCancel ? (
-            <Btn color="primary" type="button" onClick={onCancel}>
-              Đóng
-            </Btn>
-          ) : null}
+          {onCancel
+            ? (
+              <Btn color="primary" type="button" onClick={onCancel}>
+                Đóng
+              </Btn>
+            )
+            : null}
         </Col>
       </Row>
     </form>

@@ -22,3 +22,12 @@ export interface TAge {
   "max_value": number;
   "id": string;
 }
+
+export interface TMartialArtArmyGroup {
+  "team_id": string;
+  "sport_id": string;
+  "name": string;
+  "gender": 0;
+  "content_id": string;
+  "lst_member": string[];
+}

@@ -65,7 +65,8 @@ instance.interceptors.response.use(
       // }
       // window.location.href = `/sign-in?redirectUrl=${window.location.pathname}`;
     }
-    console.log("intercept_error", response);
+    const { stack, ...error_info } = error;
+    console.log({ "intercept_error": error_info });
     return Promise.reject(response);
   },
 );

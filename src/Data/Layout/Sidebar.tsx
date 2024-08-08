@@ -76,10 +76,18 @@ export const useMenuList = () => {
               ],
             },
             {
-              path: "/martialart/list",
-              title: "Môn võ chiến đấu",
+              // path: "/martialart/list",
+              title: "Môn loại trực tiếp",
               type: "link",
-              lanClass: "lan-4",
+              lanClass: "lan-3",
+              children: [
+                {
+                  path: "/martialart/list",
+                  title: "Môn võ chiến đấu",
+                  type: "link",
+                  lanClass: "lan-4",
+                },
+              ],
             },
             {
               path: "/lotsdraw/list/",
