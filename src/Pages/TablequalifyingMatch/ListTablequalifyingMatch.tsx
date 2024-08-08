@@ -1,9 +1,22 @@
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { getFilterByValue } from "../../Service/_getParams";
-import { Card, CardBody, CardHeader, Col, Container, Input, Label, Row } from "reactstrap";
+import {
+    Card,
+    CardBody,
+    CardHeader,
+    Col,
+    Container,
+    Input,
+    Label,
+    Row,
+} from "reactstrap";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { BasicDataTables, DataTables, SearchTableButton } from "../../utils/Constant";
+import {
+    BasicDataTables,
+    DataTables,
+    SearchTableButton,
+} from "../../utils/Constant";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
@@ -104,7 +117,10 @@ type TTablequalifyingColumn = Omit<TTablequalifyingMatch, "list_member_id">;
 interface IListTablequalifyingMatch {
     showAction?: boolean;
     selectableRows?: boolean;
-    onRowSelect?: (row: TTablequalifyingMatch, e: React.MouseEvent<Element, MouseEvent>) => void;
+    onRowSelect?: (
+        row: TTablequalifyingMatch,
+        e: React.MouseEvent<Element, MouseEvent>
+    ) => void;
     onSelectedRowsChange?: (v: {
         allSelected: boolean;
         selectedCount: number;
@@ -134,7 +150,9 @@ const tableColumns = (
             case "match_day":
                 return convertToDate(row[col]);
         }
-        return row?.[col] ? (row[col as keyof TTablequalifyingColumn] || "").toString() : ("" as string | number);
+        return row?.[col]
+            ? (row[col as keyof TTablequalifyingColumn] || "").toString()
+            : ("" as string | number);
     },
 }));
 
@@ -152,10 +170,15 @@ const ListTablequalifyingMatch = ({
 
     const subHeaderComponentMemo = useMemo(() => {
         return (
-            <div id="basic-1_filter" className="dataTables_filter d-flex align-items-center">
+            <div
+                id="basic-1_filter"
+                className="dataTables_filter d-flex align-items-center"
+            >
                 <Label className="me-2">{SearchTableButton}:</Label>
                 <Input
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFilterText(e.target.value)
+                    }
                     type="search"
                     value={filterText}
                 />
@@ -186,7 +209,8 @@ const ListTablequalifyingMatch = ({
 
 const PageTablequalifyingMatch = () => {
     const { t } = useTranslation();
-    const { updateTableId, addTablequalifyingMatch, tablequalifyingMatchs } = useTablequalifyingMatchStore();
+    const { updateTableId, addTablequalifyingMatch, tablequalifyingMatchs } =
+        useTablequalifyingMatchStore();
     const { table_id } = useParams();
 
     useEffect(() => {
@@ -198,7 +222,9 @@ const PageTablequalifyingMatch = () => {
         }
     }, [table_id]);
 
-    const handleAddTablequalifyingMatch = (tablequalifyingMatch: TTablequalifyingMatch) => {
+    const handleAddTablequalifyingMatch = (
+        tablequalifyingMatch: TTablequalifyingMatch
+    ) => {
         console.log({ handleAddTablequalifyingMatch: tablequalifyingMatch });
         const { id, ...rests } = tablequalifyingMatch;
         tablequalifyingMatchCreate(rests)
@@ -223,18 +249,20 @@ const PageTablequalifyingMatch = () => {
             });
     };
 
-    const { handleToggle: handleToggleAddModal, TablequalifyingMatchModal: TablequalifyingAddModal } =
-        useTablequalifyingMatchModal({
-            onSubmit: handleAddTablequalifyingMatch,
-            tablequalifyingMatch: {
-                table_id: table_id || "",
-                team1_id: "",
-                team2_id: "",
-                indexs: 0,
-                match_day: new Date().toISOString(),
-                match_hour: "",
-            },
-        });
+    const {
+        handleToggle: handleToggleAddModal,
+        TablequalifyingMatchModal: TablequalifyingAddModal,
+    } = useTablequalifyingMatchModal({
+        onSubmit: handleAddTablequalifyingMatch,
+        tablequalifyingMatch: {
+            table_id: table_id || "",
+            team1_id: "",
+            team2_id: "",
+            indexs: 0,
+            match_day: new Date().toISOString(),
+            match_time: "",
+        },
+    });
 
     return (
         <div className="page-body">
@@ -244,14 +272,20 @@ const PageTablequalifyingMatch = () => {
                     <Col sm="12">
                         <Card>
                             <CardHeader className="pb-0 card-no-border">
-                                <div className="btn btn-primary" onClick={handleToggleAddModal}>
+                                <div
+                                    className="btn btn-primary"
+                                    onClick={handleToggleAddModal}
+                                >
                                     <i className="fa fa-plus" />
                                     {"Thêm mới"}
                                 </div>
                                 <TablequalifyingAddModal />
                             </CardHeader>
                             <CardBody>
-                                <ListTablequalifyingMatch data={tablequalifyingMatchs} showAction />
+                                <ListTablequalifyingMatch
+                                    data={tablequalifyingMatchs}
+                                    showAction
+                                />
                             </CardBody>
                         </Card>
                     </Col>
@@ -265,9 +299,12 @@ interface IModalPageTablequalifyingMatch {
     tableId: string;
 }
 
-const useModalPageTablequalifyingMatch = ({ tableId }: IModalPageTablequalifyingMatch) => {
+const useModalPageTablequalifyingMatch = ({
+    tableId,
+}: IModalPageTablequalifyingMatch) => {
     const { t } = useTranslation();
-    const { updateTableId, addTablequalifyingMatch, tablequalifyingMatchs } = useTablequalifyingMatchStore();
+    const { updateTableId, addTablequalifyingMatch, tablequalifyingMatchs } =
+        useTablequalifyingMatchStore();
 
     const [opened, setOpened] = useState(false);
 
@@ -283,7 +320,9 @@ const useModalPageTablequalifyingMatch = ({ tableId }: IModalPageTablequalifying
         }
     }, [opened]);
 
-    const handleAddTablequalifyingMatch = (tablequalifyingMatch: TTablequalifyingMatch) => {
+    const handleAddTablequalifyingMatch = (
+        tablequalifyingMatch: TTablequalifyingMatch
+    ) => {
         console.log({ handleAddTablequalifyingMatch: tablequalifyingMatch });
         const { id, ...rests } = tablequalifyingMatch;
         tablequalifyingMatchCreate(rests)
@@ -344,7 +383,11 @@ const useModalPageTablequalifyingMatch = ({ tableId }: IModalPageTablequalifying
                                 {/*     showAction */}
                                 {/*   /> */}
                                 {/* </CardBody> */}
-                                <Btn type="button" color="danger" onClick={handleToggle}>
+                                <Btn
+                                    type="button"
+                                    color="danger"
+                                    onClick={handleToggle}
+                                >
                                     Đóng
                                 </Btn>
                             </Card>
@@ -367,4 +410,8 @@ const useModalPageTablequalifyingMatch = ({ tableId }: IModalPageTablequalifying
     return { handleToggle, TablequalifyingMatchModal };
 };
 
-export { ListTablequalifyingMatch, PageTablequalifyingMatch, useModalPageTablequalifyingMatch };
+export {
+    ListTablequalifyingMatch,
+    PageTablequalifyingMatch,
+    useModalPageTablequalifyingMatch,
+};
