@@ -18,27 +18,29 @@ interface IInputSelectConfirm<T> extends IInputSelect<T> {
   placeHolder: string;
 }
 
-const InputSelect = <T,>(
-  { title, data, k, v, handleChange: onChange, value, ...rest }: IInputSelect<
-    T
-  >,
-) => {
+const InputSelect = <T,>({
+  title,
+  data,
+  k,
+  v,
+  handleChange: onChange,
+  value,
+  ...rest
+}: IInputSelect<T>) => {
   const inputData = data.map((item) => ({
     k: item[k],
     v: item[v],
   }));
-  const defaultValue = null ? value : "null";
+  const defaultValue = value ? value : "null";
 
   const ref = useRef<HTMLInputElement>(null);
   return (
     <InputGroup className="relative">
-      {title
-        ? (
-          <InputGroupText>
-            <strong>{title}</strong>
-          </InputGroupText>
-        )
-        : null}
+      {title ? (
+        <InputGroupText>
+          <strong>{title}</strong>
+        </InputGroupText>
+      ) : null}
       <Input
         minLength={24}
         innerRef={ref}
@@ -50,10 +52,7 @@ const InputSelect = <T,>(
       >
         <option value={"null"} selected hidden></option>
         {inputData.map(({ k: k, v: v }) => (
-          <option
-            key={v}
-            value={v}
-          >
+          <option key={v} value={v}>
             {k}
           </option>
         ))}
@@ -76,9 +75,11 @@ const InputSelect = <T,>(
   );
 };
 
-const InputSelectConfirm = <T,>(
-  { placeHolder, handleChange, ...rest }: IInputSelectConfirm<T>,
-) => {
+const InputSelectConfirm = <T,>({
+  placeHolder,
+  handleChange,
+  ...rest
+}: IInputSelectConfirm<T>) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [defaultValue, setDefaultValue] = useState(placeHolder);
   useEffect(() => {
@@ -104,41 +105,39 @@ const InputSelectConfirm = <T,>(
 
   return (
     <div className="input-select-confirm">
-      {editing
-        ? <InputSelect {...rest} handleChange={changeMiddleware} />
-        : <div className="default-value">{defaultValue}</div>}
+      {editing ? (
+        <InputSelect {...rest} handleChange={changeMiddleware} />
+      ) : (
+        <div className="default-value">{defaultValue}</div>
+      )}
 
-      {!editing
-        ? (
+      {!editing ? (
+        <div
+          className="input-icon"
+          onClick={() => setEditing(true)}
+          style={{ color: "greenyellow" }}
+        >
+          <i className="icon-pencil-alt" />
+        </div>
+      ) : null}
+      {editing ? (
+        <>
           <div
             className="input-icon"
-            onClick={() => setEditing(true)}
-            style={{ color: "greenyellow" }}
+            onClick={confirm}
+            style={{ color: "blueviolet" }}
           >
-            <i className="icon-pencil-alt" />
+            <i className="icon-check-box" />
           </div>
-        )
-        : null}
-      {editing
-        ? (
-          <>
-            <div
-              className="input-icon"
-              onClick={confirm}
-              style={{ color: "blueviolet" }}
-            >
-              <i className="icon-check-box" />
-            </div>
-            <div
-              className="input-icon"
-              onClick={reset}
-              style={{ color: "salmon" }}
-            >
-              <i className="icon-reload" />
-            </div>
-          </>
-        )
-        : null}
+          <div
+            className="input-icon"
+            onClick={reset}
+            style={{ color: "salmon" }}
+          >
+            <i className="icon-reload" />
+          </div>
+        </>
+      ) : null}
     </div>
   );
 };

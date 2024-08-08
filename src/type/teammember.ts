@@ -16,6 +16,11 @@ export interface TTeammember {
   "competition_name"?: string;
   member_map_org?: string; // for martial art tree only
   photo?: string; // file id
+  has_army?: boolean;
+  has_militia?: boolean;
+  id_number?: string;
+  date_of_issue?: Date;
+  issuing_authority: string;
 }
 
 export type TKeyTeammember = keyof TTeammember;

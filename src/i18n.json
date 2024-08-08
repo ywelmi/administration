@@ -18,11 +18,9 @@
   "list_member_name": "Danh sách thành viên",
   "list_team": "Danh sách đội",
   "match_day": "Ngày",
-  "match_hour": "Giờ",
   "name": "Tên",
   "number_team": "Số đội",
   "org_id": "Đơn vị",
-  "org_name": "Đơn vị",
   "org_name": "Đơn vị",
   "rank": "Cấp bậc",
   "sets": "Séc đấu",
@@ -60,5 +58,8 @@
   "photo": "Ảnh",
   "sport_location": "Địa điểm lớn",
   "match_location": "Địa điểm lớn",
-  "match_location_chid": "Nơi đấu"
+  "match_location_chid": "Nơi đấu",
+  "id_number": "Số CCCD/CMND",
+  "date_of_issue": "Ngày cấp",
+  "issuing_authority": "Nơi cấp"
 }
