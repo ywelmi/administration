@@ -209,32 +209,32 @@ const UnfullfilledSeed = (
     setLockPick(team.team1_point_win_count != null);
   }, [team.team1_point_win_count != null]);
 
-  const handleUpdateKnockoutMatch = (
-    v: TTablequalifyingKnockoutMatchReport,
-  ) => {
-    const pairUpdate = { id: seed.id as string, ...team };
-    tablequalifyingKnockoutPairUpdate(pairUpdate).then(
-      (res) => {
-        const { status } = res;
-        if (status === 200) {
-          return tablequalifyingKnockoutUpdate(v).then((res) => {
-            const { status } = res;
-            if (status === 200) {
-              toast.success(N["success"]);
-              // setLockPick(true);
-              setTeam((prev) => ({ ...prev }));
-              refreshMartialArtKnockout();
-            }
-          });
-        }
-      },
-    ).catch((err) => {
-      const { response: { data } } = err;
-      toast.error(data || N["failed"]);
-      console.log({ err });
-    });
-    // .finally(() => callback?.());
-  };
+  // const handleUpdateKnockoutMatch = (
+  //   v: TTablequalifyingKnockoutMatchReport,
+  // ) => {
+  //   const pairUpdate = { id: seed.id as string, ...team };
+  //   tablequalifyingKnockoutPairUpdate(pairUpdate).then(
+  //     (res) => {
+  //       const { status } = res;
+  //       if (status === 200) {
+  //         return tablequalifyingKnockoutUpdate(v).then((res) => {
+  //           const { status } = res;
+  //           if (status === 200) {
+  //             toast.success(N["success"]);
+  //             // setLockPick(true);
+  //             setTeam((prev) => ({ ...prev }));
+  //             refreshMartialArtKnockout();
+  //           }
+  //         });
+  //       }
+  //     },
+  //   ).catch((err) => {
+  //     const { response: { data } } = err;
+  //     toast.error(data || N["failed"]);
+  //     console.log({ err });
+  //   });
+  //   // .finally(() => callback?.());
+  // };
 
   return (
     <Seed

@@ -1,4 +1,4 @@
-import { ChangeEvent, RefObject, useRef } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { Input, InputGroup, InputGroupText } from "reactstrap";
 
 type TEvent = ChangeEvent & { target: { value: string } };
@@ -7,10 +7,10 @@ interface IInputSelect<T> {
   data: (T & { [ki: string]: any })[];
   k: keyof T;
   v: keyof T;
-  // handleChange: (v: string) => void;
   handleChange: (e: TEvent) => void;
   value?: any;
   name: string;
+  placeHolder?: string;
 }
 
 const InputSelect = <T,>(
@@ -49,9 +49,7 @@ const InputSelect = <T,>(
       </Input>
       <div
         className="absolute right-8 flex items-center cursor-pointer z-1 text-slate-800 top-[50%] translate-y-[-50%]"
-        // style={{ backgroundColor: "red" }}
         onClick={() => {
-          // console.log({ ref: ref.current }, "clicked");
           if (ref.current) ref.current.value = "";
           const event = {
             target: { value: "" },
@@ -67,4 +65,9 @@ const InputSelect = <T,>(
   );
 };
 
-export { InputSelect };
+const InputSelectConfirm = () => {
+  const [editing, setEditing] = useState<boolean>(false);
+
+  return <div></div>;
+};
+export { InputSelect, InputSelectConfirm };
