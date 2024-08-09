@@ -11,7 +11,6 @@ import { InputSelect } from "../../Component/InputSelect";
 import {
   Bracket,
   IRenderSeedProps,
-  ISeedProps,
   Seed,
   SeedItem,
   SeedTeam,
@@ -29,8 +28,9 @@ import { KnockoutContextProvider, useKnockoutContext } from "./context";
 
 import "./style.css";
 import { CustomRoundComponent } from "./CustomRound.tsx";
+import { ICustomSeedProps } from "../../typing/treeRound.ts";
 
-interface IPair {
+interface ISeedPair {
   team1_id: string;
   team1_name: string;
   team1_point_win_count?: string;
@@ -39,7 +39,7 @@ interface IPair {
   team2_point_win_count?: string;
 }
 
-const seed2pair = (seed: ISeedProps): IPair => {
+const seed2pair = (seed: ICustomSeedProps): ISeedPair => {
   return {
     team1_id: seed.teams[0]?.id || "",
     team1_name: seed.teams[0]?.name || "",
@@ -49,21 +49,19 @@ const seed2pair = (seed: ISeedProps): IPair => {
     team2_point_win_count: seed.teams[1]?.winCount,
   };
 };
+
 const CustomSeed = ({
   seed,
   breakpoint,
   roundIndex,
   seedIndex,
-  callback,
-}: IRenderSeedProps & {
-  callback?: () => void;
-}) => {
+}: IRenderSeedProps) => {
   const { fetchTablequalifyingKnockout, sportId, knockoutTeams } =
     useKnockoutContext();
 
   const bracketId = seed.id;
 
-  const [pair, setPair] = useState<IPair>(seed2pair(seed)); // each team's id in pair
+  const [pair, setPair] = useState<ISeedPair>(seed2pair(seed)); // each team's id in pair
 
   const [lockPick, setLockPick] = useState(
     seed.teams[0]?.id && seed.teams[1]?.id
@@ -146,11 +144,12 @@ const CustomSeed = ({
     setLockPick(false);
     setIsUpdatingTeam(true);
   };
+
   return (
     <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 14 }}>
       <SeedItem className="seed">
         <div>
-          {!lockPick ? (
+          {!lockPick && isUpdatingTeam ? (
             <InputSelect
               title={N["team"]}
               data={knockoutTeams}
@@ -214,7 +213,7 @@ const CustomSeed = ({
               <div>Chưa đủ </div>
             )}
           </div>
-          {!lockPick ? (
+          {!lockPick && isUpdatingTeam ? (
             <InputSelect
               title={N["team"]}
               data={knockoutTeams}

@@ -14,30 +14,25 @@ import { InputSelect } from "../../Component/InputSelect";
 
 interface ItablequalifyingKnockoutForm {
   tablequalifyingKnockout?: IKnockoutCreate;
-  onSubmit: (
-    tablequalifyingKnockout: IKnockoutCreate,
-  ) => void;
+  onSubmit: (tablequalifyingKnockout: IKnockoutCreate) => void;
   onCancel?: () => void;
 }
 
-interface ItablequalifyingKnockoutModal extends ItablequalifyingKnockoutForm {
-}
+interface ItablequalifyingKnockoutModal extends ItablequalifyingKnockoutForm {}
 
-const MartialArtForm = (
-  {
-    tablequalifyingKnockout: initTablequalifyingKnockout,
-    onSubmit,
-    onCancel,
-  }: ItablequalifyingKnockoutForm,
-) => {
+const MartialArtForm = ({
+  tablequalifyingKnockout: initTablequalifyingKnockout,
+  onSubmit,
+  onCancel,
+}: ItablequalifyingKnockoutForm) => {
   const tablequalifyingKnockout = initTablequalifyingKnockout
     ? initTablequalifyingKnockout
     : {
-      "number_team": 0,
-      "has_grade_3rd": false,
-      "sport_id": "",
-      "content_id": "",
-    };
+        number_team: 0,
+        has_grade_3rd: false,
+        sport_id: "",
+        content_id: "",
+      };
 
   // const { sports } = useSportStore();
   const { t } = useTranslation();
@@ -55,7 +50,9 @@ const MartialArtForm = (
     <form onSubmit={formik.handleSubmit}>
       <Row className="g-3">
         <Col md="12" className="form-check checkbox-primary">
-          <Label for="number_team" check>{t("number_team")}</Label>
+          <Label for="number_team" check>
+            {t("number_team")}
+          </Label>
           <Input
             id="number_team"
             type="text"
@@ -100,26 +97,27 @@ const MartialArtForm = (
           <Btn color="primary" type="submit">
             Xác nhận
           </Btn>
-          {onCancel
-            ? <Btn color="primary" type="button" onClick={onCancel}>Đóng</Btn>
-            : null}
+          {onCancel ? (
+            <Btn color="primary" type="button" onClick={onCancel}>
+              Đóng
+            </Btn>
+          ) : null}
         </Col>
       </Row>
     </form>
   );
 };
 
-const useGenTreeMartialArt = (
-  { onSubmit, ...rest }: ItablequalifyingKnockoutModal,
-) => {
+const useGenTreeMartialArt = ({
+  onSubmit,
+  ...rest
+}: ItablequalifyingKnockoutModal) => {
   const [opened, setOpened] = useState(false);
   const handleToggle = () => {
     setOpened((s) => !s);
   };
 
-  const handleSubmit = (
-    tablequalifyingKnockout: IKnockoutCreate,
-  ) => {
+  const handleSubmit = (tablequalifyingKnockout: IKnockoutCreate) => {
     onSubmit(tablequalifyingKnockout);
     setOpened(false);
   };
@@ -155,21 +153,20 @@ export interface ITablequalifyingKnockoutMatchReportForm {
 }
 
 export interface ITablequalifyingMatchReportModal
-  extends ITablequalifyingKnockoutMatchReportForm {
-}
+  extends ITablequalifyingKnockoutMatchReportForm {}
 
-const TablequalifyingKnockoutMatchReportForm = (
-  {
-    tablequalifyingKnockoutMatchReport: initTablequalifyingMatchReport,
-    onSubmit,
-    onCancel,
-  }: ITablequalifyingKnockoutMatchReportForm,
-) => {
+const TablequalifyingKnockoutMatchReportForm = ({
+  tablequalifyingKnockoutMatchReport: initTablequalifyingMatchReport,
+  onSubmit,
+  onCancel,
+}: ITablequalifyingKnockoutMatchReportForm) => {
   const tablequalifyingMatchReport: Partial<TTablequalifyingMatchReport> =
-    initTablequalifyingMatchReport ? initTablequalifyingMatchReport : {
-      "id": "",
-      "sets": [],
-    };
+    initTablequalifyingMatchReport
+      ? initTablequalifyingMatchReport
+      : {
+          id: "",
+          sets: [],
+        };
 
   const { t } = useTranslation();
   const formik = useFormik<Partial<TTablequalifyingMatchReport>>({
@@ -204,7 +201,9 @@ const TablequalifyingKnockoutMatchReportForm = (
           </Btn>
         </SetReportPopover>
         <Col md="12" className="form-check checkbox-primary">
-          <Label for="sets" check>{t("sets")}</Label>
+          <Label for="sets" check>
+            {t("sets")}
+          </Label>
           <ListSetReport items={formik.values.sets} />
         </Col>
 
@@ -212,18 +211,21 @@ const TablequalifyingKnockoutMatchReportForm = (
           <Btn color="primary" type="submit">
             Xác nhận
           </Btn>
-          {onCancel
-            ? <Btn color="primary" type="button" onClick={onCancel}>Đóng</Btn>
-            : null}
+          {onCancel ? (
+            <Btn color="primary" type="button" onClick={onCancel}>
+              Đóng
+            </Btn>
+          ) : null}
         </Col>
       </Row>
     </form>
   );
 };
 
-const useTablequalifyingKnockoutMatchReportModal = (
-  { onSubmit, ...rest }: ITablequalifyingMatchReportModal,
-) => {
+const useTablequalifyingKnockoutMatchReportModal = ({
+  onSubmit,
+  ...rest
+}: ITablequalifyingMatchReportModal) => {
   const [opened, setOpened] = useState(false);
 
   const handleToggle = () => {
@@ -231,7 +233,7 @@ const useTablequalifyingKnockoutMatchReportModal = (
   };
 
   const handleSubmit = (
-    tablequalifyingMatchReport: TTablequalifyingMatchReport,
+    tablequalifyingMatchReport: TTablequalifyingMatchReport
   ) => {
     onSubmit(tablequalifyingMatchReport);
     setOpened(false);
@@ -255,52 +257,51 @@ const useTablequalifyingKnockoutMatchReportModal = (
   return { TablequalifyingKnockoutMatchReportModal, handleToggle };
 };
 
-export const TablequalifyingKnockoutMatchReportModal = forwardRef((
-  { onSubmit, ...rest }: ITablequalifyingMatchReportModal,
-  ref,
-) => {
-  const [opened, setOpened] = useState(false);
+export const TablequalifyingKnockoutMatchReportModal = forwardRef(
+  ({ onSubmit, ...rest }: ITablequalifyingMatchReportModal, ref) => {
+    const [opened, setOpened] = useState(false);
 
-  const handleToggle = () => {
-    setOpened((s) => !s);
-  };
+    const handleToggle = () => {
+      setOpened((s) => !s);
+    };
 
-  useImperativeHandle(ref, () => ({ handleToggle }));
+    useImperativeHandle(ref, () => ({ handleToggle }));
 
-  const handleSubmit = (
-    tablequalifyingMatchReport: TTablequalifyingMatchReport,
-  ) => {
-    onSubmit(tablequalifyingMatchReport);
-    setOpened(false);
-  };
+    const handleSubmit = (
+      tablequalifyingMatchReport: TTablequalifyingMatchReport
+    ) => {
+      onSubmit(tablequalifyingMatchReport);
+      setOpened(false);
+    };
 
-  return (
-    <div>
-      <Btn
-        color="secondary"
-        type="button"
-        size="xs"
-        style={{ fontSize: "10" }}
-        onClick={() => setOpened(true)}
-      >
-        <i className="icon-info-alt" />
-        {/* Cập nhật kết quả */}
-      </Btn>
-      <CommonModal
-        backdrop="static"
-        modalBodyClassName="social-profile text-start"
-        isOpen={opened}
-        toggle={handleToggle}
-      >
-        <TablequalifyingKnockoutMatchReportForm
-          onSubmit={handleSubmit}
-          {...rest}
-          onCancel={() => setOpened(false)}
-        />
-      </CommonModal>
-    </div>
-  );
-});
+    return (
+      <div>
+        <button
+          color="primary"
+          type="button"
+          className="cnf-btn"
+          style={{ fontSize: "10" }}
+          onClick={() => setOpened(true)}
+        >
+          {/* <i className="icon-info-alt" /> */}
+          Cập nhật kết quả
+        </button>
+        <CommonModal
+          backdrop="static"
+          modalBodyClassName="social-profile text-start"
+          isOpen={opened}
+          toggle={handleToggle}
+        >
+          <TablequalifyingKnockoutMatchReportForm
+            onSubmit={handleSubmit}
+            {...rest}
+            onCancel={() => setOpened(false)}
+          />
+        </CommonModal>
+      </div>
+    );
+  }
+);
 
 export {
   TablequalifyingKnockoutMatchReportForm,

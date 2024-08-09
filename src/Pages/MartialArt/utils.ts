@@ -53,6 +53,7 @@ export const convertKnockoutsToBrackets = (
       }
       if (idx === -1) {
         const newRound = {
+          grade: knockout.grade,
           title: knockout.turn_name,
           seeds: [bracketSeed],
         } as ICustomRoundProps;

@@ -279,16 +279,16 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
 
     return (
       <div>
-        <Btn
-          color="secondary"
+        <button
+          color="primary"
           type="button"
-          size="xs"
+          className="cnf-btn"
           style={{ fontSize: "10" }}
           onClick={() => setOpened(true)}
         >
-          <i className="icon-info-alt" />
-          {/* Cập nhật kết quả */}
-        </Btn>
+          {/* <i className="icon-info-alt" /> */}
+          Cập nhật kết quả
+        </button>
         <CommonModal
           backdrop="static"
           modalBodyClassName="social-profile text-start"

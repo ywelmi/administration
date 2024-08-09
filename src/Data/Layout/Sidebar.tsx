@@ -5,7 +5,7 @@ export const useMenuList = () => {
     {
       Items: [
         {
-          title: "Quản trị người dùng",
+          title: "Quản trị",
           icon: "fa fa-user",
           lanClass: "lan-1",
           children: [
@@ -16,7 +16,7 @@ export const useMenuList = () => {
               path: "/user/list",
             },
             {
-              title: "Phân quyền - Not",
+              title: "Phân quyền",
               type: "sub",
               lanClass: "lan-3",
               // path: "/user/list",
@@ -38,7 +38,7 @@ export const useMenuList = () => {
           type: "link",
         },
         {
-          title: "Nhập vận động viên cho đơn vị",
+          title: "Nhập vận động viên",
           icon: "fa fa-group",
           lanClass: "lan-1",
           path: "/teammember/list",
@@ -122,7 +122,7 @@ export const useMenuList = () => {
           ],
         },
         {
-          title: "Lực lượng Dân quân tự vệ",
+          title: "Dân quân tự vệ",
           icon: "fa fa-th",
           lanClass: "lan-1",
           unitType: "DQTV" as DUnitType,
