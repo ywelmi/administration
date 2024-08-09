@@ -32,6 +32,11 @@ export interface TTablequalifyingKnockout {
   turn_name: string;
   grade: number;
 
+  match_day?: string;
+  match_hour?: string;
+  match_location?: string;
+  match_time?: number;
+
   // Dành cho môn võ chiến đấu
   member1_name?: string;
   member2_name?: string;
@@ -47,10 +52,27 @@ export interface TTablequalifyingKnockoutMatchReport {
 }
 
 export interface IKnockoutCreate {
-  "number_team": number;
-  "has_grade_3rd": boolean;
-  "sport_id": string;
-  "content_id": string;
+  number_team: number;
+  has_grade_3rd: boolean;
+  sport_id: string;
+  content_id: string;
 }
 
+export interface IKnockoutRound {
+  sport_id: string;
+  conent_id: string;
+  grade: number;
+  match_day: string;
+  match_hour: string;
+  match_location: string;
+  match_time: number;
+}
+
+export interface IKnockoutRoundPair {
+  id: string;
+  match_day: string;
+  match_hour: string;
+  match_location: string;
+  match_time: number;
+}
 export const DIRECT_KNOCKOUT_GRADE = 99;

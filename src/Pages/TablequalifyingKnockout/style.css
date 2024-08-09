@@ -1,9 +1,19 @@
-.seed{
+.seed {
   background-color: slategray;
   min-width: 16rem;
 }
 
-.team{
+.team {
   color: whitesmoke;
 }
 
+.cnf-btn {
+  background-color: #007777;
+  color: white;
+  padding: 0.25rem;
+  border-radius: 5rem;
+}
+
+.text-alert {
+  @apply bg-red-500 rounded-md;
+}

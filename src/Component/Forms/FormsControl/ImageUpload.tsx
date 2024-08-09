@@ -12,10 +12,14 @@ interface IImageUpload {
   maxNumber?: number;
 }
 
-const ImageUpload = (
-  { multiple = false, maxNumber = 10, values = [], onAdd, onUpdate, onDelete }:
-    IImageUpload,
-) => {
+const ImageUpload = ({
+  multiple = false,
+  maxNumber = 10,
+  values = [],
+  onAdd,
+  onUpdate,
+  onDelete,
+}: IImageUpload) => {
   const [images, setImages] = useState(values);
 
   useEffect(() => {
@@ -25,11 +29,11 @@ const ImageUpload = (
 
   const handleOnChange = (
     imageList: ImageListType,
-    addUpdateIndex: number[] | undefined,
+    addUpdateIndex: number[] | undefined
   ) => {
     // data for submit
     const preImagesNum = images.length;
-    if (!!addUpdateIndex?.length) {
+    if (addUpdateIndex?.length) {
       if (addUpdateIndex[0] < preImagesNum) {
         // update
         if (onUpdate) {
@@ -67,59 +71,48 @@ const ImageUpload = (
         }) => (
           // write your building UI
           <div className="">
-            {onAdd
-              ? (
-                <Button
-                  type="button"
-                  color="primary"
-                  style={isDragging ? { color: "red" } : undefined}
-                  onClick={onImageUpload}
-                  {...dragProps}
-                >
-                  Nhấn hoặc thả...
-                </Button>
-              )
-              : null}
+            {onAdd ? (
+              <Button
+                type="button"
+                color="primary"
+                style={isDragging ? { color: "red" } : undefined}
+                onClick={onImageUpload}
+                {...dragProps}
+              >
+                Nhấn hoặc thả ảnh...
+              </Button>
+            ) : null}
             &nbsp;
-            {multiple
-              ? (
-                <Button type="button" onClick={onImageRemoveAll}>
-                  Xóa tất cả
-                </Button>
-              )
-              : null}
+            {multiple ? (
+              <Button type="button" onClick={onImageRemoveAll}>
+                Xóa tất cả ảnh
+              </Button>
+            ) : null}
             {imageList.map((image, index) => (
               <div key={index} className="image-item">
                 <img src={image.dataURL} alt="" width="100" />
                 <div className="flex gap-2">
-                  {onUpdate
-                    ? (
-                      <Button
-                        type="button"
-                        onClick={() => onImageUpdate(index)}
-                      >
-                        Cập nhật
-                      </Button>
-                    )
-                    : null}
-                  {onDelete
-                    ? (
-                      <Button
-                        type="button"
-                        onClick={async () => {
-                          if (onDelete) {
-                            await onDelete?.(index).then(() =>
-                              onImageRemove(index)
-                            );
-                            return;
-                          }
-                          onImageRemove(index);
-                        }}
-                      >
-                        Xóa
-                      </Button>
-                    )
-                    : null}
+                  {onUpdate ? (
+                    <Button type="button" onClick={() => onImageUpdate(index)}>
+                      Cập nhật
+                    </Button>
+                  ) : null}
+                  {onDelete ? (
+                    <Button
+                      type="button"
+                      onClick={async () => {
+                        if (onDelete) {
+                          await onDelete?.(index).then(() =>
+                            onImageRemove(index)
+                          );
+                          return;
+                        }
+                        onImageRemove(index);
+                      }}
+                    >
+                      Xóa ảnh
+                    </Button>
+                  ) : null}
                 </div>
               </div>
             ))}

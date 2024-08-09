@@ -30,7 +30,7 @@ const tableColumns: ColumnDef<TTeammember>[] = [
         accessorKey: "photo",
         footer: (props) => props.column.id,
         header: N["photo"],
-        cell: (props) => {
+        cell: (props): React.ReactElement => {
             const [src, setSrc] = useState("#");
             useEffect(() => {
                 const photoId = props.getValue() as string;
@@ -68,26 +68,59 @@ const tableColumns: ColumnDef<TTeammember>[] = [
         footer: (props) => props.column.id,
         header: N["created"],
         cell: (props) => convertToDate(props.getValue() as string),
+        filterFn: "dateFilter",
+        meta: { custom: { date: true } },
     },
     {
         accessorKey: "dob",
         footer: (props) => props.column.id,
         header: N["dob"],
         cell: (props) => convertToDate(props.getValue() as string),
+        filterFn: "dateFilter",
         meta: { custom: { date: true } },
     },
+
     {
         accessorKey: "date_join_army",
         footer: (props) => props.column.id,
         header: N["date_join_army"],
         cell: (props) => convertToDate(props.getValue() as string),
+        filterFn: "dateFilter",
+        meta: { custom: { date: true } },
     },
+    // TODO: filter this
+    // {
+    //   accessorKey: "has_army",
+    //   footer: (props) => props.column.id,
+    //   header: N["has_army"],
+    //   cell: (props) => convertToDate(props.getValue() as string),
+    // },
+    // {
+    //   accessorKey: "has_militia",
+    //   footer: (props) => props.column.id,
+    //   header: N["has_militia"],
+    //   cell: (props) => convertToDate(props.getValue() as string),
+    // },
     {
-        accessorKey: "org_name",
+        accessorKey: "id_number",
         footer: (props) => props.column.id,
-        header: N["org_name"],
+        header: N["id_number"],
         cell: (props) => props.getValue() as string,
     },
+    {
+        accessorKey: "date_of_issue",
+        footer: (props) => props.column.id,
+        header: N["date_of_issue"],
+        cell: (props) => convertToDate((props.getValue() as string) || new Date()),
+        filterFn: "dateFilter",
+        meta: { custom: { date: true } },
+    },
+    // {
+    //   accessorKey: "issuing_authority",
+    //   footer: (props) => props.column.id,
+    //   header: N["issuing_authority"],
+    //   cell: (props) => props.getValue() as string,
+    // },
     {
         accessorKey: "weights",
         footer: (props) => props.column.id,
@@ -111,7 +144,6 @@ const action: ColumnDef<TTeammember> = {
         } = props;
 
         const { updateTeammember, deleteTeammember } = useTeammemberStore();
-        const { t } = useTranslation();
         const handleUpdateTeammember = (teammember: TTeammember) => {
             console.log({ handleUpdateTeammember: teammember });
             teammemberUpdate(teammember)
@@ -119,14 +151,14 @@ const action: ColumnDef<TTeammember> = {
                     const { status, data } = res;
                     if (status === 200) {
                         updateTeammember(data as TTeammember);
-                        toast.success(t("success"));
+                        toast.success(N["success"]);
                         return;
                     }
 
                     return Promise.reject(status);
                 })
                 .catch((err) => {
-                    toast.error(t("error"));
+                    toast.error(N["error"]);
                     console.log({ err });
                 });
         };
@@ -145,7 +177,7 @@ const action: ColumnDef<TTeammember> = {
                         const { status, data } = res;
                         console.log({ status, data });
                         if (status === 200) {
-                            toast.success(t("success"));
+                            toast.success(N["success"]);
                             deleteTeammember(teammember.id);
                             return;
                         }
@@ -157,7 +189,7 @@ const action: ColumnDef<TTeammember> = {
                         } = err;
                         if (data) toast.error(data);
                         else {
-                            toast.error(t("error"));
+                            toast.error(N["error"]);
                         }
                         console.log({ err });
                     });

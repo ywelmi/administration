@@ -25,12 +25,17 @@ import {
 } from "@tanstack/react-table";
 import React from "react";
 
-import _, { head } from "lodash";
+import _ from "lodash";
 import { Filter, FilterDate, FilterGender } from "./Filter";
+import { dateFilter } from "./utils";
 
 declare module "@tanstack/react-table" {
     interface TableMeta<TData extends RowData> {
-        updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+        updateData: (
+            rowIndex: number,
+            columnId: string,
+            value: unknown
+        ) => void;
         getRowStyles: (row: Row<TData>) => CSSProperties;
     }
     type TColumnMeta = "gender" | "rank" | "date";
@@ -44,7 +49,11 @@ declare module "@tanstack/react-table" {
 interface ITable<T> {
     showAction?: boolean;
     selectableRows?: boolean;
-    onSelectedRowsChange?: (v: { allSelected: boolean; selectedCount: number; selectedRows: T[] }) => void;
+    onSelectedRowsChange?: (v: {
+        allSelected: boolean;
+        selectedCount: number;
+        selectedRows: T[];
+    }) => void;
     columns: ColumnDef<T>[];
     data?: T[];
     selectableRowSelected?: (row: T) => boolean; // pre selected rows condition
@@ -79,7 +88,14 @@ function IndeterminateCheckbox({
         }
     }, [ref, indeterminate]);
 
-    return <input type="checkbox" ref={ref} className={className + " cursor-pointer form-check-input"} {...rest} />;
+    return (
+        <input
+            type="checkbox"
+            ref={ref}
+            className={className + " cursor-pointer form-check-input"}
+            {...rest}
+        />
+    );
 }
 function getDefaultColumn<T>() {
     return {
@@ -202,9 +218,13 @@ const TanTableComponent = <T,>(
     }, [srcData]);
 
     useEffect(() => {
-        const selectedRowIds = Object.keys(rowSelection).filter((id) => rowSelection[id]);
+        const selectedRowIds = Object.keys(rowSelection).filter(
+            (id) => rowSelection[id]
+        );
 
-        const selectedRows = data.filter((row) => selectedRowIds.includes(getRowId(row)));
+        const selectedRows = data.filter((row) =>
+            selectedRowIds.includes(getRowId(row))
+        );
 
         onSelectedRowsChange?.({
             allSelected: selectedRows.length === data.length,
@@ -229,6 +249,9 @@ const TanTableComponent = <T,>(
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         autoResetPageIndex,
+        filterFns: {
+            dateFilter,
+        },
         // Provide our updateData function to our table meta
         meta: {
             updateData: (rowIndex, columnId, value) => {
@@ -250,7 +273,9 @@ const TanTableComponent = <T,>(
                 background: (() => {
                     let same = false;
                     const tableRow = row.original;
-                    const srcRecord = srcData.find((d) => getRowId(d) === getRowId(tableRow));
+                    const srcRecord = srcData.find(
+                        (d) => getRowId(d) === getRowId(tableRow)
+                    );
                     if (!srcRecord) same = false;
                     else same = _.isEqual(tableRow, srcRecord);
                     return same ? "#fafafa" : "#fff";
@@ -278,25 +303,64 @@ const TanTableComponent = <T,>(
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map((header, i) => {
-                                let className = "align-middle border border-slate-300 ";
+                                let className =
+                                    "align-middle border border-slate-300 ";
                                 if (i == 0 && onSelectedRowsChange) {
                                     className += " w-8";
                                 }
                                 return (
-                                    <th key={header.id} colSpan={header.colSpan} className={className}>
+                                    <th
+                                        key={header.id}
+                                        colSpan={header.colSpan}
+                                        className={className}
+                                    >
                                         {header.isPlaceholder ? null : (
                                             <div>
-                                                {flexRender(header.column.columnDef.header, header.getContext())}
+                                                {flexRender(
+                                                    header.column.columnDef
+                                                        .header,
+                                                    header.getContext()
+                                                )}
                                                 {(() => {
-                                                    if (!header.column.getCanFilter()) return null;
-                                                    if (header.column.columnDef.meta?.custom.gender) {
-                                                        return <FilterGender column={header.column} table={table} />;
+                                                    if (
+                                                        !header.column.getCanFilter()
+                                                    )
+                                                        return null;
+                                                    if (
+                                                        header.column.columnDef
+                                                            .meta?.custom.gender
+                                                    ) {
+                                                        return (
+                                                            <FilterGender
+                                                                column={
+                                                                    header.column
+                                                                }
+                                                                table={table}
+                                                            />
+                                                        );
                                                     }
 
-                                                    if (header.column.columnDef.meta?.custom.date) {
-                                                        return <FilterDate column={header.column} table={table} />;
+                                                    if (
+                                                        header.column.columnDef
+                                                            .meta?.custom.date
+                                                    ) {
+                                                        return (
+                                                            <FilterDate
+                                                                column={
+                                                                    header.column
+                                                                }
+                                                                table={table}
+                                                            />
+                                                        );
                                                     }
-                                                    return <Filter column={header.column} table={table} />;
+                                                    return (
+                                                        <Filter
+                                                            column={
+                                                                header.column
+                                                            }
+                                                            table={table}
+                                                        />
+                                                    );
                                                 })()}
                                             </div>
                                         )}
@@ -309,11 +373,20 @@ const TanTableComponent = <T,>(
                 <tbody>
                     {table.getRowModel().rows.map((row) => {
                         return (
-                            <tr key={row.id} style={table.options.meta?.getRowStyles(row)}>
+                            <tr
+                                key={row.id}
+                                style={table.options.meta?.getRowStyles(row)}
+                            >
                                 {row.getVisibleCells().map((cell) => {
                                     return (
-                                        <td key={cell.id} className="border border-slate-300">
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        <td
+                                            key={cell.id}
+                                            className="border border-slate-300"
+                                        >
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
                                         </td>
                                     );
                                 })}
@@ -355,7 +428,8 @@ const TanTableComponent = <T,>(
                 <span className="flex items-center gap-1">
                     <div>Trang</div>
                     <strong>
-                        {table.getState().pagination.pageIndex + 1} của {table.getPageCount()}
+                        {table.getState().pagination.pageIndex + 1} của{" "}
+                        {table.getPageCount()}
                     </strong>
                 </span>
                 <span className="flex items-center gap-1">
@@ -364,7 +438,9 @@ const TanTableComponent = <T,>(
                         type="number"
                         defaultValue={table.getState().pagination.pageIndex + 1}
                         onChange={(e) => {
-                            const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                            const page = e.target.value
+                                ? Number(e.target.value) - 1
+                                : 0;
                             table.setPageIndex(page);
                         }}
                         className="border p-1 rounded w-16"
@@ -394,6 +470,8 @@ const TanTableComponent = <T,>(
     );
 };
 
-export type TTanTable = <T>(p: ITable<T> & { ref?: Ref<ITanTableRef<T>> }) => ReactElement;
+export type TTanTable = <T>(
+    p: ITable<T> & { ref?: Ref<ITanTableRef<T>> }
+) => ReactElement;
 const TanTable = forwardRef(TanTableComponent) as TTanTable;
 export { TanTable };

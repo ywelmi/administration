@@ -1,6 +1,4 @@
 import { Row } from "reactstrap";
-import HeaderLogo from "./HeaderLogo/HeaderLogo";
-import LeftHeader from "./LeftHeader/LeftHeader";
 import RightHeader from "./RightHeader/RightHeader";
 import { useLayoutStore } from "../../store/layout";
 
@@ -13,8 +11,12 @@ const Header = () => {
       style={{ display: scroll ? "none" : "" }}
     >
       <Row className="header-wrapper m-0">
-        <HeaderLogo />
+        {/* <HeaderLogo /> */}
         {/* <LeftHeader /> */}
+        <h3 style={{ width: "fit-content" }}>
+          Phần mềm hỗ trợ tổng hợp, xử lý, tính toán kết quả <br />
+          phục vụ Hội thao Thể thao Quốc phòng năm 2024
+        </h3>
         <RightHeader />
       </Row>
     </div>

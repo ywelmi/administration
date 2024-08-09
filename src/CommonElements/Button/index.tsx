@@ -1,4 +1,4 @@
-import { Button } from "reactstrap";
+import { Button, ButtonProps } from "reactstrap";
 import { CSSModule } from "reactstrap/types/lib/utils";
 
 interface StyleProp {
@@ -7,7 +7,7 @@ interface StyleProp {
   padding: number;
 }
 
-interface propsTypes {
+interface propsTypes extends ButtonProps {
   children?: React.ReactNode;
   color?: string;
   onClick?: (key: any) => void;
@@ -34,10 +34,7 @@ interface propsTypes {
 const Btn = (props: propsTypes) => {
   const { children } = props;
   return (
-    <Button
-      color={props.color ? props.color : "transparent"}
-      {...props}
-    >
+    <Button color={props.color ? props.color : "transparent"} {...props}>
       {children}
     </Button>
   );

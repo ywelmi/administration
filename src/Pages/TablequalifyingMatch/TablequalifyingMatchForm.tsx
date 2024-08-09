@@ -10,13 +10,12 @@ import {
   TTableQualifyingMember,
 } from "../../type/tablequalifyingMatch";
 import { parseInt } from "lodash";
-import { useTeamStore } from "../../store/team";
 import ReactDatePicker from "react-datepicker";
-import { TTeam } from "../../type/team";
 import { tablequalifyingMatchMembersGet } from "../../Service/tablequalifyingMatch";
-import { DHour, DSportLocation } from "../../type/enum";
+import { DTime as DTime } from "../../type/enum";
 import { useSportStore } from "../../store/sport";
 import { N } from "../../name-conversion";
+import { convertHoursToDate } from "../../utils/date";
 
 export interface ITablequalifyingMatchForm {
   tablequalifyingMatch?: Partial<TTablequalifyingMatch>;
@@ -24,27 +23,30 @@ export interface ITablequalifyingMatchForm {
   onCancel?: () => void;
 }
 
-export interface ITablequalifyingMatchModal extends ITablequalifyingMatchForm {
-}
+export interface ITablequalifyingMatchModal extends ITablequalifyingMatchForm {}
 
 interface ITablequalifyingMatchPopover extends ITablequalifyingMatchForm {}
 
-const TablequalifyingMatchForm = (
-  { tablequalifyingMatch: initTablequalifyingMatch, onSubmit, onCancel }:
-    ITablequalifyingMatchForm,
-) => {
+const TablequalifyingMatchForm = ({
+  tablequalifyingMatch: initTablequalifyingMatch,
+  onSubmit,
+  onCancel,
+}: ITablequalifyingMatchForm) => {
   const tablequalifyingMatch: Partial<TTablequalifyingMatch> =
-    initTablequalifyingMatch ? initTablequalifyingMatch : {
-      table_id: "",
-      team1_id: "",
-      team2_id: "",
-      indexs: 0,
-      match_day: new Date().toISOString(),
-      match_hour: "",
-      match_location_chid: "",
-      // team1_name: "",
-      // team2_name: "",
-    };
+    initTablequalifyingMatch
+      ? initTablequalifyingMatch
+      : {
+          table_id: "",
+          team1_id: "",
+          team2_id: "",
+          indexs: 0,
+          match_day: new Date().toISOString(),
+          match_hour: "",
+          match_time: DTime[0].k,
+          match_location_chid: "",
+          // team1_name: "",
+          // team2_name: "",
+        };
 
   const { sports, selectedSportId } = useSportStore();
   const selectedSport = sports.find(({ id }) => id === selectedSportId);
@@ -59,9 +61,10 @@ const TablequalifyingMatchForm = (
       console.log({ submitAddTablequalifyingMatchValue: value });
       let submitValue = {
         ...value,
-        indexs: typeof value.indexs === "string"
-          ? parseInt(value.indexs)
-          : value.indexs,
+        indexs:
+          typeof value.indexs === "string"
+            ? parseInt(value.indexs)
+            : value.indexs,
       } as TTablequalifyingMatch;
       if (submitValue) onSubmit(submitValue);
     },
@@ -70,12 +73,14 @@ const TablequalifyingMatchForm = (
   useEffect(() => {
     const tableId = formik.values.table_id;
     if (tableId) {
-      tablequalifyingMatchMembersGet(tableId).then((res) => {
-        const { data, status } = res;
-        if (status === 200) {
-          setTeams(data);
-        }
-      }).catch((err) => console.log({ err }));
+      tablequalifyingMatchMembersGet(tableId)
+        .then((res) => {
+          const { data, status } = res;
+          if (status === 200) {
+            setTeams(data);
+          }
+        })
+        .catch((err) => console.log({ err }));
     }
   }, [formik.values.table_id]);
 
@@ -87,7 +92,9 @@ const TablequalifyingMatchForm = (
     <form onSubmit={formik.handleSubmit}>
       <Row className="g-3">
         <Col md="12" className="form-check checkbox-primary">
-          <Label for="indexs" check>{t("indexs")}</Label>
+          <Label for="indexs" check>
+            {t("indexs")}
+          </Label>
           <Input
             id="indexs"
             type="number"
@@ -123,7 +130,9 @@ const TablequalifyingMatchForm = (
           />
         </Col>
         <Col md="12">
-          <Label for="indexs" check>{N["match_location"]}</Label>
+          <Label for="indexs" check>
+            {N["match_location"]}
+          </Label>
           <Input
             name="match_location"
             disabled
@@ -131,7 +140,9 @@ const TablequalifyingMatchForm = (
           />
         </Col>
         <Col md="12">
-          <Label for="indexs" check>{N["match_location_chid"]}</Label>
+          <Label for="indexs" check>
+            {N["match_location_chid"]}
+          </Label>
           <Input
             name="match_location_chid"
             value={formik.values.match_location_chid || ""}
@@ -140,25 +151,57 @@ const TablequalifyingMatchForm = (
         </Col>
 
         <Col md="12">
-          <Label for="match_day" check>{t("match_day")}</Label>
+          <Label for="match_day" check>
+            {t("match_day")}
+          </Label>
           <ReactDatePicker
             className="form-control"
             name="match_day"
             selected={new Date(formik.values.match_day || new Date())}
             // value={formik.values.match_day}
             onChange={(date) =>
-              formik.setFieldValue("match_day", date?.toISOString())}
+              formik.setFieldValue("match_day", date?.toISOString())
+            }
             locale={"vi"}
             dateFormat={"dd/MM/yyyy"}
           />
         </Col>
-        <Col>
-          <Label for="match_hour" check>{t("match_hour")}</Label>
-          <InputSelect
-            data={DHour.map((h, i) => ({ i, h }))}
-            k="h"
-            v="h"
+        <Col md="12">
+          <Label for="match_hour" check>
+            {t("match_hour")}
+          </Label>
+          <ReactDatePicker
+            className="form-control"
             name="match_hour"
+            value={
+              formik.values.match_hour
+                ? convertHoursToDate(formik.values.match_hour).toISOString()
+                : undefined
+            }
+            onChange={(date) =>
+              formik.setFieldValue(
+                "match_hour",
+                `${date?.getHours()}:${date?.getMinutes()}`
+              )
+            }
+            showTimeSelect
+            showTimeSelectOnly
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            timeCaption="Giờ"
+            locale={"vi"}
+          />
+        </Col>
+        <Col>
+          <Label for="match_time" check>
+            {t("match_time")}
+          </Label>
+          <InputSelect
+            data={DTime}
+            k="k"
+            v="v"
+            name="match_time"
+            value={formik.values.match_time}
             handleChange={formik.handleChange}
           />
         </Col>
@@ -167,18 +210,21 @@ const TablequalifyingMatchForm = (
           <Btn color="primary" type="submit">
             Xác nhận
           </Btn>
-          {onCancel
-            ? <Btn color="primary" type="button" onClick={onCancel}>Đóng</Btn>
-            : null}
+          {onCancel ? (
+            <Btn color="primary" type="button" onClick={onCancel}>
+              Đóng
+            </Btn>
+          ) : null}
         </Col>
       </Row>
     </form>
   );
 };
 
-const useTablequalifyingMatchModal = (
-  { onSubmit, ...rest }: ITablequalifyingMatchModal,
-) => {
+const useTablequalifyingMatchModal = ({
+  onSubmit,
+  ...rest
+}: ITablequalifyingMatchModal) => {
   const [opened, setOpened] = useState(false);
   const handleToggle = () => {
     setOpened((s) => !s);
@@ -208,9 +254,10 @@ const useTablequalifyingMatchModal = (
   return { TablequalifyingMatchModal, handleToggle };
 };
 
-const useTablequalifyingMatchPopover = (
-  { onSubmit, ...rest }: ITablequalifyingMatchPopover,
-) => {
+const useTablequalifyingMatchPopover = ({
+  onSubmit,
+  ...rest
+}: ITablequalifyingMatchPopover) => {
   const [opened, setOpened] = useState(false);
 
   const handleToggle = useCallback(() => {
@@ -222,9 +269,10 @@ const useTablequalifyingMatchPopover = (
     setOpened(false);
   };
 
-  const TablequalifyingMatchPopover = (
-    { children, target }: React.PropsWithChildren<{ target: string }>,
-  ) => (
+  const TablequalifyingMatchPopover = ({
+    children,
+    target,
+  }: React.PropsWithChildren<{ target: string }>) => (
     <div>
       {children}
       <Popovers

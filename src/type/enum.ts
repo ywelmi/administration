@@ -1,3 +1,7 @@
+export type TDict = {
+  k: string;
+  v: string | number;
+};
 export const DGender = ["Nam", "Nữ"];
 export const DRank = [
   "Binh nhì",
@@ -26,10 +30,19 @@ export const DRank = [
   "Đại tướng",
 ];
 
-export const DHour = [
-  "Sáng",
-  "Chiều",
-  "Tối",
+export const DTime: TDict[] = [
+  {
+    v: "1",
+    k: "Sáng",
+  },
+  {
+    v: "2",
+    k: "Chiều",
+  },
+  {
+    v: "3",
+    k: "Tối",
+  },
 ];
 
 export enum DSportType {
