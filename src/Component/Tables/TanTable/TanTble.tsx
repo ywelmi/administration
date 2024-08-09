@@ -273,8 +273,8 @@ const TanTableComponent = <T,>(
                     placeholder="Tìm kiếm"
                 />
             </div>
-            <table className="layout w-100">
-                <thead className="text-center ">
+            <table className="table">
+                <thead className="text-center">
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map((header, i) => {
