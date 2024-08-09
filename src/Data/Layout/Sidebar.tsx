@@ -68,7 +68,7 @@ export const useMenuList = () => {
                   lanClass: "lan-4",
                 },
                 {
-                  path: "/tablequalifyings/knockout/:sport_id",
+                  path: "/tablequalifyings/knockout",
                   title: "Vòng loại",
                   type: "link",
                   lanClass: "lan-4",
@@ -128,7 +128,7 @@ export const useMenuList = () => {
           unitType: "DQTV" as DUnitType,
           children: [
             {
-              //path: "/team/list",
+              path: "/team/list",
               title: "Đăng ký thi",
               type: "link",
               lanClass: "lan-4",
@@ -139,13 +139,13 @@ export const useMenuList = () => {
               lanClass: "lan-3",
               children: [
                 {
-                  //path: "/tablequalifyings/list",
+                  path: "/tablequalifyings/list",
                   title: "Vòng bảng",
                   type: "link",
                   lanClass: "lan-4",
                 },
                 {
-                  //path: "/tablequalifyings/knockout/:sport_id",
+                  path: "/tablequalifyings/knockout/:sport_id",
                   title: "Vòng loại",
                   type: "link",
                   lanClass: "lan-4",
@@ -153,7 +153,7 @@ export const useMenuList = () => {
               ],
             },
             {
-              //path: "/lotsdraw/list/",
+              path: "/lotsdraw/list/",
               title: "Môn bốc thăm",
               type: "link",
               lanClass: "lan-4",
@@ -165,13 +165,13 @@ export const useMenuList = () => {
             //   lanClass: "lan-4",
             // },
             {
-              // path: "/reportresult",
+              path: "/reportresult",
               title: "Xuất phiếu điểm",
               type: "link",
               lanClass: "lan-4",
             },
             {
-              //path: "/resultexport",
+              path: "/resultexport",
               title: "Bảng xếp hạng",
 
               type: "link",
