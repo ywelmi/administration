@@ -5,7 +5,7 @@ export const useMenuList = () => {
         {
             Items: [
                 {
-                    title: "Quản trị người dùng",
+                    title: "Quản trị",
                     icon: "fa fa-user",
                     lanClass: "lan-1",
                     children: [
@@ -16,7 +16,7 @@ export const useMenuList = () => {
                             path: "/user/list",
                         },
                         {
-                            title: "Phân quyền - Not",
+                            title: "Phân quyền",
                             type: "sub",
                             lanClass: "lan-3",
                             // path: "/user/list",
@@ -38,7 +38,7 @@ export const useMenuList = () => {
                     type: "link",
                 },
                 {
-                    title: "Nhập vận động viên cho đơn vị",
+                    title: "Nhập vận động viên",
                     icon: "fa fa-group",
                     lanClass: "lan-1",
                     path: "/teammember/list",
@@ -68,7 +68,7 @@ export const useMenuList = () => {
                                     lanClass: "lan-4",
                                 },
                                 {
-                                    path: "/tablequalifyings/knockout/:sport_id",
+                                    path: "/tablequalifyings/knockout",
                                     title: "Vòng loại",
                                     type: "link",
                                     lanClass: "lan-4",
@@ -122,38 +122,56 @@ export const useMenuList = () => {
                     ],
                 },
                 {
-                    title: "Lực lượng Dân quân tự vệ",
+                    title: "Dân quân tự vệ",
                     icon: "fa fa-th",
                     lanClass: "lan-1",
                     unitType: "DQTV" as DUnitType,
                     children: [
                         {
-                            //path: "/team/list",
+                            path: "/team/list",
                             title: "Đăng ký thi",
                             type: "link",
                             lanClass: "lan-4",
                         },
-
+                        {
+                            title: "Môn vòng bảng",
+                            type: "link",
+                            lanClass: "lan-3",
+                            children: [
+                                {
+                                    path: "/tablequalifyings/list",
+                                    title: "Vòng bảng",
+                                    type: "link",
+                                    lanClass: "lan-4",
+                                },
+                                {
+                                    path: "/tablequalifyings/knockout/:sport_id",
+                                    title: "Vòng loại",
+                                    type: "link",
+                                    lanClass: "lan-4",
+                                },
+                            ],
+                        },
                         {
                             path: "/lotsdraw/list/",
                             title: "Môn bốc thăm",
                             type: "link",
                             lanClass: "lan-4",
                         },
+                        // {
+                        //   path: "/progress",
+                        //   title: "Tiến độ thi đấu",
+                        //   type: "link",
+                        //   lanClass: "lan-4",
+                        // },
                         {
-                            path: "/martialartmilitia",
-                            title: "Môn võ Dân quân tự vệ",
-                            type: "link",
-                            lanClass: "lan-4",
-                        },
-                        {
-                            // path: "/reportresult",
+                            path: "/reportresult",
                             title: "Xuất phiếu điểm",
                             type: "link",
                             lanClass: "lan-4",
                         },
                         {
-                            //path: "/resultexport",
+                            path: "/resultexport",
                             title: "Bảng xếp hạng",
 
                             type: "link",

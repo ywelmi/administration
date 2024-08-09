@@ -60,6 +60,7 @@ const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
         header: N["dob"],
         cell: (props) => convertToDate(props.getValue() as string),
         meta: { custom: { date: true } },
+        filterFn: "dateFilter",
     },
     {
         accessorKey: "date_join_army",
@@ -125,7 +126,9 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
             const { org_id: f_org_id } = formik.values;
             if (f_org_id) {
                 const memberFilter = getFilterByValue("org_id", "=", f_org_id);
-                const members = await teammembersGet({ filter: memberFilter }).then((res) => {
+                const members = await teammembersGet({
+                    filter: memberFilter,
+                }).then((res) => {
                     const {
                         data: { data },
                     } = res;
@@ -187,30 +190,6 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                     </Col>
                 ) : null}
 
-                <ButtonGroup>
-                    <Button
-                        color="primary"
-                        outline
-                        onClick={() => {
-                            formik.setFieldValue("has_militia", false);
-                            formik.setFieldValue("has_army", true);
-                        }}
-                        active={!!formik.values.has_army}
-                    >
-                        Lực lượng thường trực
-                    </Button>
-                    <Button
-                        outline
-                        color="primary"
-                        onClick={() => {
-                            formik.setFieldValue("has_militia", true);
-                            formik.setFieldValue("has_army", false);
-                        }}
-                        active={!!formik.values.has_militia}
-                    >
-                        Dân quân tự vệ
-                    </Button>
-                </ButtonGroup>
                 {sports?.length ? (
                     <Col md="12">
                         <InputSelect
@@ -246,7 +225,6 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                                 "list_team_member",
                                 selectedRows.map((row) => row.id)
                             );
-
                             // Update
                             formik.setFieldValue(
                                 "list_member_id",

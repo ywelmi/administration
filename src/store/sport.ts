@@ -32,6 +32,7 @@ export type SportState = {
 const selector = (state: SportState): SportState => {
   const { unitType: uniteType } = useConfigStore.getState();
 
+  // console.log({ allSports: state.sports });
   if (uniteType) {
     const filteredSports = state.sports.filter(
       (s) => s.for_type === DUnit[uniteType],

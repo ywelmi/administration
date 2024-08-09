@@ -63,6 +63,10 @@ const Routes = [
         Component: <PageTablequalifyingKnockout />,
     },
     {
+        path: "/tablequalifyings/knockout",
+        Component: <PageTablequalifyingKnockout />,
+    },
+    {
         path: "/lotsdraw/list/:sport_id?",
         Component: <PageLotsDraw />,
     },
@@ -71,16 +75,12 @@ const Routes = [
         Component: <PageMartialArt />,
     },
     {
-        path: "/martialartmilitia",
-        Component: <PageMartialArtMilitia />,
-    },
-    {
         path: "/martialart/:sport_id/knockout/:content_id",
         Component: <MartialArtKnockout />,
     },
     {
-        path: "/reportresult",
-        Component: <PageReportResult />,
+        path: "/martialartmilitia",
+        Component: <PageMartialArtMilitia />,
     },
     {
         path: "/resultexport",
