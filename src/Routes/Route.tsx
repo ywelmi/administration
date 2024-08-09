@@ -87,8 +87,8 @@ const Routes = [
         Component: <PageResultExport />,
     },
     {
-        path: "/progress",
-        Component: <PageProgress />,
+        path: "/reportresult",
+        Component: <PageReportResult />,
     },
 ];
 
