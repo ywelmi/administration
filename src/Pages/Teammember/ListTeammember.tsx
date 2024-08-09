@@ -5,12 +5,7 @@ import { useTranslation } from "react-i18next";
 import { TTeammember } from "../../type/teammember";
 import { useTeammemberStore } from "../../store/teammember";
 import { useTeammemberModal } from "./TeammemberForm";
-import {
-    getTeammemberPhoto,
-    teammemberCreate,
-    teammemberDelete,
-    teammemberUpdate,
-} from "../../Service/teammember";
+import { getTeammemberPhoto, teammemberCreate, teammemberDelete, teammemberUpdate } from "../../Service/teammember";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { DGender, DRank } from "../../type/enum";
@@ -24,15 +19,8 @@ interface IListTeammember {
     showAction?: boolean;
     selectableRows?: boolean;
     data?: TTeammember[];
-    onRowSelect?: (
-        row: TTeammember,
-        e: React.MouseEvent<Element, MouseEvent>
-    ) => void;
-    onSelectedRowsChange?: (v: {
-        allSelected: boolean;
-        selectedCount: number;
-        selectedRows: TTeammember[];
-    }) => void;
+    onRowSelect?: (row: TTeammember, e: React.MouseEvent<Element, MouseEvent>) => void;
+    onSelectedRowsChange?: (v: { allSelected: boolean; selectedCount: number; selectedRows: TTeammember[] }) => void;
     columns?: ColumnDef<TTeammember>[];
     selectableRowSelected?: (row: TTeammember) => boolean;
 }
@@ -123,8 +111,7 @@ const tableColumns: ColumnDef<TTeammember>[] = [
         accessorKey: "date_of_issue",
         footer: (props) => props.column.id,
         header: N["date_of_issue"],
-        cell: (props) =>
-            convertToDate((props.getValue() as string) || new Date()),
+        cell: (props) => convertToDate((props.getValue() as string) || new Date()),
         filterFn: "dateFilter",
         meta: { custom: { date: true } },
     },
@@ -176,10 +163,7 @@ const action: ColumnDef<TTeammember> = {
                 });
         };
 
-        const {
-            handleToggle: handleToggleUpdateModal,
-            TeammemberModal: TeammemberUpdateModal,
-        } = useTeammemberModal({
+        const { handleToggle: handleToggleUpdateModal, TeammemberModal: TeammemberUpdateModal } = useTeammemberModal({
             onSubmit: handleUpdateTeammember,
             teammember,
         });
@@ -216,10 +200,7 @@ const action: ColumnDef<TTeammember> = {
         return (
             <UL className="action simple-list flex-row" id={teammember.id}>
                 <LI className="edit btn">
-                    <i
-                        className="icon-pencil-alt"
-                        onClick={handleToggleUpdateModal}
-                    />
+                    <i className="icon-pencil-alt" onClick={handleToggleUpdateModal} />
                     <TeammemberUpdateModal />
                 </LI>
                 <LI className="delete btn" onClick={handleConfirmDel}>
@@ -281,28 +262,19 @@ const PageTeammember = () => {
                 console.log({ err });
             });
     };
-    const {
-        handleToggle: handleToggleAddModal,
-        TeammemberModal: TeammemberAddModal,
-    } = useTeammemberModal({
+    const { handleToggle: handleToggleAddModal, TeammemberModal: TeammemberAddModal } = useTeammemberModal({
         onSubmit: handleAddTeammember,
     });
 
     return (
         <div className="page-body">
-            <Breadcrumbs
-                mainTitle={"Danh sách vận động viên"}
-                parent={"HTTQ2024"}
-            />
+            <Breadcrumbs mainTitle={"Danh sách vận động viên"} parent={"HTTQ2024"} />
             <Container fluid>
                 <Row>
                     <Col sm="12">
                         <Card>
                             <CardHeader className="pb-0 card-no-border">
-                                <div
-                                    className="btn btn-primary"
-                                    onClick={handleToggleAddModal}
-                                >
+                                <div className="btn btn-primary" onClick={handleToggleAddModal}>
                                     <i className="fa fa-plus" />
                                     {"Thêm mới"}
                                 </div>

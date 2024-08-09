@@ -1,12 +1,4 @@
-import {
-    Button,
-    ButtonGroup,
-    Col,
-    FormGroup,
-    Input,
-    Label,
-    Row,
-} from "reactstrap";
+import { Button, ButtonGroup, Col, FormGroup, Input, Label, Row } from "reactstrap";
 import { TTeam } from "../../type/team";
 import { useFormik } from "formik";
 import { Btn } from "../../AbstractElements";
@@ -223,10 +215,8 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                         columns={tableTeammemberColumns}
                         onSelectedRowsChange={({ selectedRows }) => {
                             if (
-                                selectedRows.length ===
-                                    formik.values.list_team_member?.length ||
-                                selectedRows.length ===
-                                    formik.values.list_member_id?.length
+                                selectedRows.length === formik.values.list_team_member?.length ||
+                                selectedRows.length === formik.values.list_member_id?.length
                             ) {
                                 return;
                             }
@@ -242,10 +232,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                             );
                         }}
                         selectableRowSelected={(r) => {
-                            return (
-                                !!team.list_member_id?.includes(r.id) ||
-                                !!team.list_team_member?.includes(r.id)
-                            );
+                            return !!team.list_member_id?.includes(r.id) || !!team.list_team_member?.includes(r.id);
                         }}
                     />
                 </Col>
@@ -293,11 +280,7 @@ const useTeamModal = ({ onSubmit, ...rest }: ITeamModal) => {
             isOpen={opened}
             toggle={handleToggle}
         >
-            <TeamForm
-                onSubmit={handleSubmit}
-                {...rest}
-                onCancel={() => setOpened(false)}
-            />
+            <TeamForm onSubmit={handleSubmit} {...rest} onCancel={() => setOpened(false)} />
         </CommonModal>
     );
 

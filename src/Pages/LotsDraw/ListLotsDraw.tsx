@@ -22,7 +22,7 @@ import ReactDatePicker from "react-datepicker";
 import { convertToDate } from "../../utils/date";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { Btn, H3, H5, LI } from "../../AbstractElements";
-import { useLotsDrawSubmitModal } from "../LotsDrawSubmit/LotsDrawSubmitForm";
+import { useLotsDrawSubmitModal, useLotsDrawUpdateAtheleModal } from "../LotsDrawSubmit/LotsDrawSubmitForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
 
@@ -230,14 +230,15 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [
             // if (idx !== -1) hasEmptyFiled = true;
             // if (hasEmptyFiled) return null;
             if (!original.isDetail) return null;
-            const { LotsDrawSubmitModal, handleToggle } = useLotsDrawSubmitModal({
+            const { LotsDrawUpdateAthele, handleToggle } = useLotsDrawUpdateAtheleModal({
                 sportId: original.sport_id,
-                orgId: original.org_id,
+                orgId: original.team_id,
             });
             return (
                 <Btn className="btn btn-success edit" onClick={handleToggle}>
-                    Phiếu đăng ký
-                    <LotsDrawSubmitModal />
+                    <i className="icon-pencil-alt" />
+                    Lập lịch
+                    <LotsDrawUpdateAthele />
                 </Btn>
             );
         },
@@ -314,7 +315,7 @@ const PageLotsDraw = () => {
 
     const { sport_id: paramSportId } = useParams();
     // số VĐV thi đấu trong 1 lượt
-    const [numberPlayedPerRound, setNumberPlayedPerRound] = useState<number>(1);
+    const [numberPlayedPerRound, setNumberPlayedPerRound] = useState<number>(3);
     // số VĐV thi đấu trong 1 lượt
     const [selectedContentSport, setSelectedContentSport] = useState<string>("");
 
@@ -325,7 +326,7 @@ const PageLotsDraw = () => {
     }, [paramSportId]);
     //danh sách các nội dung thi đấu của môn
     const contentSport = useRef<any>();
-    //số VĐV tham gia môn thi
+    //số VĐV tham gia nội dung thi
     const numberAthele = useRef<any>();
     const [data, setData] = useState<TLotsDraw[]>([]);
 
@@ -345,15 +346,17 @@ const PageLotsDraw = () => {
                 console.log(contentSport.current);
             })
             .catch((err) => console.log({ err }));
-        getNumberAthele(sportId)
+    }, []);
+    const handleSelectContent = (id: any) => {
+        getNumberAthele(id)
             .then((res) => {
                 const { data, status } = res;
                 console.log({ data });
                 if (status === 200) numberAthele.current = data;
-                console.log(contentSport.current);
+                setSelectedContentSport(id);
             })
             .catch((err) => console.log({ err }));
-    }, []);
+    };
     useEffect(() => {
         if (sportId) {
             fetchData(sportId);
@@ -438,7 +441,7 @@ const PageLotsDraw = () => {
                                             onClick={() => {
                                                 if (sportId) {
                                                     toggleLotsDrawModal();
-                                                    alert("hii");
+
                                                     // setTimeout(() => fetchData(sportId), 2000);
                                                 } else {
                                                     toast.warn("Mời chọn môn thi");
@@ -470,19 +473,29 @@ const PageLotsDraw = () => {
                                                                 v="id"
                                                                 name="sport"
                                                                 value={selectedContentSport}
-                                                                handleChange={(e) =>
-                                                                    setSelectedContentSport(e.target.value)
-                                                                }
+                                                                handleChange={(e) => {
+                                                                    handleSelectContent(e.target.value);
+                                                                }}
                                                             />
                                                         )}
                                                     </div>
                                                     <Row className="d-flex">
                                                         <Col md={7}>
-                                                            <InputGroup>
+                                                            <InputGroup className="d-flex justify-content-between align-items-center p-1">
                                                                 <InputGroupText className="text-center">
                                                                     <strong>Số VĐV thi đấu trong 1 lượt:</strong>
                                                                 </InputGroupText>
+                                                                <Btn
+                                                                    className={`p-0 increment-touchspin btn-touchspin m-10`}
+                                                                    onClick={() => {
+                                                                        if (numberPlayedPerRound == 2) return;
+                                                                        setNumberPlayedPerRound((value) => value - 1);
+                                                                    }}
+                                                                >
+                                                                    <i className="fa fa-minus" />
+                                                                </Btn>
                                                                 <Input
+                                                                    className="me-1"
                                                                     type="number"
                                                                     value={numberPlayedPerRound}
                                                                     onChange={(e) =>
@@ -490,7 +503,17 @@ const PageLotsDraw = () => {
                                                                             parseInt(e.target.value)
                                                                         )
                                                                     }
+                                                                    min={2}
+                                                                    readOnly
                                                                 />
+                                                                <Btn
+                                                                    className={`p-0 increment-touchspin btn-touchspin m-10`}
+                                                                    onClick={() =>
+                                                                        setNumberPlayedPerRound((value) => value + 1)
+                                                                    }
+                                                                >
+                                                                    <i className="fa fa-plus" />
+                                                                </Btn>
                                                             </InputGroup>
                                                         </Col>
                                                         <Col md={5}>

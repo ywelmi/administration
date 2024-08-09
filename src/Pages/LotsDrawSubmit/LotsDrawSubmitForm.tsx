@@ -2,42 +2,67 @@ import { TLotsDraw } from "../../type/lotsdraw";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useState } from "react";
 import { LotsDrawSubmitSwimForm } from "./LotsDrawSubmitSwimForm";
+import { LotsDrawUpdateAtheleForm } from "./LotsDrawUpdateAtheleForm";
 
 interface ILotsDrawSubmitModal {
-  lotsdraw?: TLotsDraw[];
-  onCancel?: () => void;
-  sportId: string;
-  orgId: string;
-  title?: string;
-  // onSubmit: (lotsdraw: TLotsDraw[]) => void;
+    lotsdraw?: TLotsDraw[];
+    onCancel?: () => void;
+    sportId: string;
+    orgId: string;
+    title?: string;
+    // onSubmit: (lotsdraw: TLotsDraw[]) => void;
 }
 
-const useLotsDrawSubmitModal = (
-  { sportId, orgId, title }: ILotsDrawSubmitModal,
-) => {
-  const [opened, setOpened] = useState(false);
-  const handleToggle = () => {
-    setOpened((s) => !s);
-  };
+const useLotsDrawSubmitModal = ({ sportId, orgId, title }: ILotsDrawSubmitModal) => {
+    const [opened, setOpened] = useState(false);
+    const handleToggle = () => {
+        setOpened((s) => !s);
+    };
 
-  const LotsDrawSubmitModal = () => (
-    <CommonModal
-      backdrop="static"
-      modalBodyClassName="social-profile text-start"
-      isOpen={opened}
-      toggle={handleToggle}
-      title={title}
-    >
-      <LotsDrawSubmitSwimForm
-        sportId={sportId}
-        // onSubmit={() => setOpened(false)}
-        orgId={orgId}
-        onCancel={() => setOpened(false)}
-      />
-    </CommonModal>
-  );
+    const LotsDrawSubmitModal = () => (
+        <CommonModal
+            backdrop="static"
+            modalBodyClassName="social-profile text-start"
+            isOpen={opened}
+            toggle={handleToggle}
+            title={title}
+        >
+            <LotsDrawSubmitSwimForm
+                sportId={sportId}
+                // onSubmit={() => setOpened(false)}
+                orgId={orgId}
+                onCancel={() => setOpened(false)}
+            />
+        </CommonModal>
+    );
 
-  return { LotsDrawSubmitModal, handleToggle };
+    return { LotsDrawSubmitModal, handleToggle };
 };
 
-export { useLotsDrawSubmitModal };
+const useLotsDrawUpdateAtheleModal = ({ sportId, orgId, title }: ILotsDrawSubmitModal) => {
+    const [opened, setOpened] = useState(false);
+    const handleToggle = () => {
+        setOpened((s) => !s);
+    };
+
+    const LotsDrawUpdateAthele = () => (
+        <CommonModal
+            backdrop="static"
+            modalBodyClassName="social-profile text-start"
+            isOpen={opened}
+            toggle={handleToggle}
+            title={title}
+        >
+            <LotsDrawUpdateAtheleForm
+                sportId={sportId}
+                // onSubmit={() => setOpened(false)}
+                orgId={orgId}
+                onCancel={() => setOpened(false)}
+            />
+        </CommonModal>
+    );
+
+    return { LotsDrawUpdateAthele, handleToggle };
+};
+
+export { useLotsDrawSubmitModal, useLotsDrawUpdateAtheleModal };
