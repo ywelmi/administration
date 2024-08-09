@@ -39,17 +39,17 @@ const RoundUpdatePairForm = ({
       },
     },
     {
-      accessorKey: "team1_name",
+      accessorKey: "member1_name",
       footer: (props) => props.column.id,
-      header: N["team1_name"],
+      header: N["member1_name"],
       cell(props) {
         return props.getValue();
       },
     },
     {
-      accessorKey: "team2_name",
+      accessorKey: "member2_name",
       footer: (props) => props.column.id,
-      header: N["team2_name"],
+      header: N["member2_name"],
       cell(props) {
         return props.getValue();
       },
@@ -180,7 +180,6 @@ const useRoundUpdateModal = ({ onSubmit, ...rest }: IRoundUpdateModal) => {
       isOpen={opened}
       toggle={handleToggle}
     >
-      yolo
       <RoundUpdatePairForm
         onSubmit={handleSubmit}
         {...rest}

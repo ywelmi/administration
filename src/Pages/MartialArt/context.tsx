@@ -112,7 +112,7 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
     if (sportId && contentId) {
       fetchTablequalifyingKnockout(sportId, contentId);
     }
-  }, [sportId, contentId]);
+  }, [sportId, contentId, fetchTablequalifyingKnockout]);
 
   useEffect(() => {
     refreshMartialArtKnockout();

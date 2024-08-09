@@ -12,7 +12,8 @@ interface IRound {
 }
 
 const Round = ({ title, roundIndex }: IRound) => {
-  const { listTablequalifyingKnockout, rounds } = useKnockoutContext();
+  const { listTablequalifyingKnockout, rounds, refreshKnockout } =
+    useKnockoutContext();
   const round = rounds[roundIndex];
   const knockoutPairs = listTablequalifyingKnockout.filter(
     (t) => t.grade === round.grade
@@ -42,6 +43,7 @@ const Round = ({ title, roundIndex }: IRound) => {
         .then(() => {
           toast.success(N["success"]);
           console.log("round pair successfully");
+          refreshKnockout();
         })
         .catch((err) => {
           toast.error(err.data ? err.data : N["error"]);

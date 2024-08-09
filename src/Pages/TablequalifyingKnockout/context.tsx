@@ -24,6 +24,7 @@ interface IKnockoutContext {
   fetchTablequalifyingKnockout: (s: string) => void;
   listTablequalifyingKnockout: TTablequalifyingKnockout[];
   knockoutSports: TSport[];
+  refreshKnockout: () => void;
   knockoutTeams: TTeam[]; // which can be selected to create a new pair
   // updateMatch: (m: Partial<TTablequalifyingKnockout>) => void;
 }
@@ -35,6 +36,7 @@ const KnockoutContext = createContext<IKnockoutContext>({
   setRounds: () => {},
   fetchTablequalifyingKnockout: () => {},
   listTablequalifyingKnockout: [],
+  refreshKnockout: () => {},
   knockoutSports: [],
   knockoutTeams: [],
   // updateMatch: () => {},
@@ -85,6 +87,12 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
       .catch((err) => console.log({ err }));
   }, []);
 
+  const refreshKnockout = useCallback(() => {
+    // console.log({ sportId, contentId });
+    if (sportId) {
+      fetchTablequalifyingKnockout(sportId);
+    }
+  }, [sportId, fetchTablequalifyingKnockout]);
   const fetchKnockoutTeams = useCallback((sportId: string) => {
     teamsBySportGet(sportId)
       .then((res) => {
@@ -113,6 +121,7 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
   return (
     <KnockoutContext.Provider
       value={{
+        refreshKnockout,
         // updateMatch,
         listTablequalifyingKnockout,
         knockoutTeams,
