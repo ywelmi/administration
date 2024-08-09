@@ -134,23 +134,10 @@ export const useMenuList = () => {
                             lanClass: "lan-4",
                         },
                         {
-                            title: "Môn vòng bảng",
+                            path: "/martialartmilitia",
+                            title: "Võ DQTV",
                             type: "link",
-                            lanClass: "lan-3",
-                            children: [
-                                {
-                                    path: "/tablequalifyings/list",
-                                    title: "Vòng bảng",
-                                    type: "link",
-                                    lanClass: "lan-4",
-                                },
-                                {
-                                    path: "/tablequalifyings/knockout/:sport_id",
-                                    title: "Vòng loại",
-                                    type: "link",
-                                    lanClass: "lan-4",
-                                },
-                            ],
+                            lanClass: "lan-4",
                         },
                         {
                             path: "/lotsdraw/list/",
