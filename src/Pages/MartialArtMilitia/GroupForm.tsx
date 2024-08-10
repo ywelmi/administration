@@ -18,9 +18,11 @@ import { getFilterByValue } from "../../Service/_getParams";
 import { teammembersGet } from "../../Service/teammember";
 import { ColumnDef } from "@tanstack/react-table";
 import { martialArtMilitiaArmyGroupGetContent } from "../../Service/martialArtMilitia";
+import { teamGet, teamsGet } from "../../Service/team";
 
 interface IGroupForm {
     team?: TGroup;
+    sportId: string;
     onSubmit: (team: TGroup) => void;
     onCancel?: () => void;
 }
@@ -88,7 +90,7 @@ const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
     },
 ];
 
-const GroupForm = ({ team: initTeam, onSubmit, onCancel }: IGroupForm) => {
+const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId }: IGroupForm) => {
     const team: Partial<TGroup> = initTeam
         ? initTeam
         : {
@@ -119,20 +121,21 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel }: IGroupForm) => {
     });
     const listContent = useRef<any>(null);
     const listTypeGroup = [
-        { id: 1, name: "Đôi nam 1", number: 2 },
-        { id: 2, name: "Đôi nam 2", number: 2 },
+        { id: 1, name: "Đôi nam 1", number: 2, gender: 1 },
+        { id: 2, name: "Đôi nam 2", number: 2, gender: 1 },
 
-        { id: 3, name: "Đôi nữ 1", number: 2 },
+        { id: 3, name: "Đôi nữ 1", number: 2, gender: 2 },
 
-        { id: 4, name: "Đôi nữ 2", number: 2 },
+        { id: 4, name: "Đôi nữ 2", number: 2, gender: 2 },
 
-        { id: 5, name: "Đồng diễn", number: 100 },
+        { id: 5, name: "Đồng diễn", number: 100, gender: 0 },
     ];
     const fetch_data_content = () => {
         (async () => {
             const contents = await martialArtMilitiaArmyGroupGetContent().then((res) => {
                 return res.data;
             });
+            console.log(contents);
             listContent.current = contents;
         })();
 
@@ -147,6 +150,8 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel }: IGroupForm) => {
         // })();
     };
     const [numberAthele, setNumberAthele] = useState<number>(2);
+    const [teamId, setTeamId] = useState<any>("");
+    const [orgName, setOrgName] = useState<any>("");
     const [numberAtheleSelected, setNumberAtheleSelected] = useState(2);
     const [orgMembers, setOrgMembers] = useState<TTeammember[]>([]);
     useEffect(() => {
@@ -157,13 +162,46 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel }: IGroupForm) => {
             const { org_id: f_org_id } = formik.values;
             if (f_org_id) {
                 const memberFilter = getFilterByValue("org_id", "=", f_org_id);
-                const members = await teammembersGet({ filter: memberFilter }).then((res) => {
+                // const members = await teammembersGet({ filter: memberFilter }).then((res) => {
+                //     const {
+                //         data: { data },
+                //     } = res;
+                //     return data;
+                // });
+                // setOrgMembers(members);
+                const team = await teamsGet({ filter: memberFilter }).then((res) => {
                     const {
                         data: { data },
                     } = res;
+
                     return data;
                 });
-                setOrgMembers(members);
+                var hasTeam = false;
+                var team_id = "";
+                var org_name = "";
+                team.forEach((e) => {
+                    if (e.sport_id == sportId) {
+                        //alert(e.id);
+                        hasTeam = true;
+                        team_id = e.id;
+                        org_name = e.org_name;
+                    }
+                });
+                if (hasTeam) {
+                    const memberFilter1 = getFilterByValue("team_id", "=", team_id);
+                    const members = await teammembersGet({ filter: memberFilter1 }).then((res) => {
+                        const {
+                            data: { data },
+                        } = res;
+                        return data;
+                    });
+                    setOrgMembers(members);
+                    setTeamId(team_id);
+                    setOrgName(org_name);
+                } else {
+                    alert("Đơn vị chưa đăng ký đội tham gia môn võ DQTV");
+                    setOrgMembers([]);
+                }
             }
         })();
     }, [formik.values.org_id]);
@@ -206,12 +244,14 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel }: IGroupForm) => {
                 <Col md="12">
                     <InputSelect
                         title={t("sport_id")}
-                        data={sports.filter((e) => e.id == "6e929924-a5d7-4b4b-a261-cbe4e6b9a97b")}
+                        data={sports.filter((e) => e.id == sportId)}
                         k="name"
                         name="sport_id"
                         v="id"
-                        handleChange={(e) => {}}
-                        value={"6e929924-a5d7-4b4b-a261-cbe4e6b9a97b"}
+                        handleChange={(e) => {
+                            formik.setFieldValue("sport_id", sportId);
+                        }}
+                        value={sportId}
                     />
                 </Col>
                 <Row className="m-t-20">
@@ -222,10 +262,18 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel }: IGroupForm) => {
                                     title={"Nội dung thi"}
                                     data={listContent.current}
                                     k="name"
-                                    name="content_name"
-                                    v="content_id"
+                                    name="content_id"
+                                    v="id"
                                     handleChange={(e) => {
                                         formik.handleChange(e);
+                                        formik.setFieldValue("team_id", teamId);
+                                        formik.setFieldValue("sport_id", sportId);
+                                        formik.setFieldValue(
+                                            "content_name",
+                                            listContent.current.filter(
+                                                (element: any) => element.id == e.target.value
+                                            )[0].name
+                                        );
                                     }}
                                     value={formik.values.content_id}
                                 />
@@ -236,11 +284,21 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel }: IGroupForm) => {
                                     title={"Nội dung VĐV"}
                                     data={listTypeGroup}
                                     k="name"
-                                    name="name"
-                                    v="number"
+                                    name="type"
+                                    v="name"
                                     handleChange={(e) => {
                                         formik.handleChange(e);
-                                        setNumberAthele(parseInt(e.target.value));
+                                        if (e.target.value != "Đồng diễn") {
+                                            setNumberAthele(2);
+                                        } else {
+                                            setNumberAthele(100);
+                                        }
+
+                                        formik.setFieldValue(
+                                            "gender",
+                                            listTypeGroup.filter((element: any) => element.name == e.target.value)[0]
+                                                .gender
+                                        );
                                     }}
                                     value={formik.values.type}
                                 />
@@ -260,7 +318,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel }: IGroupForm) => {
                         onSelectedRowsChange={({ selectedRows }) => {
                             if (
                                 selectedRows.length === formik.values.list_team_member?.length ||
-                                selectedRows.length === formik.values.list_member_id?.length
+                                selectedRows.length === formik.values.lst_member?.length
                             ) {
                                 return;
                             }
@@ -272,13 +330,13 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel }: IGroupForm) => {
                             );
                             // Update
                             formik.setFieldValue(
-                                "list_member_id",
+                                "lst_member",
                                 selectedRows.map((row) => row.id)
                             );
                             setNumberAtheleSelected(selectedRows.length);
                         }}
                         selectableRowSelected={(r) => {
-                            return !!team.list_member_id?.includes(r.id) || !!team.list_team_member?.includes(r.id);
+                            return !!team.lst_member?.includes(r.id) || !!team.list_team_member?.includes(r.id);
                         }}
                     />
                 </Col>
@@ -298,11 +356,21 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel }: IGroupForm) => {
                     <Btn
                         color="primary"
                         type="button"
-                        onClick={() =>
-                            numberAthele == numberAtheleSelected && numberAthele != 100
-                                ? formik.submitForm()
-                                : alert("Chọn đúng số lượng thành viên cần thiết: " + numberAthele)
-                        }
+                        onClick={() => {
+                            formik.setFieldValue(
+                                "name",
+                                orgName + " - " + formik.values.type + " - " + formik.values.content_name
+                            );
+                            if (formik.values.type && formik.values.content_id) {
+                                numberAthele == 100
+                                    ? formik.submitForm()
+                                    : numberAthele == numberAtheleSelected
+                                    ? formik.submitForm()
+                                    : alert("Chọn đúng số lượng thành viên cần thiết: " + numberAthele);
+                            } else {
+                                alert("Vui lòng chọn đầy đủ các nội dung của nhóm thi đấu!");
+                            }
+                        }}
                     >
                         Xác nhận
                     </Btn>
@@ -317,7 +385,8 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel }: IGroupForm) => {
     );
 };
 
-const useGroupModal = ({ onSubmit, ...rest }: ITeamModal) => {
+const useGroupModal = ({ sportId, onSubmit, ...rest }: ITeamModal) => {
+    const sport_Id = "6e929924-a5d7-4b4b-a261-cbe4e6b9a97b";
     const [opened, setOpened] = useState(false);
     const handleToggle = () => {
         setOpened((s) => !s);
@@ -334,7 +403,7 @@ const useGroupModal = ({ onSubmit, ...rest }: ITeamModal) => {
             isOpen={opened}
             toggle={handleToggle}
         >
-            <GroupForm onSubmit={handleSubmit} {...rest} onCancel={() => setOpened(false)} />
+            <GroupForm sportId={sport_Id} onSubmit={handleSubmit} {...rest} onCancel={() => setOpened(false)} />
         </CommonModal>
     );
 

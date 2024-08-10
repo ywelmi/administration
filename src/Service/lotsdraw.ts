@@ -44,9 +44,10 @@ export const lotsdrawResultUpdate = (orgId: string, lotsdrawResult: Partial<TLot
 };
 
 // lấy danh sách Cập nhật điểm cho đơn vị theo môn thi
-export const lotsdrawScheduleGet = (member_count: number, sport_id: string) => {
+export const lotsdrawScheduleGet = (member_count: number, sport_id: string, content_id: string) => {
     return httpPost<any>(`/sports/${sport_id}/matrix_ticket`, {
         member_count,
         sport_id,
+        content_id,
     });
 };

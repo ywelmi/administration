@@ -12,6 +12,7 @@ export interface TMartialArtMilitiaArmyGroupGet {
     match_hour?: string;
     match_date?: string;
     locations?: string;
+    org_id: string;
 }
 
 export interface TMartialArtMilitiaArmyGroupCreate {
