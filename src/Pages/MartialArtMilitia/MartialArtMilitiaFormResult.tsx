@@ -7,6 +7,7 @@ import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble"
 import { ColumnDef } from "@tanstack/react-table";
 import {
     martialArtMilitiaArmyGroupGetAll,
+    martialArtMilitiaArmyGroupGetInsertPoint,
     martialArtMilitiaArmyGroupGetLotsdraw,
     martialArtMilitiaArmyGroupGetUpdate,
 } from "../../Service/martialArtMilitia";
@@ -15,22 +16,22 @@ import { N } from "../../name-conversion";
 import { da } from "date-fns/locale";
 import { TLotsDraw } from "../../type/lotsdraw";
 
-interface IMartialArtMilitiaForm {
+interface IMartialArtMilitiaFormResult {
     MartialArtMilitia: TMartialArtMilitiaArmyGroupGet[];
     onCancel?: () => void;
     sportId: string;
     onSubmit: (MartialArtMilitia: TMartialArtMilitiaArmyGroupGet[]) => void;
 }
 
-interface IMartialArtMilitiaModal extends Omit<IMartialArtMilitiaForm, "MartialArtMilitia" | "onSubmit"> {
+interface IMartialArtMilitiaModal extends Omit<IMartialArtMilitiaFormResult, "MartialArtMilitia" | "onSubmit"> {
     MartialArtMilitia?: TMartialArtMilitiaArmyGroupGet[];
 }
 
 const getMartialArtMilitiaId = (d: TMartialArtMilitiaArmyGroupGet) => d.id;
-const MartialArtMilitiaForm = ({ MartialArtMilitia, onCancel, onSubmit }: IMartialArtMilitiaForm) => {
+const MartialArtMilitiaFormResult = ({ MartialArtMilitia, onCancel, onSubmit }: IMartialArtMilitiaFormResult) => {
     const columns: ColumnDef<TMartialArtMilitiaArmyGroupGet>[] = [
         {
-            accessorKey: "team_name",
+            accessorKey: "name",
             footer: (props) => props.column.id,
             header: N["team_name"],
             cell(props) {
@@ -38,9 +39,9 @@ const MartialArtMilitiaForm = ({ MartialArtMilitia, onCancel, onSubmit }: IMarti
             },
         },
         {
-            accessorKey: "ticket_index",
+            accessorKey: "point",
             footer: (props) => props.column.id,
-            header: N["ticket_index"],
+            header: "Điểm thi đấu",
         },
     ];
     const ref = useRef<ITanTableRef<TMartialArtMilitiaArmyGroupGet>>(null);
@@ -70,7 +71,7 @@ const MartialArtMilitiaForm = ({ MartialArtMilitia, onCancel, onSubmit }: IMarti
     );
 };
 
-const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
+const useMartialArtMilitiaResultModal = ({ sportId, org_id, onSubmit, ...rest }: any) => {
     const [data, setData] = useState<TMartialArtMilitiaArmyGroupGet[]>([]);
 
     const [opened, setOpened] = useState(false);
@@ -79,8 +80,8 @@ const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
     };
     const fetch_data = useCallback(() => {
         (async () => {
-            const contents = await martialArtMilitiaArmyGroupGetLotsdraw().then((res) => {
-                return res.data;
+            const contents = await martialArtMilitiaArmyGroupGetInsertPoint(org_id, sportId).then((res) => {
+                return res.data.data;
             });
             console.log(contents);
             setData(contents);
@@ -115,7 +116,7 @@ const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
             isOpen={opened}
             toggle={handleToggle}
         >
-            <MartialArtMilitiaForm
+            <MartialArtMilitiaFormResult
                 MartialArtMilitia={data}
                 sportId={sportId}
                 onSubmit={handleSubmit}
@@ -128,4 +129,4 @@ const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
     return { MartialArtMilitiaModal, handleToggle, handleSubmit };
 };
 
-export { MartialArtMilitiaForm, useMartialArtMilitiaModal };
+export { MartialArtMilitiaFormResult, useMartialArtMilitiaResultModal };

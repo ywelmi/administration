@@ -9,11 +9,11 @@ import { lotsdrawScheduleGet, lotsdrawsGet, lotsdrawUpdate } from "../../Service
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
 
-const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, onCancel }: any) => {
+const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, onCancel }: any) => {
     const [schedule, setSchedule] = useState<any>([]);
 
     const fetch_data = async () => {
-        await lotsdrawScheduleGet(numberPerRound, sport_id).then((res) => {
+        await lotsdrawScheduleGet(numberPerRound, sport_id, content_id).then((res) => {
             setSchedule(res.data);
         });
     };
@@ -56,7 +56,7 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, onCancel }: 
     );
 };
 
-const useLotsDrawScheduleModal = ({ sportId, numberPerRound, numberOfTeam }: any) => {
+const useLotsDrawScheduleModal = ({ sportId, content_id, numberPerRound, numberOfTeam }: any) => {
     const [data, setData] = useState<TLotsDraw[]>([]);
     console.log("! lượt:" + numberPerRound);
     const [opened, setOpened] = useState(false);
@@ -104,6 +104,7 @@ const useLotsDrawScheduleModal = ({ sportId, numberPerRound, numberOfTeam }: any
                 numberPerRound={numberPerRound}
                 numberOfTeam={numberOfTeam}
                 sport_id={sportId}
+                content_id={content_id}
                 onCancel={() => setOpened(false)}
             />
         </CommonModal>

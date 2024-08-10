@@ -229,7 +229,7 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [
             // const idx = Object.values(original).findIndex((v) => v == null);
             // if (idx !== -1) hasEmptyFiled = true;
             // if (hasEmptyFiled) return null;
-            if (!original.isDetail) return null;
+            // if (!original.isDetail) return null;
             const { LotsDrawUpdateAthele, handleToggle } = useLotsDrawUpdateAtheleModal({
                 sportId: original.sport_id,
                 orgId: original.team_id,
@@ -252,7 +252,7 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [
             // const idx = Object.values(original).findIndex((v) => v == null);
             // if (idx !== -1) hasEmptyFiled = true;
             // if (hasEmptyFiled) return null;
-            if (!original.isDetail) return null;
+            // if (!original.isDetail) return null;
             const { LotsDrawSubmitModal, handleToggle } = useLotsDrawSubmitModal({
                 sportId: original.sport_id,
                 orgId: original.org_id,
@@ -396,6 +396,7 @@ const PageLotsDraw = () => {
     const { LotsDrawScheduleModal: LotsDrawScheduleModal, handleToggle: toggleLotsDrawScheduleModal } =
         useLotsDrawScheduleModal({
             sportId: sportId,
+            content_id: selectedContentSport,
             numberPerRound: numberPlayedPerRound,
             numberOfTeam: data,
         });
@@ -520,7 +521,9 @@ const PageLotsDraw = () => {
                                                             <Btn
                                                                 className="btn btn-info"
                                                                 onClick={() => {
-                                                                    toggleLotsDrawScheduleModal();
+                                                                    selectedContentSport != ""
+                                                                        ? toggleLotsDrawScheduleModal()
+                                                                        : alert("Chưa chọn nội dung thi");
                                                                 }}
                                                             >
                                                                 Xem lịch thi đấu

@@ -23,10 +23,11 @@ export interface TTeam {
 export interface TGroup {
     id: string;
     content_id: string;
+    team_id: string;
     org_id: string;
     content_name: string;
     org_name: string;
-    list_member_id?: string[]; // PUT: list of teammembers' ids
+    lst_member?: string[]; // PUT: list of teammembers' ids
     list_member_name?: string;
     type: number;
     // GET by team id
