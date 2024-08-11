@@ -61,4 +61,5 @@ export interface TTableQualifyingMember {
     rating_order?: number;
     match_team_id?: string;
     team_name: string;
+    member_id: string,
 }

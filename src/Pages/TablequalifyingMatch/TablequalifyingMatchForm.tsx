@@ -109,7 +109,7 @@ const TablequalifyingMatchForm = ({
             data={teams || []}
             k="team_name"
             name="team1_id"
-            v="team_id"
+            v="member_id"
             handleChange={(e) => {
               formik.handleChange(e);
             }}
@@ -122,7 +122,7 @@ const TablequalifyingMatchForm = ({
             data={teams || []}
             k="team_name"
             name="team2_id"
-            v="team_id"
+            v="member_id"
             handleChange={(e) => {
               formik.handleChange(e);
             }}
@@ -173,9 +173,9 @@ const TablequalifyingMatchForm = ({
           <ReactDatePicker
             className="form-control"
             name="match_hour"
-            value={
+            selected={
               formik.values.match_hour
-                ? convertHoursToDate(formik.values.match_hour).toISOString()
+                ? convertHoursToDate(formik.values.match_hour)
                 : undefined
             }
             onChange={(date) =>
@@ -187,6 +187,7 @@ const TablequalifyingMatchForm = ({
             showTimeSelect
             showTimeSelectOnly
             timeFormat="HH:mm"
+            dateFormat="HH:mm"
             timeIntervals={15}
             timeCaption="Giờ"
             locale={"vi"}

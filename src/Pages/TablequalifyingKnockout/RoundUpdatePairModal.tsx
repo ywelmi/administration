@@ -12,6 +12,7 @@ import {
   TanTable,
 } from "../../Component/Tables/TanTable/TanTble";
 import { ColumnDef } from "@tanstack/react-table";
+import { convertHoursToDate } from "../../utils/date";
 
 interface IRoundUpdatePairForm {
   knockoutRoundPairs?: TTablequalifyingKnockout[];
@@ -84,8 +85,11 @@ const RoundUpdatePairForm = ({
           <ReactDatePicker
             className="form-control"
             name="match_hour"
-            // selected={new Date(original.match_date as string || new Date())}
-            value={original.match_hour}
+            selected={
+              original.match_hour
+                ? convertHoursToDate(original.match_hour)
+                : undefined
+            }
             onChange={(date) =>
               table.options.meta?.updateData(
                 index,
@@ -96,6 +100,7 @@ const RoundUpdatePairForm = ({
             showTimeSelect
             showTimeSelectOnly
             timeFormat="HH:mm"
+            dateFormat="HH:mm"
             timeIntervals={15}
             timeCaption="Giờ"
             locale={"vi"}

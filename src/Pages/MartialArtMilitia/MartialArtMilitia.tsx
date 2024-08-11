@@ -19,7 +19,7 @@ import { InputSelect } from "../../Component/InputSelect";
 import { useSportStore } from "../../store/sport";
 import { ColumnDef } from "@tanstack/react-table";
 import ReactDatePicker from "react-datepicker";
-import { convertToDate } from "../../utils/date";
+import { convertHoursToDate, convertToDate } from "../../utils/date";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { Btn, H3, H5, LI } from "../../AbstractElements";
 import { useMartialArtMilitiaModal } from "./MartialArtMilitiaForm";
@@ -254,14 +254,18 @@ const tableColumns: ColumnDef<TMartialArtMilitiaArmyGroupGet>[] = [
                 <ReactDatePicker
                     className="form-control"
                     name="match_hour"
-                    // selected={new Date(original.match_date as string || new Date())}
-                    value={original.match_hour}
+                    selected={
+                        original.match_hour
+                          ? convertHoursToDate(original.match_hour)
+                          : undefined
+                      }
                     onChange={(date) =>
                         table.options.meta?.updateData(index, id, `${date?.getHours()}:${date?.getMinutes()}`)
                     }
                     showTimeSelect
                     showTimeSelectOnly
                     timeFormat="HH:mm"
+                    dateFormat="HH:mm"
                     timeIntervals={15}
                     timeCaption="Giờ"
                     locale={"vi"}
