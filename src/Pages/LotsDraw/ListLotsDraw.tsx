@@ -12,6 +12,7 @@ import {
     // lotsdrawCreate,
     // lotsdrawDelete,
     lotsdrawUpdate,
+    lotsdrawGroupGetAll,
 } from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
@@ -25,6 +26,10 @@ import { Btn, H3, H5, LI } from "../../AbstractElements";
 import { useLotsDrawSubmitModal, useLotsDrawUpdateAtheleModal } from "../LotsDrawSubmit/LotsDrawSubmitForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
+import { useTeamAtheleModal } from "./TeamAtheleForm";
+import { martialArtMilitiaArmyGroupCreate } from "../../Service/martialArtMilitia";
+import { martialArtArmyGroupGetAll } from "../../Service/martialArt";
+import { getMoreFilterByValue } from "../../Service/_getParams";
 
 // const LotsDrawTableAction = (
 //   { lotsdraw }: { lotsdraw: TLotsDrawColumn },
@@ -230,9 +235,11 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [
             // if (idx !== -1) hasEmptyFiled = true;
             // if (hasEmptyFiled) return null;
             // if (!original.isDetail) return null;
+
             const { LotsDrawUpdateAthele, handleToggle } = useLotsDrawUpdateAtheleModal({
                 sportId: original.sport_id,
-                orgId: original.team_id,
+                team_id: original.team_id,
+                content_id: original.content_id,
             });
             return (
                 <Btn className="btn btn-success edit" onClick={handleToggle}>
@@ -255,7 +262,8 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [
             // if (!original.isDetail) return null;
             const { LotsDrawSubmitModal, handleToggle } = useLotsDrawSubmitModal({
                 sportId: original.sport_id,
-                orgId: original.org_id,
+                team_id: original.org_id,
+                content_id: original.content_id,
             });
             return (
                 <Btn className="btn btn-info edit" onClick={handleToggle}>
@@ -318,44 +326,31 @@ const PageLotsDraw = () => {
     const [numberPlayedPerRound, setNumberPlayedPerRound] = useState<number>(3);
     // số VĐV thi đấu trong 1 lượt
     const [selectedContentSport, setSelectedContentSport] = useState<string>("");
-
+    const [contentType, setContentType] = useState<any>("");
     useEffect(() => {
         if (paramSportId) {
             setSportId(paramSportId);
         }
     }, [paramSportId]);
     //danh sách các nội dung thi đấu của môn
-    const contentSport = useRef<any>();
+    const [contentSport, setContent] = useState<any>([]);
     //số VĐV tham gia nội dung thi
     const numberAthele = useRef<any>();
     const [data, setData] = useState<TLotsDraw[]>([]);
-
-    const fetchData = useCallback((sportId: string) => {
-        lotsdrawsGet(sportId)
+    const handleAddNew = (e: any) => {
+        martialArtMilitiaArmyGroupCreate(e)
             .then((res) => {
-                const { data, status } = res;
-                console.log({ data });
-                if (status === 200) setData(data);
+                if (res.status === 200) {
+                    toast.success(N["success"]);
+                    fetchData(sportId);
+                    fetchDataTable(sportId, selectedContentSport);
+                }
             })
-            .catch((err) => console.log({ err }));
-        getContentSport(sportId)
-            .then((res) => {
-                const { data, status } = res;
-                console.log({ data });
-                if (status === 200) contentSport.current = data;
-                console.log(contentSport.current);
-            })
-            .catch((err) => console.log({ err }));
-    }, []);
-    const handleSelectContent = (id: any) => {
-        getNumberAthele(id)
-            .then((res) => {
-                const { data, status } = res;
-                console.log({ data });
-                if (status === 200) numberAthele.current = data;
-                setSelectedContentSport(id);
-            })
-            .catch((err) => console.log({ err }));
+            .catch((err) => {
+                toast.error(N["failed"]);
+                console.log({ err });
+            });
+        return;
     };
     useEffect(() => {
         if (sportId) {
@@ -363,17 +358,95 @@ const PageLotsDraw = () => {
         }
     }, [sportId]);
 
+    const handleSelectContent = (id: any) => {
+        getNumberAthele(id)
+            .then((res) => {
+                const { data, status } = res;
+                console.log({ data });
+                if (status === 200) numberAthele.current = data;
+            })
+            .catch((err) => console.log({ err }));
+
+        fetchDataTable(sportId, id);
+    };
+    const fetchData = async (sportId: string) => {
+        await getContentSport(sportId)
+            .then((res) => {
+                const { data, status } = res;
+                console.log({ data });
+                if (status === 200) setContent(data);
+            })
+            .catch((err) => console.log({ err }));
+    };
+
+    const fetchDataTable = useCallback(async (sportId: string, content_id: string) => {
+        if (content_id != "") {
+            // if (contentType == 1) {
+            await lotsdrawsGet(sportId, content_id)
+                .then((res) => {
+                    const { data, status } = res;
+                    console.log({ data });
+                    if (status === 200) setData(data);
+                })
+                .catch((err) => console.log({ err }));
+            // } else {
+            //     var allFilter: any[] = [];
+            //     if (sportId) {
+            //         const sportFilter = getMoreFilterByValue("sport_id", "=", sportId);
+            //         allFilter = [...allFilter, sportFilter];
+            //     }
+
+            //     if (content_id) {
+            //         const contentFilter = getMoreFilterByValue("content_id", "=", content_id);
+            //         allFilter = [...allFilter, contentFilter];
+            //     }
+            //     await lotsdrawGroupGetAll({ filter: `[${allFilter}]` })
+            //         .then((res) => {
+            //             const { data, status } = res;
+            //             console.log({ data });
+            //             if (status === 200) setData(res.data.data);
+            //         })
+            //         .catch((err) => console.log({ err }));
+            // }
+        }
+    }, []);
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
 
     const handleUpdate = useCallback(() => {
         const newData = ref.current?.getData();
+
         if (newData && sportId) {
-            lotsdrawUpdate(sportId, newData)
+            lotsdrawUpdate(sportId, selectedContentSport, newData)
                 .then((res) => {
                     const { data, status } = res;
                     if (status === 200) {
-                        toast.success(N["success"]);
-                        fetchData(sportId);
+                        const dataSubmit = newData!.map((e: TLotsDraw) => {
+                            return {
+                                id: e.id,
+                                sport_id: e.sport_id,
+                                content_id: selectedContentSport,
+                                team_id: e.team_id,
+                                ticket_index: e.ticket_index,
+                                has_ranking: true,
+                                match_hour: e.match_hour,
+                                match_date: e.match_date,
+                                locations: e.locations,
+                            };
+                        });
+                        lotsdrawUpdate(sportId, selectedContentSport, dataSubmit)
+                            .then((res) => {
+                                const { data, status } = res;
+                                if (status === 200) {
+                                    toast.success(N["success"]);
+                                    fetchData(sportId);
+                                    fetchDataTable(sportId, selectedContentSport);
+                                }
+                            })
+                            .catch((err) => {
+                                toast.error(N["failed"]);
+                                console.log({ err });
+                            });
+                        return;
                     }
                 })
                 .catch((err) => {
@@ -387,9 +460,11 @@ const PageLotsDraw = () => {
 
     const { handleToggle: toggleLotsDrawModal, LotsDrawModal: LotsDrawAddModal } = useLotsDrawModal({
         sportId: sportId,
+        content_id: selectedContentSport,
         onSubmit: () => {
             if (sportId) {
                 fetchData(sportId);
+                fetchDataTable(sportId, selectedContentSport);
             }
         },
     });
@@ -400,6 +475,13 @@ const PageLotsDraw = () => {
             numberPerRound: numberPlayedPerRound,
             numberOfTeam: data,
         });
+    const { handleToggle: handleToggleAddModal, TeamModal: TeamAddModal } = useTeamAtheleModal({
+        sportId: sportId,
+        content_id: selectedContentSport,
+        onSubmit: (e) => {
+            handleAddNew(e);
+        },
+    });
     return (
         <div className="page-body">
             <Breadcrumbs mainTitle={"Thi đấu bốc thăm"} parent={"HTTQ2024"} />
@@ -461,40 +543,52 @@ const PageLotsDraw = () => {
                                 {sportId ? (
                                     <>
                                         <H3 className="text-center">Lịch thi đấu</H3>
-
                                         <div className=" justify-content-center">
                                             <Row className="justify-content-center">
                                                 <Col md={5}>
                                                     <div className="m-b-10">
-                                                        {contentSport.current && (
+                                                        {contentSport.length > 0 && (
                                                             <InputSelect
                                                                 title={"Chọn nội dung thi đấu"}
-                                                                data={contentSport.current}
+                                                                data={contentSport}
                                                                 k="name"
                                                                 v="id"
                                                                 name="sport"
                                                                 value={selectedContentSport}
                                                                 handleChange={(e) => {
+                                                                    setSelectedContentSport(e.target.value);
+                                                                    setContentType(
+                                                                        contentSport.filter(
+                                                                            (el: any) => el.id == e.target.value
+                                                                        )[0].content_type
+                                                                    );
                                                                     handleSelectContent(e.target.value);
                                                                 }}
                                                             />
                                                         )}
                                                     </div>
-                                                    <Row className="d-flex">
-                                                        <Col md={7}>
-                                                            <InputGroup className="d-flex justify-content-between align-items-center p-1">
-                                                                <InputGroupText className="text-center">
-                                                                    <strong>Số VĐV thi đấu trong 1 lượt:</strong>
-                                                                </InputGroupText>
+                                                    <div className="d-flex align-items-center">
+                                                        <InputGroupText className="text-center">
+                                                            <strong>Số VĐV thi đấu trong 1 lượt:</strong>
+                                                        </InputGroupText>
+                                                        <Row className="d-flex justify-content-center align-items-center m-l-10">
+                                                            <Col
+                                                                md={3}
+                                                                className="d-flex justify-content-center align-items-center"
+                                                            >
                                                                 <Btn
-                                                                    className={`p-0 increment-touchspin btn-touchspin m-10`}
-                                                                    onClick={() => {
-                                                                        if (numberPlayedPerRound == 2) return;
-                                                                        setNumberPlayedPerRound((value) => value - 1);
-                                                                    }}
+                                                                    className={`bg-primary`}
+                                                                    onClick={() =>
+                                                                        setNumberPlayedPerRound((value) => value + 1)
+                                                                    }
                                                                 >
-                                                                    <i className="fa fa-minus" />
+                                                                    <i className="fa fa-plus" />
                                                                 </Btn>
+                                                            </Col>
+                                                            <Col
+                                                                md={6}
+                                                                className="d-flex justify-content-center align-items-center"
+                                                            >
                                                                 <Input
                                                                     className="me-1"
                                                                     type="number"
@@ -507,38 +601,67 @@ const PageLotsDraw = () => {
                                                                     min={2}
                                                                     readOnly
                                                                 />
-                                                                <Btn
-                                                                    className={`p-0 increment-touchspin btn-touchspin m-10`}
-                                                                    onClick={() =>
-                                                                        setNumberPlayedPerRound((value) => value + 1)
-                                                                    }
-                                                                >
-                                                                    <i className="fa fa-plus" />
-                                                                </Btn>
-                                                            </InputGroup>
-                                                        </Col>
-                                                        <Col md={5}>
-                                                            <Btn
-                                                                className="btn btn-info"
-                                                                onClick={() => {
-                                                                    selectedContentSport != ""
-                                                                        ? toggleLotsDrawScheduleModal()
-                                                                        : alert("Chưa chọn nội dung thi");
-                                                                }}
+                                                            </Col>
+                                                            <Col
+                                                                md={3}
+                                                                className="d-flex justify-content-center align-items-center"
                                                             >
-                                                                Xem lịch thi đấu
-                                                            </Btn>
-                                                        </Col>
+                                                                <Btn
+                                                                    className={`bg-primary`}
+                                                                    onClick={() => {
+                                                                        if (numberPlayedPerRound == 2) return;
+                                                                        setNumberPlayedPerRound((value) => value - 1);
+                                                                    }}
+                                                                >
+                                                                    <i className="fa fa-minus" />
+                                                                </Btn>
+                                                            </Col>
+                                                        </Row>
+
                                                         <LotsDrawScheduleModal />
-                                                    </Row>
+                                                    </div>
                                                 </Col>
                                             </Row>
                                         </div>
-
-                                        <ListLotsDraw tableRef={ref} data={data} showAction />
+                                        <div className="d-flex justify-content-center m-10">
+                                            <Btn
+                                                className="btn btn-info"
+                                                onClick={() => {
+                                                    selectedContentSport != ""
+                                                        ? toggleLotsDrawScheduleModal()
+                                                        : alert("Chưa chọn nội dung thi");
+                                                }}
+                                            >
+                                                Xem lịch thi đấu
+                                            </Btn>
+                                        </div>
+                                        {selectedContentSport != "" && (
+                                            <>
+                                                {contentType == "2" && (
+                                                    <div className="d-flex justify-content-center">
+                                                        <div
+                                                            className="btn btn-primary"
+                                                            onClick={() => {
+                                                                handleToggleAddModal();
+                                                            }}
+                                                        >
+                                                            <i className="fa fa-plus" />
+                                                            &nbsp;
+                                                            {"Tạo đội thi đấu"}
+                                                        </div>
+                                                        <TeamAddModal />
+                                                    </div>
+                                                )}
+                                                {data.length > 0 ? (
+                                                    <ListLotsDraw tableRef={ref} data={data} showAction />
+                                                ) : (
+                                                    <H3 className="text-center">Chưa có dữ liệu thi đấu </H3>
+                                                )}
+                                            </>
+                                        )}
                                     </>
                                 ) : (
-                                    <H3>Chưa lựa chọn môn thi</H3>
+                                    <H3 className="text-center">Chưa lựa chọn môn thi</H3>
                                 )}
                             </CardBody>
                         </Card>

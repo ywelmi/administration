@@ -70,7 +70,7 @@ const MartialArtMilitiaForm = ({ MartialArtMilitia, onCancel, onSubmit }: IMarti
     );
 };
 
-const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
+const useMartialArtMilitiaModal = ({ sportId, content_id, onSubmit, ...rest }: any) => {
     const [data, setData] = useState<TMartialArtMilitiaArmyGroupGet[]>([]);
 
     const [opened, setOpened] = useState(false);
@@ -91,7 +91,17 @@ const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
         fetch_data();
     }, []);
     const handleSubmit = (MartialArtMilitia: TLotsDraw[]) => {
-        martialArtMilitiaArmyGroupGetUpdate(MartialArtMilitia)
+        const dataSubmit = MartialArtMilitia.map((e: TLotsDraw) => {
+            return {
+                id: e.id,
+                sport_id: e.sport_id,
+                content_id: content_id,
+                team_id: e.team_id,
+                ticket_index: e.ticket_index,
+                has_ranking: true,
+            };
+        });
+        martialArtMilitiaArmyGroupGetUpdate(dataSubmit)
             .then((res) => {
                 const { data, status } = res;
                 if (status === 200) {

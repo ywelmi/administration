@@ -11,14 +11,17 @@ export interface TLotsDraw {
     row_num?: number;
     team_name?: string;
     isDetail?: boolean;
+    content_id: string;
+    content_type: string;
 }
 export interface TLotsDrawUpdateAthele {
+    team_id: string;
     member_id: string;
     member_name: string;
     ticket_index: number;
     match_time?: string;
     clothers_number?: string;
-    ticket_code?: string;
+    ticket_code: string;
     match_hour?: string;
     match_date?: string;
     locations?: string;

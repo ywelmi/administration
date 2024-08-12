@@ -192,7 +192,7 @@ const userAction: ColumnDef<TMartialArtMilitiaArmyGroupGet> = {
                     }
                 })
                 .catch((err) => {
-                    toast.error(N["failed"]);
+                    toast.error(N["failed"] + err.data);
                     console.log({ err });
                 });
             return;
@@ -205,14 +205,6 @@ const userAction: ColumnDef<TMartialArtMilitiaArmyGroupGet> = {
     },
 };
 const tableColumns: ColumnDef<TMartialArtMilitiaArmyGroupGet>[] = [
-    {
-        accessorKey: "content_name",
-        footer: (props) => props.column.id,
-        header: "Nội dung thi đấu",
-        cell(props) {
-            return <div className="form-control">{props.getValue() as string}</div>;
-        },
-    },
     {
         accessorKey: "name",
         footer: (props) => props.column.id,
@@ -289,6 +281,11 @@ const tableColumns: ColumnDef<TMartialArtMilitiaArmyGroupGet>[] = [
                 />
             );
         },
+    },
+    {
+        accessorKey: "match_time",
+        footer: (props) => props.column.id,
+        header: N["match_time"],
     },
     {
         accessorKey: "locations",
@@ -374,7 +371,7 @@ const getLotDrawId = (d: TMartialArtMilitiaArmyGroupGet) => d.id;
 
 //Component render page lots draw
 const PageMartialArtMilitia = () => {
-    const { MartialArtMilitias, addMartialArtMilitias, addMartialArtMilitia } = useMartialArtMilitiaStore();
+    const { MartialArtMilitias, addMartialArtMilitias } = useMartialArtMilitiaStore();
     const [sportId, setSportId] = useState("");
 
     const { sport_id: paramSportId } = useParams();
@@ -386,7 +383,7 @@ const PageMartialArtMilitia = () => {
     }, [paramSportId]);
     const [gender, setGender] = useState<any>("");
     const [orgName, setOrgName] = useState<any>(null);
-    const [data, setData] = useState<TMartialArtMilitiaArmyGroupGet[]>(MartialArtMilitias);
+
     const [type, setType] = useState<any>(null);
     const fetchData = useCallback(() => {
         martialArtMilitiaArmyGroupGetAll()
@@ -394,7 +391,7 @@ const PageMartialArtMilitia = () => {
                 console.log("response here");
                 console.log(res.data.data);
                 addMartialArtMilitias(res.data.data);
-                setData(res.data.data);
+
                 fetch_data_content();
             })
             .catch((err) => console.log({ err }));
@@ -413,10 +410,7 @@ const PageMartialArtMilitia = () => {
                 const orgFilter = getMoreFilterByValue("org_id", "=", orgName);
                 allFilter = [...allFilter, orgFilter];
             }
-            if (type) {
-                const typeFilter = getMoreFilterByValue("content_id", "=", type.id);
-                allFilter = [...allFilter, typeFilter];
-            }
+
             if (gender) {
                 const genderFilter = getMoreFilterByValue("gender", "=", gender);
                 allFilter = [...allFilter, genderFilter];
@@ -430,7 +424,7 @@ const PageMartialArtMilitia = () => {
             });
             console.log("new");
             console.log(group);
-            setData(group);
+            addMartialArtMilitias(group);
         })();
     }, [type, orgName, gender]);
     useEffect(() => {
@@ -442,6 +436,7 @@ const PageMartialArtMilitia = () => {
 
     const handleUpdate = useCallback(() => {
         const newData = ref.current?.getData();
+
         if (newData) {
             martialArtMilitiaArmyGroupGetUpdate(newData)
                 .then((res) => {
@@ -477,6 +472,7 @@ const PageMartialArtMilitia = () => {
     const { handleToggle: toggleMartialArtMilitiaModal, MartialArtMilitiaModal: MartialArtMilitiaAddModal } =
         useMartialArtMilitiaModal({
             sportId: sportId,
+            content_id: type ? type.id : "",
             onSubmit: () => {
                 fetchData();
             },
@@ -521,26 +517,7 @@ const PageMartialArtMilitia = () => {
                                     <TeamAddModal />
                                 </div>
                                 <Row className="m-t-10">
-                                    <Col md={4}>
-                                        <InputSelect
-                                            title={"Nội dung thi đấu"}
-                                            data={listContent.current}
-                                            k="name"
-                                            name="type"
-                                            v="id"
-                                            handleChange={(e) => {
-                                                e.target.value != ""
-                                                    ? setType(
-                                                          listContent.current.filter(
-                                                              (el: any) => el.id == e.target.value
-                                                          )[0]
-                                                      )
-                                                    : setType(null);
-                                            }}
-                                            value={type ? type.id : ""}
-                                        />
-                                    </Col>
-                                    <Col md={4}>
+                                    <Col md={6}>
                                         <InputSelect
                                             title={"Đơn vị"}
                                             data={orgs}
@@ -553,7 +530,7 @@ const PageMartialArtMilitia = () => {
                                             value={orgName}
                                         />
                                     </Col>
-                                    <Col md={4}>
+                                    <Col md={6}>
                                         <InputSelect
                                             title={"Giới tính"}
                                             data={[
@@ -601,7 +578,7 @@ const PageMartialArtMilitia = () => {
                             </CardHeader>
                             <CardBody>
                                 <>
-                                    <ListMartialArtMilitia tableRef={ref} data={data} showAction />
+                                    <ListMartialArtMilitia tableRef={ref} data={MartialArtMilitias} showAction />
                                 </>
                             </CardBody>
                         </Card>
