@@ -58,7 +58,7 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, 
 
 const useLotsDrawScheduleModal = ({ sportId, content_id, numberPerRound, numberOfTeam }: any) => {
     const [data, setData] = useState<TLotsDraw[]>([]);
-    console.log("! lượt:" + numberPerRound);
+
     const [opened, setOpened] = useState(false);
     const handleToggle = () => {
         setOpened((s) => !s);
