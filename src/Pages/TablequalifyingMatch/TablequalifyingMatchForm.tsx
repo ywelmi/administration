@@ -16,6 +16,7 @@ import { DTime as DTime } from "../../type/enum";
 import { useSportStore } from "../../store/sport";
 import { N } from "../../name-conversion";
 import { convertHoursToDate } from "../../utils/date";
+import { useConfigStore } from "../../store/config";
 
 export interface ITablequalifyingMatchForm {
   tablequalifyingMatch?: Partial<TTablequalifyingMatch>;
@@ -48,7 +49,8 @@ const TablequalifyingMatchForm = ({
           // team2_name: "",
         };
 
-  const { sports, selectedSportId } = useSportStore();
+  const { sportSelector } = useConfigStore();
+  const { sports, selectedSportId } = useSportStore(sportSelector());
   const selectedSport = sports.find(({ id }) => id === selectedSportId);
 
   // const { teams } = useTeamStore(); // take teams from same table

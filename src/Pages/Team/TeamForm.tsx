@@ -114,7 +114,8 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
 
   const { competitions } = useCompetitionStore();
   const { orgs } = useOrgStore();
-  const { sports } = useSportStore();
+  const { sportSelector } = useConfigStore();
+  const { sports } = useSportStore(sportSelector());
   // const { teammembers } = useTeammemberStore();
 
   const { t } = useTranslation();

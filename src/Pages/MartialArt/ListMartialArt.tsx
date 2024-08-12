@@ -16,6 +16,7 @@ import { martialArtsGet } from "../../Service/martialArt";
 import { LI, UL } from "../../AbstractElements";
 import { useNavigate } from "react-router-dom";
 import { useSportStore } from "../../store/sport";
+import { useConfigStore } from "../../store/config";
 
 interface IListMartialArt {
   showAction?: boolean;
@@ -23,15 +24,13 @@ interface IListMartialArt {
   data?: TMartialArt[];
   onRowSelect?: (
     row: TMartialArt,
-    e: React.MouseEvent<Element, MouseEvent>,
+    e: React.MouseEvent<Element, MouseEvent>
   ) => void;
-  onSelectedRowsChange?: (
-    v: {
-      allSelected: boolean;
-      selectedCount: number;
-      selectedRows: TMartialArt[];
-    },
-  ) => void;
+  onSelectedRowsChange?: (v: {
+    allSelected: boolean;
+    selectedCount: number;
+    selectedRows: TMartialArt[];
+  }) => void;
   columns?: ColumnDef<TMartialArt>[];
   selectableRowSelected?: (row: TMartialArt) => boolean;
 }
@@ -57,7 +56,7 @@ const tableColumns: ColumnDef<TMartialArt>[] = [
     header: (props) => {
       const { ages } = useCategoryStore();
       return (
-        <div style={{ "minWidth": "124px" }}>
+        <div style={{ minWidth: "124px" }}>
           <div>{N["age"]}</div>
           <InputSelect
             data={ages}
@@ -81,7 +80,7 @@ const tableColumns: ColumnDef<TMartialArt>[] = [
     header: (props) => {
       const { weighs } = useCategoryStore();
       return (
-        <div style={{ "minWidth": "124px" }}>
+        <div style={{ minWidth: "124px" }}>
           <div>{N["weigh"]}</div>
           <InputSelect
             data={weighs}
@@ -155,7 +154,7 @@ const action: ColumnDef<TMartialArt> = {
           className="edit btn"
           onClick={() => {
             navigate(
-              `/martialart/${martialArtContent.sport_id}/knockout/${martialArtContent.id}`,
+              `/martialart/${martialArtContent.sport_id}/knockout/${martialArtContent.id}`
             );
           }}
         >
@@ -197,19 +196,22 @@ const ListMartialArt = ({
 const PageMartialArt = () => {
   const [data, setData] = useState<TMartialArt[]>([]);
 
-  const { sports } = useSportStore();
+  const { sportSelector } = useConfigStore();
+  const { sports } = useSportStore(sportSelector());
   const sportMartialArt = sports.find((s) => s.point_unit === 3);
 
   useEffect(() => {
     if (!sportMartialArt) return;
-    martialArtsGet(sportMartialArt.id).then((res) => {
-      const { data, status } = res;
-      if (status === 200) {
-        setData(data);
-      }
-    }).catch((err) => {
-      console.log({ err });
-    });
+    martialArtsGet(sportMartialArt.id)
+      .then((res) => {
+        const { data, status } = res;
+        if (status === 200) {
+          setData(data);
+        }
+      })
+      .catch((err) => {
+        console.log({ err });
+      });
   }, []);
 
   return (
@@ -222,8 +224,7 @@ const PageMartialArt = () => {
         <Row>
           <Col sm="12">
             <Card>
-              <CardHeader className="pb-0 card-no-border">
-              </CardHeader>
+              <CardHeader className="pb-0 card-no-border"></CardHeader>
               <CardBody>
                 <ListMartialArt data={data} showAction />
               </CardBody>

@@ -16,6 +16,7 @@ import {
   teamsNoTableGet,
 } from "../../Service/team";
 import { TTeam } from "../../type/team";
+import { useConfigStore } from "../../store/config";
 
 interface ITablequalifyingForm {
   tablequalifying?: Partial<TTablequalifying>;
@@ -41,7 +42,8 @@ const TablequalifyingForm = ({
 
   // const { teams } = useTeamStore();
   const [teams, setTeams] = useState<TTeam[]>([]);
-  const { sports } = useSportStore();
+  const { sportSelector } = useConfigStore();
+  const { sports } = useSportStore(sportSelector());
   const { t } = useTranslation();
   const formik = useFormik<Partial<TTablequalifying>>({
     initialValues: { ...tablequalifying },

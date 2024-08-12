@@ -1,12 +1,14 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { DUnitType } from "../type/enum";
+import { DUnit, DUnitType } from "../type/enum";
 import { persist } from "zustand/middleware";
 import { TeamState } from "./team";
+import { SportState } from "./sport";
 
 export type ConfigState = {
   updateUnitType: (t: DUnitType) => void;
   unitType: DUnitType | "";
+  sportSelector: () => (s: SportState) => SportState;
   teamSelector: () => (s: TeamState) => TeamState;
 };
 
@@ -40,6 +42,26 @@ export const useConfigStore = create<ConfigState>()(
             default:
               return state;
           }
+        },
+      sportSelector:
+        () =>
+        (state: SportState): SportState => {
+          // const { unitType } = useConfigStore.getState();
+          const { unitType } = get();
+
+          if (unitType) {
+            const filteredSports = state.sports.filter(
+              (s) => s.for_type === DUnit[unitType]
+            );
+            if (filteredSports) {
+              return {
+                ...state,
+                sports: filteredSports,
+                sportsAll: state.sports,
+              };
+            }
+          }
+          return { ...state, sportsAll: state.sports };
         },
     })),
     {

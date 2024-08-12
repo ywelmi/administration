@@ -30,18 +30,21 @@ import { useConfirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
 import { InputSelect } from "../../Component/InputSelect";
 import { useSportStore } from "../../store/sport";
+import { useConfigStore } from "../../store/config";
 
 type TTablequalifyingColumn = Omit<TTablequalifying, "list_member_id">;
 
-const TablequalifyingTableAction = (
-  { tablequalifying }: { tablequalifying: TTablequalifyingColumn },
-) => {
+const TablequalifyingTableAction = ({
+  tablequalifying,
+}: {
+  tablequalifying: TTablequalifyingColumn;
+}) => {
   const { updateTablequalifying, deleteTablequalifying } =
     useTablequalifyingStore();
   const { t } = useTranslation();
 
   const handleUpdateTablequalifying = (
-    tablequalifying: Partial<TTablequalifying>,
+    tablequalifying: Partial<TTablequalifying>
   ) => {
     tablequalifyingUpdate(tablequalifying as TTablequalifying)
       .then((res) => {
@@ -129,7 +132,8 @@ const TablequalifyingTableAction = (
       <LI
         className="edit btn"
         onClick={() =>
-          navigate(`/tablequalifyings/match/${tablequalifying.id}`)}
+          navigate(`/tablequalifyings/match/${tablequalifying.id}`)
+        }
       >
         <i className="icon-folder" />
         Lập lịch
@@ -137,7 +141,8 @@ const TablequalifyingTableAction = (
       <LI
         className="edit btn"
         onClick={() =>
-          navigate(`/tablequalifyings/match-report/${tablequalifying.id}`)}
+          navigate(`/tablequalifyings/match-report/${tablequalifying.id}`)
+        }
       >
         <i className="icon-slice cursor-pointer"></i>
         Nhập kết quả
@@ -151,7 +156,7 @@ interface IListTablequalifying {
   selectableRows?: boolean;
   onRowSelect?: (
     row: TTablequalifying,
-    e: React.MouseEvent<Element, MouseEvent>,
+    e: React.MouseEvent<Element, MouseEvent>
   ) => void;
   onSelectedRowsChange?: (v: {
     allSelected: boolean;
@@ -163,17 +168,18 @@ interface IListTablequalifying {
   selectableRowSelected?: (row: TTablequalifying) => boolean;
 }
 
-const tableColumns = (["name", "list_team"] as (keyof TTablequalifyingColumn)[])
-  .map((c) => ({
-    name: N[c],
-    sortable: true,
-    selector: (row: TTablequalifyingColumn) => {
-      const col = c as keyof TTablequalifyingColumn;
-      return row?.[col]
-        ? row[col as keyof TTablequalifyingColumn] || ""
-        : ("" as string | number);
-    },
-  }));
+const tableColumns = (
+  ["name", "list_team"] as (keyof TTablequalifyingColumn)[]
+).map((c) => ({
+  name: N[c],
+  sortable: true,
+  selector: (row: TTablequalifyingColumn) => {
+    const col = c as keyof TTablequalifyingColumn;
+    return row?.[col]
+      ? row[col as keyof TTablequalifyingColumn] || ""
+      : ("" as string | number);
+  },
+}));
 
 const ListTablequalifying = ({
   showAction,
@@ -224,7 +230,8 @@ const ListTablequalifying = ({
         <Label className="me-2">{SearchTableButton}:</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)}
+            setFilterText(e.target.value)
+          }
           type="search"
           value={filterText}
         />
@@ -260,14 +267,11 @@ const ListTablequalifying = ({
 
 const PageTablequalifying = () => {
   const { t } = useTranslation();
-  const {
-    tablequalifyings,
-    addTablequalifying,
-    updateGetFilter,
-    filters,
-  } = useTablequalifyingStore();
+  const { tablequalifyings, addTablequalifying, updateGetFilter, filters } =
+    useTablequalifyingStore();
   const { selectSport } = useSportStore();
-  const { sports } = useSportStore();
+  const { sportSelector } = useConfigStore();
+  const { sports } = useSportStore(sportSelector());
   const [sportId, setSportId] = useState("");
   const navigate = useNavigate();
 
@@ -294,7 +298,7 @@ const PageTablequalifying = () => {
   }, [sportId]);
 
   const handleAddTablequalifying = (
-    tablequalifying: Partial<TTablequalifying>,
+    tablequalifying: Partial<TTablequalifying>
   ) => {
     // console.log({ handleAddTablequalifying: tablequalifying });
     const { id, ...rests } = tablequalifying;
@@ -355,19 +359,19 @@ const PageTablequalifying = () => {
                     <i className="fa fa-plus" />
                     {"Thêm mới"}
                   </div>
-                  {sportId
-                    ? (
-                      <div
-                        className="btn btn-secondary"
-                        onClick={() => (sportId
+                  {sportId ? (
+                    <div
+                      className="btn btn-secondary"
+                      onClick={() =>
+                        sportId
                           ? navigate(`/tablequalifyings/knockout/${sportId}`)
-                          : undefined)}
-                      >
-                        <i className="fa fa-edit" />
-                        {"Xem Đấu loại"}
-                      </div>
-                    )
-                    : null}
+                          : undefined
+                      }
+                    >
+                      <i className="fa fa-edit" />
+                      {"Xem Đấu loại"}
+                    </div>
+                  ) : null}
                 </div>
                 <TablequalifyingAddModal />
               </CardHeader>

@@ -15,6 +15,7 @@ import { TTeam } from "../../type/team";
 import { teamsBySportGet } from "../../Service/team";
 import { convertKnockoutsToBrackets } from "./utils";
 import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
+import { useConfigStore } from "../../store/config";
 
 interface IKnockoutContext {
   sportId: string;
@@ -47,7 +48,8 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
 
   const [rounds, setRounds] = useState<ICustomRoundProps[]>([]);
   const { sport_id: paramSportId } = useParams();
-  const { sports: storeSports } = useSportStore();
+  const { sportSelector } = useConfigStore();
+  const { sports: storeSports } = useSportStore(sportSelector());
 
   const [knockoutSports, setKnockoutSports] = useState<TSport[]>([]);
   const [knockoutTeams, setKnockoutTeams] = useState<TTeam[]>([]);
