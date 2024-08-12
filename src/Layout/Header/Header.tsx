@@ -10,10 +10,7 @@ const Header = () => {
       id="pageheaders"
       style={{ display: scroll ? "none" : "" }}
     >
-      <Row
-        className="header-wrapper m-0 d-flex mb-2"
-        style={{ backgroundColor: "#2b2bff"}}
-      >
+      <Row className="header-wrapper m-0 d-flex mb-2">
         {/* <HeaderLogo /> */}
         {/* <LeftHeader /> */}
         {/* <h3 style={{ width: "fit-content" }}>
@@ -21,10 +18,11 @@ const Header = () => {
                     phục vụ Hội thao Thể thao Quốc phòng năm 2024
                 </h3> */}
         <Col md={9}>
-          <h3 style={{ width: "fit-content", color: "white" }}>
-            PHẦN MỀM HỖ TRỢ TỔNG HỢP, XỬ LÝ, TÍNH TOÁN KẾT QUẢ PHỤC VỤ HỘI THAO{" "}
+          <h3 style={{ width: "fit-content", color: "#066" }}>
+            {/* PHẦN MỀM HỖ TRỢ TỔNG HỢP, XỬ LÝ, TÍNH TOÁN KẾT QUẢ PHỤC VỤ HỘI THAO{" "}
             <br />
-            THỂ THAO QUỐC PHÒNG NĂM 2024
+            THỂ THAO QUỐC PHÒNG NĂM 2024 */}
+            PHẦN MỀM HỖ TRỢ HỘI THAO QUỐC PHÒNG NĂM 2024
           </h3>
         </Col>
         <RightHeader />
