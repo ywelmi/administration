@@ -18,13 +18,14 @@ import { LI, UL } from "../../AbstractElements";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { TTeam } from "../../type/team";
-import { useTeamStore } from "../../store/team";
+import { useTeamStore, teamSelector } from "../../store/team";
 import { useMemo, useState } from "react";
 import { useTeamModal } from "./TeamForm";
 import { teamCreate, teamDelete, teamUpdate } from "../../Service/team";
 import { toast } from "react-toastify";
 import { useConfirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
+import { useConfigStore } from "../../store/config";
 
 type TTeamColumn = Omit<TTeam, "list_member_id">;
 
@@ -102,9 +103,11 @@ interface IListTeam {
   showAction?: boolean;
   selectableRows?: boolean;
   onRowSelect?: (row: TTeam, e: React.MouseEvent<Element, MouseEvent>) => void;
-  onSelectedRowsChange?: (
-    v: { allSelected: boolean; selectedCount: number; selectedRows: TTeam[] },
-  ) => void;
+  onSelectedRowsChange?: (v: {
+    allSelected: boolean;
+    selectedCount: number;
+    selectedRows: TTeam[];
+  }) => void;
   columns?: TableColumn<TTeamColumn>[];
   data?: TTeam[];
   selectableRowSelected?: (row: TTeam) => boolean;
@@ -116,10 +119,7 @@ const tableColumns = (
     "org_name",
     "sport_name",
     "list_member_name",
-  ] as (keyof Omit<
-    TTeamColumn,
-    "list_team_member"
-  >)[]
+  ] as (keyof Omit<TTeamColumn, "list_team_member">)[]
 ).map((c) => ({
   name: N[c],
   sortable: true,
@@ -175,7 +175,8 @@ const ListTeam = ({
         <Label className="me-2">{SearchTableButton}:</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)}
+            setFilterText(e.target.value)
+          }
           type="search"
           value={filterText}
         />
@@ -200,7 +201,7 @@ const ListTeam = ({
         selectableRows={!!onRowSelect || !!onSelectedRowsChange}
         progressPending={loading}
         // paginationServer
-        paginationTotalRows={total}
+        // paginationTotalRows={total}
         // onChangeRowsPerPage={handlePerRowsChange}
         // onChangePage={handlePageChange}
         selectableRowSelected={selectableRowSelected}
@@ -211,11 +212,12 @@ const ListTeam = ({
 
 const PageTeam = () => {
   const { t } = useTranslation();
-  const { addTeam, teams } = useTeamStore();
+  const { teamSelector } = useConfigStore();
+  const { addTeam, teams } = useTeamStore(teamSelector());
 
   const handleAddTeam = (team: TTeam) => {
     console.log({ handleAddTeam: team });
-    const { id, ...rests } = team;
+    const { ...rests } = team;
     teamCreate(rests)
       .then((res) => {
         const { status, data } = res;
@@ -228,10 +230,7 @@ const PageTeam = () => {
         return Promise.reject(status);
       })
       .catch((err) => {
-        const {
-          response: { data },
-        } = err;
-        toast.error(data || t("error"));
+        toast.error(err?.data || t("error"));
         console.log({ err });
       });
   };

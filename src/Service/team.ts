@@ -3,16 +3,15 @@ import { baseGetParams, getFilterByValue, IListResponse } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
 // TODO: how to filter
-export const teamsGet = async (
-  params = baseGetParams,
-) => {
-  return httpPost<IListResponse<TTeam>>("/teams/padding_filter", params);
+export const teamsGet = async (params = baseGetParams) => {
+  return httpPost<IListResponse<TTeam>>("/teams/padding_filter", {
+    ...baseGetParams,
+    params,
+  });
 };
 
 // TODO: how to filter
-export const teamsBySportGet = async (
-  sportId: string,
-) => {
+export const teamsBySportGet = async (sportId: string) => {
   const filter = getFilterByValue("sport_id", "=", sportId);
   return httpPost<IListResponse<TTeam>>("/teams/padding_filter", {
     ...baseGetParams,

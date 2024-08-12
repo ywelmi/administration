@@ -19,7 +19,7 @@ export type TeamState = {
   updateLoading: (v: boolean) => void;
 };
 
-const selector = (state: TeamState): TeamState => {
+export const teamSelector = (state: TeamState): TeamState => {
   const { unitType } = useConfigStore.getState();
 
   switch (unitType) {
@@ -33,7 +33,7 @@ const selector = (state: TeamState): TeamState => {
   }
 };
 
-const _useTeamStore = create<TeamState>()(
+export const _useTeamStore = create<TeamState>()(
   immer((set) => ({
     filters: baseGetParams,
     teams: [],
@@ -48,7 +48,7 @@ const _useTeamStore = create<TeamState>()(
     updateTeam: (data: TTeam) =>
       set((state: TeamState) => {
         const idx = state.teams.findIndex(
-          ({ id: teamId }) => teamId === data.id,
+          ({ id: teamId }) => teamId === data.id
         );
         if (idx > -1) {
           state.teams[idx] = data;
@@ -79,7 +79,13 @@ const _useTeamStore = create<TeamState>()(
         state.loading = v;
       });
     },
-  })),
+    // refresh() {
+    //   set((state: TeamState) => {
+    //     state.teams = [...state.teams];
+    //   });
+    // },
+  }))
 );
 
-export const useTeamStore = () => _useTeamStore(selector);
+// export const useTeamStore = () => _useTeamStore(teamSelector);
+export const useTeamStore = _useTeamStore;
