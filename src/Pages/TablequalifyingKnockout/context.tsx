@@ -6,16 +6,16 @@ import {
   useEffect,
   useState,
 } from "react";
-import { ICustomRoundProps } from "../../typing/treeRound";
-import { tablequalifyingKnockoutsGet } from "../../Service/tablequalifyingKnockout";
 import { useParams } from "react-router-dom";
-import { TSport } from "../../type/sport";
-import { useSportStore } from "../../store/sport";
-import { TTeam } from "../../type/team";
+import { tablequalifyingKnockoutsGet } from "../../Service/tablequalifyingKnockout";
 import { teamsBySportGet } from "../../Service/team";
-import { convertKnockoutsToBrackets } from "./utils";
-import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
 import { useConfigStore } from "../../store/config";
+import { useSportStore } from "../../store/sport";
+import { TSport } from "../../type/sport";
+import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
+import { TTeam } from "../../type/team";
+import { ICustomRoundProps } from "../../typing/treeRound";
+import { convertKnockoutsToBrackets } from "./utils";
 
 interface IKnockoutContext {
   sportId: string;
@@ -51,14 +51,12 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
   const { sportSelector } = useConfigStore();
   const { sports: storeSports } = useSportStore(sportSelector());
 
-  const [knockoutSports, setKnockoutSports] = useState<TSport[]>([]);
   const [knockoutTeams, setKnockoutTeams] = useState<TTeam[]>([]);
   const [listTablequalifyingKnockout, setListTablequalifyingKnockout] =
     useState<TTablequalifyingKnockout[]>([]);
 
-  useEffect(() => {
-    setKnockoutSports(storeSports.filter((s) => s.point_unit !== 1));
-  }, [storeSports]);
+  const knockoutSports = storeSports.filter((s) => s.point_unit !== 1);
+  // console.log({ knockoutSports });
 
   useEffect(() => {
     if (paramSportId) {
@@ -94,7 +92,8 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
     if (sportId) {
       fetchTablequalifyingKnockout(sportId);
     }
-  }, [sportId, fetchTablequalifyingKnockout]);
+  }, [fetchTablequalifyingKnockout, sportId]);
+
   const fetchKnockoutTeams = useCallback((sportId: string) => {
     teamsBySportGet(sportId)
       .then((res) => {
@@ -116,7 +115,7 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
       fetchTablequalifyingKnockout(sportId);
       fetchKnockoutTeams(sportId);
     }
-  }, [sportId, fetchTablequalifyingKnockout, fetchKnockoutTeams]);
+  }, [fetchKnockoutTeams, fetchTablequalifyingKnockout, sportId]);
 
   // const updateMatch = () => {};
 

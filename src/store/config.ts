@@ -1,9 +1,9 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { DUnit, DUnitType } from "../type/enum";
-import { persist } from "zustand/middleware";
-import { TeamState } from "./team";
 import { SportState } from "./sport";
+import { TeamState } from "./team";
 
 export type ConfigState = {
   updateUnitType: (t: DUnitType) => void;

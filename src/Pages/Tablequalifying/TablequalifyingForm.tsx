@@ -1,22 +1,22 @@
-import { Col, Input, Label, Row } from "reactstrap";
-import { TTablequalifying } from "../../type/tablequalifying";
 import { useFormik } from "formik";
-import { Btn } from "../../AbstractElements";
-import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ListTeam } from "../Team/ListTeam";
-import { useSportStore } from "../../store/sport";
+import { Col, Input, Label, Row } from "reactstrap";
+import { Btn } from "../../AbstractElements";
 import { InputSelect } from "../../Component/InputSelect";
-import { tablequalifyingMembersGet } from "../../Service/tablequalifying";
+import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { getFilterByValue } from "../../Service/_getParams";
+import { tablequalifyingMembersGet } from "../../Service/tablequalifying";
 import {
   teamsGet,
   teamsHaveTableGet,
   teamsNoTableGet,
 } from "../../Service/team";
-import { TTeam } from "../../type/team";
 import { useConfigStore } from "../../store/config";
+import { useSportStore } from "../../store/sport";
+import { TTablequalifying } from "../../type/tablequalifying";
+import { TTeam } from "../../type/team";
+import { ListTeam } from "../Team/ListTeam";
 
 interface ITablequalifyingForm {
   tablequalifying?: Partial<TTablequalifying>;
@@ -49,7 +49,7 @@ const TablequalifyingForm = ({
     initialValues: { ...tablequalifying },
     onSubmit: (value) => {
       console.log({ submitAddTablequalifyingValue: value });
-      let submitValue = {
+      const submitValue = {
         ...value,
       } as TTablequalifying;
       if (submitValue) onSubmit(submitValue);
@@ -98,11 +98,11 @@ const TablequalifyingForm = ({
           });
 
           // console.log({ sportTeams, noTableTeams });
-          if (sportTeams?.length && noTableTeams?.length) {
+          if (sportTeams?.length) {
+            //&& noTableTeams?.length) {
             const sportTeamIds = sportTeams.map((t) => t.id);
-            const noTableSportTeams = noTableTeams.filter((t) =>
-              sportTeamIds.includes(t.id)
-            );
+            const noTableSportTeams =
+              noTableTeams?.filter((t) => sportTeamIds.includes(t.id)) || [];
             if (!tablequalifying.list_team?.length && sportTeams) {
               // Case add new
               setTeams(noTableSportTeams);

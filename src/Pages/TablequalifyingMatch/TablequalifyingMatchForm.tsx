@@ -1,22 +1,22 @@
-import { Col, Input, Label, Row } from "reactstrap";
 import { useFormik } from "formik";
-import { Btn, Popovers } from "../../AbstractElements";
-import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { parseInt } from "lodash";
 import { useCallback, useEffect, useState } from "react";
+import ReactDatePicker from "react-datepicker";
 import { useTranslation } from "react-i18next";
+import { Col, Input, Label, Row } from "reactstrap";
+import { Btn, Popovers } from "../../AbstractElements";
 import { InputSelect } from "../../Component/InputSelect";
+import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { N } from "../../name-conversion";
+import { tablequalifyingMatchMembersGet } from "../../Service/tablequalifyingMatch";
+import { useConfigStore } from "../../store/config";
+import { useSportStore } from "../../store/sport";
+import { DTime } from "../../type/enum";
 import {
   TTablequalifyingMatch,
   TTableQualifyingMember,
 } from "../../type/tablequalifyingMatch";
-import { parseInt } from "lodash";
-import ReactDatePicker from "react-datepicker";
-import { tablequalifyingMatchMembersGet } from "../../Service/tablequalifyingMatch";
-import { DTime as DTime } from "../../type/enum";
-import { useSportStore } from "../../store/sport";
-import { N } from "../../name-conversion";
 import { convertHoursToDate } from "../../utils/date";
-import { useConfigStore } from "../../store/config";
 
 export interface ITablequalifyingMatchForm {
   tablequalifyingMatch?: Partial<TTablequalifyingMatch>;
@@ -61,7 +61,7 @@ const TablequalifyingMatchForm = ({
     initialValues: { ...tablequalifyingMatch },
     onSubmit: (value) => {
       console.log({ submitAddTablequalifyingMatchValue: value });
-      let submitValue = {
+      const submitValue = {
         ...value,
         indexs:
           typeof value.indexs === "string"

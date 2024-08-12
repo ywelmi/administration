@@ -1,13 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
-import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import {
-  TablequalifyingKnockoutMatchReportModal,
-  useTablequalifyingKnockout,
-} from "./TablequalifyingKnockoutForm";
-import { toast } from "react-toastify";
-import { N } from "../../name-conversion";
-import { InputSelect } from "../../Component/InputSelect";
 import {
   Bracket,
   IRenderSeedProps,
@@ -15,6 +6,11 @@ import {
   SeedItem,
   SeedTeam,
 } from "react-brackets";
+import { toast } from "react-toastify";
+import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
+import { InputSelect } from "../../Component/InputSelect";
+import { N } from "../../name-conversion";
 import {
   tablequalifyingKnockoutGen,
   tablequalifyingKnockoutPairUpdate,
@@ -25,10 +21,14 @@ import {
   TTablequalifyingKnockoutMatchReport,
 } from "../../type/tablequalifyingKnockout";
 import { KnockoutContextProvider, useKnockoutContext } from "./context";
+import {
+  TablequalifyingKnockoutMatchReportModal,
+  useTablequalifyingKnockout,
+} from "./TablequalifyingKnockoutForm";
 
-import "./style.css";
-import { CustomRoundComponent } from "./CustomRound.tsx";
 import { ICustomSeedProps } from "../../typing/treeRound.ts";
+import { CustomRoundComponent } from "./CustomRound.tsx";
+import "./style.css";
 
 interface ISeedPair {
   team1_id: string;
@@ -317,7 +317,9 @@ const PageTablequalifyingKnockout = () => {
                   v="id"
                   name="sport"
                   value={sportId}
-                  handleChange={(e) => setSportId(e.target.value)}
+                  handleChange={(e) =>
+                    e.target.value && setSportId(e.target.value)
+                  }
                 />
                 <div
                   ref={addBtnRef}
