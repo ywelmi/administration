@@ -1,19 +1,5 @@
 import {
-  CSSProperties,
-  forwardRef,
-  HTMLAttributes,
-  HTMLProps,
-  ReactElement,
-  Ref,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useState,
-} from "react";
-import {
-  Column,
   ColumnDef,
-  FilterFn,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -23,9 +9,20 @@ import {
   RowSelectionState,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
+import React, {
+  CSSProperties,
+  forwardRef,
+  HTMLProps,
+  ReactElement,
+  Ref,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 
 import _ from "lodash";
+import { DefaultColumn } from "./Column";
 import { Filter, FilterDate, FilterGender } from "./Filter";
 import { dateFilter } from "./utils";
 
@@ -41,7 +38,9 @@ declare module "@tanstack/react-table" {
       [k in TColumnMeta]?: boolean;
     };
   }
-  type CustomFilterFns<TData extends TValue> = Record<string, FilterFn<TData>>;
+  interface FilterFns {
+    dateFilter: typeof dateFilter;
+  }
 }
 
 interface ITable<T> {
@@ -97,30 +96,7 @@ function IndeterminateCheckbox({
 }
 function getDefaultColumn<T>() {
   return {
-    cell: ({ getValue, row: { index }, column: { id }, table }) => {
-      const initialValue = getValue();
-      // We need to keep and update the state of the cell normally
-      const [value, setValue] = React.useState(initialValue);
-
-      // When the input is blurred, we'll call our table meta's updateData function
-      const onBlur = () => {
-        table.options.meta?.updateData(index, id, value);
-      };
-
-      // If the initialValue is changed external, sync it up with our state
-      React.useEffect(() => {
-        setValue(initialValue);
-      }, [initialValue]);
-
-      return (
-        <input
-          className="w-full form-control"
-          value={value as string}
-          onChange={(e) => setValue(e.target.value)}
-          onBlur={onBlur}
-        />
-      );
-    },
+    cell: (props) => <DefaultColumn {...props} />,
   } as Partial<ColumnDef<T>>;
 }
 

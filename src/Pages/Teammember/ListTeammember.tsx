@@ -1,24 +1,24 @@
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
-import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { LI, UL } from "../../AbstractElements";
+import { ColumnDef } from "@tanstack/react-table";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { TTeammember } from "../../type/teammember";
-import { useTeammemberStore } from "../../store/teammember";
-import { useTeammemberModal } from "./TeammemberForm";
+import { toast } from "react-toastify";
+import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import { LI, UL } from "../../AbstractElements";
+import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
+import { useConfirmModal } from "../../Component/confirmModal";
+import { TanTable } from "../../Component/Tables/TanTable/TanTble";
+import { N } from "../../name-conversion";
 import {
   getTeammemberPhoto,
   teammemberCreate,
   teammemberDelete,
   teammemberUpdate,
 } from "../../Service/teammember";
-import { toast } from "react-toastify";
-import { useConfirmModal } from "../../Component/confirmModal";
+import { useTeammemberStore } from "../../store/teammember";
 import { DGender, DRank } from "../../type/enum";
-import { N } from "../../name-conversion";
+import { TTeammember } from "../../type/teammember";
 import { convertToDate } from "../../utils/date";
-import { TanTable } from "../../Component/Tables/TanTable/TanTble";
-import { ColumnDef } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { useTeammemberModal } from "./TeammemberForm";
 
 interface IListTeammember {
   showAction?: boolean;
@@ -42,7 +42,7 @@ const tableColumns: ColumnDef<TTeammember>[] = [
     accessorKey: "photo",
     footer: (props) => props.column.id,
     header: N["photo"],
-    cell: (props): React.ReactElement => {
+    cell: function Cell(props): React.ReactElement | null {
       const [src, setSrc] = useState("#");
       useEffect(() => {
         const photoId = props.getValue() as string;
@@ -50,7 +50,7 @@ const tableColumns: ColumnDef<TTeammember>[] = [
         getTeammemberPhoto(photoId).then((imSrc) => {
           setSrc(imSrc.url);
         });
-      }, [props.getValue()]);
+      }, [props]);
       return src ? <img src={src}></img> : null;
     },
   },

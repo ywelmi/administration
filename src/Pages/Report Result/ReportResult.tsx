@@ -1,86 +1,19 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Container,
-  Input,
-  Label,
-  Row,
-} from "reactstrap";
-import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import {
-  BasicDataTables,
-  DataTables,
-  SearchTableButton,
-} from "../../utils/Constant";
-import { Btn, LI, UL } from "../../AbstractElements";
-import DataTable, { TableColumn } from "react-data-table-component";
-import { useTranslation } from "react-i18next";
-import { TSport } from "../../type/sport";
-import { useSportStore } from "../../store/sport";
 import { useMemo, useState } from "react";
+import DataTable, { TableColumn } from "react-data-table-component";
+import { Card, CardBody, Col, Container, Input, Label, Row } from "reactstrap";
+import { Btn, LI, UL } from "../../AbstractElements";
+import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
+import { useSportStore } from "../../store/sport";
+import { TSport } from "../../type/sport";
+import { SearchTableButton } from "../../utils/Constant";
 
-import {
-  sportCreate,
-  sportDelete,
-  sportUpdate,
-  sportXuatPhieuDiem,
-} from "../../Service/sport";
-import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
-import { useNavigate } from "react-router-dom";
-import { useLotsDrawModal } from "../LotsDraw/LotsDrawForm";
+import { sportXuatPhieuDiem } from "../../Service/sport";
 import { useConfigStore } from "../../store/config";
 
 type TSportColumn = TSport;
 
 const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
-  const { updateSport, deleteSport } = useSportStore();
-  const { t } = useTranslation();
-
-  const handleUpdateSport = (sport: TSport) => {
-    console.log({ handleUpdateSport: sport });
-    sportUpdate(sport)
-      .then((res) => {
-        const { status, data } = res;
-        if (status === 200) {
-          updateSport(data as TSport);
-          toast.success(t("success"));
-          return;
-        }
-
-        return Promise.reject(status);
-      })
-      .catch((err) => {
-        toast.error(t("error"));
-        console.log({ err });
-      });
-  };
-
-  // const handleConfirmDel = () => {
-  //   const { confirm } = useConfirmModal();
-  //   if (confirm) {
-  //     sportDelete(sport.id).then((res) => {
-  //       const { status, data } = res;
-  //       console.log({ status, data });
-  //       if (status === 200) {
-  //         toast.success(t("success"));
-  //         deleteSport(sport.id);
-  //         return;
-  //       }
-  //       return Promise.reject(status);
-  //     })
-  //       .catch((err) => {
-  //         toast.error(t("error"));
-  //         console.log({ err });
-  //       });
-  //   }
-  //   return;
-  // };
-
-  const navigate = useNavigate();
-
   const handleDownloadClick = () => {
     sportXuatPhieuDiem(sport.id);
   };
@@ -202,34 +135,12 @@ const ListSport = ({
 };
 
 const PageReportResult = () => {
-  const { t } = useTranslation();
   const { sportSelector } = useConfigStore();
-  const { addSport, sports } = useSportStore(sportSelector());
-
-  // const handleAddSport = (sport: TSport) => {
-  //   console.log({ handleAddSport: sport });
-  //   const { id, ...rests } = sport;
-  //   sportCreate(rests).then((res) => {
-  //     const { status, data } = res;
-  //     console.log({ addSportResult: data });
-  //     if (status === 200) {
-  //       addSport(data as TSport);
-  //       toast.info(t("success"));
-  //       return;
-  //     }
-  //     return Promise.reject(status);
-  //   }).catch((err) => {
-  //     toast.error(t("error"));
-  //     console.log({ err });
-  //   });
-  // };
-
-  // const { handleToggle: handleToggleAddModal, SportModal: SportAddModal } =
-  //   useSportModal({ onSubmit: handleAddSport });
+  const { sports } = useSportStore(sportSelector());
 
   return (
     <div className="page-body">
-      <Breadcrumbs mainTitle={"Xuất phiếu điểm"} parent={"HTTQ2024"} />
+      <Breadcrumbs mainTitle={"Xuất biên bản thi đấu"} parent={"HTTQ2024"} />
       <Container fluid>
         <Row>
           <Col sm="12">

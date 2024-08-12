@@ -45,30 +45,20 @@ export const sportXuatPhieuDiem = async (id: string): Promise<void> => {
 
 export const sportXuatXepHang = async (id: string): Promise<void> => {
   try {
-    const response = await httpPut(`sports/${id}/Rating`, {
+    const response = await httpGet(`sports/${id}/export/result`, {
       responseType: "blob",
     });
-    if (response.status == 200) {
-      try {
-        const response = await httpGet(`sports/${id}/export/result`, {
-          responseType: "blob",
-        });
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `XepHang_${id}.xlsx`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error("Download failed:", error);
-        toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng");
-      }
-    }
-  } catch (e) {
-    console.error("Download failed:", e);
-    toast.error("Xảy ra lỗi khi tính toán điểm");
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `XepHang_${id}.xlsx`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Download failed:", error);
+    toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng");
   }
 };
 

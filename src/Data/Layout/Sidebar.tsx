@@ -102,7 +102,7 @@ export const useMenuList = () => {
                         // },
                         {
                             path: "/reportresult",
-                            title: "Xuất phiếu điểm",
+                            title: "Biên bản thi đấu",
                             type: "link",
                             lanClass: "lan-4",
                         },
@@ -153,7 +153,7 @@ export const useMenuList = () => {
                         // },
                         {
                             path: "/reportresult",
-                            title: "Xuất phiếu điểm",
+                            title: "Biên bản thi đấu",
                             type: "link",
                             lanClass: "lan-4",
                         },
