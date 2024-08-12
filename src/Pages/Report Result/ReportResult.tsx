@@ -23,7 +23,7 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
       <>
         <LI className="edit btn">
           <Btn color="warning" type="button" onClick={handleDownloadClick}>
-            Biên bản thi đi đấu
+            Biên bản thi đấu
           </Btn>
         </LI>
       </>

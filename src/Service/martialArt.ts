@@ -22,32 +22,33 @@ export const agesGet = async () => {
 
 export const generateMartialArtContentTree = async (
   sportId: string,
-  contentId: string,
+  contentId: string
 ) => {
-  return httpGet<TTablequalifyingKnockout[]>(
+  return httpPost<TTablequalifyingKnockout[]>(
     `/sports/content/${contentId}/tree-plan?sportId=${sportId}`,
+    {}
   );
 };
 
 export const getMartialArtContentTree = async (
   sportId: string,
-  contentId: string,
+  contentId: string
 ) => {
   return httpGet<TTablequalifyingKnockout[]>(
-    `/sports/${sportId}/SportContent/${contentId}/TableKnockoutMatchs`,
+    `/sports/${sportId}/SportContent/${contentId}/TableKnockoutMatchs`
   );
 };
 
 export const genMartialArtTreeForContents = async (sportId: string) => {
   return httpGet<TTablequalifyingKnockout[]>(
-    `/sports/${sportId}/tree-plan?sportId=${sportId}`,
+    `/sports/${sportId}/tree-plan?sportId=${sportId}`
   );
 };
 
 // For army units
 
 export const martialArtArmyGroupCreate = async (
-  group: TMartialArtArmyGroup,
+  group: TMartialArtArmyGroup
 ) => {
   return httpPost<TMartialArtArmyGroup[]>(`/teamsportgroups`, group);
 };
@@ -56,12 +57,10 @@ export const martialArtArmyGroupGet = async (teamId: string) => {
   return httpGet<TMartialArtArmyGroup[]>(`/teamsportgroups/${teamId}`);
 };
 
-export const martialArtArmyGroupGetAll = async (
-  params = baseGetParams,
-) => {
+export const martialArtArmyGroupGetAll = async (params = baseGetParams) => {
   return httpPost<TMartialArtArmyGroup[]>(
     `/teamsportgroups/padding_filter`,
-    params,
+    params
   );
 };
 
