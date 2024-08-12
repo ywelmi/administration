@@ -8,6 +8,8 @@ import {
 } from "react";
 import { IRoundProps } from "react-brackets";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { N } from "../../name-conversion";
 import {
   generateMartialArtContentTree,
   getMartialArtContentTree,
@@ -71,7 +73,10 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
   const fetchTablequalifyingKnockout = useCallback(
     async (sportId: string, contentId: string, refetchable = true) => {
       console.log("generateMartialArtContentTree", { sportId, contentId });
-      await generateMartialArtContentTree(sportId, contentId);
+      await generateMartialArtContentTree(sportId, contentId).catch((err) => {
+        toast.error(err?.data ? err.data : N["failed"]);
+        console.log({ err });
+      });
       getMartialArtContentTree(sportId, contentId).then((res) => {
         const { status, data } = res;
         console.log({ fetchTablequalifyingKnockout: data, status });
@@ -101,7 +106,10 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
                   }
                 }
               })
-              .catch((err) => console.log({ err }));
+              .catch((err) => {
+                toast.error(err?.data ? err.data : N["failed"]);
+                console.log({ err });
+              });
           }
         }
       });
