@@ -90,7 +90,7 @@ function IndeterminateCheckbox({
     <input
       type="checkbox"
       ref={ref}
-      className={className + " cursor-pointer form-check-input"}
+      className={className + " cursor-pointer"}
       {...rest}
     />
   );
