@@ -13,7 +13,7 @@ import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { useState } from "react";
 import { useSportStore } from "../../store/sport";
 import { Btn, H6 } from "../../AbstractElements";
-import { sportXuatXepHang } from "../../Service/sport";
+import { sportXuatXepHang } from "../../Service/result";
 import { toast } from "react-toastify";
 import { exportResultAll } from "../../Service/result";
 import { useConfigStore } from "../../store/config";

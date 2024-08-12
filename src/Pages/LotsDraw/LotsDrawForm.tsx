@@ -5,7 +5,7 @@ import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useEffect, useRef, useState } from "react";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { ColumnDef } from "@tanstack/react-table";
-import { lotsdrawsGet, lotsdrawUpdate } from "../../Service/lotsdraw";
+import { lotsdrawsGet, lotsdrawsGetNotContentId, lotsdrawUpdate } from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
 import { da } from "date-fns/locale";
@@ -32,6 +32,7 @@ const LotsDrawForm = ({ lotsdraw, onCancel, onSubmit }: ILotsDrawForm) => {
                 return <div className="form-control">{props.getValue() as string}</div>;
             },
         },
+
         {
             accessorKey: "ticket_index",
             footer: (props) => props.column.id,
@@ -65,7 +66,7 @@ const LotsDrawForm = ({ lotsdraw, onCancel, onSubmit }: ILotsDrawForm) => {
     );
 };
 
-const useLotsDrawModal = ({ sportId, onSubmit, ...rest }: any) => {
+const useLotsDrawModal = ({ sportId, content_id, onSubmit, ...rest }: any) => {
     const [data, setData] = useState<TLotsDraw[]>([]);
 
     const [opened, setOpened] = useState(false);
@@ -74,7 +75,17 @@ const useLotsDrawModal = ({ sportId, onSubmit, ...rest }: any) => {
     };
 
     const handleSubmit = (lotsdraw: TLotsDraw[]) => {
-        lotsdrawUpdate(sportId, lotsdraw)
+        const dataSubmit = lotsdraw.map((e: TLotsDraw) => {
+            return {
+                id: e.id,
+                sport_id: e.sport_id,
+                content_id: content_id,
+                team_id: e.team_id,
+                ticket_index: e.ticket_index,
+                has_ranking: true,
+            };
+        });
+        lotsdrawUpdate(sportId, content_id, dataSubmit)
             .then((res) => {
                 const { data, status } = res;
                 if (status === 200) {
@@ -93,8 +104,9 @@ const useLotsDrawModal = ({ sportId, onSubmit, ...rest }: any) => {
     };
 
     useEffect(() => {
+        console.log(sportId + content_id);
         if (sportId) {
-            lotsdrawsGet(sportId)
+            lotsdrawsGetNotContentId(sportId)
                 .then((res) => {
                     const { data, status } = res;
                     console.log({ data });
@@ -102,7 +114,7 @@ const useLotsDrawModal = ({ sportId, onSubmit, ...rest }: any) => {
                 })
                 .catch((err) => console.log({ err }));
         }
-    }, [sportId]);
+    }, [sportId, content_id]);
 
     const LotsDrawModal = () => (
         <CommonModal
