@@ -30,7 +30,7 @@ import { useTeamAtheleModal } from "./TeamAtheleForm";
 import { martialArtMilitiaArmyGroupCreate } from "../../Service/martialArtMilitia";
 import { martialArtArmyGroupGetAll } from "../../Service/martialArt";
 import { getMoreFilterByValue } from "../../Service/_getParams";
-
+import { useConfigStore } from "../../store/config";
 // const LotsDrawTableAction = (
 //   { lotsdraw }: { lotsdraw: TLotsDrawColumn },
 // ) => {
@@ -318,7 +318,8 @@ const getLotDrawId = (d: TLotsDraw) => d.id;
 
 //Component render page lots draw
 const PageLotsDraw = () => {
-    const { sports } = useSportStore();
+    const { sportSelector } = useConfigStore();
+    const { sports } = useSportStore(sportSelector());
     const [sportId, setSportId] = useState("");
 
     const { sport_id: paramSportId } = useParams();
@@ -389,25 +390,6 @@ const PageLotsDraw = () => {
                     if (status === 200) setData(data);
                 })
                 .catch((err) => console.log({ err }));
-            // } else {
-            //     var allFilter: any[] = [];
-            //     if (sportId) {
-            //         const sportFilter = getMoreFilterByValue("sport_id", "=", sportId);
-            //         allFilter = [...allFilter, sportFilter];
-            //     }
-
-            //     if (content_id) {
-            //         const contentFilter = getMoreFilterByValue("content_id", "=", content_id);
-            //         allFilter = [...allFilter, contentFilter];
-            //     }
-            //     await lotsdrawGroupGetAll({ filter: `[${allFilter}]` })
-            //         .then((res) => {
-            //             const { data, status } = res;
-            //             console.log({ data });
-            //             if (status === 200) setData(res.data.data);
-            //         })
-            //         .catch((err) => console.log({ err }));
-            // }
         }
     }, []);
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);

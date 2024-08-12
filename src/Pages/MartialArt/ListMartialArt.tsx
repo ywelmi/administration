@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { toast } from "react-toastify";
-import { N } from "../../name-conversion";
 import { InputSelect } from "../../Component/InputSelect";
-import { KnockoutContextProvider, useKnockoutContext } from "./context";
+import { N } from "../../name-conversion";
 
-import "./style.css";
 import { ColumnDef } from "@tanstack/react-table";
-import { TMartialArt } from "../../type/martialArt";
-import { useCategoryStore } from "../../store/categories";
-import { DGender } from "../../type/enum";
+import { useNavigate } from "react-router-dom";
+import { LI, UL } from "../../AbstractElements";
 import { TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { martialArtsGet } from "../../Service/martialArt";
-import { LI, UL } from "../../AbstractElements";
-import { useNavigate } from "react-router-dom";
+import { useCategoryStore } from "../../store/categories";
+import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
+import { DGender } from "../../type/enum";
+import { TMartialArt } from "../../type/martialArt";
+import "./style.css";
 
 interface IListMartialArt {
   showAction?: boolean;
@@ -23,15 +22,13 @@ interface IListMartialArt {
   data?: TMartialArt[];
   onRowSelect?: (
     row: TMartialArt,
-    e: React.MouseEvent<Element, MouseEvent>,
+    e: React.MouseEvent<Element, MouseEvent>
   ) => void;
-  onSelectedRowsChange?: (
-    v: {
-      allSelected: boolean;
-      selectedCount: number;
-      selectedRows: TMartialArt[];
-    },
-  ) => void;
+  onSelectedRowsChange?: (v: {
+    allSelected: boolean;
+    selectedCount: number;
+    selectedRows: TMartialArt[];
+  }) => void;
   columns?: ColumnDef<TMartialArt>[];
   selectableRowSelected?: (row: TMartialArt) => boolean;
 }
@@ -54,10 +51,10 @@ const tableColumns: ColumnDef<TMartialArt>[] = [
     accessorKey: "age_id",
     footer: (props) => props.column.id,
     enableColumnFilter: false,
-    header: (props) => {
+    header: function Age(props) {
       const { ages } = useCategoryStore();
       return (
-        <div style={{ "minWidth": "124px" }}>
+        <div style={{ minWidth: "124px" }}>
           <div>{N["age"]}</div>
           <InputSelect
             data={ages}
@@ -69,7 +66,7 @@ const tableColumns: ColumnDef<TMartialArt>[] = [
         </div>
       );
     },
-    cell: (props) => {
+    cell: function Age(props) {
       const { ages } = useCategoryStore();
       return ages.find((a) => a.id === props.getValue())?.name;
     },
@@ -78,10 +75,10 @@ const tableColumns: ColumnDef<TMartialArt>[] = [
     accessorKey: "weight_id",
     footer: (props) => props.column.id,
     enableColumnFilter: false,
-    header: (props) => {
+    header: function Weight(props) {
       const { weighs } = useCategoryStore();
       return (
-        <div style={{ "minWidth": "124px" }}>
+        <div style={{ minWidth: "124px" }}>
           <div>{N["weigh"]}</div>
           <InputSelect
             data={weighs}
@@ -94,7 +91,7 @@ const tableColumns: ColumnDef<TMartialArt>[] = [
       );
     },
 
-    cell: (props) => {
+    cell: function Weight(props) {
       const { weighs } = useCategoryStore();
       return weighs.find((a) => a.id === props.getValue())?.name;
     },
@@ -104,46 +101,11 @@ const tableColumns: ColumnDef<TMartialArt>[] = [
 const action: ColumnDef<TMartialArt> = {
   id: "actions",
   header: "#",
-  cell(props) {
+  cell: function Action(props) {
     const {
       row: { original: martialArtContent },
     } = props;
     const navigate = useNavigate();
-
-    // const handleGenTree = useCallback(
-    //   (
-    //     knockoutBracket: IKnockoutCreate,
-    //   ) => {
-    //     console.log({ knockoutBracket });
-    //     tablequalifyingKnockoutGen(knockoutBracket).then((res) => {
-    //       const { status, data } = res;
-    //       console.log({ addTablequalifyingResult: data });
-    //       if (status === 200) {
-    //         // fetchTablequalifyingKnockout(sportId);
-    //         toast.info(N["success"]);
-    //         return;
-    //       }
-    //       // return Promise.reject(status);
-    //     }).catch((err) => {
-    //       toast.error(N["error"]);
-    //       console.log({ err });
-    //     });
-    //   },
-    //   [],
-    // );
-
-    // const {
-    //   handleToggle: handleToggleGenTree,
-    //   GenTreeMartialArtModal: GenTreeMartialArtModal,
-    // } = useGenTreeMartialArt({
-    //   onSubmit: handleGenTree,
-    //   tablequalifyingKnockout: {
-    //     "number_team": 0,
-    //     "has_grade_3rd": false,
-    //     "sport_id": martialArtContent.sport_id,
-    //     content_id: martialArtContent.id,
-    //   },
-    // });
 
     return (
       <UL className="action simple-list flex-row" id={martialArtContent.id}>
@@ -155,7 +117,7 @@ const action: ColumnDef<TMartialArt> = {
           className="edit btn"
           onClick={() => {
             navigate(
-              `/martialart/${martialArtContent.sport_id}/knockout/${martialArtContent.id}`,
+              `/martialart/${martialArtContent.sport_id}/knockout/${martialArtContent.id}`
             );
           }}
         >
@@ -197,20 +159,23 @@ const ListMartialArt = ({
 const PageMartialArt = () => {
   const [data, setData] = useState<TMartialArt[]>([]);
 
-  const { sports } = useSportStore();
+  const { sportSelector } = useConfigStore();
+  const { sports } = useSportStore(sportSelector());
   const sportMartialArt = sports.find((s) => s.point_unit === 3);
 
   useEffect(() => {
     if (!sportMartialArt) return;
-    martialArtsGet(sportMartialArt.id).then((res) => {
-      const { data, status } = res;
-      if (status === 200) {
-        setData(data);
-      }
-    }).catch((err) => {
-      console.log({ err });
-    });
-  }, []);
+    martialArtsGet(sportMartialArt.id)
+      .then((res) => {
+        const { data, status } = res;
+        if (status === 200) {
+          setData(data);
+        }
+      })
+      .catch((err) => {
+        console.log({ err });
+      });
+  }, [sportMartialArt]);
 
   return (
     <div className="page-body">
@@ -222,8 +187,7 @@ const PageMartialArt = () => {
         <Row>
           <Col sm="12">
             <Card>
-              <CardHeader className="pb-0 card-no-border">
-              </CardHeader>
+              <CardHeader className="pb-0 card-no-border"></CardHeader>
               <CardBody>
                 <ListMartialArt data={data} showAction />
               </CardBody>

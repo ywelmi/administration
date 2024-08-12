@@ -7,12 +7,13 @@ import { TSport } from "../../type/sport";
 import { useSportStore } from "../../store/sport";
 import { N } from "../../name-conversion";
 import { ListSport } from "../Sport/ListSport";
+import { useConfigStore } from "../../store/config";
 
 type TSportColumn = TSport;
 
 const PageCompetitionRegister = () => {
-  const { t } = useTranslation();
-  const { addSport, sports } = useSportStore();
+  const { sportSelector } = useConfigStore();
+  const { addSport, sports } = useSportStore(sportSelector());
 
   // const handleAddSport = (sport: TSport) => {
   //   console.log({ handleAddSport: sport });
@@ -50,10 +51,7 @@ const PageCompetitionRegister = () => {
               {/*   <SportAddModal /> */}
               {/* </CardHeader> */}
               <CardBody>
-                <ListSport
-                  data={sports}
-                  showAction
-                />
+                <ListSport data={sports} showAction />
               </CardBody>
             </Card>
           </Col>

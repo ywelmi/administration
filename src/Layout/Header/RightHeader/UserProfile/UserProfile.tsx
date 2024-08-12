@@ -9,10 +9,10 @@ const UserProfile = () => {
                 <Image className="b-r-10" src={dynamicImage("/assets/images/logo.png")} alt="image" />
                 <div className="media-body d-xxl-block d-none box-col-none">
                     <div className="d-flex align-items-center gap-2">
-                        <span>TQ24</span>
+                        <span style={{color: "#066"}}>TQ24</span>
                         <i className="middle fa fa-angle-down"></i>
                     </div>
-                    <P className="mb-0 font-roboto">Admin</P>
+                    <P className="mb-0 font-roboto" style={{color: '#066'}}>Admin</P>
                 </div>
             </div>
             <ProfileBox />

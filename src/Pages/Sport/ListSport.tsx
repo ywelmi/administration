@@ -1,34 +1,15 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Container,
-  Input,
-  Label,
-  Row,
-} from "reactstrap";
-import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import {
-  BasicDataTables,
-  DataTables,
-  SearchTableButton,
-} from "../../utils/Constant";
-import { Btn, LI, UL } from "../../AbstractElements";
-import DataTable, { TableColumn } from "react-data-table-component";
-import { useTranslation } from "react-i18next";
-import { TSport } from "../../type/sport";
-import { useSportStore } from "../../store/sport";
 import { useMemo, useState } from "react";
-import { useSportModal } from "./SportForm";
-import {
-  sportLocationUpdate,
-  sportNameUpdate,
-  sportUpdate,
-} from "../../Service/sport";
+import DataTable, { TableColumn } from "react-data-table-component";
 import { toast } from "react-toastify";
+import { Card, CardBody, Col, Container, Input, Label, Row } from "reactstrap";
+import { LI, UL } from "../../AbstractElements";
+import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { N } from "../../name-conversion";
-import { useNavigate } from "react-router-dom";
+import { sportLocationUpdate, sportNameUpdate } from "../../Service/sport";
+import { useSportStore } from "../../store/sport";
+import { TSport } from "../../type/sport";
+import { SearchTableButton } from "../../utils/Constant";
+import { useSportModal } from "./SportForm";
 
 type TSportColumn = TSport;
 
@@ -37,18 +18,15 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
 
   const handleUpdateSport = (sport: TSport) => {
     console.log({ handleUpdateSport: sport });
-    Promise.all(
-      [
-        sportNameUpdate(sport),
-        sportLocationUpdate(sport),
-      ],
-    ).then(() => {
-      updateSport(sport);
-      toast.success(N["success"]);
-    }).catch((err) => {
-      toast.error(N["failed"]);
-      console.log({ handleUpdateSport: err });
-    });
+    Promise.all([sportNameUpdate(sport), sportLocationUpdate(sport)])
+      .then(() => {
+        updateSport(sport);
+        toast.success(N["success"]);
+      })
+      .catch((err) => {
+        toast.error(N["failed"]);
+        console.log({ handleUpdateSport: err });
+      });
   };
 
   const {
@@ -115,7 +93,7 @@ const tableColumns = (["name", "sport_location"] as (keyof TSportColumn)[]).map(
     selector: (row: TSportColumn) => {
       return row[c as keyof TSportColumn] as string | number;
     },
-  }),
+  })
 );
 
 const ListSport = ({
@@ -127,7 +105,7 @@ const ListSport = ({
   selectableRowSelected,
 }: IListSport) => {
   const [filterText, setFilterText] = useState("");
-  const { updateGetFilter, total, loading, filters } = useSportStore();
+  const { loading } = useSportStore();
   const filteredItems = data.filter((item) => item);
 
   // const handlePerRowsChange = (newPerPage: number, page: number) => {
@@ -164,7 +142,8 @@ const ListSport = ({
         <Label className="me-2">{SearchTableButton}:</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)}
+            setFilterText(e.target.value)
+          }
           type="search"
           value={filterText}
         />
@@ -199,8 +178,8 @@ const ListSport = ({
 };
 
 const PageSport = () => {
-  const { sportsAll } = useSportStore();
-  console.log({ sportsAll });
+  const { sports } = useSportStore();
+  console.log({ sports });
 
   // const handleAddSport = (sport: TSport) => {
   //   console.log({ handleAddSport: sport });
@@ -239,7 +218,7 @@ const PageSport = () => {
               {/* </CardHeader> */}
               <CardBody>
                 <ListSport
-                  data={sportsAll}
+                  data={sports}
                   showAction
                   // columns={[...tableColumns]}
                 />

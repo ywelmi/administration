@@ -1,20 +1,21 @@
-import { Col, Input, Label, Row } from "reactstrap";
 import { useFormik } from "formik";
-import { Btn, Popovers } from "../../AbstractElements";
-import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { parseInt } from "lodash";
 import { useCallback, useEffect, useState } from "react";
+import ReactDatePicker from "react-datepicker";
 import { useTranslation } from "react-i18next";
+import { Col, Input, Label, Row } from "reactstrap";
+import { Btn, Popovers } from "../../AbstractElements";
 import { InputSelect } from "../../Component/InputSelect";
+import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { N } from "../../name-conversion";
+import { tablequalifyingMatchMembersGet } from "../../Service/tablequalifyingMatch";
+import { useConfigStore } from "../../store/config";
+import { useSportStore } from "../../store/sport";
+import { DTime } from "../../type/enum";
 import {
   TTablequalifyingMatch,
   TTableQualifyingMember,
 } from "../../type/tablequalifyingMatch";
-import { parseInt } from "lodash";
-import ReactDatePicker from "react-datepicker";
-import { tablequalifyingMatchMembersGet } from "../../Service/tablequalifyingMatch";
-import { DTime as DTime } from "../../type/enum";
-import { useSportStore } from "../../store/sport";
-import { N } from "../../name-conversion";
 import { convertHoursToDate } from "../../utils/date";
 
 export interface ITablequalifyingMatchForm {
@@ -48,7 +49,8 @@ const TablequalifyingMatchForm = ({
           // team2_name: "",
         };
 
-  const { sports, selectedSportId } = useSportStore();
+  const { sportSelector } = useConfigStore();
+  const { sports, selectedSportId } = useSportStore(sportSelector());
   const selectedSport = sports.find(({ id }) => id === selectedSportId);
 
   // const { teams } = useTeamStore(); // take teams from same table
@@ -59,7 +61,7 @@ const TablequalifyingMatchForm = ({
     initialValues: { ...tablequalifyingMatch },
     onSubmit: (value) => {
       console.log({ submitAddTablequalifyingMatchValue: value });
-      let submitValue = {
+      const submitValue = {
         ...value,
         indexs:
           typeof value.indexs === "string"
@@ -109,7 +111,7 @@ const TablequalifyingMatchForm = ({
             data={teams || []}
             k="team_name"
             name="team1_id"
-            v="team_id"
+            v="member_id"
             handleChange={(e) => {
               formik.handleChange(e);
             }}
@@ -122,7 +124,7 @@ const TablequalifyingMatchForm = ({
             data={teams || []}
             k="team_name"
             name="team2_id"
-            v="team_id"
+            v="member_id"
             handleChange={(e) => {
               formik.handleChange(e);
             }}
@@ -173,9 +175,9 @@ const TablequalifyingMatchForm = ({
           <ReactDatePicker
             className="form-control"
             name="match_hour"
-            value={
+            selected={
               formik.values.match_hour
-                ? convertHoursToDate(formik.values.match_hour).toISOString()
+                ? convertHoursToDate(formik.values.match_hour)
                 : undefined
             }
             onChange={(date) =>
@@ -187,6 +189,7 @@ const TablequalifyingMatchForm = ({
             showTimeSelect
             showTimeSelectOnly
             timeFormat="HH:mm"
+            dateFormat="HH:mm"
             timeIntervals={15}
             timeCaption="Giờ"
             locale={"vi"}

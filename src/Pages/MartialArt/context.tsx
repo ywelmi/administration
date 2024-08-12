@@ -12,10 +12,10 @@ import {
   generateMartialArtContentTree,
   getMartialArtContentTree,
 } from "../../Service/martialArt";
-import { TTeammember } from "../../type/teammember";
 import { teammembersByContent } from "../../Service/teammember";
-import { convertKnockoutsToBrackets } from "./utils";
 import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
+import { TTeammember } from "../../type/teammember";
+import { convertKnockoutsToBrackets } from "./utils";
 
 interface IKnockoutContext {
   sportId: string;
@@ -69,7 +69,9 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
   }, [paramContentId]);
 
   const fetchTablequalifyingKnockout = useCallback(
-    (sportId: string, contentId: string, refetchable = true) => {
+    async (sportId: string, contentId: string, refetchable = true) => {
+      console.log("generateMartialArtContentTree", { sportId, contentId });
+      await generateMartialArtContentTree(sportId, contentId);
       getMartialArtContentTree(sportId, contentId).then((res) => {
         const { status, data } = res;
         console.log({ fetchTablequalifyingKnockout: data, status });

@@ -35,7 +35,7 @@ const selector = (state: SportState): SportState => {
   // console.log({ allSports: state.sports });
   if (uniteType) {
     const filteredSports = state.sports.filter(
-      (s) => s.for_type === DUnit[uniteType],
+      (s) => s.for_type === DUnit[uniteType]
     );
     if (filteredSports) {
       return { ...state, sports: filteredSports, sportsAll: state.sports };
@@ -77,7 +77,7 @@ const _useSportStore = create<SportState>()(
     updateSport: (data: TSport) =>
       set((state: SportState) => {
         const idx = state.sports.findIndex(
-          ({ id: sportId }) => sportId === data.id,
+          ({ id: sportId }) => sportId === data.id
         );
         if (idx > -1) {
           state.sports[idx] = data;
@@ -134,6 +134,7 @@ const _useSportStore = create<SportState>()(
         state.selectedSportId = v;
       });
     },
-  })),
+  }))
 );
-export const useSportStore = () => _useSportStore(selector);
+// export const useSportStore = () => _useSportStore(selector);
+export const useSportStore = _useSportStore;
