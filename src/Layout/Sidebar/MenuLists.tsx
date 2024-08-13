@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { LI, SVG, UL } from "../../AbstractElements";
-import { Href } from "../../utils/Constant";
-import { MenuListType, SidebarItemTypes } from "../../Types/Layout/Sidebar";
 import { useTranslation } from "react-i18next";
-import { useLayoutStore } from "../../store/layout";
-import { DUnit, DUnitType } from "../../type/enum";
+import { Link, useLocation } from "react-router-dom";
+import { LI, UL } from "../../AbstractElements";
 import { useConfigStore } from "../../store/config";
+import { useLayoutStore } from "../../store/layout";
+import { DUnitType } from "../../type/enum";
+import { MenuListType, SidebarItemTypes } from "../../Types/Layout/Sidebar";
+import { Href } from "../../utils/Constant";
 
 const MenuLists: React.FC<MenuListType> = ({
   menu,
@@ -45,7 +45,6 @@ const MenuLists: React.FC<MenuListType> = ({
     temp[level] = item !== temp[level] ? item : "";
     setActiveMenu([...temp]);
     if (unitType) {
-      // updateSportByUnitType(unitType);
       updateUnitType(unitType);
     }
   };

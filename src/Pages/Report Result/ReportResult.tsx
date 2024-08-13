@@ -62,22 +62,21 @@ const ListSport = ({
   selectableRowSelected,
 }: IListSport) => {
   const [filterText, setFilterText] = useState("");
-  const { updateGetFilter, total, loading, filters } = useSportStore();
   const filteredItems = data.filter((item) => item);
 
-  const handlePerRowsChange = (newPerPage: number, page: number) => {
-    const take = newPerPage;
-    const skip = Math.max(page - 1, 0) * take;
-    updateGetFilter({ take, skip });
-  };
+  // const handlePerRowsChange = (newPerPage: number, page: number) => {
+  //   const take = newPerPage;
+  //   const skip = Math.max(page - 1, 0) * take;
+  //   updateGetFilter({ take, skip });
+  // };
 
-  const handlePageChange = (page: number) => {
-    if (!filters) return;
-    const { take } = filters;
-    if (take) {
-      updateGetFilter({ skip: Math.max(page - 1, 0) * take });
-    }
-  };
+  // const handlePageChange = (page: number) => {
+  //   if (!filters) return;
+  //   const { take } = filters;
+  //   if (take) {
+  //     updateGetFilter({ skip: Math.max(page - 1, 0) * take });
+  //   }
+  // };
 
   if (columns.length > 0 && showAction) {
     columns = [
@@ -123,11 +122,11 @@ const ListSport = ({
         onRowClicked={onRowSelect}
         onSelectedRowsChange={onSelectedRowsChange}
         selectableRows={!!onRowSelect || !!onSelectedRowsChange}
-        progressPending={loading}
-        paginationServer
-        paginationTotalRows={total}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
+        // progressPending={loading}
+        // paginationServer
+        // paginationTotalRows={total}
+        // onChangeRowsPerPage={handlePerRowsChange}
+        // onChangePage={handlePageChange}
         selectableRowSelected={selectableRowSelected}
       />
     </div>

@@ -53,6 +53,7 @@ export const useConfigStore = create<ConfigState>()(
             const filteredSports = state.sports.filter(
               (s) => s.for_type === DUnit[unitType]
             );
+            // console.log({ filteredSports });
             if (filteredSports) {
               return {
                 ...state,
@@ -61,6 +62,7 @@ export const useConfigStore = create<ConfigState>()(
               };
             }
           }
+          // console.log({ storeSports: state.sports });
           return { ...state, sportsAll: state.sports };
         },
     })),

@@ -1,32 +1,19 @@
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Container,
-  Input,
-  Label,
-  Row,
-} from "reactstrap";
-import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import {
-  BasicDataTables,
-  DataTables,
-  SearchTableButton,
-} from "../../utils/Constant";
-import { Btn, LI, UL } from "../../AbstractElements";
+import { useMemo, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
-import { TSport } from "../../type/sport";
+import { Card, CardBody, Col, Container, Input, Label, Row } from "reactstrap";
+import { Btn, LI, UL } from "../../AbstractElements";
+import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { useSportStore } from "../../store/sport";
-import { useMemo, useState } from "react";
+import { TSport } from "../../type/sport";
+import { SearchTableButton } from "../../utils/Constant";
 
-import { sportUpdate } from "../../Service/sport";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
-import { useNavigate } from "react-router-dom";
-import { useLotsDrawModal } from "../LotsDraw/LotsDrawForm";
+import { sportUpdate } from "../../Service/sport";
 import { useConfigStore } from "../../store/config";
+import { useLotsDrawModal } from "../LotsDraw/LotsDrawForm";
 
 type TSportColumn = TSport;
 
@@ -180,19 +167,19 @@ const ListSport = ({
   const { updateGetFilter, total, loading, filters } = useSportStore();
   const filteredItems = data.filter((item) => item);
 
-  const handlePerRowsChange = (newPerPage: number, page: number) => {
-    const take = newPerPage;
-    const skip = Math.max(page - 1, 0) * take;
-    updateGetFilter({ take, skip });
-  };
+  // const handlePerRowsChange = (newPerPage: number, page: number) => {
+  //   const take = newPerPage;
+  //   const skip = Math.max(page - 1, 0) * take;
+  //   updateGetFilter({ take, skip });
+  // };
 
-  const handlePageChange = (page: number) => {
-    if (!filters) return;
-    const { take } = filters;
-    if (take) {
-      updateGetFilter({ skip: Math.max(page - 1, 0) * take });
-    }
-  };
+  // const handlePageChange = (page: number) => {
+  //   if (!filters) return;
+  //   const { take } = filters;
+  //   if (take) {
+  //     updateGetFilter({ skip: Math.max(page - 1, 0) * take });
+  //   }
+  // };
 
   if (columns.length > 0 && showAction) {
     columns = [
@@ -241,8 +228,8 @@ const ListSport = ({
         progressPending={loading}
         paginationServer
         paginationTotalRows={total}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
+        // onChangeRowsPerPage={handlePerRowsChange}
+        // onChangePage={handlePageChange}
         selectableRowSelected={selectableRowSelected}
       />
     </div>
