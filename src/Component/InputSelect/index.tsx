@@ -51,8 +51,8 @@ const InputSelect = <T,>({
         {...rest}
       >
         <option value={"null"} selected hidden></option>
-        {inputData.map(({ k: k, v: v }) => (
-          <option key={v} value={v}>
+        {inputData.map(({ k: k, v: v }, i) => (
+          <option key={`${v}-${i}`} value={v}>
             {k}
           </option>
         ))}

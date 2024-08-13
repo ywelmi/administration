@@ -58,6 +58,7 @@ function Filter({
 
 const FilterGender = ({
   column,
+  table,
 }: {
   column: Column<any, any>;
   table: Table<any>;
@@ -74,7 +75,11 @@ const FilterGender = ({
         v={"i"}
         handleChange={({ target: { value } }) => {
           setState(value);
-          column.setFilterValue(parseInt(value));
+          const filterValue = parseInt(value);
+          if (!isNaN(filterValue)) column.setFilterValue(filterValue);
+          else {
+            column.setFilterValue(undefined);
+          }
         }}
       />
     </div>
