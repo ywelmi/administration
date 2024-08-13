@@ -155,7 +155,7 @@ const tableColumns: ColumnDef<TTeammember>[] = [
 const action: ColumnDef<TTeammember> = {
   id: "actions",
   header: "#",
-  cell(props) {
+  cell: function Action(props) {
     const {
       row: { original: teammember },
     } = props;

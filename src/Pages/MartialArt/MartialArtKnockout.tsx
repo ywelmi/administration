@@ -166,8 +166,12 @@ const FullSeed = ({
           ) : (
             <SeedTeam className="team">
               {pair.team1_name
-                ? `${pair.team1_name}: ${pair.team1_point_win_count}`
-                : "NO TEAM"}
+                ? `${pair.team1_name}: ${
+                    pair.team1_point_win_count != null
+                      ? pair.team1_point_win_count
+                      : ""
+                  }`
+                : "CHƯA CÓ"}
             </SeedTeam>
           )}
           <div className="p-2 flex gap-2 justify-center">
@@ -230,8 +234,12 @@ const FullSeed = ({
           ) : (
             <SeedTeam className="team">
               {pair.team2_name
-                ? `${pair.team2_name}: ${pair.team2_point_win_count}`
-                : "NO TEAM"}
+                ? `${pair.team2_name}: ${
+                    pair.team2_point_win_count != null
+                      ? pair.team2_point_win_count
+                      : ""
+                  }`
+                : "CHƯA CÓ"}
             </SeedTeam>
           )}
         </div>
@@ -324,7 +332,11 @@ const UnfullfilledSeed = ({
         ) : (
           <SeedTeam className="team">
             {team.team1_name
-              ? `${team.team1_name}: ${team.team1_point_win_count}`
+              ? `${team.team1_name}: ${
+                  team.team1_point_win_count != null
+                    ? team.team1_point_win_count
+                    : ""
+                }`
               : "Chưa có"}
           </SeedTeam>
         )}
