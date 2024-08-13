@@ -8,12 +8,7 @@ import {
 } from "react";
 import { IRoundProps } from "react-brackets";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { N } from "../../name-conversion";
-import {
-  generateMartialArtContentTree,
-  getMartialArtContentTree,
-} from "../../Service/martialArt";
+import { getMartialArtContentTree } from "../../Service/martialArt";
 import { teammembersByContent } from "../../Service/teammember";
 import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
 import { TTeammember } from "../../type/teammember";
@@ -71,12 +66,8 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
   }, [paramContentId]);
 
   const fetchTablequalifyingKnockout = useCallback(
-    async (sportId: string, contentId: string, refetchable = true) => {
+    async (sportId: string, contentId: string) => {
       console.log("generateMartialArtContentTree", { sportId, contentId });
-      await generateMartialArtContentTree(sportId, contentId).catch((err) => {
-        toast.error(err?.data ? err.data : N["failed"]);
-        console.log({ err });
-      });
       getMartialArtContentTree(sportId, contentId).then((res) => {
         const { status, data } = res;
         console.log({ fetchTablequalifyingKnockout: data, status });
@@ -92,24 +83,24 @@ const KnockoutContextProvider = ({ children }: PropsWithChildren) => {
           } else {
             setRounds([]);
             console.log("MartialArt got no rounds");
-            generateMartialArtContentTree(sportId, contentId)
-              .then((res) => {
-                const { status } = res;
-                if (status === 200) {
-                  console.log("Generate new ones");
-                  if (refetchable) {
-                    fetchTablequalifyingKnockout(
-                      sportId,
-                      contentId,
-                      (refetchable = false)
-                    );
-                  }
-                }
-              })
-              .catch((err) => {
-                toast.error(err?.data ? err.data : N["failed"]);
-                console.log({ err });
-              });
+            // generateMartialArtContentTree(sportId, contentId)
+            //   .then((res) => {
+            //     const { status } = res;
+            //     if (status === 200) {
+            //       console.log("Generate new ones");
+            //       if (refetchable) {
+            //         fetchTablequalifyingKnockout(
+            //           sportId,
+            //           contentId,
+            //           (refetchable = false)
+            //         );
+            //       }
+            //     }
+            //   })
+            //   .catch((err) => {
+            //     toast.error(err?.data ? err.data : N["failed"]);
+            //     console.log({ err });
+            //   });
           }
         }
       });

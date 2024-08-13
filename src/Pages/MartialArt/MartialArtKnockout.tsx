@@ -1,10 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
-import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { BasicDataTables, DataTables } from "../../utils/Constant";
-import { TablequalifyingKnockoutMatchReportModal } from "./MartialArtForm";
-import { toast } from "react-toastify";
-import { N } from "../../name-conversion";
 import {
   Bracket,
   IRenderSeedProps,
@@ -12,15 +6,22 @@ import {
   SeedItem,
   SeedTeam,
 } from "react-brackets";
+import { toast } from "react-toastify";
+import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
+import { InputSelect, InputSelectConfirm } from "../../Component/InputSelect";
+import { N } from "../../name-conversion";
+import { generateMartialArtContentTree } from "../../Service/martialArt";
 import {
   tablequalifyingKnockoutPairUpdate,
   tablequalifyingKnockoutUpdate,
 } from "../../Service/tablequalifyingKnockout";
 import { TTablequalifyingKnockoutMatchReport } from "../../type/tablequalifyingKnockout";
-import { KnockoutContextProvider, useKnockoutContext } from "./context";
-import { InputSelect, InputSelectConfirm } from "../../Component/InputSelect";
-import { CustomRoundComponent } from "./CustomRound";
 import { ICustomSeedProps } from "../../typing/treeRound";
+import { BasicDataTables, DataTables } from "../../utils/Constant";
+import { KnockoutContextProvider, useKnockoutContext } from "./context";
+import { CustomRoundComponent } from "./CustomRound";
+import { TablequalifyingKnockoutMatchReportModal } from "./MartialArtForm";
 
 interface ISeedTeam {
   team1_id: string;
@@ -268,7 +269,7 @@ const UnfullfilledSeed = ({
 
   useEffect(() => {
     setLockPick(team.team1_point_win_count != null);
-  }, [team.team1_point_win_count != null]);
+  }, [team.team1_point_win_count]);
 
   // const handleUpdateKnockoutMatch = (
   //   v: TTablequalifyingKnockoutMatchReport,
@@ -344,7 +345,13 @@ const CustomSeed = (props: IRenderSeedProps) => {
 };
 
 const MartialArtKnockout = () => {
-  const { rounds: fetchedRounds } = useKnockoutContext();
+  const { rounds: fetchedRounds, sportId, contentId } = useKnockoutContext();
+
+  const genMartialArtTree = () =>
+    generateMartialArtContentTree(sportId, contentId).catch((err) => {
+      toast.error(err?.data ? err.data : N["failed"]);
+      console.log({ err });
+    });
 
   return (
     <div className="page-body">
@@ -353,7 +360,12 @@ const MartialArtKnockout = () => {
         <Row>
           <Col sm="12">
             <Card>
-              <CardHeader className="pb-0 card-no-border"></CardHeader>
+              <CardHeader className="pb-0 card-no-border">
+                <div className="btn btn-primary" onClick={genMartialArtTree}>
+                  <i className="fa fa-plus" />
+                  Sinh cây
+                </div>
+              </CardHeader>
               <CardBody>
                 <Bracket
                   rounds={fetchedRounds}

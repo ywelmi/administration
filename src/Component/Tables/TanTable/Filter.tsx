@@ -74,7 +74,7 @@ const FilterGender = ({
         v={"i"}
         handleChange={({ target: { value } }) => {
           setState(value);
-          column.setFilterValue(value);
+          column.setFilterValue(parseInt(value));
         }}
       />
     </div>

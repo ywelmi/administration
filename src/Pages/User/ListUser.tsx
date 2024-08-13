@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import { LI, UL } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { useConfirmModal } from "../../Component/confirmModal";
+import { confirmModal } from "../../Component/confirmModal";
 import { TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { N } from "../../name-conversion";
 import { userCreate, userDelete, userUpdate } from "../../Service/user";
@@ -65,7 +65,7 @@ const userAction: ColumnDef<TUser> = {
     });
 
     const handleConfirmDel = async () => {
-      const { confirm } = await useConfirmModal();
+      const { confirm } = await confirmModal();
       if (confirm) {
         userDelete(user.id)
           .then((res) => {

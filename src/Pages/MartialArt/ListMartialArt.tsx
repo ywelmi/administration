@@ -46,6 +46,7 @@ const tableColumns: ColumnDef<TMartialArt>[] = [
     header: N["gender"],
     cell: (props) => DGender[props.getValue() as number],
     meta: { custom: { gender: true } },
+    filterFn: "equals",
   },
   {
     accessorKey: "age_id",

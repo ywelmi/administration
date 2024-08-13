@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import { LI, UL } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { useConfirmModal } from "../../Component/confirmModal";
+import { confirmModal } from "../../Component/confirmModal";
 import { TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { N } from "../../name-conversion";
 import {
@@ -190,7 +190,7 @@ const action: ColumnDef<TTeammember> = {
     });
 
     const handleConfirmDel = async () => {
-      const { confirm } = await useConfirmModal();
+      const { confirm } = await confirmModal();
       console.log({ confirm });
       if (confirm) {
         teammemberDelete(teammember.id)
