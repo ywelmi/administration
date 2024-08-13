@@ -1,5 +1,5 @@
-import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
 import { ISeedProps } from "react-brackets";
+import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
 import { ICustomRoundProps } from "../../typing/treeRound";
 
 export const convertKnockoutsToBrackets = (
@@ -14,12 +14,12 @@ export const convertKnockoutsToBrackets = (
           {
             id: bracket.team1_id,
             name: bracket.team1_name,
-            winCount: bracket.team1_point_win_count,
+            winCount: bracket.team1_set_win_count,
           },
           {
             id: bracket.team2_id,
             name: bracket.team2_name,
-            winCount: bracket.team2_point_win_count,
+            winCount: bracket.team2_set_win_count,
           },
         ],
       };

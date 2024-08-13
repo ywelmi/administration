@@ -171,7 +171,7 @@ const CustomSeed = ({
           ) : (
             <SeedTeam className="team">
               {pair.team1_name
-                ? `${pair.team1_name}: ${pair.team1_point_win_count || ""}`
+                ? `${pair.team1_name}: ${pair.team1_point_win_count}`
                 : "NO TEAM"}
             </SeedTeam>
           )}
@@ -235,7 +235,7 @@ const CustomSeed = ({
           ) : (
             <SeedTeam className="team">
               {pair.team2_name
-                ? `${pair.team2_name}: ${pair.team2_point_win_count || ""}`
+                ? `${pair.team2_name}: ${pair.team2_point_win_count}`
                 : "NO TEAM"}
             </SeedTeam>
           )}

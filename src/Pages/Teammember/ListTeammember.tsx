@@ -70,10 +70,9 @@ const tableColumns: ColumnDef<TTeammember>[] = [
     accessorKey: "gender",
     footer: (props) => props.column.id,
     header: N["gender"],
-    cell: (props) => {
-      return DGender[parseInt(props.getValue() as string)];
-    },
+    cell: (props) => DGender[props.getValue() as number],
     meta: { custom: { gender: true } },
+    filterFn: "weakEquals",
   },
   {
     accessorKey: "created",
