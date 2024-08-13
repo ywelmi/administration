@@ -379,11 +379,20 @@ const MartialArtKnockout = () => {
                 </div>
               </CardHeader>
               <CardBody>
-                <Bracket
-                  rounds={fetchedRounds}
-                  renderSeedComponent={(props) => <CustomSeed {...props} />}
-                  roundTitleComponent={CustomRoundComponent}
-                />
+                <div
+                  style={{
+                    position: "relative",
+                    overflow: "scroll",
+                    width: "100%",
+                    height: "70vh",
+                  }}
+                >
+                  <Bracket
+                    rounds={fetchedRounds}
+                    renderSeedComponent={(props) => <CustomSeed {...props} />}
+                    roundTitleComponent={CustomRoundComponent}
+                  />
+                </div>
               </CardBody>
             </Card>
           </Col>
