@@ -166,7 +166,7 @@ const ListSport = ({
         onRowClicked={onRowSelect}
         onSelectedRowsChange={onSelectedRowsChange}
         selectableRows={!!onRowSelect || !!onSelectedRowsChange}
-        progressPending={loading}
+        // progressPending={loading}
         // paginationServer
         // paginationTotalRows={total}
         // onChangeRowsPerPage={handlePerRowsChange}
@@ -180,27 +180,6 @@ const ListSport = ({
 const PageSport = () => {
   const { sports } = useSportStore();
   console.log({ sports });
-
-  // const handleAddSport = (sport: TSport) => {
-  //   console.log({ handleAddSport: sport });
-  //   const { id, ...rests } = sport;
-  //   sportCreate(rests).then((res) => {
-  //     const { status, data } = res;
-  //     console.log({ addSportResult: data });
-  //     if (status === 200) {
-  //       addSport(data as TSport);
-  //       toast.info(t("success"));
-  //       return;
-  //     }
-  //     return Promise.reject(status);
-  //   }).catch((err) => {
-  //     toast.error(t("error"));
-  //     console.log({ err });
-  //   });
-  // };
-
-  // const { handleToggle: handleToggleAddModal, SportModal: SportAddModal } =
-  //   useSportModal({ onSubmit: handleAddSport });
 
   return (
     <div className="page-body">

@@ -5,12 +5,12 @@ import { InputSelect } from "../../InputSelect";
 // import { parseInt } from "lodash";
 import ReactDatePicker from "react-datepicker";
 
-function Filter({
+function Filter<T, Q>({
   column,
   table,
 }: {
-  column: Column<any, any>;
-  table: Table<any>;
+  column: Column<T, Q>;
+  table: Table<T>;
 }) {
   const firstValue = table
     .getPreFilteredRowModel()
@@ -56,11 +56,11 @@ function Filter({
   );
 }
 
-const FilterGender = ({
+const FilterGender = <T, Q>({
   column,
 }: {
-  column: Column<any, any>;
-  table: Table<any>;
+  column: Column<T, Q>;
+  table: Table<T>;
 }) => {
   const [state, setState] = useState("");
   const data = DGender.map((v, i) => ({ i, v }));
@@ -74,18 +74,22 @@ const FilterGender = ({
         v={"i"}
         handleChange={({ target: { value } }) => {
           setState(value);
-          column.setFilterValue(value);
+          const filterValue = parseInt(value);
+          if (!isNaN(filterValue)) column.setFilterValue(filterValue);
+          else {
+            column.setFilterValue(undefined);
+          }
         }}
       />
     </div>
   );
 };
 
-const FilterDate = ({
+const FilterDate = <T, Q>({
   column,
 }: {
-  column: Column<any, any>;
-  table: Table<any>;
+  column: Column<T, Q>;
+  table: Table<T>;
 }) => {
   const [data, setData] = useState<string>();
   return (

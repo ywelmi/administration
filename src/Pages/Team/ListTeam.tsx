@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import { LI, UL } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { useConfirmModal } from "../../Component/confirmModal";
+import { confirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
 import { teamCreate, teamDelete, teamUpdate } from "../../Service/team";
 import { useConfigStore } from "../../store/config";
@@ -56,7 +56,7 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
     });
 
   const handleConfirmDel = async () => {
-    const { confirm } = await useConfirmModal();
+    const { confirm } = await confirmModal();
     if (confirm) {
       teamDelete(team.id)
         .then((res) => {

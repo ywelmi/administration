@@ -16,7 +16,7 @@ const Round = ({ title, roundIndex }: IRound) => {
     useKnockoutContext();
   const round = rounds[roundIndex];
   const knockoutPairs = listTablequalifyingKnockout.filter(
-    (t) => t.grade === round.grade
+    (t) => t.grade === round?.grade
   );
   // console.log({ knockoutPairs: knockoutPairs, listTablequalifyingKnockout });
   const { RoundKnockoutModal, handleToggle } = useRoundUpdateModal({
@@ -52,12 +52,14 @@ const Round = ({ title, roundIndex }: IRound) => {
     },
   });
   return (
-    <div style={{ textAlign: "center", color: "black" }}>
-      <div>{title}</div>
-      <Button color="primary" onClick={handleToggle}>
-        Lập lịch
-      </Button>
-      <RoundKnockoutModal />
+    <div>
+      <div style={{ textAlign: "center", color: "black" }}>
+        <div>{title}</div>
+        <Button color="primary" onClick={handleToggle}>
+          Lập lịch
+        </Button>
+        <RoundKnockoutModal />
+      </div>
     </div>
   );
 };

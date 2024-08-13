@@ -1,6 +1,8 @@
+import { useEffect, useMemo, useState } from "react";
+import DataTable, { TableColumn } from "react-data-table-component";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { getFilterByValue } from "../../Service/_getParams";
+import { toast } from "react-toastify";
 import {
   Card,
   CardBody,
@@ -11,26 +13,23 @@ import {
   Label,
   Row,
 } from "reactstrap";
-import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { SearchTableButton } from "../../utils/Constant";
 import { LI, UL } from "../../AbstractElements";
-import DataTable, { TableColumn } from "react-data-table-component";
-import { useTranslation } from "react-i18next";
-import { TTablequalifying } from "../../type/tablequalifying";
-import { useTablequalifyingStore } from "../../store/tablequalifying";
-import { useMemo, useState } from "react";
-import { useTablequalifyingModal } from "./TablequalifyingForm";
+import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
+import { confirmModal } from "../../Component/confirmModal";
+import { InputSelect } from "../../Component/InputSelect";
+import { N } from "../../name-conversion";
+import { getFilterByValue } from "../../Service/_getParams";
 import {
   tablequalifyingCreate,
   tablequalifyingDelete,
   tablequalifyingUpdate,
 } from "../../Service/tablequalifying";
-import { toast } from "react-toastify";
-import { useConfirmModal } from "../../Component/confirmModal";
-import { N } from "../../name-conversion";
-import { InputSelect } from "../../Component/InputSelect";
-import { useSportStore } from "../../store/sport";
 import { useConfigStore } from "../../store/config";
+import { useSportStore } from "../../store/sport";
+import { useTablequalifyingStore } from "../../store/tablequalifying";
+import { TTablequalifying } from "../../type/tablequalifying";
+import { SearchTableButton } from "../../utils/Constant";
+import { useTablequalifyingModal } from "./TablequalifyingForm";
 
 type TTablequalifyingColumn = Omit<TTablequalifying, "list_member_id">;
 
@@ -72,7 +71,7 @@ const TablequalifyingTableAction = ({
   });
 
   const handleConfirmDel = async () => {
-    const { confirm } = await useConfirmModal();
+    const { confirm } = await confirmModal();
     if (confirm) {
       tablequalifyingDelete(tablequalifying.id)
         .then((res) => {

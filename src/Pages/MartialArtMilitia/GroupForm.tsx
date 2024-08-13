@@ -1,33 +1,24 @@
-import {
-  Button,
-  ButtonGroup,
-  Col,
-  FormGroup,
-  Input,
-  Label,
-  Row,
-} from "reactstrap";
-import { TGroup, TTeam } from "../../type/team";
+import { ColumnDef } from "@tanstack/react-table";
 import { useFormik } from "formik";
-import { Btn } from "../../AbstractElements";
-import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useCompetitionStore } from "../../store/competition";
-import { useOrgStore } from "../../store/org";
-import { useSportStore } from "../../store/sport";
+import { Col, Label, Row } from "reactstrap";
+import { Btn } from "../../AbstractElements";
 import { InputSelect } from "../../Component/InputSelect";
-import { TTeammember } from "../../type/teammember";
-import { ListTeammember } from "../Teammember/ListTeammember";
-import { DGender, DRank } from "../../type/enum";
-import { convertToDate } from "../../utils/date";
+import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { N } from "../../name-conversion";
 import { getFilterByValue } from "../../Service/_getParams";
-import { teammembersGet } from "../../Service/teammember";
-import { ColumnDef } from "@tanstack/react-table";
 import { martialArtMilitiaArmyGroupGetContent } from "../../Service/martialArtMilitia";
-import { teamGet, teamsGet } from "../../Service/team";
+import { teamsGet } from "../../Service/team";
+import { teammembersGet } from "../../Service/teammember";
 import { useConfigStore } from "../../store/config";
+import { useOrgStore } from "../../store/org";
+import { useSportStore } from "../../store/sport";
+import { DGender, DRank } from "../../type/enum";
+import { TGroup } from "../../type/team";
+import { TTeammember } from "../../type/teammember";
+import { convertToDate } from "../../utils/date";
+import { ListTeammember } from "../Teammember/ListTeammember";
 
 interface IGroupForm {
   team?: TGroup;
@@ -55,10 +46,9 @@ const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
     accessorKey: "gender",
     footer: (props) => props.column.id,
     header: N["gender"],
-    cell: (props) => {
-      return DGender[parseInt(props.getValue() as string)];
-    },
+    cell: (props) => DGender[props.getValue() as number],
     meta: { custom: { gender: true } },
+    filterFn: "weakEquals",
   },
   {
     accessorKey: "created",

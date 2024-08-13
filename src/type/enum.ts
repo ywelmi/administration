@@ -2,7 +2,7 @@ export type TDict = {
   k: string;
   v: string | number;
 };
-export const DGender = ["Nam", "Nữ"];
+export const DGender = ["Nữ", "Nam"];
 export const DRank = [
   "Binh nhì",
   "Hạ sĩ",

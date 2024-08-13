@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { Btn } from "../AbstractElements";
 
 const CONFIRM_ID = "confirm-modal";
-const useConfirmModal = async () => {
+const confirmModal = async () => {
   const p = new Promise((resolve) => {
     const M = () => {
       return (
@@ -32,18 +32,15 @@ const useConfirmModal = async () => {
       );
     };
 
-    toast.warn(
-      <M />,
-      {
-        position: "top-center",
-        onClose: () => resolve(false),
-        toastId: CONFIRM_ID,
-      },
-    );
+    toast.warn(<M />, {
+      position: "top-center",
+      onClose: () => resolve(false),
+      toastId: CONFIRM_ID,
+    });
   });
 
   const confirm = await p.then();
   return { confirm };
 };
 
-export { useConfirmModal };
+export { confirmModal };

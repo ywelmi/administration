@@ -171,8 +171,12 @@ const CustomSeed = ({
           ) : (
             <SeedTeam className="team">
               {pair.team1_name
-                ? `${pair.team1_name}: ${pair.team1_point_win_count || ""}`
-                : "NO TEAM"}
+                ? `${pair.team1_name}: ${
+                    pair.team1_point_win_count != null
+                      ? pair.team1_point_win_count
+                      : ""
+                  }`
+                : "CHƯA CÓ"}
             </SeedTeam>
           )}
           <div className="p-2 flex gap-2 justify-center">
@@ -235,8 +239,12 @@ const CustomSeed = ({
           ) : (
             <SeedTeam className="team">
               {pair.team2_name
-                ? `${pair.team2_name}: ${pair.team2_point_win_count || ""}`
-                : "NO TEAM"}
+                ? `${pair.team2_name}: ${
+                    pair.team2_point_win_count != null
+                      ? pair.team2_point_win_count
+                      : ""
+                  }`
+                : "CHƯA CÓ"}
             </SeedTeam>
           )}
         </div>
@@ -332,13 +340,22 @@ const PageTablequalifyingKnockout = () => {
                 <TablequalifyingKnockoutAddModal />
               </CardHeader>
               <CardBody>
-                <Bracket
-                  rounds={rounds}
-                  renderSeedComponent={(props) => <CustomSeed {...props} />}
-                  // bracketClassName="bracket"
-                  // roundClassName="round"
-                  roundTitleComponent={CustomRoundComponent}
-                />
+                <div
+                  style={{
+                    position: "relative",
+                    overflow: "scroll",
+                    width: "100%",
+                    height: "70vh",
+                  }}
+                >
+                  <Bracket
+                    rounds={rounds}
+                    renderSeedComponent={(props) => <CustomSeed {...props} />}
+                    // bracketClassName="bracket"
+                    // roundClassName="round"
+                    roundTitleComponent={CustomRoundComponent}
+                  />
+                </div>
               </CardBody>
             </Card>
           </Col>

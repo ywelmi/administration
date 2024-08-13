@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import { LI, UL } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { useConfirmModal } from "../../Component/confirmModal";
+import { confirmModal } from "../../Component/confirmModal";
 import { TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { N } from "../../name-conversion";
 import {
@@ -70,10 +70,9 @@ const tableColumns: ColumnDef<TTeammember>[] = [
     accessorKey: "gender",
     footer: (props) => props.column.id,
     header: N["gender"],
-    cell: (props) => {
-      return DGender[parseInt(props.getValue() as string)];
-    },
+    cell: (props) => DGender[props.getValue() as number],
     meta: { custom: { gender: true } },
+    filterFn: "weakEquals",
   },
   {
     accessorKey: "created",
@@ -156,7 +155,7 @@ const tableColumns: ColumnDef<TTeammember>[] = [
 const action: ColumnDef<TTeammember> = {
   id: "actions",
   header: "#",
-  cell(props) {
+  cell: function Action(props) {
     const {
       row: { original: teammember },
     } = props;
@@ -190,7 +189,7 @@ const action: ColumnDef<TTeammember> = {
     });
 
     const handleConfirmDel = async () => {
-      const { confirm } = await useConfirmModal();
+      const { confirm } = await confirmModal();
       console.log({ confirm });
       if (confirm) {
         teammemberDelete(teammember.id)
