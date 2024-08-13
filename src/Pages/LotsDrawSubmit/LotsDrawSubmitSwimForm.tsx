@@ -8,6 +8,7 @@ import { N } from "../../name-conversion";
 import { lotsdrawResultTableGet, lotsdrawResultUpdate } from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
 import { DRank } from "../../type/enum";
+
 interface ILotsDrawSubmitForm {
     // lotsdraw: TLotsDrawMember[];
     onCancel?: () => void;
@@ -65,7 +66,7 @@ const getLotDrawId = (d: TLotsDrawMember) => d.id;
 
 const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILotsDrawSubmitForm) => {
     const [columns, setColumns] = useState<ColumnDef<TLotsDrawMember>[]>(defaultColumns);
-
+    const _content_point = window._content_point;
     const [data, setData] = useState<TLotsDrawMember[]>([]);
 
     useEffect(() => {
@@ -86,13 +87,29 @@ const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILo
                             columns: [
                                 {
                                     accessorKey: `${field}_record_value`,
-                                    header: N[`${field}_record_value`],
+                                    header: N[`${field}_record_value`] + "(Định dạng: Giờ: phút: giây: mili giây)",
                                     footer: (props) => props.column.id,
                                 },
                                 {
                                     accessorKey: `${field}_point_value`,
                                     header: N[`${field}_point_value`],
                                     footer: (props) => props.column.id,
+                                    // cell({ getValue, row: { index, original }, column: { id }, table }) {
+                                    //     // let hasEmptyFiled = false;
+                                    //     // const idx = Object.values(original).findIndex((v) => v == null);
+                                    //     // if (idx !== -1) hasEmptyFiled = true;
+                                    //     // if (hasEmptyFiled) return null;
+                                    //     // if (!original.isDetail) return null;
+
+                                    //     return (
+                                    //         <div>
+                                    //             {/* {_content_point.convert(
+                                    //                 content_id,
+                                    //                 table.getColumn(`${field}_record_value`)
+                                    //             )} */}
+                                    //         </div>
+                                    //     );
+                                    // },
                                 },
                             ],
                         };
