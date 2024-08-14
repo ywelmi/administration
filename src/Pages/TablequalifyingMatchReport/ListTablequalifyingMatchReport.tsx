@@ -58,6 +58,8 @@ const TablequalifyingTableAction = ({
   } = useTablequalifyingMatchReportModal({
     onSubmit: handleUpdateTablequalifyingMatchReport,
     tablequalifyingMatchReport: {
+      team1_name: tablequalifyingMatch.team1_name,
+      team2_name: tablequalifyingMatch.team2_name,
       id: tablequalifyingMatch.id,
       team1_point: 0,
       team2_point: 0,
