@@ -318,16 +318,21 @@ const getLotDrawId = (d: TLotsDraw) => d.id;
 
 //Component render page lots draw
 const PageLotsDraw = () => {
-    const { sportSelector } = useConfigStore();
-    const { sports } = useSportStore(sportSelector());
+    const { sportSelector, unitType } = useConfigStore();
+    const { sports, sportsMain, sportsSub } = useSportStore(sportSelector());
     const [sportId, setSportId] = useState("");
-
+    const [listSport, setListSport] = useState(sports);
     const { sport_id: paramSportId } = useParams();
     // số VĐV thi đấu trong 1 lượt
     const [numberPlayedPerRound, setNumberPlayedPerRound] = useState<number>(3);
     // số VĐV thi đấu trong 1 lượt
     const [selectedContentSport, setSelectedContentSport] = useState<string>("");
     const [contentType, setContentType] = useState<any>("");
+    useEffect(() => {
+        unitType == "LLTT"
+            ? setListSport(sportsMain.filter((e) => e.point_unit == 1))
+            : setListSport(sportsSub.filter((e) => e.point_unit == 1));
+    }, []);
     useEffect(() => {
         if (paramSportId) {
             setSportId(paramSportId);
@@ -490,18 +495,6 @@ const PageLotsDraw = () => {
                                 <div className="d-flex justify-content-center">
                                     <div className="flex gap-2 mt-4">
                                         <div
-                                            className="btn btn-primary"
-                                            onClick={() => {
-                                                if (sportId) handleUpdate();
-                                                else {
-                                                    toast.warn("Mời chọn môn thi");
-                                                }
-                                            }}
-                                        >
-                                            <i className="fa fa-edit" />
-                                            {"Cập nhật lịch"}
-                                        </div>
-                                        <div
                                             className="btn btn-danger"
                                             onClick={() => {
                                                 if (sportId) {
@@ -606,8 +599,20 @@ const PageLotsDraw = () => {
                                             </Row>
                                         </div>
                                         <div className="d-flex justify-content-center m-10">
+                                            <div
+                                                className="btn btn-primary"
+                                                onClick={() => {
+                                                    if (sportId) handleUpdate();
+                                                    else {
+                                                        toast.warn("Mời chọn môn thi");
+                                                    }
+                                                }}
+                                            >
+                                                <i className="fa fa-edit" />
+                                                {"Cập nhật lịch"}
+                                            </div>
                                             <Btn
-                                                className="btn btn-info"
+                                                className="btn btn-info m-l-10"
                                                 onClick={() => {
                                                     selectedContentSport != ""
                                                         ? toggleLotsDrawScheduleModal()
