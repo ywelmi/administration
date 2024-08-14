@@ -40,8 +40,16 @@ export const getMapTicketAthele = async (sportId: string, team_id: string, conte
     );
 };
 
+export const getPointConfig = async (content_id: string) => {
+    return httpGet<any>(`/sports/${content_id}/point-config`);
+};
+
+export const getContentConfig = async (content_id: string) => {
+    return httpGet<any>(`/sports/${content_id}/content-config`);
+};
+
 // Thực hiện Cập nhật điểm cho đơn vị theo môn thi bốc thăm
-export const lotsdrawResultUpdate = (orgId: string, lotsdrawResult: Partial<TLotsDrawMember>[]) => {
+export const lotsdrawResultUpdate = (orgId: string, lotsdrawResult: any) => {
     return httpPut(`/orgs/${orgId}/SportTicketMembers`, lotsdrawResult);
 };
 
