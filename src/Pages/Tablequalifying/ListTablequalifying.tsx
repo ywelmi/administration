@@ -294,7 +294,7 @@ const PageTablequalifying = () => {
     } else {
       updateGetFilter({ ...filters, filter: "" });
     }
-  }, [sportId]);
+  }, [filters, sportId, updateGetFilter]);
 
   const handleAddTablequalifying = (
     tablequalifying: Partial<TTablequalifying>

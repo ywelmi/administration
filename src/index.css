@@ -3,3 +3,7 @@
 /* body {
   font-size: xx-large !important;
 } */
+
+.invalid-text {
+  color: #fe6a49 !important;
+}

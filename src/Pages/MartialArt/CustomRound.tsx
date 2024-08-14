@@ -1,5 +1,5 @@
-import { Button } from "reactstrap";
 import { toast } from "react-toastify";
+import { Button } from "reactstrap";
 import { N } from "../../name-conversion";
 import { tablequalifyingKnockoutPairInfoUpdate } from "../../Service/tablequalifyingKnockout";
 import { IKnockoutRoundPair } from "../../type/tablequalifyingKnockout";
@@ -52,7 +52,7 @@ const Round = ({ title, roundIndex }: IRound) => {
     },
   });
   return (
-    <div style={{ textAlign: "center", color: "red" }}>
+    <div style={{ textAlign: "center", color: "black" }}>
       <div>{title}</div>
       <Button color="primary" onClick={handleToggle}>
         Lập lịch
