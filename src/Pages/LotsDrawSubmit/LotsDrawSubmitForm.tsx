@@ -3,6 +3,7 @@ import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useState } from "react";
 import { LotsDrawSubmitResultForm } from "./LotsDrawSubmitSwimForm";
 import { LotsDrawUpdateAtheleForm } from "./LotsDrawUpdateAtheleForm";
+import { H3 } from "../../AbstractElements";
 
 interface ILotsDrawSubmitModal {
     lotsdraw?: TLotsDraw[];
@@ -21,20 +22,17 @@ const useLotsDrawSubmitModal = ({ sportId, team_id, content_id, title }: ILotsDr
     };
 
     const LotsDrawSubmitModal = () => (
-        <CommonModal
-            backdrop="static"
-            modalBodyClassName="social-profile text-start"
-            isOpen={opened}
-            toggle={handleToggle}
-            title={title}
-        >
-            <LotsDrawSubmitResultForm
-                sportId={sportId}
-                // onSubmit={() => setOpened(false)}
-                org_id={team_id}
-                content_id={content_id}
-                onCancel={() => setOpened(false)}
-            />
+        <CommonModal modalBodyClassName=" text-start" isOpen={opened} toggle={handleToggle}>
+            <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
+                <H3 className="modal-header justify-content-center border-0">Cập nhật kết quả thi đấu</H3>
+                <LotsDrawSubmitResultForm
+                    sportId={sportId}
+                    // onSubmit={() => setOpened(false)}
+                    org_id={team_id}
+                    content_id={content_id}
+                    onCancel={() => setOpened(false)}
+                />
+            </div>
         </CommonModal>
     );
 
@@ -43,26 +41,25 @@ const useLotsDrawSubmitModal = ({ sportId, team_id, content_id, title }: ILotsDr
 
 const useLotsDrawUpdateAtheleModal = ({ sportId, team_id, content_id, title }: ILotsDrawSubmitModal) => {
     const [opened, setOpened] = useState(false);
-    console.log(content_id);
+
     const handleToggle = () => {
         setOpened((s) => !s);
     };
 
     const LotsDrawUpdateAthele = () => (
-        <CommonModal
-            backdrop="static"
-            modalBodyClassName="social-profile text-start"
-            isOpen={opened}
-            toggle={handleToggle}
-            title={title}
-        >
-            <LotsDrawUpdateAtheleForm
-                sportId={sportId}
-                // onSubmit={() => setOpened(false)}
-                team_id={team_id}
-                content_id={content_id}
-                onCancel={() => setOpened(false)}
-            />
+        <CommonModal modalBodyClassName=" text-start" isOpen={opened} toggle={handleToggle}>
+            <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
+                <H3 className="modal-header justify-content-center border-0">
+                    Cập nhật thăm thi đấu cho vận động viên
+                </H3>
+                <LotsDrawUpdateAtheleForm
+                    sportId={sportId}
+                    // onSubmit={() => setOpened(false)}
+                    team_id={team_id}
+                    content_id={content_id}
+                    onCancel={() => setOpened(false)}
+                />
+            </div>
         </CommonModal>
     );
 
