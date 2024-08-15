@@ -14,7 +14,7 @@ import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
 import { DGender } from "../../type/enum";
 import { TMartialArt } from "../../type/martialArt";
-import "./style.css";
+// import "./style.css";
 
 interface IListMartialArt {
   showAction?: boolean;

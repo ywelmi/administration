@@ -1,8 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { TTablequalifyingMatch } from "../type/tablequalifyingMatch";
-import { baseGetParams, IGetFilters } from "../Service/_getParams";
-import _ from "lodash";
 
 export type TablequalifyingMatchState = {
   counter: number;
@@ -34,9 +32,9 @@ export const useTablequalifyingMatchStore = create<TablequalifyingMatchState>()(
       }),
     updateTablequalifyingMatch: (data: TTablequalifyingMatch) =>
       set((state: TablequalifyingMatchState) => {
-        const idx = state.tablequalifyingMatchs.findIndex((
-          { id: tablequalifyingMatchId },
-        ) => tablequalifyingMatchId === data.id);
+        const idx = state.tablequalifyingMatchs.findIndex(
+          ({ id: tablequalifyingMatchId }) => tablequalifyingMatchId === data.id
+        );
         if (idx > -1) {
           state.tablequalifyingMatchs[idx] = {
             ...state.tablequalifyingMatchs[idx],
@@ -46,9 +44,9 @@ export const useTablequalifyingMatchStore = create<TablequalifyingMatchState>()(
       }),
     deleteTablequalifyingMatch: (id: string) =>
       set((state: TablequalifyingMatchState) => {
-        const idx = state.tablequalifyingMatchs.findIndex((
-          { id: tablequalifyingMatchId },
-        ) => tablequalifyingMatchId === id);
+        const idx = state.tablequalifyingMatchs.findIndex(
+          ({ id: tablequalifyingMatchId }) => tablequalifyingMatchId === id
+        );
         if (idx > -1) {
           state.tablequalifyingMatchs.splice(idx, 1);
         }
@@ -76,5 +74,5 @@ export const useTablequalifyingMatchStore = create<TablequalifyingMatchState>()(
         state.counter += 1;
       });
     },
-  })),
+  }))
 );

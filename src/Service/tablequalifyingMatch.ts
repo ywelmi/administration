@@ -1,11 +1,9 @@
-import { AxiosResponse } from "axios";
 import {
   TTablequalifyingMatch,
   TTablequalifyingMatchReport,
   TTableQualifyingMember,
 } from "../type/tablequalifyingMatch";
-import { baseGetParams, IListResponse } from "./_getParams";
-import { httpDel, httpGet, httpPost, httpPut } from "./_request";
+import { httpGet, httpPost, httpPut } from "./_request";
 
 // export const tablequalifyingMatchsGet = async (
 //   params = baseGetParams,
@@ -19,34 +17,32 @@ import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 // lấy toàn lịch thi đấu của một bảng đấu  theo id bảng đấu
 export const tablequalifyingMatchsGet = (table_id: string) => {
   return httpGet<TTablequalifyingMatch[]>(
-    `/tablequalifyings/${table_id}/TableQualifyingMatchs`,
+    `/tablequalifyings/${table_id}/TableQualifyingMatchs`
   );
 };
 
 // Thêm lịch thi đấu - checked
 export const tablequalifyingMatchCreate = (
-  tablequalifyingMatch: Omit<TTablequalifyingMatch, "id">,
+  tablequalifyingMatch: Omit<TTablequalifyingMatch, "id">
 ) => {
   return httpPost<TTablequalifyingMatch>(
     "/tablequalifyings/create_table-qualifying-match",
-    tablequalifyingMatch,
+    tablequalifyingMatch
   );
 };
 
 export const tablequalifyingMatchReportUpdate = (
-  tablequalifyingMatchResult: TTablequalifyingMatchReport,
+  tablequalifyingMatchResult: TTablequalifyingMatchReport
 ) => {
   return httpPut<TTablequalifyingMatch>(
     `tablequalifyingMatchs/${tablequalifyingMatchResult.id}`,
-    tablequalifyingMatchResult,
+    tablequalifyingMatchResult
   );
 };
 
-export const tablequalifyingMatchMembersGet = (
-  tableId: string,
-) => {
+export const tablequalifyingMatchMembersGet = (tableId: string) => {
   return httpGet<TTableQualifyingMember[]>(
-    `tablequalifyings/${tableId}/TableQualifyingMembers`,
+    `tablequalifyings/${tableId}/TableQualifyingMembers`
   );
 };
 
