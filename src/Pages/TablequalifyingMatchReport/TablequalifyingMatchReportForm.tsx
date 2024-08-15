@@ -1,12 +1,19 @@
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Col, Input, Label, Row } from "reactstrap";
 import * as Yup from "yup";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { getFilterByValue } from "../../Service/_getParams";
+import {
+  knockoutMatchTurnsGet,
+  qualifyingMatchTurnsGet,
+} from "../../Service/matchTurn";
+import { MatchTurnWrapper } from "../../features/matchTurn";
+import { ETable } from "../../type/enum";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import { ListSetReport, useSetReportPopover } from "./SetReport";
+import { ListSetReport } from "./SetReport";
 
 const Schema = Yup.object({
   id: Yup.string(),
@@ -24,32 +31,34 @@ const Schema = Yup.object({
 });
 
 export interface ITablequalifyingMatchReportForm {
-  tablequalifyingMatchReport?: Partial<TTablequalifyingMatchReport>;
+  matchReport?: Partial<TTablequalifyingMatchReport>;
   onSubmit: (tablequalifyingMatchReport: TTablequalifyingMatchReport) => void;
   onCancel?: () => void;
 }
 
 export interface ITablequalifyingMatchReportModal
-  extends ITablequalifyingMatchReportForm {}
+  extends ITablequalifyingMatchReportForm {
+  tableType: ETable;
+}
 
 const TablequalifyingMatchReportForm = ({
-  tablequalifyingMatchReport: initTablequalifyingMatchReport,
+  matchReport: initMatchReport,
   onSubmit,
   onCancel,
 }: ITablequalifyingMatchReportForm) => {
-  const tablequalifyingMatchReport: Partial<TTablequalifyingMatchReport> =
-    initTablequalifyingMatchReport
-      ? initTablequalifyingMatchReport
-      : {
-          id: "",
-          team1_point: 0,
-          team2_point: 0,
-          sets: [],
-        };
+  const matchReport: Partial<TTablequalifyingMatchReport> = initMatchReport
+    ? initMatchReport
+    : {
+        id: "", // match_id
+        team1_point: 0,
+        team2_point: 0,
+        sets: [],
+      };
 
+  // console.log({ initTablequalifyingMatchReport, tablequalifyingMatchReport });
   const { t } = useTranslation();
   const formik = useFormik<Partial<TTablequalifyingMatchReport>>({
-    initialValues: { ...tablequalifyingMatchReport },
+    initialValues: { ...matchReport },
     onSubmit: (value) => {
       // console.log({ submitAddTablequalifyingMatchReportValue: value });
       const submitValue = {
@@ -63,20 +72,20 @@ const TablequalifyingMatchReportForm = ({
     validationSchema: Schema,
   });
 
-  const { SetReportPopover, handleToggle: handleToggleAddSetReport } =
-    useSetReportPopover({
-      onSubmit: (v) => {
-        const sets = formik.values.sets ?? [];
-        formik.setFieldValue("sets", [...sets, v]);
-      },
-    });
+  // const { SetReportPopover, handleToggle: handleToggleAddSetReport } =
+  //   useSetReportPopover({
+  //     onSubmit: (v) => {
+  //       const sets = formik.values.sets ?? [];
+  //       formik.setFieldValue("sets", [...sets, v]);
+  //     },
+  //   });
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <Row className="g-3">
         <Col md="12" className="form-check checkbox-primary">
           <Label for="team1_point" check>
-            {tablequalifyingMatchReport?.team1_name || t("team1_point")}
+            {matchReport?.team1_name || t("team1_point")}
           </Label>
           <Input
             id="indexs"
@@ -92,7 +101,7 @@ const TablequalifyingMatchReportForm = ({
         </Col>
         <Col md="12" className="form-check checkbox-primary">
           <Label for="team2_point" check>
-            {tablequalifyingMatchReport?.team2_name || t("team2_point")}
+            {matchReport?.team2_name || t("team2_point")}
           </Label>
           <Input
             id="indexs"
@@ -106,7 +115,7 @@ const TablequalifyingMatchReportForm = ({
             onChange={formik.handleChange}
           />
         </Col>
-        <SetReportPopover target="PopoversSetReport">
+        {/* <SetReportPopover target="PopoversSetReport">
           <Btn
             color="secondary"
             type="button"
@@ -115,7 +124,7 @@ const TablequalifyingMatchReportForm = ({
           >
             Thêm mới séc
           </Btn>
-        </SetReportPopover>
+        </SetReportPopover> */}
         {formik.errors.sets ? (
           <div className="invalid-text">Mời nhập séc</div>
         ) : null}
@@ -142,6 +151,8 @@ const TablequalifyingMatchReportForm = ({
 };
 const useTablequalifyingMatchReportModal = ({
   onSubmit,
+  matchReport,
+  tableType = ETable.KNOCKOUT,
   ...rest
 }: ITablequalifyingMatchReportModal) => {
   const [opened, setOpened] = useState(false);
@@ -157,6 +168,22 @@ const useTablequalifyingMatchReportModal = ({
     setOpened(false);
   };
 
+  useEffect(() => {}, [matchReport?.id]);
+
+  const getMatchTurns = useCallback(async () => {
+    if (matchReport?.id) {
+      // get all match turns belong to that match id
+      const filter = getFilterByValue("match_id", "=", matchReport.id);
+
+      if (tableType == ETable.QUALIFYING) {
+        return qualifyingMatchTurnsGet({ filter });
+      } else return knockoutMatchTurnsGet({ filter });
+    }
+
+    return Promise.reject("no match id");
+  }, [matchReport?.id, tableType]);
+
+  // console.log({ getMatchTurns });
   const TablequalifyingMatchReportModal = () => (
     <CommonModal
       backdrop="static"
@@ -164,11 +191,14 @@ const useTablequalifyingMatchReportModal = ({
       isOpen={opened}
       toggle={handleToggle}
     >
-      <TablequalifyingMatchReportForm
-        onSubmit={handleSubmit}
-        {...rest}
-        onCancel={() => setOpened(false)}
-      />
+      <MatchTurnWrapper matchTurnsGet={getMatchTurns}>
+        <TablequalifyingMatchReportForm
+          onSubmit={handleSubmit}
+          matchReport={matchReport}
+          {...rest}
+          onCancel={() => setOpened(false)}
+        />
+      </MatchTurnWrapper>
     </CommonModal>
   );
 

@@ -2,6 +2,12 @@ export type TDict = {
   k: string;
   v: string | number;
 };
+
+export enum ETable {
+  KNOCKOUT = 0,
+  QUALIFYING = 1,
+}
+
 export const DGender = ["Nữ", "Nam"];
 export const DRank = [
   "Binh nhì",

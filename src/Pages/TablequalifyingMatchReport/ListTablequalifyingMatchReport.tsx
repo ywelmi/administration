@@ -12,6 +12,7 @@ import {
   tablequalifyingMatchsGet,
 } from "../../Service/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
+import { ETable } from "../../type/enum";
 import {
   TTablequalifyingMatch,
   TTablequalifyingMatchReport,
@@ -57,7 +58,7 @@ const TablequalifyingTableAction = ({
     TablequalifyingMatchReportModal: TablequalifyingUpdateModal,
   } = useTablequalifyingMatchReportModal({
     onSubmit: handleUpdateTablequalifyingMatchReport,
-    tablequalifyingMatchReport: {
+    matchReport: {
       team1_name: tablequalifyingMatch.team1_name,
       team2_name: tablequalifyingMatch.team2_name,
       id: tablequalifyingMatch.id,
@@ -65,6 +66,7 @@ const TablequalifyingTableAction = ({
       team2_point: 0,
       sets: [],
     },
+    tableType: ETable.QUALIFYING,
   });
 
   return (
