@@ -66,7 +66,10 @@ const defaultColumns: ColumnDef<TLotsDrawMember>[] = [
 ];
 
 const getLotDrawId = (d: TLotsDrawMember) => d.id;
-
+const canParseToNumber = (str: string) => {
+    const num = Number(str);
+    return !isNaN(num) && isFinite(num);
+};
 const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILotsDrawSubmitForm) => {
     const [columns, setColumns] = useState<ColumnDef<TLotsDrawMember>[]>(defaultColumns);
     const _content_point = window._content_point;
@@ -88,11 +91,12 @@ const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILo
                     return res.data;
                 });
                 const valueType = contentConfig.filter((e: any) => e.id == content_id)[0].record_type;
-                _content_point.setPoints(pointConfig);
                 console.log(valueType);
+                _content_point.setPoints(pointConfig);
+
                 lst_map_sport_content.forEach(({ field, name, id }) => {
                     if (id == content_id) {
-                        const col: ColumnDef<TLotsDrawMember> = {
+                        const col: ColumnDef<any> = {
                             // accessorKey: field,
                             footer: (props) => props.column.id,
                             header: name,
@@ -101,7 +105,8 @@ const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILo
                                     accessorKey: `${field}_record_value`,
                                     header: (
                                         <p>
-                                            {N[`${field}_record_value`]} <br /> (Giờ: phút: giây. mili giây)
+                                            {N[`${field}_record_value`]} <br />{" "}
+                                            {valueType == 2 ? "(Giờ: phút: giây. mili giây)" : "(Nhập dạng số)"}
                                         </p>
                                     ),
                                     footer: (props) => props.column.id,
@@ -116,28 +121,27 @@ const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILo
                                         // if (idx !== -1) hasEmptyFiled = true;
                                         // if (hasEmptyFiled) return null;
                                         // if (!original.isDetail) return null;
+
                                         var dataResult;
                                         const value = _content_point.convert(
                                             content_id,
-                                            original.content1_record_value
+                                            original[`${field}_record_value`]
                                         );
-                                        const [content1_record_value, setcontent1_record_value] = useState(
-                                            original.content1_record_value
+                                        useEffect(() => {
+                                            setRecord_value(original[`${field}_record_value`]);
+                                            table.options.meta?.updateData(index, id, value);
+                                        }, [original[`${field}_record_value`]]);
+                                        const [record_value, setRecord_value] = useState(
+                                            original[`${field}_record_value`]
                                         );
 
-                                        useEffect(() => {
-                                            table.options.meta?.updateData(index, id, value);
-                                            setcontent1_record_value(original.content1_record_value);
-                                        }, [original.content1_record_value]);
                                         if (valueType == 2) {
                                             if (
-                                                (original.content1_record_value &&
-                                                    original.content1_record_value!.split(":").length > 1 &&
-                                                    original.content1_record_value!.split(":").length > 1) ||
-                                                (original.content1_record_value &&
-                                                    original.content1_record_value!.split(".").length > 1)
+                                                (original[`${field}_record_value`] &&
+                                                    canParseToNumber(original[`${field}_record_value`].toString())) ||
+                                                (original[`${field}_record_value`] &&
+                                                    original[`${field}_record_value`].toString().split(":").length > 1)
                                             ) {
-                                                console.log(value);
                                                 setCanSubmit(true);
 
                                                 dataResult = <div>{value}</div>;
@@ -148,10 +152,10 @@ const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILo
                                         }
                                         if (valueType == 1) {
                                             if (
-                                                original.content1_record_value &&
-                                                original.content1_record_value!.split(".").length > 1
+                                                original[`${field}_record_value`] &&
+                                                canParseToNumber(original[`${field}_record_value`].toString())
                                             ) {
-                                                console.log(value);
+                                                //console.log(value);
                                                 setCanSubmit(true);
                                                 // table.options.meta?.updateData(index, id, value);
                                                 dataResult = <div>{value}</div>;
