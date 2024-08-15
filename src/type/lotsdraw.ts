@@ -44,6 +44,14 @@ export interface TLotsDrawMember {
     group_id?: null;
     content1_record_value?: string;
     content1_point_value?: string;
+    content2_record_value?: string;
+    content2_point_value?: string;
+    content3_record_value?: string;
+    content3_point_value?: string;
+    content4_record_value?: string;
+    content4_point_value?: string;
+    content5_record_value?: string;
+    content5_point_value?: string;
 }
 
 export interface TLotsDrawSportContent {
