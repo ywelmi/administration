@@ -50,11 +50,8 @@ export interface TLotsDrawMember {
     content3_point_value?: string;
     content4_record_value?: string;
     content4_point_value?: string;
-
-    content1?: string;
-    content2?: string;
-    content3?: string;
-    content4?: string;
+    content5_record_value?: string;
+    content5_point_value?: string;
 }
 
 export interface TLotsDrawSportContent {

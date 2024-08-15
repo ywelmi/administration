@@ -13,6 +13,7 @@ import {
     // lotsdrawDelete,
     lotsdrawUpdate,
     lotsdrawGroupGetAll,
+    lotsdrawScheduleGet,
 } from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
@@ -22,7 +23,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import ReactDatePicker from "react-datepicker";
 import { convertToDate } from "../../utils/date";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
-import { Btn, H3, H5, LI } from "../../AbstractElements";
+import { Btn, H2, H3, H5, LI } from "../../AbstractElements";
 import { useLotsDrawSubmitModal, useLotsDrawUpdateAtheleModal } from "../LotsDrawSubmit/LotsDrawSubmitForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
@@ -275,7 +276,24 @@ const tableColumns: ColumnDef<TLotsDraw>[] = [
         },
     },
 ];
-
+const tableUnitColumns: ColumnDef<TLotsDraw>[] = [
+    {
+        accessorKey: "team_name",
+        footer: (props) => props.column.id,
+        header: N["team_name"],
+        cell(props) {
+            return <div className="form-control">{props.getValue() as string}</div>;
+        },
+    },
+    {
+        accessorKey: "ticket_index",
+        footer: (props) => props.column.id,
+        header: N["ticket_index"],
+        cell(props) {
+            return <div className="">{props.getValue() as string}</div>;
+        },
+    },
+];
 const isUpdated = (d: TLotsDraw) => {
     const detailCols: (keyof TLotsDraw)[] = ["ticket_index", "match_hour", "match_date", "locations"];
     for (const c of detailCols) {
@@ -286,11 +304,39 @@ const isUpdated = (d: TLotsDraw) => {
     return true;
 };
 
-const ListLotsDraw = ({
+const ListContentLotsDraw = ({
     showAction,
     onRowSelect,
     onSelectedRowsChange,
     columns = [...tableColumns],
+    data = [],
+    tableRef,
+    selectableRowSelected,
+}: IListLotsDraw) => {
+    // if (columns.length > 0 && showAction) {
+    //   columns = [...columns, {
+    //     name: "#",
+    //     cell: (row: TLotsDrawColumn) => <LotsDrawTableAction lotsdraw={row} />,
+    //     sortable: true,
+    //   }];
+    // }
+    //
+    //
+    const tableData = data.map((d) => ({ ...d, isDetail: isUpdated(d) }));
+
+    console.log({ tableData });
+    return (
+        <div className="table-responsive">
+            <TanTable ref={tableRef} data={tableData} getRowId={getLotDrawId} columns={columns} />
+        </div>
+    );
+};
+
+const ListUnitLotsDraw = ({
+    showAction,
+    onRowSelect,
+    onSelectedRowsChange,
+    columns = [...tableUnitColumns],
     data = [],
     tableRef,
     selectableRowSelected,
@@ -340,9 +386,13 @@ const PageLotsDraw = () => {
     }, [paramSportId]);
     //danh sách các nội dung thi đấu của môn
     const [contentSport, setContent] = useState<any>([]);
-    //số VĐV tham gia nội dung thi
+    // kiểm tra đã cập nhật thăm đơn vị chưa
+    const [isUpdateTicketUnit, setIsUpdateTicketUnit] = useState<any>(false);
     const numberAthele = useRef<any>();
+    // dữ liệu bảng thăm theo nội dung
     const [data, setData] = useState<TLotsDraw[]>([]);
+    // dữ liệu bảng thăm theo đơn vị
+    const [dataUnit, setDataUnit] = useState<TLotsDraw[]>([]);
     const handleAddNew = (e: any) => {
         martialArtMilitiaArmyGroupCreate(e)
             .then((res) => {
@@ -375,26 +425,36 @@ const PageLotsDraw = () => {
 
         fetchDataTable(sportId, id);
     };
-    const fetchData = async (sportId: string) => {
-        await getContentSport(sportId)
+    const fetchData = useCallback((sportId: string) => {
+        getContentSport(sportId)
             .then((res) => {
                 const { data, status } = res;
                 console.log({ data });
                 if (status === 200) setContent(data);
             })
             .catch((err) => console.log({ err }));
-    };
+        lotsdrawsGet(sportId, "")
+            .then((res) => {
+                const { data, status } = res;
+                console.log({ data });
+                if (status === 200) setDataUnit(data);
+            })
+            .catch((err) => console.log({ err }));
+    }, []);
 
-    const fetchDataTable = useCallback(async (sportId: string, content_id: string) => {
+    const fetchDataTable = useCallback((sportId: string, content_id: string) => {
         if (content_id != "") {
             // if (contentType == 1) {
-            await lotsdrawsGet(sportId, content_id)
+            lotsdrawsGet(sportId, content_id)
                 .then((res) => {
                     const { data, status } = res;
                     console.log({ data });
                     if (status === 200) setData(data);
                 })
                 .catch((err) => console.log({ err }));
+            lotsdrawScheduleGet(numberPlayedPerRound, sportId, content_id).then((res) => {
+                console.log(res.data);
+            });
         }
     }, []);
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
@@ -433,6 +493,8 @@ const PageLotsDraw = () => {
                                 toast.error(N["failed"]);
                                 console.log({ err });
                             });
+                        fetchData(sportId);
+                        fetchDataTable(sportId, selectedContentSport);
                         return;
                     }
                 })
@@ -452,6 +514,7 @@ const PageLotsDraw = () => {
             if (sportId) {
                 fetchData(sportId);
                 fetchDataTable(sportId, selectedContentSport);
+                setIsUpdateTicketUnit(true);
             }
         },
     });
@@ -488,36 +551,39 @@ const PageLotsDraw = () => {
                                             v="id"
                                             name="sport"
                                             value={sportId}
-                                            handleChange={(e) => setSportId(e.target.value)}
+                                            handleChange={(e) => {
+                                                setSportId(e.target.value);
+                                                setSelectedContentSport("");
+                                            }}
                                         />
                                     </Col>
                                 </Row>
-                                <div className="d-flex justify-content-center">
-                                    <div className="flex gap-2 mt-4">
-                                        <div
-                                            className="btn btn-danger"
-                                            onClick={() => {
-                                                if (sportId) {
-                                                    toggleLotsDrawModal();
+                                {sportId && (
+                                    <div className="d-flex justify-content-center">
+                                        <div className="flex gap-2 mt-4">
+                                            <div
+                                                className="btn btn-danger"
+                                                onClick={() => {
+                                                    if (sportId) {
+                                                        toggleLotsDrawModal();
 
-                                                    // setTimeout(() => fetchData(sportId), 2000);
-                                                } else {
-                                                    toast.warn("Mời chọn môn thi");
-                                                }
-                                            }}
-                                        >
-                                            <i className="fa fa-plus" /> &nbsp;
-                                            {"Cập nhật kết quả bốc thăm"}
+                                                        // setTimeout(() => fetchData(sportId), 2000);
+                                                    } else {
+                                                        toast.warn("Mời chọn môn thi");
+                                                    }
+                                                }}
+                                            >
+                                                <i className="fa fa-plus" /> &nbsp;
+                                                {"Cập nhật kết quả bốc thăm đơn vị"}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
+                                )}
                                 <LotsDrawAddModal />
                             </CardHeader>
                             <CardBody>
                                 {sportId ? (
                                     <>
-                                        <H3 className="text-center">Lịch thi đấu</H3>
                                         <div className=" justify-content-center">
                                             <Row className="justify-content-center">
                                                 <Col md={5}>
@@ -525,7 +591,9 @@ const PageLotsDraw = () => {
                                                         {contentSport.length > 0 && (
                                                             <InputSelect
                                                                 title={"Chọn nội dung thi đấu"}
-                                                                data={contentSport}
+                                                                data={contentSport.sort(
+                                                                    (a: any, b: any) => a.indexs - b.indexs
+                                                                )}
                                                                 k="name"
                                                                 v="id"
                                                                 name="sport"
@@ -542,86 +610,106 @@ const PageLotsDraw = () => {
                                                             />
                                                         )}
                                                     </div>
-                                                    <div className="d-flex align-items-center">
-                                                        <InputGroupText className="text-center">
-                                                            <strong>Số VĐV thi đấu trong 1 lượt:</strong>
-                                                        </InputGroupText>
-                                                        <Row className="d-flex justify-content-center align-items-center m-l-10">
-                                                            <Col
-                                                                md={3}
-                                                                className="d-flex justify-content-center align-items-center"
-                                                            >
-                                                                <Btn
-                                                                    className={`bg-primary`}
-                                                                    onClick={() =>
-                                                                        setNumberPlayedPerRound((value) => value + 1)
-                                                                    }
+                                                    {selectedContentSport != "" ? (
+                                                        <H2 className="text-center m-20">
+                                                            Lịch và kết quả thi đấu nội dung{" "}
+                                                            <span className="text-danger">
+                                                                {(contentSport &&
+                                                                    contentSport.filter(
+                                                                        (e: any) => e.id == selectedContentSport
+                                                                    )[0].name) ??
+                                                                    ""}
+                                                            </span>
+                                                        </H2>
+                                                    ) : (
+                                                        <H3 className="text-center">Bảng thăm đơn vị</H3>
+                                                    )}
+                                                    {selectedContentSport != "" && (
+                                                        <div className="d-flex align-items-center">
+                                                            <InputGroupText className="text-center">
+                                                                <strong>Số VĐV thi đấu trong 1 lượt:</strong>
+                                                            </InputGroupText>
+                                                            <Row className="d-flex justify-content-center align-items-center m-l-10">
+                                                                <Col
+                                                                    md={3}
+                                                                    className="d-flex justify-content-center align-items-center"
                                                                 >
-                                                                    <i className="fa fa-plus" />
-                                                                </Btn>
-                                                            </Col>
-                                                            <Col
-                                                                md={6}
-                                                                className="d-flex justify-content-center align-items-center"
-                                                            >
-                                                                <Input
-                                                                    className="me-1"
-                                                                    type="number"
-                                                                    value={numberPlayedPerRound}
-                                                                    onChange={(e) =>
-                                                                        setNumberPlayedPerRound(
-                                                                            parseInt(e.target.value)
-                                                                        )
-                                                                    }
-                                                                    min={2}
-                                                                    readOnly
-                                                                />
-                                                            </Col>
-                                                            <Col
-                                                                md={3}
-                                                                className="d-flex justify-content-center align-items-center"
-                                                            >
-                                                                <Btn
-                                                                    className={`bg-primary`}
-                                                                    onClick={() => {
-                                                                        if (numberPlayedPerRound == 2) return;
-                                                                        setNumberPlayedPerRound((value) => value - 1);
-                                                                    }}
+                                                                    <Btn
+                                                                        className={`bg-primary`}
+                                                                        onClick={() =>
+                                                                            setNumberPlayedPerRound(
+                                                                                (value) => value + 1
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <i className="fa fa-plus" />
+                                                                    </Btn>
+                                                                </Col>
+                                                                <Col
+                                                                    md={6}
+                                                                    className="d-flex justify-content-center align-items-center"
                                                                 >
-                                                                    <i className="fa fa-minus" />
-                                                                </Btn>
-                                                            </Col>
-                                                        </Row>
+                                                                    <Input
+                                                                        className="me-1"
+                                                                        type="number"
+                                                                        value={numberPlayedPerRound}
+                                                                        onChange={(e) =>
+                                                                            setNumberPlayedPerRound(
+                                                                                parseInt(e.target.value)
+                                                                            )
+                                                                        }
+                                                                        min={2}
+                                                                        readOnly
+                                                                    />
+                                                                </Col>
+                                                                <Col
+                                                                    md={3}
+                                                                    className="d-flex justify-content-center align-items-center"
+                                                                >
+                                                                    <Btn
+                                                                        className={`bg-primary`}
+                                                                        onClick={() => {
+                                                                            if (numberPlayedPerRound == 2) return;
+                                                                            setNumberPlayedPerRound(
+                                                                                (value) => value - 1
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <i className="fa fa-minus" />
+                                                                    </Btn>
+                                                                </Col>
+                                                            </Row>
 
-                                                        <LotsDrawScheduleModal />
-                                                    </div>
+                                                            <LotsDrawScheduleModal />
+                                                        </div>
+                                                    )}
                                                 </Col>
                                             </Row>
                                         </div>
-                                        <div className="d-flex justify-content-center m-10">
-                                            <div
-                                                className="btn btn-primary"
-                                                onClick={() => {
-                                                    if (sportId) handleUpdate();
-                                                    else {
-                                                        toast.warn("Mời chọn môn thi");
-                                                    }
-                                                }}
-                                            >
-                                                <i className="fa fa-edit" />
-                                                {"Cập nhật lịch"}
+                                        {selectedContentSport != "" && (
+                                            <div className="d-flex justify-content-center m-10">
+                                                <Btn
+                                                    className="btn btn-info m-l-10"
+                                                    onClick={() => {
+                                                        selectedContentSport != ""
+                                                            ? toggleLotsDrawScheduleModal()
+                                                            : alert("Chưa chọn nội dung thi");
+                                                    }}
+                                                >
+                                                    Xem lịch thi đấu
+                                                </Btn>
                                             </div>
-                                            <Btn
-                                                className="btn btn-info m-l-10"
-                                                onClick={() => {
-                                                    selectedContentSport != ""
-                                                        ? toggleLotsDrawScheduleModal()
-                                                        : alert("Chưa chọn nội dung thi");
-                                                }}
-                                            >
-                                                Xem lịch thi đấu
-                                            </Btn>
-                                        </div>
+                                        )}
+                                        {selectedContentSport == "" ? (
+                                            <>
+                                                <ListUnitLotsDraw tableRef={ref} data={dataUnit} showAction />
+                                                <H3 className="text-center text-danger">Chưa chọn nội dung thi đấu </H3>
+                                            </>
+                                        ) : (
+                                            dataUnit.length == 0 && (
+                                                <H3 className="text-center">Chưa thực hiện bốc thăm đơn vị </H3>
+                                            )
+                                        )}
                                         {selectedContentSport != "" && (
                                             <>
                                                 {contentType == "2" && (
@@ -640,9 +728,44 @@ const PageLotsDraw = () => {
                                                     </div>
                                                 )}
                                                 {data.length > 0 ? (
-                                                    <ListLotsDraw tableRef={ref} data={data} showAction />
+                                                    <div>
+                                                        <ListContentLotsDraw tableRef={ref} data={data} showAction />
+                                                        <div className="d-flex justify-content-end">
+                                                            <div
+                                                                className="btn btn-primary "
+                                                                onClick={() => {
+                                                                    if (sportId) handleUpdate();
+                                                                    else {
+                                                                        toast.warn("Mời chọn môn thi");
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <i className="fa fa-edit" />
+                                                                {"Cập nhật lịch"}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 ) : (
-                                                    <H3 className="text-center">Chưa có dữ liệu thi đấu </H3>
+                                                    <div className="d-flex justify-content-center mt-4">
+                                                        <H3 className="m-r-10">Chưa có dữ liệu thi đấu </H3>
+                                                        <div className="">
+                                                            <div
+                                                                className="btn btn-warning text-dark"
+                                                                onClick={() => {
+                                                                    if (sportId) {
+                                                                        toggleLotsDrawModal();
+
+                                                                        // setTimeout(() => fetchData(sportId), 2000);
+                                                                    } else {
+                                                                        toast.warn("Mời chọn môn thi");
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <i className="fa fa-plus" /> &nbsp;
+                                                                {"Cập nhật kết quả bốc thăm cho nội dung"}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 )}
                                             </>
                                         )}
@@ -658,4 +781,4 @@ const PageLotsDraw = () => {
         </div>
     );
 };
-export { ListLotsDraw, PageLotsDraw };
+export { ListContentLotsDraw, PageLotsDraw };

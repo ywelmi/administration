@@ -54,7 +54,15 @@ const LotsDrawUpdateAtheleForm = ({ sportId, team_id, content_id, onCancel }: IL
                                     k={"name"}
                                     v={"id"}
                                     handleChange={(e) => {
-                                        table.options.meta?.updateData(index, id, e.target.value);
+                                        if (e.target.value == "") {
+                                            table.options.meta?.updateData(
+                                                index,
+                                                id,
+                                                "00000000-0000-0000-000000000000"
+                                            );
+                                        } else {
+                                            table.options.meta?.updateData(index, id, e.target.value);
+                                        }
                                     }}
                                     name={"name"}
                                     value={getValue()}

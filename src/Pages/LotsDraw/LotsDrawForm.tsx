@@ -1,6 +1,6 @@
 import { Col } from "reactstrap";
 import { TLotsDraw } from "../../type/lotsdraw";
-import { Btn } from "../../AbstractElements";
+import { Btn, H3 } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useEffect, useRef, useState } from "react";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
@@ -117,19 +117,17 @@ const useLotsDrawModal = ({ sportId, content_id, onSubmit, ...rest }: any) => {
     }, [sportId, content_id]);
 
     const LotsDrawModal = () => (
-        <CommonModal
-            backdrop="static"
-            modalBodyClassName="social-profile text-start"
-            isOpen={opened}
-            toggle={handleToggle}
-        >
-            <LotsDrawForm
-                lotsdraw={data}
-                sportId={sportId}
-                onSubmit={handleSubmit}
-                {...rest}
-                onCancel={() => setOpened(false)}
-            />
+        <CommonModal modalBodyClassName=" text-start" isOpen={opened} toggle={handleToggle}>
+            <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
+                <H3 className="modal-header justify-content-center border-0">Cập nhật kết quả bốc thăm đơn vị</H3>
+                <LotsDrawForm
+                    lotsdraw={data}
+                    sportId={sportId}
+                    onSubmit={handleSubmit}
+                    {...rest}
+                    onCancel={() => setOpened(false)}
+                />
+            </div>
         </CommonModal>
     );
 
