@@ -71,18 +71,23 @@ const LotsDrawUpdateAtheleForm = ({ sportId, team_id, content_id, onCancel }: IL
                         },
                     },
                     {
-                        accessorKey: "ticket_code",
+                        accessorKey: "clothers_number",
                         footer: (props) => props.column.id,
-                        header: "Mã thăm cá nhân",
-                        cell(props) {
-                            return <div className="form-control">{props.getValue() as string}</div>;
-                        },
+                        header: "Số áo (Nếu có)",
                     },
 
                     {
                         accessorKey: "ticket_index",
                         footer: (props) => props.column.id,
                         header: "Mã thăm đơn vị",
+                        cell(props) {
+                            return <div className="form-control">{props.getValue() as string}</div>;
+                        },
+                    },
+                    {
+                        accessorKey: "ticket_code",
+                        footer: (props) => props.column.id,
+                        header: "Mã thăm cá nhân",
                         cell(props) {
                             return <div className="form-control">{props.getValue() as string}</div>;
                         },
