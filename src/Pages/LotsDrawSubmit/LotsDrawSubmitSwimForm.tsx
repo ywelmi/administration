@@ -46,17 +46,17 @@ const defaultColumns: ColumnDef<TLotsDrawMember>[] = [
                 },
             },
             {
-                accessorKey: "ticket_code",
+                accessorKey: "ticket_index",
                 footer: (props) => props.column.id,
-                header: "Thăm cá nhân",
+                header: N["ticket_index"] + " đơn vị",
                 cell(props) {
                     return <div className="form-control">{props.getValue() as string}</div>;
                 },
             },
             {
-                accessorKey: "ticket_index",
+                accessorKey: "ticket_code",
                 footer: (props) => props.column.id,
-                header: N["ticket_index"] + " đơn vị",
+                header: "Thăm cá nhân",
                 cell(props) {
                     return <div className="form-control">{props.getValue() as string}</div>;
                 },
@@ -67,8 +67,17 @@ const defaultColumns: ColumnDef<TLotsDrawMember>[] = [
 
 const getLotDrawId = (d: TLotsDrawMember) => d.id;
 const canParseToNumber = (str: string) => {
-    const num = Number(str);
-    return !isNaN(num) && isFinite(num);
+    if (str.split(".").length > 1) {
+        if (str.split(".")[1].split("").length == 1) {
+            return false;
+        } else {
+            const num = Number(str);
+            return !isNaN(num) && isFinite(num);
+        }
+    } else {
+        const num = Number(str);
+        return !isNaN(num) && isFinite(num);
+    }
 };
 const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILotsDrawSubmitForm) => {
     const [columns, setColumns] = useState<ColumnDef<TLotsDrawMember>[]>(defaultColumns);
@@ -140,14 +149,24 @@ const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILo
                                                 (original[`${field}_record_value`] &&
                                                     canParseToNumber(original[`${field}_record_value`].toString())) ||
                                                 (original[`${field}_record_value`] &&
-                                                    original[`${field}_record_value`].toString().split(":").length > 1)
+                                                    original[`${field}_record_value`].toString().split(":").length >
+                                                        1 &&
+                                                    original[`${field}_record_value`] &&
+                                                    original[`${field}_record_value`].toString().split(":")[1].split("")
+                                                        .length > 1)
                                             ) {
                                                 setCanSubmit(true);
 
                                                 dataResult = <div>{value}</div>;
                                             } else {
                                                 setCanSubmit(false);
-                                                dataResult = <strong className="text-danger">Sai định dạng</strong>;
+                                                dataResult = (
+                                                    <strong className="text-danger">
+                                                        Sai định dạng
+                                                        <br />
+                                                        Định dạng: 00.00 / 00:00
+                                                    </strong>
+                                                );
                                             }
                                         }
                                         if (valueType == 1) {

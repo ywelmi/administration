@@ -6,10 +6,10 @@ import { BasicDataTables, DataTables } from "../../utils/Constant";
 import { TMartialArtMilitiaArmyGroupCreate, TMartialArtMilitiaArmyGroupGet } from "../../type/martialArtMilitia";
 import { useMemo, useState } from "react";
 import {
+    groupGetAll,
     martialArtMilitiaArmyGroupCreate,
     martialArtMilitiaArmyGroupDelete,
     martialArtMilitiaArmyGroupGet,
-    martialArtMilitiaArmyGroupGetAll,
     martialArtMilitiaArmyGroupGetContent,
     martialArtMilitiaArmyGroupGetUpdate,
 } from "../../Service/martialArtMilitia";
@@ -174,7 +174,7 @@ const userAction: ColumnDef<TMartialArtMilitiaArmyGroupGet> = {
 
         const { addMartialArtMilitias, deleteMartialArtMilitia } = useMartialArtMilitiaStore();
         const fetchData = useCallback(() => {
-            martialArtMilitiaArmyGroupGetAll()
+            groupGetAll()
                 .then((res) => {
                     console.log("response here");
                     console.log(res.data.data);
@@ -246,11 +246,7 @@ const tableColumns: ColumnDef<TMartialArtMilitiaArmyGroupGet>[] = [
                 <ReactDatePicker
                     className="form-control"
                     name="match_hour"
-                    selected={
-                        original.match_hour
-                          ? convertHoursToDate(original.match_hour)
-                          : undefined
-                      }
+                    selected={original.match_hour ? convertHoursToDate(original.match_hour) : undefined}
                     onChange={(date) =>
                         table.options.meta?.updateData(index, id, `${date?.getHours()}:${date?.getMinutes()}`)
                     }
@@ -390,7 +386,7 @@ const PageMartialArtMilitia = () => {
 
     const [type, setType] = useState<any>(null);
     const fetchData = useCallback(() => {
-        martialArtMilitiaArmyGroupGetAll()
+        groupGetAll()
             .then((res) => {
                 console.log("response here");
                 console.log(res.data.data);
@@ -419,7 +415,7 @@ const PageMartialArtMilitia = () => {
                 const genderFilter = getMoreFilterByValue("gender", "=", gender);
                 allFilter = [...allFilter, genderFilter];
             }
-            const group = await martialArtMilitiaArmyGroupGetAll({ filter: `[${allFilter}]` }).then((res) => {
+            const group = await groupGetAll({ filter: `[${allFilter}]` }).then((res) => {
                 const {
                     data: { data },
                 } = res;
