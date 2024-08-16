@@ -33,7 +33,7 @@ export const martialArtMilitiaArmyGroupGetContent = async () => {
     return httpGet<any>(`/sports/6e929924-a5d7-4b4b-a261-cbe4e6b9a97b/SportContents`);
 };
 
-export const martialArtMilitiaArmyGroupGetAll = async (params = baseGetParams) => {
+export const groupGetAll = async (params = baseGetParams) => {
     return httpPost<any>(`/teamsportgroups/padding_filter`, params);
 };
 

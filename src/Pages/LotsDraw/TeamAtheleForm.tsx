@@ -3,12 +3,12 @@ import { useFormik } from "formik";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Col, Label, Row } from "reactstrap";
-import { Btn, H3 } from "../../AbstractElements";
+import { Btn, H3, H5 } from "../../AbstractElements";
 import { InputSelect } from "../../Component/InputSelect";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { N } from "../../name-conversion";
 import { getFilterByValue } from "../../Service/_getParams";
-import { teamsGet } from "../../Service/team";
+import { teamsGet, teamsGetByOrg } from "../../Service/team";
 import { teammembersGet } from "../../Service/teammember";
 import { useOrgStore } from "../../store/org";
 import { useSportStore } from "../../store/sport";
@@ -118,12 +118,29 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
         },
     });
 
-    const [numberAthele, setNumberAthele] = useState<number>(2);
+    const [listAthele, setListAthele] = useState<TTeammember[]>([]);
     const [teamId, setTeamId] = useState<any>("");
     const [orgName, setOrgName] = useState<any>("");
     const [numberAtheleSelected, setNumberAtheleSelected] = useState(2);
     const [orgMembers, setOrgMembers] = useState<TTeammember[]>([]);
+    const [queue, setQueue] = useState<any>([]);
 
+    // Effect to monitor changes in the list and update the queue
+    useEffect(() => {
+        // Create a map to track current indices of items
+        const indexMap = new Map(listAthele.map((item, index) => [item, index]));
+
+        // Update queue based on the current list
+        setQueue((prevQueue: any) => {
+            // Filter queue to keep only items that still exist in the list
+            const filteredQueue = prevQueue.filter((item: any) => indexMap.has(item));
+
+            // Add any new items that are in the current list but not in the queue
+            const newItems = listAthele.filter((item) => !prevQueue.includes(item));
+
+            return [...filteredQueue, ...newItems];
+        });
+    }, [listAthele]);
     useEffect(() => {
         (async () => {
             const { org_id: f_org_id } = formik.values;
@@ -136,7 +153,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
                 //     return data;
                 // });
                 // setOrgMembers(members);
-                const team = await teamsGet({ filter: memberFilter }).then((res) => {
+                const team = await teamsGetByOrg({ filter: memberFilter }).then((res) => {
                     const {
                         data: { data },
                     } = res;
@@ -166,7 +183,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
                     setTeamId(team_id);
                     setOrgName(org_name);
                 } else {
-                    alert("Đơn vị chưa đăng ký đội tham gia môn võ DQTV");
+                    alert("Đơn vị chưa đăng ký đội tham gia môn thi");
                     setOrgMembers([]);
                 }
             }
@@ -194,7 +211,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
         <form onSubmit={formik.handleSubmit}>
             <Row className="g-3">
                 {orgs?.length ? (
-                    <Col md="12">
+                    <Col md="6">
                         <InputSelect
                             title={t("org_id")}
                             data={orgs}
@@ -208,24 +225,29 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
                         />
                     </Col>
                 ) : null}
-
-                <Row className="m-t-20">
-                    <>
-                        <Col md="6">
-                            <InputSelect
-                                title={t("sport_id")}
-                                data={sports.filter((e) => e.id == sportId)}
-                                k="name"
-                                name="sport_id"
-                                v="id"
-                                handleChange={(e) => {
-                                    formik.setFieldValue("sport_id", sportId);
-                                }}
-                                value={sportId}
-                            />
-                        </Col>
-                    </>
-                </Row>
+                <Col md="6">
+                    <InputSelect
+                        title={t("sport_id")}
+                        data={sports.filter((e) => e.id == sportId)}
+                        k="name"
+                        name="sport_id"
+                        v="id"
+                        handleChange={(e) => {
+                            formik.setFieldValue("sport_id", sportId);
+                        }}
+                        value={sportId}
+                    />
+                </Col>
+                <H3 className="text-center">Thứ tự thi đấu</H3>
+                <div className="m-t-20 text-center ">
+                    {queue.map((e: TTeammember, index: number) => {
+                        return (
+                            <H5>
+                                <strong>Đợt {index + 1}</strong> : {e.name}
+                            </H5>
+                        );
+                    })}
+                </div>
 
                 <Col md="12" className="form-check checkbox-primary">
                     <Label for="list_team_member" check>
@@ -244,15 +266,16 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
                             }
 
                             // Add new
-                            formik.setFieldValue(
-                                "list_team_member",
-                                selectedRows.map((row) => row.id)
-                            );
-                            // Update
-                            formik.setFieldValue(
-                                "lst_member",
-                                selectedRows.map((row) => row.id)
-                            );
+                            // formik.setFieldValue(
+                            //     "list_team_member",
+                            //     selectedRows.map((row) => row.id)
+                            // );
+                            // // Update
+                            // formik.setFieldValue(
+                            //     "lst_member",
+                            //     selectedRows.map((row) => row.id)
+                            // );
+                            setListAthele(selectedRows);
                             setNumberAtheleSelected(selectedRows.length);
                         }}
                         selectableRowSelected={(r) => {
@@ -277,6 +300,15 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
                         color="primary"
                         type="button"
                         onClick={() => {
+                            formik.setFieldValue(
+                                "lst_member",
+                                queue.map((e: TTeammember, index: number) => {
+                                    return {
+                                        memberid: e.id,
+                                        indexs: index,
+                                    };
+                                })
+                            );
                             formik.setFieldValue("name", orgName + " - Tiếp sức");
                             formik.setFieldValue("org_name", orgName);
                             formik.setFieldValue("team_id", teamId);
