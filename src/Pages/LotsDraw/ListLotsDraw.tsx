@@ -24,7 +24,11 @@ import ReactDatePicker from "react-datepicker";
 import { convertToDate } from "../../utils/date";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { Btn, H2, H3, H5, LI } from "../../AbstractElements";
-import { useLotsDrawSubmitModal, useLotsDrawUpdateAtheleModal } from "../LotsDrawSubmit/LotsDrawSubmitForm";
+import {
+    useLotsDrawSubmitGroupModal,
+    useLotsDrawSubmitModal,
+    useLotsDrawUpdateAtheleModal,
+} from "../LotsDrawSubmit/LotsDrawSubmitForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
 import { useTeamAtheleModal } from "./TeamAtheleForm";
@@ -444,7 +448,7 @@ const PageLotsDraw = () => {
                 // if (idx !== -1) hasEmptyFiled = true;
                 // if (hasEmptyFiled) return null;
                 // if (!original.isDetail) return null;
-                const { LotsDrawSubmitModal, handleToggle } = useLotsDrawSubmitModal({
+                const { LotsDrawSubmitGroupResultModal, handleToggle } = useLotsDrawSubmitGroupModal({
                     sportId: original.sport_id,
                     team_id: original.org_id,
                     content_id: original.content_id,
@@ -453,7 +457,7 @@ const PageLotsDraw = () => {
                     <Btn className="btn btn-info edit" onClick={handleToggle}>
                         <i className="icon-pencil-alt" />
                         Cập nhật
-                        <LotsDrawSubmitModal />
+                        <LotsDrawSubmitGroupResultModal />
                     </Btn>
                 );
             },
@@ -469,7 +473,7 @@ const PageLotsDraw = () => {
                 // if (hasEmptyFiled) return null;
                 // if (!original.isDetail) return null;
                 const handleToggle = useCallback((sportId: string) => {
-                    martialArtArmyGroupDelete(original.team_id)
+                    martialArtArmyGroupDelete(original.id)
                         .then((res) => {
                             const { data, status } = res;
                             if (status === 200) {
@@ -629,9 +633,6 @@ const PageLotsDraw = () => {
                                 if (status === 200) setData(data.data);
                             })
                             .catch((err) => console.log({ err }));
-                        lotsdrawScheduleGet(numberPlayedPerRound, sportId, content_id).then((res) => {
-                            console.log(res.data);
-                        });
                     }
                 }
             })

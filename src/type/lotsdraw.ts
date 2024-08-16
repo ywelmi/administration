@@ -62,5 +62,6 @@ export interface TLotsDrawSportContent {
 
 export interface ILotsDrawResultTemplate {
     lst_ticket_member: TLotsDrawMember[];
+    lst_ticket_group: TLotsDrawMember[];
     lst_map_sport_content: TLotsDrawSportContent[];
 }
