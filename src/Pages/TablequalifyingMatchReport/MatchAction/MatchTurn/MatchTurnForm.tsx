@@ -1,14 +1,15 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import omit from "lodash/omit";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Button, Col } from "reactstrap";
-import { Btn, LI, UL } from "../../../AbstractElements";
-import { confirmModal } from "../../../Component/confirmModal";
-import { TanTable } from "../../../Component/Tables/TanTable/TanTble";
-import { useMatchTurnContext } from "../../../features/matchTurn/context";
-import { N } from "../../../name-conversion";
-import { TMatchTurn } from "../../../type/matchTurn";
-import { getUniqueId } from "../../../utils/id";
+import { Btn, LI, UL } from "../../../../AbstractElements";
+import { confirmModal } from "../../../../Component/confirmModal";
+import { TanTable } from "../../../../Component/Tables/TanTable/TanTble";
+import { N } from "../../../../name-conversion";
+import { TMatchTurn } from "../../../../type/matchTurn";
+import { getUniqueId } from "../../../../utils/id";
+import { useMatchTurnContext } from "./context";
 
 interface IMatchTurnForm {
   onCancel?: () => void;
@@ -48,12 +49,15 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
         updateMatchTurn,
         matchTurnCreate,
         createMatchTurn,
+        matchTurnDel,
+        delMatchTurn,
       } = useMatchTurnContext();
       const handleUpdateMatchTurn = (matchTurn: TMatchTurn) => {
         console.log({ handleUpdateMatchTurn: matchTurn });
         if (matchTurn?.id.includes(PREF_TMP_ID)) {
-          const { id, ...withoutId } = matchTurn;
-          matchTurnCreate(withoutId)
+          console.log({ insertMatchTurn: matchTurn });
+          const matchNoId = omit(matchTurn, ["id"]);
+          matchTurnCreate(matchNoId)
             .then((res) => {
               const { status, data } = res;
               if (status === 200) {
@@ -67,43 +71,51 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
               console.log({ err });
             });
           return;
-        }
-        matchTurnUpdate(matchTurn)
-          .then((res) => {
-            const { status } = res;
-            if (status === 200) {
-              toast.success(N["success"]);
-              updateMatchTurn(matchTurn);
-              // return;
-            }
+        } else {
+          console.log({ updateMatchTurn: matchTurn });
+          matchTurnUpdate(matchTurn)
+            .then((res) => {
+              const { status } = res;
+              if (status === 200) {
+                toast.success(N["success"]);
+                updateMatchTurn(matchTurn);
+                console.log({ updateMatchTurn: matchTurn });
+                // return;
+              }
 
-            // return Promise.reject(status);
-          })
-          .catch((err) => {
-            toast.error(N["error"]);
-            console.log({ err });
-          });
+              // return Promise.reject(status);
+            })
+            .catch((err) => {
+              toast.error(N["error"]);
+              console.log({ err });
+            });
+        }
       };
 
       const handleConfirmDel = async () => {
         const { confirm } = await confirmModal();
-        // if (confirm) {
-        //   userDelete(matchTurn.id)
-        //     .then((res) => {
-        //       const { status, data } = res;
-        //       console.log({ status, data });
-        //       if (status === 200) {
-        //         toast.success(t("success"));
-        //         deleteUser(matchTurn.id);
-        //         return;
-        //       }
-        //     })
-        //     .catch((err) => {
-        //       toast.error(t("error"));
-        //       console.log({ err });
-        //     });
-        // }
-        // return;
+        if (confirm) {
+          console.log({ deleteMatchTurnId: matchTurn.id });
+          const matchId = matchTurn.id;
+          if (matchId.includes(PREF_TMP_ID)) {
+            table.options.meta?.removeData(index);
+          } else
+            matchTurnDel(matchId)
+              .then((res) => {
+                const { status, data } = res;
+                console.log({ matchTurnDel: data });
+                if (status === 200) {
+                  toast.success(N["success"]);
+                  return;
+                }
+              })
+              .catch((err) => {
+                toast.error(N["error"]);
+                console.log({ err });
+              })
+              .finally(() => delMatchTurn(matchId));
+        }
+        return;
       };
 
       return (
@@ -134,14 +146,18 @@ export const MatchTurnForm = ({
 }: IMatchTurnForm) => {
   const { matchTurns, matchId } = useMatchTurnContext();
 
-  const [data, setData] = useState<TMatchTurn[]>([]);
+  const [data, setData] = useState<TMatchTurn[]>(matchTurns || []);
+
+  console.log({ MatchTurnFormMatchTurns: matchTurns });
   useEffect(() => {
+    console.log({ changematchTurns: matchTurns });
     setData(matchTurns);
   }, [matchTurns]);
 
-  const insertNewTempRow = () => {
+  const insertNewTempRow = useCallback(() => {
     console.log("insertNewTempRow");
     setData((prev) => {
+      console.log({ prev });
       const newRowId = getUniqueId(PREF_TMP_ID);
       const newRow: TMatchTurn = {
         id: newRowId,
@@ -154,7 +170,7 @@ export const MatchTurnForm = ({
       console.log({ newRow });
       return [...prev, newRow];
     });
-  };
+  }, [matchId]);
 
   return (
     <div className="table-responsive">

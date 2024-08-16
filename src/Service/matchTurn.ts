@@ -50,23 +50,16 @@ export const qualifyingMatchTurnsGet = (params: typeof baseGetParams) => {
 export const qualifyingMatchTurnCreate = (
   matchTurn: Omit<TMatchTurn, "id">
 ) => {
-  return httpPost<TMatchTurn>(
-    "/tablequalifyings/create_table-qualifying-match",
-    matchTurn
-  );
+  return httpPost<TMatchTurn>("tablequalifyingmatchturns", matchTurn);
 };
 
-export const qualifyingMatchTurnUpdate = (
-  matchTurn: Omit<TMatchTurn, "id">
-) => {
+export const qualifyingMatchTurnUpdate = (matchTurn: TMatchTurn) => {
   return httpPut<TMatchTurn>(
-    "/tablequalifyings/create_table-qualifying-match",
+    `/tablequalifyingmatchturns/${matchTurn.id}`,
     matchTurn
   );
 };
 
 export const qualifyingMatchTurnDelete = (id: string) => {
-  return httpDel<TMatchTurn>(
-    `/tablequalifyings/create_table-qualifying-match/${id}`
-  );
+  return httpDel<TMatchTurn>(`/tablequalifyingmatchturns/${id}`);
 };

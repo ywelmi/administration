@@ -15,8 +15,8 @@ import {
   qualifyingMatchTurnDelete,
   qualifyingMatchTurnsGet,
   qualifyingMatchTurnUpdate,
-} from "../../Service/matchTurn";
-import { TMatchTurn, TMatchTurnWithSet } from "../../type/matchTurn";
+} from "../../../../Service/matchTurn";
+import { TMatchTurn, TMatchTurnWithSet } from "../../../../type/matchTurn";
 
 interface IMatchTurnQuery {
   matchTurnCreate:
@@ -58,9 +58,9 @@ const MatchTurnContext = createContext<IMatchTurnContext>({
   matchTurnDel: () => Promise<void>,
 });
 
-export interface IMatchTurnProvider
-  extends PropsWithChildren,
-    IMatchTurnQuery {}
+export interface IMatchTurnProvider extends PropsWithChildren, IMatchTurnQuery {
+  matchId: string;
+}
 
 const _combineMatchTurnsAndSets = (matchTurns: TMatchTurn[], sets: []) => {
   return [] as TMatchTurnWithSet[];
@@ -68,40 +68,40 @@ const _combineMatchTurnsAndSets = (matchTurns: TMatchTurn[], sets: []) => {
 
 const MatchTurnProvider = ({
   children,
+  matchId: initMatchId = "",
   matchTurnCreate: matchTurnCreate,
   matchTurnsGet,
   matchTurnUpdate,
   matchTurnDel,
 }: IMatchTurnProvider) => {
-  const [matchId, setMatchId] = useState("");
+  const [matchId, setMatchId] = useState(initMatchId);
+  useEffect(() => {
+    setMatchId(initMatchId);
+  }, [initMatchId]);
   // const [matchTurnWithSets, setMatchTurnsWithSets] = useState<TMatchTurnWithSet[]>([]);
   const [matchTurns, setMatchTurns] = useState<TMatchTurn[]>([]);
 
   useEffect(() => {
     matchTurnsGet()
       .then((res) => {
-        console.log({ res });
+        // console.log({ res });
         const {
           data: { data },
           status,
         } = res;
         if (status === 200) {
-          console.log({ setMatchTurns: data });
           setMatchTurns(data);
+          console.log({ setMatchTurns: data });
         }
       })
-      .then((err) => {
+      .catch((err) => {
         console.log({ err });
       });
   }, [matchId, matchTurnsGet]);
 
   const updateMatchTurn = useCallback((matchTurn: TMatchTurn) => {
     setMatchTurns((prev) => {
-      const idx = prev.findIndex((m) => m.id === matchTurn.id);
-      if (idx !== -1) {
-        return [...prev.splice(idx, 1), matchTurn];
-      }
-      return prev;
+      return [...prev.map((m) => (m.id === matchTurn.id ? matchTurn : m))];
     });
   }, []);
 
@@ -110,7 +110,13 @@ const MatchTurnProvider = ({
   }, []);
 
   const delMatchTurn = useCallback((id: string) => {
-    setMatchTurns((prev) => [...prev.filter((m) => m.id !== id)]);
+    // console.log({ delMatchTurn: id });
+    setMatchTurns((prev) => {
+      // console.log({ prev });
+      const newData = [...prev.filter((m) => m.id !== id)];
+      // console.log({ newData });
+      return newData;
+    });
   }, []);
 
   const matchTurnsWithSets = useMemo<TMatchTurnWithSet[]>(() => {

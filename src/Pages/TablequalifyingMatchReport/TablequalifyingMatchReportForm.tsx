@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Col,
@@ -15,22 +15,8 @@ import {
 import * as Yup from "yup";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import { MatchTurnWrapper } from "../../features/matchTurn";
-import { useMatchTurnContext } from "../../features/matchTurn/context";
-import { getFilterByValue } from "../../Service/_getParams";
-import {
-  knockoutMatchTurnCreate,
-  knockoutMatchTurnDelete,
-  knockoutMatchTurnsGet,
-  knockoutMatchTurnUpdate,
-  qualifyingMatchTurnCreate,
-  qualifyingMatchTurnDelete,
-  qualifyingMatchTurnsGet,
-  qualifyingMatchTurnUpdate,
-} from "../../Service/matchTurn";
-import { ETable } from "../../type/enum";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import { MatchTurnForm } from "./MatchTurn/MatchTurnForm";
+import { MatchTurnForm } from "./MatchAction/MatchTurn/MatchTurnForm";
 import { ListSetReport } from "./SetReport";
 
 const Schema = Yup.object({
@@ -60,7 +46,6 @@ interface ITabMatchTurn {
 interface ITablequalifyingMatchReportModal
   extends ITablequalifyingMatchReportForm {
   matchReport: TTablequalifyingMatchReport;
-  tableType: ETable;
 }
 
 const TablequalifyingMatchReportForm = ({
@@ -174,44 +159,12 @@ const TablequalifyingMatchReportForm = ({
 
 const useTablequalifyingMatchReportModal = ({
   matchReport,
-  tableType = ETable.KNOCKOUT,
 }: ITablequalifyingMatchReportModal) => {
   const [opened, setOpened] = useState(false);
 
   const handleToggle = () => {
     setOpened((s) => !s);
   };
-
-  const matchTurnsGet = useCallback(async () => {
-    if (matchReport?.id) {
-      // get all match turns belong to that match id
-      const filter = getFilterByValue("match_id", "=", matchReport.id);
-      if (tableType == ETable.QUALIFYING) {
-        return qualifyingMatchTurnsGet({ filter });
-      } else return knockoutMatchTurnsGet({ filter });
-    }
-    return Promise.reject("no match id");
-  }, [matchReport?.id, tableType]);
-
-  const matchTurnAdd = useMemo(() => {
-    if (tableType == ETable.QUALIFYING) {
-      return qualifyingMatchTurnCreate;
-    }
-    return knockoutMatchTurnCreate;
-  }, [tableType]);
-
-  const matchTurnUpdate = useMemo(() => {
-    if (tableType == ETable.QUALIFYING) {
-      return qualifyingMatchTurnUpdate;
-    }
-    return knockoutMatchTurnUpdate;
-  }, [tableType]);
-
-  const matchTurnDel = useMemo(() => {
-    if (tableType == ETable.QUALIFYING) {
-      return qualifyingMatchTurnDelete;
-    } else return knockoutMatchTurnDelete;
-  }, [tableType]);
 
   const TablequalifyingMatchReportModal = () => (
     <CommonModal
@@ -221,14 +174,7 @@ const useTablequalifyingMatchReportModal = ({
       toggle={handleToggle}
       title="Trận nhỏ"
     >
-      <MatchTurnWrapper
-        matchTurnsGet={matchTurnsGet}
-        matchTurnUpdate={matchTurnUpdate}
-        matchTurnDel={matchTurnDel}
-        matchTurnCreate={matchTurnAdd}
-      >
-        <TabMatchTurn matchReport={matchReport || {}}></TabMatchTurn>
-      </MatchTurnWrapper>
+      <TabMatchTurn matchReport={matchReport || {}}></TabMatchTurn>
     </CommonModal>
   );
 
@@ -242,11 +188,6 @@ enum ETabTurn {
 
 const TabMatchTurn = ({ matchReport }: ITabMatchTurn) => {
   const [tabId, setTabId] = useState<ETabTurn>(ETabTurn.TURN);
-  const { setMatchId } = useMatchTurnContext();
-  useEffect(() => {
-    console.log({ matchReportid: matchReport?.id });
-    matchReport?.id && setMatchId(matchReport.id);
-  }, [matchReport, setMatchId]);
   return (
     <>
       <Nav tabs>

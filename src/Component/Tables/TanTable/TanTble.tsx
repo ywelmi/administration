@@ -29,6 +29,7 @@ import { dateFilter } from "./utils";
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+    removeData: (rowIndex: number) => void;
     getRowStyles: (row: Row<TData>) => CSSProperties;
   }
   type TColumnMeta = "gender" | "rank" | "date";
@@ -240,6 +241,18 @@ const TanTableComponent = <T,>(
               };
             }
             return row;
+          })
+        );
+      },
+      removeData: (rowIndex) => {
+        // Skip page index reset until after next rerender
+        skipAutoResetPageIndex();
+        setData((old) =>
+          old.filter((_, index) => {
+            if (index !== rowIndex) {
+              return true;
+            }
+            return false;
           })
         );
       },

@@ -1,84 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { Card, CardBody, Col, Container, Input, Label, Row } from "reactstrap";
-import { LI, UL } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { N } from "../../name-conversion";
-import {
-  tablequalifyingMatchReportUpdate,
-  tablequalifyingMatchsGet,
-} from "../../Service/tablequalifyingMatch";
+import { tablequalifyingMatchsGet } from "../../Service/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
-import { ETable } from "../../type/enum";
-import {
-  TTablequalifyingMatch,
-  TTablequalifyingMatchReport,
-} from "../../type/tablequalifyingMatch";
+import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 import { SearchTableButton } from "../../utils/Constant";
-import { useTablequalifyingMatchReportModal } from "./TablequalifyingMatchReportForm";
+import TablequalifyingTableAction from "./MatchAction";
 
 type TTablequalifyingColumn = TTablequalifyingMatch;
-
-const TablequalifyingTableAction = ({
-  tablequalifyingMatch,
-}: {
-  tablequalifyingMatch: TTablequalifyingColumn;
-}) => {
-  const { updateTablequalifyingMatch, increaseCounter } =
-    useTablequalifyingMatchStore();
-  const { t } = useTranslation();
-
-  const handleUpdateTablequalifyingMatchReport = (
-    tablequalifyingMatch: TTablequalifyingMatchReport
-  ) => {
-    // console.log({ handleUpdateTablequalifyingMatch: tablequalifyingMatch });
-    tablequalifyingMatchReportUpdate(tablequalifyingMatch)
-      .then((res) => {
-        const { status, data } = res;
-        if (status === 200) {
-          updateTablequalifyingMatch(data as TTablequalifyingMatch);
-          increaseCounter();
-          toast.success(t("success"));
-          return;
-        }
-
-        return Promise.reject(status);
-      })
-      .catch((err) => {
-        toast.error(t("error"));
-        console.log({ err });
-      });
-  };
-
-  const {
-    handleToggle: handleToggleUpdateModal,
-    TablequalifyingMatchReportModal: TablequalifyingUpdateModal,
-  } = useTablequalifyingMatchReportModal({
-    onSubmit: handleUpdateTablequalifyingMatchReport,
-    matchReport: {
-      team1_name: tablequalifyingMatch.team1_name,
-      team2_name: tablequalifyingMatch.team2_name,
-      id: tablequalifyingMatch.id,
-      team1_point: 0,
-      team2_point: 0,
-      sets: [],
-    },
-    tableType: ETable.QUALIFYING,
-  });
-
-  return (
-    <UL className="action simple-list flex-row" id={tablequalifyingMatch.id}>
-      <LI className="edit btn" onClick={handleToggleUpdateModal}>
-        <i className="icon-pencil-alt" />
-        Cập nhật
-        <TablequalifyingUpdateModal />
-      </LI>
-    </UL>
-  );
-};
 
 interface IListTablequalifyingMatchReport {
   showAction?: boolean;
