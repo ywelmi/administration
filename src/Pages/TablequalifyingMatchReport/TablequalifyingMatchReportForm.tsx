@@ -1,18 +1,36 @@
 import { useFormik } from "formik";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Col, Input, Label, Row } from "reactstrap";
+import {
+  Col,
+  Input,
+  Label,
+  Nav,
+  NavItem,
+  NavLink,
+  Row,
+  TabContent,
+  TabPane,
+} from "reactstrap";
 import * as Yup from "yup";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { MatchTurnWrapper } from "../../features/matchTurn";
+import { useMatchTurnContext } from "../../features/matchTurn/context";
 import { getFilterByValue } from "../../Service/_getParams";
 import {
+  knockoutMatchTurnCreate,
+  knockoutMatchTurnDelete,
   knockoutMatchTurnsGet,
+  knockoutMatchTurnUpdate,
+  qualifyingMatchTurnCreate,
+  qualifyingMatchTurnDelete,
   qualifyingMatchTurnsGet,
+  qualifyingMatchTurnUpdate,
 } from "../../Service/matchTurn";
-import { MatchTurnWrapper } from "../../features/matchTurn";
 import { ETable } from "../../type/enum";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
+import { MatchTurnForm } from "./MatchTurn/MatchTurnForm";
 import { ListSetReport } from "./SetReport";
 
 const Schema = Yup.object({
@@ -36,8 +54,12 @@ export interface ITablequalifyingMatchReportForm {
   onCancel?: () => void;
 }
 
-export interface ITablequalifyingMatchReportModal
+interface ITabMatchTurn {
+  matchReport: Partial<TTablequalifyingMatchReport>;
+}
+interface ITablequalifyingMatchReportModal
   extends ITablequalifyingMatchReportForm {
+  matchReport: TTablequalifyingMatchReport;
   tableType: ETable;
 }
 
@@ -149,11 +171,10 @@ const TablequalifyingMatchReportForm = ({
     </form>
   );
 };
+
 const useTablequalifyingMatchReportModal = ({
-  onSubmit,
   matchReport,
   tableType = ETable.KNOCKOUT,
-  ...rest
 }: ITablequalifyingMatchReportModal) => {
   const [opened, setOpened] = useState(false);
 
@@ -161,48 +182,108 @@ const useTablequalifyingMatchReportModal = ({
     setOpened((s) => !s);
   };
 
-  const handleSubmit = (
-    tablequalifyingMatchReport: TTablequalifyingMatchReport
-  ) => {
-    onSubmit(tablequalifyingMatchReport);
-    setOpened(false);
-  };
-
-  useEffect(() => {}, [matchReport?.id]);
-
-  const getMatchTurns = useCallback(async () => {
+  const matchTurnsGet = useCallback(async () => {
     if (matchReport?.id) {
       // get all match turns belong to that match id
       const filter = getFilterByValue("match_id", "=", matchReport.id);
-
       if (tableType == ETable.QUALIFYING) {
         return qualifyingMatchTurnsGet({ filter });
       } else return knockoutMatchTurnsGet({ filter });
     }
-
     return Promise.reject("no match id");
   }, [matchReport?.id, tableType]);
 
-  // console.log({ getMatchTurns });
+  const matchTurnAdd = useMemo(() => {
+    if (tableType == ETable.QUALIFYING) {
+      return qualifyingMatchTurnCreate;
+    }
+    return knockoutMatchTurnCreate;
+  }, [tableType]);
+
+  const matchTurnUpdate = useMemo(() => {
+    if (tableType == ETable.QUALIFYING) {
+      return qualifyingMatchTurnUpdate;
+    }
+    return knockoutMatchTurnUpdate;
+  }, [tableType]);
+
+  const matchTurnDel = useMemo(() => {
+    if (tableType == ETable.QUALIFYING) {
+      return qualifyingMatchTurnDelete;
+    } else return knockoutMatchTurnDelete;
+  }, [tableType]);
+
   const TablequalifyingMatchReportModal = () => (
     <CommonModal
       backdrop="static"
       modalBodyClassName="social-profile text-start"
       isOpen={opened}
       toggle={handleToggle}
+      title="Trận nhỏ"
     >
-      <MatchTurnWrapper matchTurnsGet={getMatchTurns}>
-        <TablequalifyingMatchReportForm
-          onSubmit={handleSubmit}
-          matchReport={matchReport}
-          {...rest}
-          onCancel={() => setOpened(false)}
-        />
+      <MatchTurnWrapper
+        matchTurnsGet={matchTurnsGet}
+        matchTurnUpdate={matchTurnUpdate}
+        matchTurnDel={matchTurnDel}
+        matchTurnCreate={matchTurnAdd}
+      >
+        <TabMatchTurn matchReport={matchReport || {}}></TabMatchTurn>
       </MatchTurnWrapper>
     </CommonModal>
   );
 
   return { TablequalifyingMatchReportModal, handleToggle };
+};
+
+enum ETabTurn {
+  SET = 2,
+  TURN = 1,
+}
+
+const TabMatchTurn = ({ matchReport }: ITabMatchTurn) => {
+  const [tabId, setTabId] = useState<ETabTurn>(ETabTurn.TURN);
+  const { setMatchId } = useMatchTurnContext();
+  useEffect(() => {
+    console.log({ matchReportid: matchReport?.id });
+    matchReport?.id && setMatchId(matchReport.id);
+  }, [matchReport, setMatchId]);
+  return (
+    <>
+      <Nav tabs>
+        <NavItem>
+          <NavLink
+            active={tabId === ETabTurn.TURN}
+            onClick={() => setTabId(ETabTurn.TURN)}
+          >
+            Trận nhỏ
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink
+            active={tabId === ETabTurn.SET}
+            onClick={() => setTabId(ETabTurn.SET)}
+          >
+            Séc đấu
+          </NavLink>
+        </NavItem>
+      </Nav>
+      <TabContent activeTab={tabId}>
+        <TabPane tabId={ETabTurn.TURN}>
+          <MatchTurnForm />
+        </TabPane>
+        <TabPane tabId={ETabTurn.SET}>
+          <TablequalifyingMatchReportForm
+            onSubmit={(v) => {
+              console.log({ v });
+            }}
+            matchReport={matchReport}
+            // {...rest}
+            // onCancel={() => setOpened(false)}
+          />
+        </TabPane>
+      </TabContent>
+    </>
+  );
 };
 
 export { TablequalifyingMatchReportForm, useTablequalifyingMatchReportModal };

@@ -1,33 +1,38 @@
+import { useState } from "react";
 import { Popovers } from "../../../AbstractElements";
+import { TMatchTurn } from "../../../type/matchTurn";
+import { MatchTurnForm } from "./MatchTurnForm";
+import "./style.css";
 
-export const useSetReportPopover = ({
+interface IMatchTurnPopover {
+  setReport?: TMatchTurn;
+  onSubmit: (v: TMatchTurn) => void;
+  onCancel?: () => void;
+}
+
+export const useMatchTurnPopover = ({
   onSubmit,
   ...rest
-}: ISetReportPopover) => {
+}: IMatchTurnPopover) => {
   const [opened, setOpened] = useState(false);
   const handleToggle = () => {
     setOpened((s) => !s);
   };
 
-  const handleSubmit = (teammember: TSetReport) => {
-    onSubmit(teammember);
-    setOpened(false);
-  };
+  // const handleSubmit = (teammember: TMatchTurn) => {
+  //   onSubmit(teammember);
+  //   setOpened(false);
+  // };
 
-  const SetReportPopover = ({
+  const MatchTurnPopover = ({
     children,
     target,
   }: React.PropsWithChildren<{ target: string }>) => (
     <div>
       {children}
-      <Popovers
-        isOpen={opened}
-        placement="right-end"
-        target={target}
-        trigger="click"
-      >
+      <Popovers isOpen={opened} placement="top" target={target} trigger="click">
         <MatchTurnForm
-          onSubmit={handleSubmit}
+          // onSubmit={handleSubmit}
           {...rest}
           onCancel={() => setOpened(false)}
         />
@@ -35,5 +40,5 @@ export const useSetReportPopover = ({
     </div>
   );
 
-  return { SetReportPopover, handleToggle };
+  return { MatchTurnPopover, handleToggle };
 };

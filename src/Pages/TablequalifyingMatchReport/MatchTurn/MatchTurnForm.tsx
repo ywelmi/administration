@@ -1,17 +1,16 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { LI, UL } from "../../../AbstractElements";
+import { Button, Col } from "reactstrap";
+import { Btn, LI, UL } from "../../../AbstractElements";
 import { confirmModal } from "../../../Component/confirmModal";
 import { TanTable } from "../../../Component/Tables/TanTable/TanTble";
 import { useMatchTurnContext } from "../../../features/matchTurn/context";
 import { N } from "../../../name-conversion";
 import { TMatchTurn } from "../../../type/matchTurn";
-interface IMatchTurnForm {
-  match_id: string;
+import { getUniqueId } from "../../../utils/id";
 
-  matchTurn?: TMatchTurn;
-  onSubmit: (v: TMatchTurn) => void;
+interface IMatchTurnForm {
   onCancel?: () => void;
 }
 const displayColumns: ColumnDef<TMatchTurn>[] = [
@@ -19,6 +18,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
     accessorKey: "indexs",
     footer: (props) => props.column.id,
     header: N["indexs"],
+    // cell: ({ getValue }) => getValue() as string,
   },
   {
     accessorKey: "name",
@@ -43,19 +43,41 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
       column: { id },
       table,
     }) {
-      const { matchTurnUpdate, updateMatchTurn } = useMatchTurnContext();
+      const {
+        matchTurnUpdate,
+        updateMatchTurn,
+        matchTurnCreate,
+        createMatchTurn,
+      } = useMatchTurnContext();
       const handleUpdateMatchTurn = (matchTurn: TMatchTurn) => {
         console.log({ handleUpdateMatchTurn: matchTurn });
+        if (matchTurn?.id.includes(PREF_TMP_ID)) {
+          const { id, ...withoutId } = matchTurn;
+          matchTurnCreate(withoutId)
+            .then((res) => {
+              const { status, data } = res;
+              if (status === 200) {
+                toast.success(N["success"]);
+                createMatchTurn(data);
+                console.log({ createMatchTurn: data });
+              }
+            })
+            .catch((err) => {
+              toast.error(err?.data ? err.data : N["error"]);
+              console.log({ err });
+            });
+          return;
+        }
         matchTurnUpdate(matchTurn)
           .then((res) => {
             const { status } = res;
             if (status === 200) {
               toast.success(N["success"]);
               updateMatchTurn(matchTurn);
-              return;
+              // return;
             }
 
-            return Promise.reject(status);
+            // return Promise.reject(status);
           })
           .catch((err) => {
             toast.error(N["error"]);
@@ -63,41 +85,29 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
           });
       };
 
-      // const {
-      //   handleToggle: handleToggleUpdateModal,
-      //   UserModal: UserUpdateModal,
-      // } = useUserModal({
-      //   onSubmit: handleUpdateMatchTurn,
-      //   user: matchTurn,
-      // });
-
       const handleConfirmDel = async () => {
         const { confirm } = await confirmModal();
-        if (confirm) {
-          userDelete(matchTurn.id)
-            .then((res) => {
-              const { status, data } = res;
-              console.log({ status, data });
-              if (status === 200) {
-                toast.success(t("success"));
-                deleteUser(matchTurn.id);
-                return;
-              }
-            })
-            .catch((err) => {
-              toast.error(t("error"));
-              console.log({ err });
-            });
-        }
-        return;
+        // if (confirm) {
+        //   userDelete(matchTurn.id)
+        //     .then((res) => {
+        //       const { status, data } = res;
+        //       console.log({ status, data });
+        //       if (status === 200) {
+        //         toast.success(t("success"));
+        //         deleteUser(matchTurn.id);
+        //         return;
+        //       }
+        //     })
+        //     .catch((err) => {
+        //       toast.error(t("error"));
+        //       console.log({ err });
+        //     });
+        // }
+        // return;
       };
 
       return (
         <UL className="action simple-list flex-row" id={matchTurn.id}>
-          {/* <LI className="edit btn" onClick={handleToggleUpdateModal}>
-          <i className="icon-pencil-alt" />
-          <UserUpdateModal />
-        </LI> */}
           <LI className="delete btn" onClick={handleConfirmDel}>
             <i className="icon-trash cursor-pointer" />
           </LI>
@@ -114,37 +124,58 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
   },
 ];
 
+const _getRowId = (r: TMatchTurn) => r.id;
+const PREF_TMP_ID = "matchTurn";
+
 export const MatchTurnForm = ({
-  matchTurn: initMatchTurn,
-  onSubmit,
+  // matchTurn,
+  // onSubmit,
   onCancel,
 }: IMatchTurnForm) => {
-  const setReport: Partial<TMatchTurn> = initMatchTurn
-    ? initMatchTurn
-    : {
-        match_id: "",
-        name: "",
-        indexs: 0,
-        set_count: 0,
-        win_set_count: 0,
-      };
-
-  const { matchTurns } = useMatchTurnContext();
+  const { matchTurns, matchId } = useMatchTurnContext();
 
   const [data, setData] = useState<TMatchTurn[]>([]);
   useEffect(() => {
     setData(matchTurns);
   }, [matchTurns]);
 
+  const insertNewTempRow = () => {
+    console.log("insertNewTempRow");
+    setData((prev) => {
+      const newRowId = getUniqueId(PREF_TMP_ID);
+      const newRow: TMatchTurn = {
+        id: newRowId,
+        match_id: matchId,
+        name: "",
+        indexs: 0,
+        set_count: 0,
+        win_set_count: 0,
+      };
+      console.log({ newRow });
+      return [...prev, newRow];
+    });
+  };
+
   return (
     <div className="table-responsive">
+      <Button onClick={insertNewTempRow}>Thêm mới</Button>
       <TanTable
         data={data}
         columns={displayColumns}
-        onSelectedRowsChange={onSelectedRowsChange}
-        selectableRowSelected={selectableRowSelected}
-        getRowId={(r) => r.id}
+        // onSelectedRowsChange={onSelectedRowsChange}
+        // selectableRowSelected={selectableRowSelected}
+        getRowId={_getRowId}
       />
+      <Col xs="12" className="gap-2" style={{ display: "flex" }}>
+        <Btn color="primary" type="button">
+          Xác nhận
+        </Btn>
+        {onCancel ? (
+          <Btn color="primary" type="button" onClick={onCancel}>
+            Đóng
+          </Btn>
+        ) : null}
+      </Col>
     </div>
   );
 };

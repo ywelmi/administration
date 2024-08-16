@@ -1,24 +1,21 @@
-import { Modal, ModalBody, ModalFooter } from "reactstrap";
-import { Close, SaveChanges } from "../../../../utils/Constant";
-import { CommonModalType } from "../../../../Types/Ui-Kits/UiKitsTypes";
+import { Modal, ModalBody } from "reactstrap";
 import { Btn, H1, H4, H5 } from "../../../../AbstractElements";
+import { CommonModalType } from "../../../../Types/Ui-Kits/UiKitsTypes";
 
-const CommonModal: React.FC<CommonModalType> = (
-  {
-    backdrop,
-    centered,
-    size = "xl",
-    isOpen,
-    toggle,
-    title,
-    onClosed,
-    sizeTitle,
-    fullTitle,
-    modalBodyClassName,
-    children,
-    fullscreen,
-  },
-) => {
+const CommonModal: React.FC<CommonModalType> = ({
+  backdrop,
+  centered,
+  size = "xl",
+  isOpen,
+  toggle,
+  title,
+  onClosed,
+  sizeTitle,
+  fullTitle,
+  modalBodyClassName,
+  children,
+  fullscreen,
+}) => {
   return (
     <Modal
       backdrop={backdrop}
@@ -40,12 +37,12 @@ const CommonModal: React.FC<CommonModalType> = (
       <ModalBody className={modalBodyClassName ? modalBodyClassName : ""}>
         {children}
       </ModalBody>
-      {(title || fullTitle) && (
+      {/* {(title || fullTitle) && (
         <ModalFooter>
           <Btn color="secondary" onClick={toggle}>{Close}</Btn>
           <Btn color="primary">{SaveChanges}</Btn>
         </ModalFooter>
-      )}
+      )} */}
     </Modal>
   );
 };

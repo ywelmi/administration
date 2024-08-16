@@ -169,7 +169,7 @@ const TanTableComponent = <T,>(
           )
         : {}
     );
-  }, [srcData]);
+  }, [getRowId, selectableRowSelected, srcData]);
 
   useImperativeHandle(
     ref,
@@ -185,7 +185,7 @@ const TanTableComponent = <T,>(
       cols = [getSelectableColumn(), ...cols];
     }
     return cols;
-  }, [columns]);
+  }, [columns, onSelectedRowsChange]);
 
   useEffect(() => {
     setData(srcData);
@@ -205,7 +205,7 @@ const TanTableComponent = <T,>(
       selectedCount: selectedRows.length,
       selectedRows: selectedRows as T[],
     });
-  }, [rowSelection]);
+  }, [data, getRowId, onSelectedRowsChange, rowSelection]);
 
   const table = useReactTable({
     data,

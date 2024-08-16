@@ -1,6 +1,6 @@
 import { TMatchTurn } from "../type/matchTurn";
 import { baseGetParams, IListResponse } from "./_getParams";
-import { httpDel, httpPost, httpPut } from "./_request";
+import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
 // Table knockout
 export const knockoutMatchTurnsGet = (params: typeof baseGetParams) => {
@@ -13,9 +13,7 @@ export const knockoutMatchTurnsGet = (params: typeof baseGetParams) => {
   );
 };
 
-export const knockoutMatchTurnCreate = (
-  matchTurn: Omit<TMatchTurn, "match_id">
-) => {
+export const knockoutMatchTurnCreate = (matchTurn: Omit<TMatchTurn, "id">) => {
   return httpPost<TMatchTurn>("tableknockoutmatchturns", matchTurn);
 };
 
@@ -32,7 +30,13 @@ export const knockoutMatchTurnDelete = (id: string) => {
   );
 };
 
-// Table qualifying
+export const knockoutMatchTurnSetsGet = (matchTurnId: string) => {
+  return httpGet<IListResponse<TMatchTurn>>(
+    `tableknockoutmatchturns/${matchTurnId}`
+  );
+};
+
+// ---------------Table qualifying---------------------
 export const qualifyingMatchTurnsGet = (params: typeof baseGetParams) => {
   return httpPost<IListResponse<TMatchTurn>>(
     `/tablequalifyingmatchturns/padding_filter`,

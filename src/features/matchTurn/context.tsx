@@ -8,6 +8,10 @@ import {
   useState,
 } from "react";
 import {
+  knockoutMatchTurnCreate,
+  knockoutMatchTurnDelete,
+  knockoutMatchTurnUpdate,
+  qualifyingMatchTurnCreate,
   qualifyingMatchTurnDelete,
   qualifyingMatchTurnsGet,
   qualifyingMatchTurnUpdate,
@@ -15,10 +19,16 @@ import {
 import { TMatchTurn, TMatchTurnWithSet } from "../../type/matchTurn";
 
 interface IMatchTurnQuery {
-  addMatchTurn: (matchTurn: TMatchTurn) => Promise<void>;
+  matchTurnCreate:
+    | typeof qualifyingMatchTurnCreate
+    | typeof knockoutMatchTurnCreate;
   matchTurnsGet: () => ReturnType<typeof qualifyingMatchTurnsGet>;
-  matchTurnUpdate: typeof qualifyingMatchTurnUpdate;
-  matchTurnDel: typeof qualifyingMatchTurnDelete;
+  matchTurnUpdate:
+    | typeof qualifyingMatchTurnUpdate
+    | typeof knockoutMatchTurnUpdate;
+  matchTurnDel:
+    | typeof qualifyingMatchTurnDelete
+    | typeof knockoutMatchTurnDelete;
 }
 
 interface IMatchTurnContext extends IMatchTurnQuery {
@@ -26,8 +36,10 @@ interface IMatchTurnContext extends IMatchTurnQuery {
   setMatchId: (id: string) => void;
   matchTurns: TMatchTurn[];
   matchTurnsWithSets: TMatchTurnWithSet[];
-  fetchMatchTurn: (id: string) => void;
+
   updateMatchTurn: (m: TMatchTurn) => void;
+  createMatchTurn: (m: TMatchTurn) => void;
+  delMatchTurn: (id: string) => void;
   // setMatchTurnsWithSets: () => void;
 }
 
@@ -36,11 +48,10 @@ const MatchTurnContext = createContext<IMatchTurnContext>({
   setMatchId: () => {},
   matchTurns: [],
   matchTurnsWithSets: [],
-  fetchMatchTurn: () => {},
   updateMatchTurn: () => {},
 
   // set api for match turn
-  addMatchTurn: () => Promise.resolve(),
+  matchTurnCreate: () => {},
   matchTurnsGet: () =>
     Promise.resolve({} as ReturnType<typeof qualifyingMatchTurnsGet>),
   matchTurnUpdate: () => Promise<void>,
@@ -57,16 +68,14 @@ const _combineMatchTurnsAndSets = (matchTurns: TMatchTurn[], sets: []) => {
 
 const MatchTurnProvider = ({
   children,
-  addMatchTurn,
-  matchTurnsGet: matchTurnsGet,
+  matchTurnCreate: matchTurnCreate,
+  matchTurnsGet,
   matchTurnUpdate,
-  matchTurnDel: matchTurnDel,
+  matchTurnDel,
 }: IMatchTurnProvider) => {
   const [matchId, setMatchId] = useState("");
   // const [matchTurnWithSets, setMatchTurnsWithSets] = useState<TMatchTurnWithSet[]>([]);
   const [matchTurns, setMatchTurns] = useState<TMatchTurn[]>([]);
-
-  const fetchMatchTurn = () => {};
 
   useEffect(() => {
     matchTurnsGet()
@@ -96,6 +105,14 @@ const MatchTurnProvider = ({
     });
   }, []);
 
+  const createMatchTurn = useCallback((matchTurn: TMatchTurn) => {
+    setMatchTurns((prev) => [...prev, matchTurn]);
+  }, []);
+
+  const delMatchTurn = useCallback((id: string) => {
+    setMatchTurns((prev) => [...prev.filter((m) => m.id !== id)]);
+  }, []);
+
   const matchTurnsWithSets = useMemo<TMatchTurnWithSet[]>(() => {
     return _combineMatchTurnsAndSets(matchTurns, []);
   }, [matchTurns]);
@@ -103,16 +120,17 @@ const MatchTurnProvider = ({
   return (
     <MatchTurnContext.Provider
       value={{
-        addMatchTurn,
+        matchTurnCreate,
         matchTurnsGet,
         matchTurnUpdate,
         matchTurnDel,
         updateMatchTurn,
+        createMatchTurn,
+        delMatchTurn,
         matchId,
         setMatchId,
         matchTurns,
         matchTurnsWithSets,
-        fetchMatchTurn,
         // setMatchTurnsWithSets,
       }}
     >
