@@ -148,7 +148,7 @@ export const MatchTurnForm = ({
 
   const [data, setData] = useState<TMatchTurn[]>(matchTurns || []);
 
-  console.log({ MatchTurnFormMatchTurns: matchTurns });
+  // console.log({ MatchTurnFormMatchTurns: matchTurns });
   useEffect(() => {
     console.log({ changematchTurns: matchTurns });
     setData(matchTurns);

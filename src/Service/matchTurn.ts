@@ -1,4 +1,8 @@
-import { TMatchTurn } from "../type/matchTurn";
+import {
+  TDetailedTurnSet,
+  TMatchTurn,
+  TMatchTurnWithSet,
+} from "../type/matchTurn";
 import { baseGetParams, IListResponse } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
@@ -62,4 +66,20 @@ export const qualifyingMatchTurnUpdate = (matchTurn: TMatchTurn) => {
 
 export const qualifyingMatchTurnDelete = (id: string) => {
   return httpDel<TMatchTurn>(`/tablequalifyingmatchturns/${id}`);
+};
+
+// --with sets--
+export const qualifyingMatchTurnSetUpdate = (
+  matchTurnWithSets: Pick<TMatchTurnWithSet, "id" | "sets">
+) => {
+  return httpPut<TMatchTurn>(
+    `/tablequalifyingmatchturns/${matchTurnWithSets.id}/update_result`,
+    matchTurnWithSets
+  );
+};
+
+export const qualifyingMatchTurnSetGet = (matchTurnId: string) => {
+  return httpGet<TDetailedTurnSet[]>(
+    `/tablequalifyingmatchturns/${matchTurnId}/match_turn_set`
+  );
 };

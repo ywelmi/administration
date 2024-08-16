@@ -17,6 +17,7 @@ import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
 import { MatchTurnForm } from "./MatchAction/MatchTurn/MatchTurnForm";
+import { MatchTurnSet } from "./MatchAction/MatchTurn/MatchTurnSet";
 import { ListSetReport } from "./SetReport";
 
 const Schema = Yup.object({
@@ -213,14 +214,15 @@ const TabMatchTurn = ({ matchReport }: ITabMatchTurn) => {
           <MatchTurnForm />
         </TabPane>
         <TabPane tabId={ETabTurn.SET}>
-          <TablequalifyingMatchReportForm
+          <MatchTurnSet />
+          {/* <TablequalifyingMatchReportForm
             onSubmit={(v) => {
               console.log({ v });
             }}
             matchReport={matchReport}
             // {...rest}
             // onCancel={() => setOpened(false)}
-          />
+          /> */}
         </TabPane>
       </TabContent>
     </>
