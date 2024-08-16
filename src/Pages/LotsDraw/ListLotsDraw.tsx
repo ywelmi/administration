@@ -867,7 +867,7 @@ const PageLotsDraw = () => {
                                                 </Col>
                                             </Row>
                                         </div>
-                                        {selectedContentSport != "" && (
+                                        {selectedContentSport != "" && contentType == "1" && (
                                             <div className="d-flex justify-content-center m-10">
                                                 <Btn
                                                     className="btn btn-info m-l-10"
@@ -894,7 +894,7 @@ const PageLotsDraw = () => {
                                         {selectedContentSport != "" && (
                                             <>
                                                 {contentType == "2" && (
-                                                    <div className="d-flex justify-content-center">
+                                                    <div className="d-flex justify-content-center m-t-10">
                                                         <div
                                                             className="btn btn-primary"
                                                             onClick={() => {
