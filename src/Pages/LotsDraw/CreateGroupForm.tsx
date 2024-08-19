@@ -188,7 +188,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
 
             return [...filteredQueue, ...newItems];
         };
-        setQueue(newQueue);
+        return newQueue;
     };
     const displayedListTeammember = useMemo(() => {
         const availMembers: TTeammember[] = [];
@@ -271,11 +271,22 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
                             //     selectedRows.map((row) => row.id)
                             // );
                             // // Update
-                            // formik.setFieldValue(
-                            //     "lst_member",
-                            //     selectedRows.map((row) => row.id)
-                            // );
-                            updateQueue(selectedRows);
+                            formik.setFieldValue(
+                                "lst_member",
+                                selectedRows.map((row) => row.id)
+                            );
+                            const indexMap = new Map(selectedRows.map((item, index) => [item, index]));
+
+                            // Update queue based on the current list
+                            const newQueue = () => {
+                                const filteredQueue = queue.filter((item: any) => indexMap.has(item));
+
+                                // Add any new items that are in the current list but not in the queue
+                                const newItems = selectedRows.filter((item) => !queue.includes(item));
+
+                                return [...filteredQueue, ...newItems];
+                            };
+                            setQueue(newQueue);
                             setNumberAtheleSelected(selectedRows.length);
                         }}
                         selectableRowSelected={(r) => {
