@@ -126,7 +126,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
     const [queue, setQueue] = useState<any>([]);
 
     // Effect to monitor changes in the list and update the queue
-    useEffect(() => {
+    const updateQueue = (listAthele: TTeammember[]) => {
         // Create a map to track current indices of items
         const indexMap = new Map(listAthele.map((item, index) => [item, index]));
 
@@ -140,7 +140,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
 
             return [...filteredQueue, ...newItems];
         });
-    }, [listAthele]);
+    };
     useEffect(() => {
         (async () => {
             const { org_id: f_org_id } = formik.values;
@@ -275,7 +275,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
                             //     "lst_member",
                             //     selectedRows.map((row) => row.id)
                             // );
-                            setListAthele(selectedRows);
+                            updateQueue(selectedRows);
                             setNumberAtheleSelected(selectedRows.length);
                         }}
                         selectableRowSelected={(r) => {
