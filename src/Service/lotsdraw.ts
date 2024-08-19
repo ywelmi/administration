@@ -68,3 +68,7 @@ export const lotsdrawScheduleGet = (member_count: number, sport_id: string, cont
         content_id,
     });
 };
+
+export const groupUpdate = (sport_id: string, lotsdraw: Partial<TLotsDraw>[]) => {
+    return httpPut(`/sports/${sport_id}/TeamSports`, lotsdraw);
+};

@@ -14,6 +14,7 @@ import {
     lotsdrawUpdate,
     lotsdrawGroupGetAll,
     lotsdrawScheduleGet,
+    groupUpdate,
 } from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
@@ -32,7 +33,11 @@ import {
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
 import { useTeamAtheleModal } from "./TeamAtheleForm";
-import { groupGetAll, martialArtMilitiaArmyGroupCreate } from "../../Service/martialArtMilitia";
+import {
+    groupGetAll,
+    martialArtMilitiaArmyGroupCreate,
+    martialArtMilitiaArmyGroupGetUpdate,
+} from "../../Service/martialArtMilitia";
 import { martialArtArmyGroupDelete, martialArtArmyGroupGetAll } from "../../Service/martialArt";
 import { getMoreFilterByValue } from "../../Service/_getParams";
 import { useConfigStore } from "../../store/config";
@@ -644,45 +649,51 @@ const PageLotsDraw = () => {
         const newData = ref.current?.getData();
 
         if (newData && sportId) {
-            lotsdrawUpdate(sportId, selectedContentSport, newData)
-                .then((res) => {
-                    const { data, status } = res;
-                    if (status === 200) {
-                        const dataSubmit = newData!.map((e: TLotsDraw) => {
-                            return {
-                                id: e.id,
-                                sport_id: e.sport_id,
-                                content_id: selectedContentSport,
-                                team_id: e.team_id,
-                                ticket_index: e.ticket_index,
-                                has_ranking: true,
-                                match_hour: e.match_hour,
-                                match_date: e.match_date,
-                                locations: e.locations,
-                            };
-                        });
-                        lotsdrawUpdate(sportId, selectedContentSport, dataSubmit)
-                            .then((res) => {
-                                const { data, status } = res;
-                                if (status === 200) {
-                                    toast.success(N["success"]);
-                                    fetchData(sportId);
-                                    fetchDataTable(sportId, selectedContentSport);
-                                }
-                            })
-                            .catch((err) => {
-                                toast.error(N["failed"]);
-                                console.log({ err });
-                            });
-                        fetchData(sportId);
-                        fetchDataTable(sportId, selectedContentSport);
-                        return;
-                    }
-                })
-                .catch((err) => {
-                    toast.error(N["failed"]);
-                    console.log({ err });
+            if (contentType == "1") {
+                const dataSubmit = newData!.map((e: TLotsDraw) => {
+                    return {
+                        id: e.id,
+                        sport_id: e.sport_id,
+                        content_id: selectedContentSport,
+                        team_id: e.team_id,
+                        ticket_index: e.ticket_index,
+                        has_ranking: true,
+                        match_hour: e.match_hour,
+                        match_date: e.match_date,
+                        locations: e.locations,
+                    };
                 });
+                lotsdrawUpdate(sportId, selectedContentSport, dataSubmit)
+                    .then((res) => {
+                        const { data, status } = res;
+                        if (status === 200) {
+                            toast.success(N["success"]);
+                            fetchData(sportId);
+                            fetchDataTable(sportId, selectedContentSport);
+                        }
+                    })
+                    .catch((err) => {
+                        toast.error(N["failed"]);
+                        console.log({ err });
+                    });
+                fetchData(sportId);
+                fetchDataTable(sportId, selectedContentSport);
+                return;
+            } else {
+                groupUpdate(sportId, newData)
+                    .then((res) => {
+                        const { data, status } = res;
+                        if (status === 200) {
+                            toast.success(N["success"]);
+                            fetchData(sportId);
+                            fetchDataTable(sportId, selectedContentSport);
+                        }
+                    })
+                    .catch((err) => {
+                        toast.error(N["failed"]);
+                        console.log({ err });
+                    });
+            }
             return;
         }
         toast.error(N["failed"]);
