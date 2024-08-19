@@ -175,7 +175,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
             }
         })();
     }, [formik.values.org_id]);
-    useEffect(() => {
+    const updateQueue = (listAthele: TTeammember[]) => {
         // Create a map to track current indices of items
         const indexMap = new Map(listAthele.map((item, index) => [item, index]));
 
@@ -189,7 +189,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
             return [...filteredQueue, ...newItems];
         };
         setQueue(newQueue);
-    }, [listAthele]);
+    };
     const displayedListTeammember = useMemo(() => {
         const availMembers: TTeammember[] = [];
         if (!orgMembers?.length) {
@@ -275,7 +275,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
                             //     "lst_member",
                             //     selectedRows.map((row) => row.id)
                             // );
-                            setListAthele(selectedRows);
+                            updateQueue(selectedRows);
                             setNumberAtheleSelected(selectedRows.length);
                         }}
                         selectableRowSelected={(r) => {
