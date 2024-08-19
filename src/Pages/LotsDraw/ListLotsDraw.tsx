@@ -32,7 +32,7 @@ import {
 } from "../LotsDrawSubmit/LotsDrawSubmitForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
-import { useTeamAtheleModal } from "./TeamAtheleForm";
+import { useTeamAtheleModal } from "./CreateGroupForm";
 import {
     groupGetAll,
     martialArtMilitiaArmyGroupCreate,
