@@ -161,7 +161,7 @@ const TanTableComponent = <T,>(
   useEffect(() => {
     setRowSelection(
       selectableRowSelected && getRowId
-        ? srcData.reduce(
+        ? data.reduce(
             (p, c) => ({
               ...p,
               [getRowId?.(c)]: selectableRowSelected(c),
@@ -170,7 +170,7 @@ const TanTableComponent = <T,>(
           )
         : {}
     );
-  }, [getRowId, selectableRowSelected, srcData]);
+  }, [data]);
 
   useImperativeHandle(
     ref,
