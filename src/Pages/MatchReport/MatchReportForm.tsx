@@ -18,6 +18,7 @@ import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
 import { MatchTurnForm } from "./MatchAction/MatchTurn/MatchTurnForm";
 import { MatchTurnSet } from "./MatchAction/MatchTurn/MatchTurnSet";
+import { MatchTurnWithSetsWrapper } from "./MatchAction/MatchTurn/MatchTurnWithSet/MatchTurnWithSetForm";
 import { ListSetReport } from "./SetReport";
 
 const Schema = Yup.object({
@@ -177,7 +178,8 @@ const useMatchReportForm = ({ onClose }: IMatchReportFormHook) => {
       toggle={handleToggle}
       title="Trận nhỏ"
     >
-      <TabMatchTurn></TabMatchTurn>
+      <MatchTurnWithSetsWrapper />
+      {/* <TabMatchTurn></TabMatchTurn> */}
     </CommonModal>
   );
 

@@ -97,7 +97,7 @@ const TurnSetProvider = ({ children }: PropsWithChildren) => {
   }, [data]);
 
   const insertNewSet = useCallback((rid: string) => {
-    console.log("insertNewTempSet");
+    console.log("form insertNewTempSet");
     setData((prev) => {
       const idx = prev.findIndex((r) => r.id === rid);
       if (idx === -1) return prev;

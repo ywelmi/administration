@@ -69,9 +69,11 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
         matchTurnDel,
         delMatchTurn,
       } = useMatchTurnContext();
+
       const handleUpdateMatchTurn = (matchTurn: TMatchTurn) => {
         console.log({ handleUpdateMatchTurn: matchTurn });
         if (matchTurn?.id.includes(PREF_TMP_ID)) {
+          // new match turn
           console.log({ insertMatchTurn: matchTurn });
           const matchNoId = omit(matchTurn, ["id"]);
           matchTurnCreate(matchNoId)
@@ -89,6 +91,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
             });
           return;
         } else {
+          // update existed match turn
           console.log({ updateMatchTurn: matchTurn });
           matchTurnUpdate(matchTurn)
             .then((res) => {
@@ -97,10 +100,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
                 toast.success(N["success"]);
                 updateMatchTurn(matchTurn);
                 console.log({ updateMatchTurn: matchTurn });
-                // return;
               }
-
-              // return Promise.reject(status);
             })
             .catch((err) => {
               toast.error(N["error"]);

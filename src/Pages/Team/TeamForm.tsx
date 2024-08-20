@@ -7,7 +7,7 @@ import { Btn } from "../../AbstractElements";
 import { InputSelect } from "../../Component/InputSelect";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { N } from "../../name-conversion";
-import { getFilterByValue } from "../../Service/_getParams";
+import { baseGetParams, getFilterByValue } from "../../Service/_getParams";
 import { teammembersGet } from "../../Service/teammember";
 import { useCompetitionStore } from "../../store/competition";
 import { useConfigStore } from "../../store/config";
@@ -129,6 +129,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
       if (f_org_id) {
         const memberFilter = getFilterByValue("org_id", "=", f_org_id);
         const members = await teammembersGet({
+          ...baseGetParams,
           filter: memberFilter,
         }).then((res) => {
           const {
