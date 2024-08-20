@@ -127,13 +127,6 @@ const PageTablequalifyingMatchReport = () => {
     useState<TTablequalifyingMatch[]>([]);
 
   const { counter } = useTablequalifyingMatchStore();
-  useEffect(() => {
-    refreshMatchReports();
-  }, []);
-
-  useEffect(() => {
-    refreshMatchReports();
-  }, [counter]);
 
   const refreshMatchReports = useCallback(() => {
     console.log({ tableId });
@@ -152,6 +145,14 @@ const PageTablequalifyingMatchReport = () => {
         });
     }
   }, [tableId]);
+
+  useEffect(() => {
+    refreshMatchReports();
+  }, [refreshMatchReports]);
+
+  useEffect(() => {
+    refreshMatchReports();
+  }, [counter, refreshMatchReports]);
 
   return (
     <div className="page-body">

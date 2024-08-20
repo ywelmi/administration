@@ -64,5 +64,6 @@
   "issuing_authority": "Nơi cấp",
   "match_time": "Buổi đấu",
   "set_count": "Tổng số trận",
-  "win_set_count": "Số trận thắng"
+  "win_set_count": "Số trận thắng",
+  "note": "Ghi chú"
 }

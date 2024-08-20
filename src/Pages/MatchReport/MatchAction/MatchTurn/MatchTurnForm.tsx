@@ -5,11 +5,13 @@ import { toast } from "react-toastify";
 import { Button, Col } from "reactstrap";
 import { Btn, LI, UL } from "../../../../AbstractElements";
 import { confirmModal } from "../../../../Component/confirmModal";
+import { InputSelectConfirm } from "../../../../Component/InputSelect";
 import { TanTable } from "../../../../Component/Tables/TanTable/TanTble";
 import { N } from "../../../../name-conversion";
+import { DMatchTurnTeam } from "../../../../type/enum";
 import { TMatchTurn } from "../../../../type/matchTurn";
 import { getUniqueId } from "../../../../utils/id";
-import { useMatchTurnContext } from "./context";
+import { useMatchTurnContext } from "./matchTurnContext";
 
 interface IMatchTurnForm {
   onCancel?: () => void;
@@ -25,6 +27,21 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
     accessorKey: "name",
     footer: (props) => props.column.id,
     header: N["name"],
+    cell: ({ getValue, row: { index }, column: { id }, table }) => {
+      // return getValue() as string
+      return (
+        <InputSelectConfirm
+          name="name"
+          data={DMatchTurnTeam.map((t) => ({ k: t, v: t }))}
+          k={"k"}
+          v={"v"}
+          placeHolder={getValue() as string}
+          handleChange={(e) => {
+            table.options.meta?.updateData(index, id, e.target.value);
+          }}
+        ></InputSelectConfirm>
+      );
+    },
   },
   {
     accessorKey: "set_count",

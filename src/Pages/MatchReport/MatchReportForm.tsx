@@ -41,13 +41,12 @@ export interface ITablequalifyingMatchReportForm {
   onCancel?: () => void;
 }
 
-interface ITabMatchTurn {
-  matchReport: Partial<TTablequalifyingMatchReport>;
-}
-interface ITablequalifyingMatchReportModal
-  extends ITablequalifyingMatchReportForm {
-  matchReport: TTablequalifyingMatchReport;
-}
+// interface ITabMatchTurn {
+//   matchReport: Partial<TTablequalifyingMatchReport>;
+// }
+// interface ITablequalifyingMatchReportModal
+//   extends ITablequalifyingMatchReportForm {
+// }
 
 const TablequalifyingMatchReportForm = ({
   matchReport: initMatchReport,
@@ -158,13 +157,16 @@ const TablequalifyingMatchReportForm = ({
   );
 };
 
-const useTablequalifyingMatchReportModal = ({
-  matchReport,
-}: ITablequalifyingMatchReportModal) => {
+interface IMatchReportFormHook {
+  onClose?: () => void;
+}
+
+const useMatchReportForm = ({ onClose }: IMatchReportFormHook) => {
   const [opened, setOpened] = useState(false);
 
   const handleToggle = () => {
     setOpened((s) => !s);
+    onClose?.();
   };
 
   const TablequalifyingMatchReportModal = () => (
@@ -175,7 +177,7 @@ const useTablequalifyingMatchReportModal = ({
       toggle={handleToggle}
       title="Trận nhỏ"
     >
-      <TabMatchTurn matchReport={matchReport || {}}></TabMatchTurn>
+      <TabMatchTurn></TabMatchTurn>
     </CommonModal>
   );
 
@@ -187,7 +189,7 @@ enum ETabTurn {
   TURN = 1,
 }
 
-const TabMatchTurn = ({ matchReport }: ITabMatchTurn) => {
+const TabMatchTurn = () => {
   const [tabId, setTabId] = useState<ETabTurn>(ETabTurn.TURN);
   return (
     <>
@@ -229,4 +231,4 @@ const TabMatchTurn = ({ matchReport }: ITabMatchTurn) => {
   );
 };
 
-export { TablequalifyingMatchReportForm, useTablequalifyingMatchReportModal };
+export { TablequalifyingMatchReportForm, TabMatchTurn, useMatchReportForm };

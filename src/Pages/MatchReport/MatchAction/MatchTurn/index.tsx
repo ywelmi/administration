@@ -1,4 +1,4 @@
-import { IMatchTurnProvider, MatchTurnProvider } from "./context";
+import { IMatchTurnProvider, MatchTurnProvider } from "./matchTurnContext";
 
 interface IMatchTurnWrapper extends IMatchTurnProvider {}
 const MatchTurnWrapper = ({ children, ...rest }: IMatchTurnWrapper) => {

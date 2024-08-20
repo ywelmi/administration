@@ -1,16 +1,11 @@
-import { Col, Input, Label, Media, Row } from "reactstrap";
-import { IKnockoutCreate } from "../../type/tablequalifyingKnockout";
 import { useFormik } from "formik";
-import { Btn } from "../../AbstractElements";
-import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import React, {
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Col, Input, Label, Media, Row } from "reactstrap";
+import { Btn } from "../../AbstractElements";
 import { InputSelect } from "../../Component/InputSelect";
+import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { IKnockoutCreate } from "../../type/tablequalifyingKnockout";
 
 interface ItablequalifyingKnockoutForm {
   tablequalifyingKnockout?: IKnockoutCreate;
@@ -143,10 +138,8 @@ const useTablequalifyingKnockout = ({
 };
 
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import {
-  ListSetReport,
-  useSetReportPopover,
-} from "../TablequalifyingMatchReport/SetReport";
+import { TabMatchTurn } from "../MatchReport/MatchReportForm";
+import { ListSetReport, useSetReportPopover } from "../MatchReport/SetReport";
 import { useKnockoutContext } from "./context";
 
 export interface ITablequalifyingKnockoutMatchReportForm {
@@ -261,7 +254,7 @@ const useTablequalifyingKnockoutMatchReportModal = ({
 };
 
 export const TablequalifyingKnockoutMatchReportModal = forwardRef(
-  ({ onSubmit, ...rest }: ITablequalifyingMatchReportModal, ref) => {
+  (props, ref) => {
     const [opened, setOpened] = useState(false);
 
     const handleToggle = () => {
@@ -270,12 +263,12 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
 
     useImperativeHandle(ref, () => ({ handleToggle }));
 
-    const handleSubmit = (
-      tablequalifyingMatchReport: TTablequalifyingMatchReport
-    ) => {
-      onSubmit(tablequalifyingMatchReport);
-      setOpened(false);
-    };
+    // const handleSubmit = (
+    //   tablequalifyingMatchReport: TTablequalifyingMatchReport
+    // ) => {
+    //   onSubmit(tablequalifyingMatchReport);
+    //   setOpened(false);
+    // };
 
     return (
       <div>
@@ -294,12 +287,14 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
           modalBodyClassName="social-profile text-start"
           isOpen={opened}
           toggle={handleToggle}
+          title="Trận nhỏ"
         >
-          <TablequalifyingKnockoutMatchReportForm
+          <TabMatchTurn></TabMatchTurn>
+          {/* <TablequalifyingKnockoutMatchReportForm
             onSubmit={handleSubmit}
             {...rest}
             onCancel={() => setOpened(false)}
-          />
+          /> */}
         </CommonModal>
       </div>
     );
@@ -307,7 +302,8 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
 );
 
 export {
+  TablequalifyingKnockoutForm,
   TablequalifyingKnockoutMatchReportForm,
+  useTablequalifyingKnockout,
   useTablequalifyingKnockoutMatchReportModal,
 };
-export { TablequalifyingKnockoutForm, useTablequalifyingKnockout };

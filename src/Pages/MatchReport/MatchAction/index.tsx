@@ -1,21 +1,17 @@
 import { useCallback } from "react";
-import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 import { LI, UL } from "../../../AbstractElements";
 import { getFilterByValue } from "../../../Service/_getParams";
 import {
   qualifyingMatchTurnCreate,
   qualifyingMatchTurnDelete,
+  qualifyingMatchTurnSetGet,
+  qualifyingMatchTurnSetUpdate,
   qualifyingMatchTurnsGet,
   qualifyingMatchTurnUpdate,
 } from "../../../Service/matchTurn";
-import { tablequalifyingMatchReportUpdate } from "../../../Service/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../../store/tablequalifyingMatch";
-import {
-  TTablequalifyingMatch,
-  TTablequalifyingMatchReport,
-} from "../../../type/tablequalifyingMatch";
-import { useTablequalifyingMatchReportModal } from "../TablequalifyingMatchReportForm";
+import { TTablequalifyingMatch } from "../../../type/tablequalifyingMatch";
+import { useMatchReportForm } from "../MatchReportForm";
 import { MatchTurnWrapper } from "./MatchTurn";
 
 type TTablequalifyingColumn = TTablequalifyingMatch;
@@ -25,31 +21,31 @@ const TablequalifyingTableAction = ({
 }: {
   tablequalifyingMatch: TTablequalifyingColumn;
 }) => {
-  const { updateTablequalifyingMatch, increaseCounter } =
-    useTablequalifyingMatchStore();
-  const { t } = useTranslation();
+  // const { updateTablequalifyingMatch, increaseCounter } =
+  //   useTablequalifyingMatchStore();
+  // const { t } = useTranslation();
 
-  const handleUpdateTablequalifyingMatchReport = (
-    tablequalifyingMatch: TTablequalifyingMatchReport
-  ) => {
-    // console.log({ handleUpdateTablequalifyingMatch: tablequalifyingMatch });
-    tablequalifyingMatchReportUpdate(tablequalifyingMatch)
-      .then((res) => {
-        const { status, data } = res;
-        if (status === 200) {
-          updateTablequalifyingMatch(data as TTablequalifyingMatch);
-          increaseCounter();
-          toast.success(t("success"));
-          return;
-        }
+  // const handleUpdateTablequalifyingMatchReport = (
+  //   tablequalifyingMatch: TTablequalifyingMatchReport
+  // ) => {
+  //   // console.log({ handleUpdateTablequalifyingMatch: tablequalifyingMatch });
+  //   tablequalifyingMatchReportUpdate(tablequalifyingMatch)
+  //     .then((res) => {
+  //       const { status, data } = res;
+  //       if (status === 200) {
+  //         updateTablequalifyingMatch(data as TTablequalifyingMatch);
+  //         increaseCounter();
+  //         toast.success(t("success"));
+  //         return;
+  //       }
 
-        return Promise.reject(status);
-      })
-      .catch((err) => {
-        toast.error(t("error"));
-        console.log({ err });
-      });
-  };
+  //       return Promise.reject(status);
+  //     })
+  //     .catch((err) => {
+  //       toast.error(t("error"));
+  //       console.log({ err });
+  //     });
+  // };
 
   const matchReport = {
     team1_name: tablequalifyingMatch.team1_name,
@@ -60,13 +56,12 @@ const TablequalifyingTableAction = ({
     sets: [],
   };
 
+  const { increaseCounter } = useTablequalifyingMatchStore();
+
   const {
     handleToggle: handleToggleUpdateModal,
     TablequalifyingMatchReportModal: TablequalifyingUpdateModal,
-  } = useTablequalifyingMatchReportModal({
-    onSubmit: handleUpdateTablequalifyingMatchReport,
-    matchReport,
-  });
+  } = useMatchReportForm({ onClose: () => increaseCounter() });
 
   const matchTurnsGet = useCallback(async () => {
     if (matchReport?.id) {
@@ -77,7 +72,7 @@ const TablequalifyingTableAction = ({
     return Promise.reject("no match id");
   }, [matchReport?.id]);
 
-  console.log({ TablequalifyingTableActionmatchReport: matchReport });
+  // console.log({ TablequalifyingTableActionmatchReport: matchReport });
   return (
     <UL className="action simple-list flex-row" id={tablequalifyingMatch.id}>
       <LI className="edit btn" onClick={handleToggleUpdateModal}>
@@ -89,6 +84,8 @@ const TablequalifyingTableAction = ({
           matchTurnUpdate={qualifyingMatchTurnUpdate}
           matchTurnDel={qualifyingMatchTurnDelete}
           matchTurnCreate={qualifyingMatchTurnCreate}
+          matchTurnSetsUpdate={qualifyingMatchTurnSetUpdate}
+          matchTurnSetsGet={qualifyingMatchTurnSetGet}
         >
           <TablequalifyingUpdateModal />
         </MatchTurnWrapper>
