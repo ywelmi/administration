@@ -126,21 +126,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
     const [queue, setQueue] = useState<any>([]);
 
     // Effect to monitor changes in the list and update the queue
-    useEffect(() => {
-        // Create a map to track current indices of items
-        const indexMap = new Map(listAthele.map((item, index) => [item, index]));
 
-        // Update queue based on the current list
-        setQueue((prevQueue: any) => {
-            // Filter queue to keep only items that still exist in the list
-            const filteredQueue = prevQueue.filter((item: any) => indexMap.has(item));
-
-            // Add any new items that are in the current list but not in the queue
-            const newItems = listAthele.filter((item) => !prevQueue.includes(item));
-
-            return [...filteredQueue, ...newItems];
-        });
-    }, [listAthele]);
     useEffect(() => {
         (async () => {
             const { org_id: f_org_id } = formik.values;
@@ -189,7 +175,21 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
             }
         })();
     }, [formik.values.org_id]);
+    const updateQueue = (listAthele: TTeammember[]) => {
+        // Create a map to track current indices of items
+        const indexMap = new Map(listAthele.map((item, index) => [item, index]));
 
+        // Update queue based on the current list
+        const newQueue = () => {
+            const filteredQueue = queue.filter((item: any) => indexMap.has(item));
+
+            // Add any new items that are in the current list but not in the queue
+            const newItems = listAthele.filter((item) => !queue.includes(item));
+
+            return [...filteredQueue, ...newItems];
+        };
+        return newQueue;
+    };
     const displayedListTeammember = useMemo(() => {
         const availMembers: TTeammember[] = [];
         if (!orgMembers?.length) {
@@ -271,11 +271,22 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
                             //     selectedRows.map((row) => row.id)
                             // );
                             // // Update
-                            // formik.setFieldValue(
-                            //     "lst_member",
-                            //     selectedRows.map((row) => row.id)
-                            // );
-                            setListAthele(selectedRows);
+                            formik.setFieldValue(
+                                "lst_member",
+                                selectedRows.map((row) => row.id)
+                            );
+                            const indexMap = new Map(selectedRows.map((item, index) => [item, index]));
+
+                            // Update queue based on the current list
+                            const newQueue = () => {
+                                const filteredQueue = queue.filter((item: any) => indexMap.has(item));
+
+                                // Add any new items that are in the current list but not in the queue
+                                const newItems = selectedRows.filter((item) => !queue.includes(item));
+
+                                return [...filteredQueue, ...newItems];
+                            };
+                            setQueue(newQueue);
                             setNumberAtheleSelected(selectedRows.length);
                         }}
                         selectableRowSelected={(r) => {
