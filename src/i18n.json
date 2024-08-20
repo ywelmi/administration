@@ -63,7 +63,7 @@
   "date_of_issue": "Ngày cấp",
   "issuing_authority": "Nơi cấp",
   "match_time": "Buổi đấu",
-  "set_count": "Tổng số trận",
-  "win_set_count": "Số trận thắng",
+  "set_count": "Số séc",
+  "win_set_count": "Số séc thắng",
   "note": "Ghi chú"
 }
