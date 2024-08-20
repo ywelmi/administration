@@ -587,7 +587,7 @@ const PageLotsDraw = () => {
                 if (status === 200) numberAthele.current = data;
             })
             .catch((err) => console.log({ err }));
-
+        fetchData(sportId);
         fetchDataTable(sportId, id);
     };
     const fetchData = useCallback((sportId: string) => {
@@ -596,13 +596,6 @@ const PageLotsDraw = () => {
                 const { data, status } = res;
                 console.log({ data });
                 if (status === 200) setContent(data);
-            })
-            .catch((err) => console.log({ err }));
-        lotsdrawsGet(sportId, "")
-            .then((res) => {
-                const { data, status } = res;
-                console.log({ data });
-                if (status === 200) setDataUnit(data);
             })
             .catch((err) => console.log({ err }));
     }, []);
@@ -636,6 +629,13 @@ const PageLotsDraw = () => {
                                 const { data, status } = res;
                                 console.log({ data });
                                 if (status === 200) setData(data.data);
+                            })
+                            .catch((err) => console.log({ err }));
+                        lotsdrawsGet(sportId, content_id)
+                            .then((res) => {
+                                const { data, status } = res;
+                                console.log({ data });
+                                if (status === 200) setDataUnit(data);
                             })
                             .catch((err) => console.log({ err }));
                     }
