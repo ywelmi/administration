@@ -3,7 +3,7 @@ import {
   TTablequalifyingMatchReport,
   TTableQualifyingMember,
 } from "../type/tablequalifyingMatch";
-import { httpGet, httpPost, httpPut } from "./_request";
+import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
 // export const tablequalifyingMatchsGet = async (
 //   params = baseGetParams,
@@ -45,6 +45,15 @@ export const tablequalifyingMatchMembersGet = (tableId: string) => {
   );
 };
 
-// export const tablequalifyingMatchDelete = (id: string) => {
-//   return httpDel(`tablequalifyingMatchs/${id}`);
-// };
+export const tablequalifyingMatchDelete = (id: string) => {
+  return httpDel(`tablequalifyingmatchs/${id}`);
+};
+
+export const tablequalifyingMatchUpdate = (
+  tablequalifyingMatchResult: TTablequalifyingMatch
+) => {
+  return httpPut<TTablequalifyingMatch>(
+    `tablequalifyingmatchs/${tablequalifyingMatchResult.id}`,
+    tablequalifyingMatchResult
+  );
+};
