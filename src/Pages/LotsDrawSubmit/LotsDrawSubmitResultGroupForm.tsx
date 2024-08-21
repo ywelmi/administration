@@ -68,6 +68,7 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                     status,
                 } = res;
                 if (status !== 200) return;
+
                 const newCols: ColumnDef<TLotsDrawMember>[] = [...defaultColumns];
                 const pointConfig = await getPointConfig(sportId).then((res) => {
                     return res.data;
