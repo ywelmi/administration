@@ -15,6 +15,7 @@ import {
     lotsdrawGroupGetAll,
     lotsdrawScheduleGet,
     groupUpdate,
+    lotsdrawResultTableGet,
 } from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
@@ -376,7 +377,7 @@ const getLotDrawId = (d: TLotsDraw) => d.id;
 const PageLotsDraw = () => {
     const tableGroupColumns: ColumnDef<TLotsDraw>[] = [
         {
-            accessorKey: "name",
+            accessorKey: "team_name",
             footer: (props) => props.column.id,
             header: N["team_name"],
             cell(props) {
@@ -453,13 +454,34 @@ const PageLotsDraw = () => {
                 // if (idx !== -1) hasEmptyFiled = true;
                 // if (hasEmptyFiled) return null;
                 // if (!original.isDetail) return null;
+
                 const { LotsDrawSubmitGroupResultModal, handleToggle } = useLotsDrawSubmitGroupModal({
                     sportId: original.sport_id,
                     team_id: original.org_id,
                     content_id: original.content_id,
                 });
                 return (
-                    <Btn className="btn btn-info edit" onClick={handleToggle}>
+                    <Btn
+                        className="btn btn-info edit"
+                        onClick={() => {
+                            lotsdrawResultTableGet(original.org_id, original.sport_id, original.content_id).then(
+                                async (res) => {
+                                    const {
+                                        data: { lst_ticket_group, lst_map_sport_content },
+                                        status,
+                                    } = res;
+                                    console.log(lst_ticket_group.length);
+                                    if (status !== 200) return;
+                                    if (lst_ticket_group.length > 0) {
+                                        handleToggle();
+                                    } else {
+                                        toast.error("Đơn vị này chưa tạo đội thi đấu");
+                                        return <></>;
+                                    }
+                                }
+                            );
+                        }}
+                    >
                         <i className="icon-pencil-alt" />
                         Cập nhật
                         <LotsDrawSubmitGroupResultModal />
@@ -477,14 +499,27 @@ const PageLotsDraw = () => {
                 // if (idx !== -1) hasEmptyFiled = true;
                 // if (hasEmptyFiled) return null;
                 // if (!original.isDetail) return null;
+
                 const handleToggle = useCallback((sportId: string) => {
-                    martialArtArmyGroupDelete(original.id)
+                    const teamFilter = getMoreFilterByValue("team_id", "=", original.team_id);
+
+                    groupGetAll({ filter: `[${teamFilter}]` })
                         .then((res) => {
                             const { data, status } = res;
                             if (status === 200) {
-                                toast.success(N["success"]);
-                                fetchData(sportId);
-                                fetchDataTable(sportId, selectedContentSport);
+                                martialArtArmyGroupDelete(data.data[0].id)
+                                    .then((res) => {
+                                        const { data, status } = res;
+                                        if (status === 200) {
+                                            toast.success(N["success"]);
+                                            fetchData(sportId);
+                                            fetchDataTable(sportId, selectedContentSport);
+                                        }
+                                    })
+                                    .catch((err) => {
+                                        toast.error(N["failed"]);
+                                        console.log({ err });
+                                    });
                             }
                         })
                         .catch((err) => {
@@ -496,7 +531,7 @@ const PageLotsDraw = () => {
                 return (
                     <Btn className="btn btn-danger edit" onClick={() => handleToggle(sportId)}>
                         <i className="icon-pencil-alt" />
-                        Hủy đăng ký
+                        Hủy đăng ký đội
                     </Btn>
                 );
             },
@@ -562,13 +597,11 @@ const PageLotsDraw = () => {
         martialArtMilitiaArmyGroupCreate(e)
             .then((res) => {
                 if (res.status === 200) {
-                    toast.success(N["success"]);
-                    fetchData(sportId);
-                    fetchDataTable(sportId, selectedContentSport);
+                    handleUpdate();
                 }
             })
             .catch((err) => {
-                toast.error(N["failed"]);
+                toast.error(err.data);
                 console.log({ err });
             });
         return;
@@ -587,6 +620,8 @@ const PageLotsDraw = () => {
                 if (status === 200) numberAthele.current = data;
             })
             .catch((err) => console.log({ err }));
+        setSelectedContentSport(id);
+        autoCallUpdateSchedule(id);
         fetchData(sportId);
         fetchDataTable(sportId, id);
     };
@@ -596,6 +631,15 @@ const PageLotsDraw = () => {
                 const { data, status } = res;
                 console.log({ data });
                 if (status === 200) setContent(data);
+            })
+            .catch((err) => console.log({ err }));
+        lotsdrawsGet(sportId, "")
+            .then((res) => {
+                const { data, status } = res;
+                console.log({ data });
+                if (status === 200) {
+                    setDataUnit(data);
+                }
             })
             .catch((err) => console.log({ err }));
     }, []);
@@ -609,33 +653,26 @@ const PageLotsDraw = () => {
                 if (status === 200) listContentSport = data;
                 setContent(data);
                 if (content_id != "") {
-                    console.log(listContentSport);
                     if (listContentSport!.filter((el: any) => el.id == content_id)[0].content_type == 1) {
                         setContentType(listContentSport!.filter((el: any) => el.id == content_id)[0].content_type);
                         lotsdrawsGet(sportId, content_id)
                             .then((res) => {
                                 const { data, status } = res;
                                 console.log({ data });
-                                if (status === 200) setData(data);
+                                if (status === 200) {
+                                    setData(data);
+                                }
                             })
                             .catch((err) => console.log({ err }));
                         lotsdrawScheduleGet(numberPlayedPerRound, sportId, content_id).then((res) => {
                             console.log(res.data);
                         });
                     } else {
-                        var contentFilter = getMoreFilterByValue("content_id", "=", content_id);
-                        groupGetAll({ filter: `[${contentFilter}]` })
-                            .then((res) => {
-                                const { data, status } = res;
-                                console.log({ data });
-                                if (status === 200) setData(data.data);
-                            })
-                            .catch((err) => console.log({ err }));
                         lotsdrawsGet(sportId, content_id)
                             .then((res) => {
                                 const { data, status } = res;
                                 console.log({ data });
-                                if (status === 200) setDataUnit(data);
+                                if (status === 200) setData(data);
                             })
                             .catch((err) => console.log({ err }));
                     }
@@ -644,17 +681,16 @@ const PageLotsDraw = () => {
             .catch((err) => console.log({ err }));
     }, []);
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
+    const autoCallUpdateSchedule = useCallback(
+        (content_id: any) => {
+            const newData = ref.current?.getData();
 
-    const handleUpdate = useCallback(() => {
-        const newData = ref.current?.getData();
-
-        if (newData && sportId) {
-            if (contentType == "1") {
+            if (newData && sportId) {
                 const dataSubmit = newData!.map((e: TLotsDraw) => {
                     return {
                         id: e.id,
                         sport_id: e.sport_id,
-                        content_id: selectedContentSport,
+                        content_id: content_id,
                         team_id: e.team_id,
                         ticket_index: e.ticket_index,
                         has_ranking: true,
@@ -663,37 +699,57 @@ const PageLotsDraw = () => {
                         locations: e.locations,
                     };
                 });
-                lotsdrawUpdate(sportId, selectedContentSport, dataSubmit)
+                lotsdrawUpdate(sportId, content_id, dataSubmit)
                     .then((res) => {
                         const { data, status } = res;
                         if (status === 200) {
-                            toast.success(N["success"]);
                             fetchData(sportId);
-                            fetchDataTable(sportId, selectedContentSport);
+                            fetchDataTable(sportId, content_id);
                         }
                     })
                     .catch((err) => {
-                        toast.error(N["failed"]);
+                        toast.error(err.data);
                         console.log({ err });
                     });
-                fetchData(sportId);
-                fetchDataTable(sportId, selectedContentSport);
+
                 return;
-            } else {
-                groupUpdate(sportId, newData)
-                    .then((res) => {
-                        const { data, status } = res;
-                        if (status === 200) {
-                            toast.success(N["success"]);
-                            fetchData(sportId);
-                            fetchDataTable(sportId, selectedContentSport);
-                        }
-                    })
-                    .catch((err) => {
-                        toast.error(N["failed"]);
-                        console.log({ err });
-                    });
             }
+            toast.error(N["failed"]);
+        },
+        [sportId]
+    );
+    const handleUpdate = useCallback(() => {
+        const newData = ref.current?.getData();
+
+        if (newData && sportId) {
+            const dataSubmit = newData!.map((e: TLotsDraw) => {
+                return {
+                    id: e.id,
+                    sport_id: e.sport_id,
+                    content_id: selectedContentSport,
+                    team_id: e.team_id,
+                    ticket_index: e.ticket_index,
+                    has_ranking: true,
+                    match_hour: e.match_hour,
+                    match_date: e.match_date,
+                    locations: e.locations,
+                };
+            });
+
+            lotsdrawUpdate(sportId, selectedContentSport, dataSubmit)
+                .then((res) => {
+                    const { data, status } = res;
+                    if (status === 200) {
+                        toast.success(N["success"]);
+                        fetchData(sportId);
+                        fetchDataTable(sportId, selectedContentSport);
+                    }
+                })
+                .catch((err) => {
+                    toast.error(N["failed"]);
+                    console.log({ err });
+                });
+
             return;
         }
         toast.error(N["failed"]);
@@ -915,7 +971,7 @@ const PageLotsDraw = () => {
                                                         >
                                                             <i className="fa fa-plus" />
                                                             &nbsp;
-                                                            {"Tạo đội thi đấu"}
+                                                            {"Tạo đội tiếp sức"}
                                                         </div>
                                                         <TeamAddModal />
                                                     </div>
