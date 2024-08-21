@@ -134,10 +134,7 @@ const useGenTreeMartialArt = ({
 };
 
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import {
-  ListSetReport,
-  useSetReportPopover,
-} from "../TablequalifyingMatchReport/SetReport";
+import { ListSetReport, useSetReportPopover } from "../MatchReport/SetReport";
 
 export interface ITablequalifyingKnockoutMatchReportForm {
   tablequalifyingKnockoutMatchReport?: Partial<TTablequalifyingMatchReport>;

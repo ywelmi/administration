@@ -21,22 +21,36 @@ export const knockoutMatchTurnCreate = (matchTurn: Omit<TMatchTurn, "id">) => {
   return httpPost<TMatchTurn>("tableknockoutmatchturns", matchTurn);
 };
 
-export const knockoutMatchTurnUpdate = (matchTurn: Omit<TMatchTurn, "id">) => {
+export const knockoutMatchTurnUpdate = (matchTurn: TMatchTurn) => {
   return httpPut<TMatchTurn>(
-    "/tablequalifyings/create_table-qualifying-match",
+    `/tableknockoutmatchturns/${matchTurn.id}`,
     matchTurn
   );
 };
 
 export const knockoutMatchTurnDelete = (id: string) => {
-  return httpDel<TMatchTurn>(
-    `/tablequalifyings/create_table-qualifying-match/${id}`
-  );
+  return httpDel<TMatchTurn>(`/tableknockoutmatchturns/${id}`);
 };
 
 export const knockoutMatchTurnSetsGet = (matchTurnId: string) => {
   return httpGet<IListResponse<TMatchTurn>>(
     `tableknockoutmatchturns/${matchTurnId}`
+  );
+};
+
+// --with sets--
+export const knockoutMatchTurnSetUpdate = (
+  matchTurnWithSets: Pick<TMatchTurnWithSet, "id" | "sets">
+) => {
+  return httpPut<TMatchTurn>(
+    `/tableknockoutmatchturns/${matchTurnWithSets.id}/update_result`,
+    matchTurnWithSets
+  );
+};
+
+export const knockoutMatchTurnSetGet = (matchTurnId: string) => {
+  return httpGet<TDetailedTurnSet[]>(
+    `/tableknockoutmatchturns/${matchTurnId}/match_turn_set`
   );
 };
 

@@ -235,10 +235,12 @@ const TanTableComponent = <T,>(
         setData((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {
-              return {
+              const newRow = {
                 ...old[rowIndex]!,
-                [columnId]: value,
               };
+              _.set(newRow, columnId, value);
+
+              return newRow;
             }
             return row;
           })

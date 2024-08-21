@@ -51,6 +51,14 @@ export const DTime: TDict[] = [
   },
 ];
 
+export const DMatchTurnTeam = [
+  "Đôi nam",
+  "Đôi nữ",
+  "Đồng đội nam",
+  "Đồng đội nữ",
+  "Đôi nam nữ",
+];
+
 export enum DSportType {
   LotDraw,
   TableQualifying,

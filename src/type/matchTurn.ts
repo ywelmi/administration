@@ -12,6 +12,8 @@ export interface TTurnSet {
   team1_point: number;
   team2_point: number;
   note?: string;
+
+  editable?: boolean; // for editing in UI
 }
 
 export interface TDetailedTurnSet extends TTurnSet {
