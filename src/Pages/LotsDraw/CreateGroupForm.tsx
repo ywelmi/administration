@@ -13,7 +13,7 @@ import { teammembersGet } from "../../Service/teammember";
 import { useOrgStore } from "../../store/org";
 import { useSportStore } from "../../store/sport";
 import { DGender, DRank } from "../../type/enum";
-import { TGroup } from "../../type/team";
+import { TGroup, TTeam } from "../../type/team";
 import { TTeammember } from "../../type/teammember";
 import { convertToDate } from "../../utils/date";
 import { ListTeammember } from "../Teammember/ListTeammember";
@@ -118,7 +118,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
         },
     });
 
-    const [listAthele, setListAthele] = useState<TTeammember[]>([]);
+    const [listTeam, setListTeam] = useState<TTeam[]>([]);
     const [teamId, setTeamId] = useState<any>("");
     const [orgName, setOrgName] = useState<any>("");
     const [numberAtheleSelected, setNumberAtheleSelected] = useState(2);
@@ -126,55 +126,49 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
     const [queue, setQueue] = useState<any>([]);
 
     // Effect to monitor changes in the list and update the queue
-
     useEffect(() => {
         (async () => {
-            const { org_id: f_org_id } = formik.values;
-            if (f_org_id) {
-                const memberFilter = getFilterByValue("org_id", "=", f_org_id);
-                // const members = await teammembersGet({ filter: memberFilter }).then((res) => {
-                //     const {
-                //         data: { data },
-                //     } = res;
-                //     return data;
-                // });
-                // setOrgMembers(members);
-                const team = await teamsGetByOrg({ filter: memberFilter }).then((res) => {
+            const memberFilter = getFilterByValue("sport_id", "=", sportId);
+            // const members = await teammembersGet({ filter: memberFilter }).then((res) => {
+            //     const {
+            //         data: { data },
+            //     } = res;
+            //     return data;
+            // });
+            // setOrgMembers(members);
+            const team = await teamsGetByOrg({ filter: memberFilter }).then((res) => {
+                const {
+                    data: { data },
+                } = res;
+
+                return data;
+            });
+            setListTeam(team);
+        })();
+    }, []);
+    useEffect(() => {
+        (async () => {
+            const { team_id: f_team_id } = formik.values;
+            if (f_team_id) {
+                const memberFilter1 = getFilterByValue("team_id", "=", f_team_id);
+                const members = await teammembersGet({ filter: memberFilter1 }).then((res) => {
                     const {
                         data: { data },
                     } = res;
-
                     return data;
                 });
-                var hasTeam = false;
-                var team_id = "";
-                var org_name = "";
-                team.forEach((e) => {
-                    if (e.sport_id == sportId) {
-                        //alert(e.id);
-                        hasTeam = true;
-                        team_id = e.id;
-                        org_name = e.org_name;
-                    }
-                });
-                if (hasTeam) {
-                    const memberFilter1 = getFilterByValue("team_id", "=", team_id);
-                    const members = await teammembersGet({ filter: memberFilter1 }).then((res) => {
-                        const {
-                            data: { data },
-                        } = res;
-                        return data;
-                    });
+                if (members.length > 0) {
                     setOrgMembers(members);
-                    setTeamId(team_id);
-                    setOrgName(org_name);
                 } else {
-                    alert("Đơn vị chưa đăng ký đội tham gia môn thi");
+                    alert("Đơn vị chưa có thành viên đăng ký môn này");
                     setOrgMembers([]);
                 }
+
+                //setTeamId(team_id);
+                //setOrgName(org_name);
             }
         })();
-    }, [formik.values.org_id]);
+    }, [formik.values.team_id]);
     const updateQueue = (listAthele: TTeammember[]) => {
         // Create a map to track current indices of items
         const indexMap = new Map(listAthele.map((item, index) => [item, index]));
@@ -210,18 +204,19 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
     return (
         <form onSubmit={formik.handleSubmit}>
             <Row className="g-3">
-                {orgs?.length ? (
+                {listTeam?.length ? (
                     <Col md="6">
                         <InputSelect
-                            title={t("org_id")}
-                            data={orgs}
-                            k="name"
-                            name="org_id"
+                            title={"Đội - " + t("org_id")}
+                            data={listTeam}
+                            k="org_name"
+                            name="team_id"
                             v="id"
                             handleChange={(e) => {
                                 formik.handleChange(e);
+                                setOrgName(listTeam.filter((ele) => ele.id == e.target.value)[0].org_name);
                             }}
-                            value={formik.values.org_id}
+                            value={formik.values.team_id}
                         />
                     </Col>
                 ) : null}
@@ -248,52 +243,55 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
                         );
                     })}
                 </div>
+                {orgMembers.length > 0 ? (
+                    <Col md="12" className="form-check checkbox-primary">
+                        <Label for="list_team_member" check>
+                            {t("teammember")}
+                        </Label>
 
-                <Col md="12" className="form-check checkbox-primary">
-                    <Label for="list_team_member" check>
-                        {t("teammember")}
-                    </Label>
+                        <ListTeammember
+                            data={displayedListTeammember}
+                            columns={tableTeammemberColumns}
+                            onSelectedRowsChange={({ selectedRows }) => {
+                                if (
+                                    selectedRows.length === formik.values.list_team_member?.length ||
+                                    selectedRows.length === formik.values.lst_member?.length
+                                ) {
+                                    return;
+                                }
 
-                    <ListTeammember
-                        data={displayedListTeammember}
-                        columns={tableTeammemberColumns}
-                        onSelectedRowsChange={({ selectedRows }) => {
-                            if (
-                                selectedRows.length === formik.values.list_team_member?.length ||
-                                selectedRows.length === formik.values.lst_member?.length
-                            ) {
-                                return;
-                            }
+                                // Add new
+                                // formik.setFieldValue(
+                                //     "list_team_member",
+                                //     selectedRows.map((row) => row.id)
+                                // );
+                                // // Update
+                                formik.setFieldValue(
+                                    "lst_member",
+                                    selectedRows.map((row) => row.id)
+                                );
+                                const indexMap = new Map(selectedRows.map((item, index) => [item, index]));
 
-                            // Add new
-                            // formik.setFieldValue(
-                            //     "list_team_member",
-                            //     selectedRows.map((row) => row.id)
-                            // );
-                            // // Update
-                            formik.setFieldValue(
-                                "lst_member",
-                                selectedRows.map((row) => row.id)
-                            );
-                            const indexMap = new Map(selectedRows.map((item, index) => [item, index]));
+                                // Update queue based on the current list
+                                const newQueue = () => {
+                                    const filteredQueue = queue.filter((item: any) => indexMap.has(item));
 
-                            // Update queue based on the current list
-                            const newQueue = () => {
-                                const filteredQueue = queue.filter((item: any) => indexMap.has(item));
+                                    // Add any new items that are in the current list but not in the queue
+                                    const newItems = selectedRows.filter((item) => !queue.includes(item));
 
-                                // Add any new items that are in the current list but not in the queue
-                                const newItems = selectedRows.filter((item) => !queue.includes(item));
-
-                                return [...filteredQueue, ...newItems];
-                            };
-                            setQueue(newQueue);
-                            setNumberAtheleSelected(selectedRows.length);
-                        }}
-                        selectableRowSelected={(r) => {
-                            return !!team.lst_member?.includes(r.id) || !!team.list_team_member?.includes(r.id);
-                        }}
-                    />
-                </Col>
+                                    return [...filteredQueue, ...newItems];
+                                };
+                                setQueue(newQueue);
+                                setNumberAtheleSelected(selectedRows.length);
+                            }}
+                            selectableRowSelected={(r) => {
+                                return !!team.lst_member?.includes(r.id) || !!team.list_team_member?.includes(r.id);
+                            }}
+                        />
+                    </Col>
+                ) : (
+                    <H3 className="text-center text-danger">Chọn đội của đơn vị </H3>
+                )}
 
                 {/* <TeammemberPopover target="PopoverAddUser"> */}
                 {/*   <Btn */}
@@ -321,8 +319,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId, content_id }: 
                                 })
                             );
                             formik.setFieldValue("name", orgName + " - Tiếp sức");
-                            formik.setFieldValue("org_name", orgName);
-                            formik.setFieldValue("team_id", teamId);
+
                             formik.setFieldValue("content_id", content_id);
                             formik.setFieldValue("sport_id", sportId);
                             formik.submitForm();
