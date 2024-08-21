@@ -1,6 +1,6 @@
 import { Col } from "reactstrap";
 import { TLotsDraw, TLotsDrawMember } from "../../type/lotsdraw";
-import { Btn } from "../../AbstractElements";
+import { Btn, H3 } from "../../AbstractElements";
 import { useEffect, useRef, useState } from "react";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { ColumnDef } from "@tanstack/react-table";
@@ -200,30 +200,36 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
     const ref = useRef<ITanTableRef<TLotsDrawMember>>(null);
     return (
         <div>
-            <TanTable ref={ref} data={data} getRowId={getLotDrawId} columns={columns} />
-            <Col xs="12" className="gap-2" style={{ display: "flex" }}>
-                <Btn
-                    color="primary"
-                    type="button"
-                    onClick={() => {
-                        const data = ref.current?.getData();
-                        if (data) {
-                            if (canSubmit) {
-                                handleSubmitLotsDraw(data);
-                            } else {
-                                toast.error("Có dữ liệu nhập sai định dạng! Kiểm tra lại");
-                            }
-                        }
-                    }}
-                >
-                    Xác nhận
-                </Btn>
-                {onCancel ? (
-                    <Btn color="primary" type="button" onClick={onCancel}>
-                        Đóng
-                    </Btn>
-                ) : null}
-            </Col>
+            {data.length > 0 ? (
+                <div>
+                    <TanTable ref={ref} data={data} getRowId={getLotDrawId} columns={columns} />
+                    <Col xs="12" className="gap-2" style={{ display: "flex" }}>
+                        <Btn
+                            color="primary"
+                            type="button"
+                            onClick={() => {
+                                const data = ref.current?.getData();
+                                if (data) {
+                                    if (canSubmit) {
+                                        handleSubmitLotsDraw(data);
+                                    } else {
+                                        toast.error("Có dữ liệu nhập sai định dạng! Kiểm tra lại");
+                                    }
+                                }
+                            }}
+                        >
+                            Xác nhận
+                        </Btn>
+                        {onCancel ? (
+                            <Btn color="primary" type="button" onClick={onCancel}>
+                                Đóng
+                            </Btn>
+                        ) : null}
+                    </Col>
+                </div>
+            ) : (
+                <H3 className="text-center">Chưa cập nhật kết quả bốc thăm cho nội dung</H3>
+            )}
         </div>
     );
 };
