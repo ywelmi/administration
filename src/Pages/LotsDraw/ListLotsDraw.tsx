@@ -42,6 +42,7 @@ import {
 import { martialArtArmyGroupDelete, martialArtArmyGroupGetAll } from "../../Service/martialArt";
 import { getMoreFilterByValue } from "../../Service/_getParams";
 import { useConfigStore } from "../../store/config";
+import { se } from "date-fns/locale";
 // const LotsDrawTableAction = (
 //   { lotsdraw }: { lotsdraw: TLotsDrawColumn },
 // ) => {
@@ -665,7 +666,7 @@ const PageLotsDraw = () => {
                             })
                             .catch((err) => console.log({ err }));
                         lotsdrawScheduleGet(numberPlayedPerRound, sportId, content_id).then((res) => {
-                            console.log(res.data);
+                            toast.warning(res.data);
                         });
                     } else {
                         lotsdrawsGet(sportId, content_id)
@@ -683,38 +684,43 @@ const PageLotsDraw = () => {
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
     const autoCallUpdateSchedule = useCallback(
         (content_id: any) => {
-            const newData = ref.current?.getData();
+            lotsdrawsGet(sportId, "")
+                .then((res) => {
+                    const { data, status } = res;
+                    console.log({ data });
+                    if (status === 200) {
+                        if (data && sportId) {
+                            const dataSubmit = data!.map((e: TLotsDraw) => {
+                                return {
+                                    id: e.id,
+                                    sport_id: e.sport_id,
+                                    content_id: content_id,
+                                    team_id: e.team_id,
+                                    ticket_index: e.ticket_index,
+                                    has_ranking: true,
+                                    match_hour: e.match_hour,
+                                    match_date: e.match_date,
+                                    locations: e.locations,
+                                };
+                            });
+                            lotsdrawUpdate(sportId, content_id, dataSubmit)
+                                .then((res) => {
+                                    const { data, status } = res;
+                                    if (status === 200) {
+                                        fetchData(sportId);
+                                        fetchDataTable(sportId, content_id);
+                                    }
+                                })
+                                .catch((err) => {
+                                    toast.error(err.data);
+                                    console.log({ err });
+                                });
 
-            if (newData && sportId) {
-                const dataSubmit = newData!.map((e: TLotsDraw) => {
-                    return {
-                        id: e.id,
-                        sport_id: e.sport_id,
-                        content_id: content_id,
-                        team_id: e.team_id,
-                        ticket_index: e.ticket_index,
-                        has_ranking: true,
-                        match_hour: e.match_hour,
-                        match_date: e.match_date,
-                        locations: e.locations,
-                    };
-                });
-                lotsdrawUpdate(sportId, content_id, dataSubmit)
-                    .then((res) => {
-                        const { data, status } = res;
-                        if (status === 200) {
-                            fetchData(sportId);
-                            fetchDataTable(sportId, content_id);
+                            return;
                         }
-                    })
-                    .catch((err) => {
-                        toast.error(err.data);
-                        console.log({ err });
-                    });
-
-                return;
-            }
-            toast.error(N["failed"]);
+                    }
+                })
+                .catch((err) => console.log({ err }));
         },
         [sportId]
     );
@@ -960,7 +966,23 @@ const PageLotsDraw = () => {
                                                 <H3 className="text-center">Chưa thực hiện bốc thăm đơn vị </H3>
                                             )
                                         )}
+                                        <div className="d-flex justify-content-center">
+                                            <div
+                                                className="btn btn-warning text-dark"
+                                                onClick={() => {
+                                                    if (selectedContentSport != "") {
+                                                        autoCallUpdateSchedule(selectedContentSport);
 
+                                                        // setTimeout(() => fetchData(sportId), 2000);
+                                                    } else {
+                                                        toast.warn("Mời chọn môn thi");
+                                                    }
+                                                }}
+                                            >
+                                                <i className="fa fa-plus" /> &nbsp;
+                                                {"Làm mới bốc thăm nội dung"}
+                                            </div>
+                                        </div>
                                         {selectedContentSport != "" && (
                                             <>
                                                 {contentType == "2" && (
@@ -989,39 +1011,19 @@ const PageLotsDraw = () => {
                                                         ) : (
                                                             <ListGroupLotsDraw tableRef={ref} data={data} showAction />
                                                         )}
-                                                        <div className="d-flex justify-content-between">
-                                                            <div className="d-flex justify-content-start">
-                                                                <div
-                                                                    className="btn btn-warning text-dark"
-                                                                    onClick={() => {
-                                                                        if (selectedContentSport != "") {
-                                                                            autoCallUpdateSchedule(
-                                                                                selectedContentSport
-                                                                            );
 
-                                                                            // setTimeout(() => fetchData(sportId), 2000);
-                                                                        } else {
-                                                                            toast.warn("Mời chọn môn thi");
-                                                                        }
-                                                                    }}
-                                                                >
-                                                                    <i className="fa fa-plus" /> &nbsp;
-                                                                    {"Cập nhật kết quả bốc thăm cho nội dung"}
-                                                                </div>
-                                                            </div>
-                                                            <div className="d-flex justify-content-end">
-                                                                <div
-                                                                    className="btn btn-primary "
-                                                                    onClick={() => {
-                                                                        if (sportId) handleUpdate();
-                                                                        else {
-                                                                            toast.warn("Mời chọn môn thi");
-                                                                        }
-                                                                    }}
-                                                                >
-                                                                    <i className="fa fa-edit" />
-                                                                    {"Cập nhật lịch"}
-                                                                </div>
+                                                        <div className="d-flex justify-content-end">
+                                                            <div
+                                                                className="btn btn-primary "
+                                                                onClick={() => {
+                                                                    if (sportId) handleUpdate();
+                                                                    else {
+                                                                        toast.warn("Mời chọn môn thi");
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <i className="fa fa-edit" />
+                                                                {"Cập nhật lịch"}
                                                             </div>
                                                         </div>
                                                     </div>
