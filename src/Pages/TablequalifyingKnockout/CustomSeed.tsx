@@ -14,6 +14,7 @@ import {
 } from "../../Service/matchTurn";
 import {
   tablequalifyingKnockoutPairUpdate,
+  tablequalifyingKnockoutResultUpdate,
   tablequalifyingKnockoutUpdate,
 } from "../../Service/tablequalifyingKnockout";
 import { TTablequalifyingKnockoutMatchReport } from "../../type/tablequalifyingKnockout";
@@ -216,11 +217,23 @@ const CustomSeed = ({
                 matchTurnSetsGet={knockoutMatchTurnSetGet}
               >
                 <TablequalifyingKnockoutMatchReportModal
-                // onSubmit={handleUpdateKnockoutMatch}
-                // tablequalifyingKnockoutMatchReport={{
-                //   id: seed.id.toString(),
-                //   sets: [],
-                // }}
+                  onClose={() => {
+                    tablequalifyingKnockoutResultUpdate(bracketId as string)
+                      .then((res) => {
+                        const { status } = res;
+                        if (status === 200) {
+                          refreshKnockoutBrackets();
+                        }
+                      })
+                      .catch((err) => {
+                        console.log({ err });
+                      });
+                  }}
+                  // onSubmit={handleUpdateKnockoutMatch}
+                  // tablequalifyingKnockoutMatchReport={{
+                  //   id: seed.id.toString(),
+                  //   sets: [],
+                  // }}
                 />
               </MatchTurnWrapper>
             ) : (

@@ -4,8 +4,8 @@ import {
   TTablequalifyingKnockout,
   TTablequalifyingKnockoutMatchReport,
 } from "../type/tablequalifyingKnockout";
-import { baseGetParams, IListResponse } from "./_getParams";
-import { httpDel, httpGet, httpPost, httpPut } from "./_request";
+import { IListResponse } from "./_getParams";
+import { httpGet, httpPost, httpPut } from "./_request";
 
 //  gen hình cây những đội vào vòng trong
 export const tablequalifyingKnockoutTreeCreate = async (data: {
@@ -44,6 +44,10 @@ export const tablequalifyingKnockoutUpdate = (
     `tableknockoutmatchs/${tablequalifyingKnockout.id}`,
     tablequalifyingKnockout
   );
+};
+
+export const tablequalifyingKnockoutResultUpdate = (matchId: string) => {
+  return httpPut(`tableknockoutmatchs/${matchId}/update_result`);
 };
 
 // Cập nhật thông tin cặp đấu

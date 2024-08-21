@@ -2,8 +2,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import omit from "lodash/omit";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Button, Col } from "reactstrap";
-import { Btn, LI, UL } from "../../../../AbstractElements";
+import { Button } from "reactstrap";
+import { LI, UL } from "../../../../AbstractElements";
 import { confirmModal } from "../../../../Component/confirmModal";
 import { InputSelectConfirm } from "../../../../Component/InputSelect";
 import { TanTable } from "../../../../Component/Tables/TanTable/TanTble";
@@ -72,11 +72,12 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
       const handleUpdateMatchTurn = (matchTurn: TMatchTurn) => {
         console.log({ handleUpdateMatchTurn: matchTurn });
         if (matchTurn?.id.includes(PREF_TMP_ID)) {
-          console.log({ insertMatchTurn: matchTurn });
+          console.log({ insertMatchTurn: matchTurn, matchTurnCreate });
           const matchNoId = omit(matchTurn, ["id"]);
           matchTurnCreate(matchNoId)
             .then((res) => {
               const { status, data } = res;
+              console.log({ status, data });
               if (status === 200) {
                 toast.success(N["success"]);
                 createMatchTurn(data);
@@ -199,7 +200,7 @@ export const MatchTurnForm = ({
         // selectableRowSelected={selectableRowSelected}
         getRowId={_getRowId}
       />
-      <Col xs="12" className="gap-2" style={{ display: "flex" }}>
+      {/* <Col xs="12" className="gap-2" style={{ display: "flex" }}>
         <Btn color="primary" type="button">
           Xác nhận
         </Btn>
@@ -208,7 +209,7 @@ export const MatchTurnForm = ({
             Đóng
           </Btn>
         ) : null}
-      </Col>
+      </Col> */}
     </div>
   );
 };

@@ -254,11 +254,12 @@ const useTablequalifyingKnockoutMatchReportModal = ({
 };
 
 export const TablequalifyingKnockoutMatchReportModal = forwardRef(
-  (props, ref) => {
+  ({ onClose }: { onClose?: () => void }, ref) => {
     const [opened, setOpened] = useState(false);
 
     const handleToggle = () => {
       setOpened((s) => !s);
+      onClose?.();
     };
 
     useImperativeHandle(ref, () => ({ handleToggle }));

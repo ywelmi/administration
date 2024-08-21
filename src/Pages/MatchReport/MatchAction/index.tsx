@@ -9,6 +9,7 @@ import {
   qualifyingMatchTurnsGet,
   qualifyingMatchTurnUpdate,
 } from "../../../Service/matchTurn";
+import { tablequalifyingMatchReportUpdate } from "../../../Service/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../../store/tablequalifyingMatch";
 import { TTablequalifyingMatch } from "../../../type/tablequalifyingMatch";
 import { useMatchReportForm } from "../MatchReportForm";
@@ -21,32 +22,6 @@ const TablequalifyingTableAction = ({
 }: {
   tablequalifyingMatch: TTablequalifyingColumn;
 }) => {
-  // const { updateTablequalifyingMatch, increaseCounter } =
-  //   useTablequalifyingMatchStore();
-  // const { t } = useTranslation();
-
-  // const handleUpdateTablequalifyingMatchReport = (
-  //   tablequalifyingMatch: TTablequalifyingMatchReport
-  // ) => {
-  //   // console.log({ handleUpdateTablequalifyingMatch: tablequalifyingMatch });
-  //   tablequalifyingMatchReportUpdate(tablequalifyingMatch)
-  //     .then((res) => {
-  //       const { status, data } = res;
-  //       if (status === 200) {
-  //         updateTablequalifyingMatch(data as TTablequalifyingMatch);
-  //         increaseCounter();
-  //         toast.success(t("success"));
-  //         return;
-  //       }
-
-  //       return Promise.reject(status);
-  //     })
-  //     .catch((err) => {
-  //       toast.error(t("error"));
-  //       console.log({ err });
-  //     });
-  // };
-
   const matchReport = {
     team1_name: tablequalifyingMatch.team1_name,
     team2_name: tablequalifyingMatch.team2_name,
@@ -57,11 +32,23 @@ const TablequalifyingTableAction = ({
   };
 
   const { increaseCounter } = useTablequalifyingMatchStore();
+  const handleReportFormClose = () => {
+    tablequalifyingMatchReportUpdate(matchReport)
+      .then((res) => {
+        const { status } = res;
+        if (status === 200) {
+          increaseCounter();
+        }
+      })
+      .then((err) => {
+        console.log({ err });
+      });
+  };
 
   const {
     handleToggle: handleToggleUpdateModal,
     TablequalifyingMatchReportModal: TablequalifyingUpdateModal,
-  } = useMatchReportForm({ onClose: () => increaseCounter() });
+  } = useMatchReportForm({ onClose: () => handleReportFormClose() });
 
   const matchTurnsGet = useCallback(async () => {
     if (matchReport?.id) {

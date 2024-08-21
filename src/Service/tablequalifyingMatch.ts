@@ -35,8 +35,7 @@ export const tablequalifyingMatchReportUpdate = (
   tablequalifyingMatchResult: TTablequalifyingMatchReport
 ) => {
   return httpPut<TTablequalifyingMatch>(
-    `tablequalifyingMatchs/${tablequalifyingMatchResult.id}`,
-    tablequalifyingMatchResult
+    `tablequalifyingMatchs/${tablequalifyingMatchResult.id}/update_result`
   );
 };
 

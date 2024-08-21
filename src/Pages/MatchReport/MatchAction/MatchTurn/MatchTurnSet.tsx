@@ -9,8 +9,7 @@ import {
   useState,
 } from "react";
 import { toast } from "react-toastify";
-import { Col } from "reactstrap";
-import { Btn, LI, UL } from "../../../../AbstractElements";
+import { LI, UL } from "../../../../AbstractElements";
 import { InputSelectConfirm } from "../../../../Component/InputSelect";
 import { DefaultColumn } from "../../../../Component/Tables/TanTable/Column";
 import { TanTable } from "../../../../Component/Tables/TanTable/TanTble";
@@ -369,11 +368,11 @@ const MatchTurnSet = () => {
         // selectableRowSelected={selectableRowSelected}
         getRowId={_getRowId}
       />
-      <Col xs="12" className="gap-2" style={{ display: "flex" }}>
+      {/* <Col xs="12" className="gap-2" style={{ display: "flex" }}>
         <Btn color="primary" type="button">
           Xác nhận
         </Btn>
-      </Col>
+      </Col> */}
     </div>
   );
 };
