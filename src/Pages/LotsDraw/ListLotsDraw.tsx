@@ -621,7 +621,7 @@ const PageLotsDraw = () => {
             })
             .catch((err) => console.log({ err }));
         setSelectedContentSport(id);
-        autoCallUpdateSchedule(id);
+
         fetchData(sportId);
         fetchDataTable(sportId, id);
     };
@@ -949,6 +949,7 @@ const PageLotsDraw = () => {
                                                 </Btn>
                                             </div>
                                         )}
+
                                         {selectedContentSport == "" ? (
                                             <>
                                                 <ListUnitLotsDraw tableRef={ref} data={dataUnit} showAction />
@@ -959,6 +960,7 @@ const PageLotsDraw = () => {
                                                 <H3 className="text-center">Chưa thực hiện bốc thăm đơn vị </H3>
                                             )
                                         )}
+
                                         {selectedContentSport != "" && (
                                             <>
                                                 {contentType == "2" && (
@@ -987,43 +989,44 @@ const PageLotsDraw = () => {
                                                         ) : (
                                                             <ListGroupLotsDraw tableRef={ref} data={data} showAction />
                                                         )}
+                                                        <div className="d-flex justify-content-between">
+                                                            <div className="d-flex justify-content-start">
+                                                                <div
+                                                                    className="btn btn-warning text-dark"
+                                                                    onClick={() => {
+                                                                        if (selectedContentSport != "") {
+                                                                            autoCallUpdateSchedule(
+                                                                                selectedContentSport
+                                                                            );
 
-                                                        <div className="d-flex justify-content-end">
-                                                            <div
-                                                                className="btn btn-primary "
-                                                                onClick={() => {
-                                                                    if (sportId) handleUpdate();
-                                                                    else {
-                                                                        toast.warn("Mời chọn môn thi");
-                                                                    }
-                                                                }}
-                                                            >
-                                                                <i className="fa fa-edit" />
-                                                                {"Cập nhật lịch"}
+                                                                            // setTimeout(() => fetchData(sportId), 2000);
+                                                                        } else {
+                                                                            toast.warn("Mời chọn môn thi");
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <i className="fa fa-plus" /> &nbsp;
+                                                                    {"Cập nhật kết quả bốc thăm cho nội dung"}
+                                                                </div>
+                                                            </div>
+                                                            <div className="d-flex justify-content-end">
+                                                                <div
+                                                                    className="btn btn-primary "
+                                                                    onClick={() => {
+                                                                        if (sportId) handleUpdate();
+                                                                        else {
+                                                                            toast.warn("Mời chọn môn thi");
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <i className="fa fa-edit" />
+                                                                    {"Cập nhật lịch"}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 ) : (
-                                                    <div className="d-flex justify-content-center mt-4">
-                                                        <H3 className="m-r-10">Chưa có dữ liệu thi đấu </H3>
-                                                        <div className="">
-                                                            <div
-                                                                className="btn btn-warning text-dark"
-                                                                onClick={() => {
-                                                                    if (sportId) {
-                                                                        toggleLotsDrawModal();
-
-                                                                        // setTimeout(() => fetchData(sportId), 2000);
-                                                                    } else {
-                                                                        toast.warn("Mời chọn môn thi");
-                                                                    }
-                                                                }}
-                                                            >
-                                                                <i className="fa fa-plus" /> &nbsp;
-                                                                {"Cập nhật kết quả bốc thăm cho nội dung"}
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <></>
                                                 )}
                                             </>
                                         )}
