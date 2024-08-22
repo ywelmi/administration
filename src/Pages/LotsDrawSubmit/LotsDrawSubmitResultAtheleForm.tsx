@@ -8,6 +8,7 @@ import { N } from "../../name-conversion";
 import { getContentConfig, getPointConfig, lotsdrawResultTableGet, lotsdrawResultUpdate } from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
 import { DRank } from "../../type/enum";
+import { InputSelect } from "../../Component/InputSelect";
 
 interface ILotsDrawSubmitForm {
     // lotsdraw: TLotsDrawMember[];
@@ -108,93 +109,149 @@ const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILo
                         const col: ColumnDef<any> = {
                             // accessorKey: field,
                             footer: (props) => props.column.id,
-                            header: name,
+                            header: name + (valueType == 2 ? "(Giờ: phút: giây. mili giây)" : "(Nhập dạng số)"),
                             columns: [
                                 {
-                                    accessorKey: `${field}_record_value`,
-                                    header: (
-                                        <p>
-                                            {N[`${field}_record_value`]} <br />{" "}
-                                            {valueType == 2 ? "(Giờ: phút: giây. mili giây)" : "(Nhập dạng số)"}
-                                        </p>
-                                    ),
+                                    accessorKey: `${field}_record1_value`,
+                                    header: N[`${field}_record_value`] + " lần 1",
+
                                     footer: (props) => props.column.id,
                                 },
                                 {
-                                    accessorKey: `${field}_point_value`,
-                                    header: N[`${field}_point_value`],
+                                    accessorKey: `${field}_record2_value`,
+                                    header: N[`${field}_record_value`] + " lần 2",
                                     footer: (props) => props.column.id,
-                                    cell({ getValue, row: { index, original }, column: { id }, table }) {
-                                        // let hasEmptyFiled = false;
-                                        // const idx = Object.values(original).findIndex((v) => v == null);
-                                        // if (idx !== -1) hasEmptyFiled = true;
-                                        // if (hasEmptyFiled) return null;
-                                        // if (!original.isDetail) return null;
-
-                                        var dataResult;
-                                        const value = _content_point.convert(
-                                            content_id,
-                                            original[`${field}_record_value`]
-                                        );
-                                        useEffect(() => {
-                                            setRecord_value(original[`${field}_record_value`]);
-                                            table.options.meta?.updateData(index, id, value);
-                                        }, [original[`${field}_record_value`]]);
-                                        const [record_value, setRecord_value] = useState(
-                                            original[`${field}_record_value`]
-                                        );
-
-                                        if (valueType == 2) {
-                                            if (
-                                                (original[`${field}_record_value`] &&
-                                                    canParseToNumber(original[`${field}_record_value`].toString())) ||
-                                                (original[`${field}_record_value`] &&
-                                                    original[`${field}_record_value`].toString().split(":").length >
-                                                        1 &&
-                                                    original[`${field}_record_value`] &&
-                                                    original[`${field}_record_value`].toString().split(":")[1].split("")
-                                                        .length > 1)
-                                            ) {
-                                                setCanSubmit(true);
-
-                                                dataResult = <div>{value}</div>;
-                                            } else {
-                                                setCanSubmit(false);
-                                                dataResult = (
-                                                    <strong className="text-danger">
-                                                        Sai định dạng
-                                                        <br />
-                                                        Định dạng: 00.00 / 00:00
-                                                    </strong>
-                                                );
-                                            }
-                                        }
-                                        if (valueType == 1) {
-                                            if (
-                                                original[`${field}_record_value`] &&
-                                                canParseToNumber(original[`${field}_record_value`].toString())
-                                            ) {
-                                                //console.log(value);
-                                                setCanSubmit(true);
-                                                // table.options.meta?.updateData(index, id, value);
-                                                dataResult = <div>{value}</div>;
-                                            } else {
-                                                setCanSubmit(false);
-                                                <strong className="text-danger">Sai định dạng</strong>;
-                                            }
-                                        }
-                                        //table.options.meta?.updateData(index, id, value);
-                                        return dataResult;
-                                    },
+                                },
+                                {
+                                    accessorKey: `${field}_record3_value`,
+                                    header: N[`${field}_record_value`] + " lần 3",
+                                    footer: (props) => props.column.id,
                                 },
                             ],
                         };
                         newCols.push(col);
                     }
                 });
+                const valueField = lst_map_sport_content.filter((e) => e.id == content_id)[0].field;
+                const colSpecial: ColumnDef<any> = {
+                    // accessorKey: field,
+                    footer: (props) => props.column.id,
+                    header: "Xử lý vi phạm",
+                    columns: [
+                        {
+                            accessorKey: `content1_ignore_type`,
+                            header: "Lỗi",
+                            footer: (props) => props.column.id,
+                            cell({ getValue, row: { index, original }, column: { id }, table }) {
+                                // let hasEmptyFiled = false;
+                                // const idx = Object.values(original).findIndex((v) => v == null);
+                                // if (idx !== -1) hasEmptyFiled = true;
+                                // if (hasEmptyFiled) return null;
+                                // if (!original.isDetail) return null;
+
+                                return (
+                                    <InputSelect
+                                        data={[
+                                            { id: 1, value: 1, name: "Phạm quy" },
+                                            { id: 2, value: 2, name: "Bỏ cuộc" },
+                                        ]}
+                                        k={"name"}
+                                        v={"id"}
+                                        handleChange={(e) => {
+                                            if (e.target.value == "") {
+                                                table.options.meta?.updateData(index, id, null);
+                                            } else {
+                                                table.options.meta?.updateData(index, id, e.target.value);
+                                            }
+                                        }}
+                                        name={"name"}
+                                        value={getValue()}
+                                    />
+                                );
+                            },
+                        },
+                        {
+                            accessorKey: `${valueField}_ignore_content`,
+                            header: "Chi tiết lỗi",
+                            footer: (props) => props.column.id,
+                        },
+                        {
+                            accessorKey: `${valueField}_record_violation`,
+                            header: "Điểm trừ",
+                            footer: (props) => props.column.id,
+                        },
+                        {
+                            accessorKey: `${valueField}_record_value`,
+                            header: "Thành tích cuối cùng",
+                            footer: (props) => props.column.id,
+                        },
+                        {
+                            accessorKey: `${valueField}_point_value`,
+                            header: " Định dạng: 00.00 / 00:00",
+                            footer: (props) => props.column.id,
+                            cell({ getValue, row: { index, original }, column: { id }, table }) {
+                                // let hasEmptyFiled = false;
+                                // const idx = Object.values(original).findIndex((v) => v == null);
+                                // if (idx !== -1) hasEmptyFiled = true;
+                                // if (hasEmptyFiled) return null;
+                                // if (!original.isDetail) return null;
+
+                                var dataResult;
+                                const value = _content_point.convert(
+                                    content_id,
+                                    original[`${valueField}_record_value`]
+                                );
+                                useEffect(() => {
+                                    setRecord_value(original[`${valueField}_record_value`]);
+                                    table.options.meta?.updateData(index, id, value);
+                                }, [original[`${valueField}_record_value`]]);
+                                const [record_value, setRecord_value] = useState(
+                                    original[`${valueField}_record_value`]
+                                );
+
+                                if (valueType == 2) {
+                                    if (
+                                        (original[`${valueField}_record_value`] &&
+                                            canParseToNumber(original[`${valueField}_record_value`].toString())) ||
+                                        (original[`${valueField}_record_value`] &&
+                                            original[`${valueField}_record_value`].toString().split(":").length > 1 &&
+                                            original[`${valueField}_record_value`] &&
+                                            original[`${valueField}_record_value`].toString().split(":")[1].split("")
+                                                .length > 1)
+                                    ) {
+                                        setCanSubmit(true);
+
+                                        dataResult = <div>{value}</div>;
+                                    } else {
+                                        setCanSubmit(false);
+                                        dataResult = <strong className="text-danger">Sai định dạng</strong>;
+                                    }
+                                }
+                                if (valueType == 1) {
+                                    if (
+                                        original[`${valueField}_record_value`] &&
+                                        canParseToNumber(original[`${valueField}_record_value`].toString())
+                                    ) {
+                                        //console.log(value);
+                                        setCanSubmit(true);
+                                        // table.options.meta?.updateData(index, id, value);
+                                        dataResult = <div>{value}</div>;
+                                    } else {
+                                        setCanSubmit(false);
+                                        <strong className="text-danger">Sai định dạng</strong>;
+                                    }
+                                }
+                                //table.options.meta?.updateData(index, id, value);
+                                return dataResult;
+                            },
+                        },
+                    ],
+                };
+                newCols.push(colSpecial);
                 setColumns(newCols);
                 setData(lst_ticket_member);
                 console.log({ lst_ticket_member });
+                console.log(valueField);
             })
             .catch((err) => {
                 console.log({ err });
@@ -224,7 +281,7 @@ const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILo
     return (
         <div>
             <TanTable ref={ref} data={data} getRowId={getLotDrawId} columns={columns} />
-            <Col xs="12" className="gap-2" style={{ display: "flex" }}>
+            <Col xs="12" className="gap-2 justify-content-center" style={{ display: "flex" }}>
                 <Btn
                     color="primary"
                     type="button"

@@ -1,6 +1,6 @@
 import { Col } from "reactstrap";
 import { TLotsDraw, TLotsDrawMember } from "../../type/lotsdraw";
-import { Btn } from "../../AbstractElements";
+import { Btn, H3 } from "../../AbstractElements";
 import { useEffect, useRef, useState } from "react";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { ColumnDef } from "@tanstack/react-table";
@@ -8,6 +8,7 @@ import { N } from "../../name-conversion";
 import { getContentConfig, getPointConfig, lotsdrawResultTableGet, lotsdrawResultUpdate } from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
 import { DRank } from "../../type/enum";
+import { InputSelect } from "../../Component/InputSelect";
 
 interface ILotsDrawSubmitForm {
     // lotsdraw: TLotsDrawMember[];
@@ -88,13 +89,10 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                             header: name,
                             columns: [
                                 {
-                                    accessorKey: `${field}_record_value`,
-                                    header: (
-                                        <p>
-                                            {N[`${field}_record_value`]} <br />{" "}
-                                            {valueType == 2 ? "(Giờ: phút: giây. mili giây)" : "(Nhập dạng số)"}
-                                        </p>
-                                    ),
+                                    accessorKey: `${field}_record1_value`,
+                                    header:
+                                        N[`${field}_record_value`] +
+                                        (valueType == 2 ? "(Giờ: phút: giây. mili giây)" : "(Nhập dạng số)"),
                                     footer: (props) => props.column.id,
                                 },
                                 {
@@ -169,6 +167,122 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                         newCols.push(col);
                     }
                 });
+                const valueField = lst_map_sport_content.filter((e) => e.id == content_id)[0].field;
+                const colSpecial: ColumnDef<any> = {
+                    // accessorKey: field,
+                    footer: (props) => props.column.id,
+                    header: "Xử lý vi phạm",
+                    columns: [
+                        {
+                            accessorKey: `${valueField}_ignore_type`,
+                            header: "Lỗi",
+                            footer: (props) => props.column.id,
+                            cell({ getValue, row: { index, original }, column: { id }, table }) {
+                                // let hasEmptyFiled = false;
+                                // const idx = Object.values(original).findIndex((v) => v == null);
+                                // if (idx !== -1) hasEmptyFiled = true;
+                                // if (hasEmptyFiled) return null;
+                                // if (!original.isDetail) return null;
+
+                                return (
+                                    <InputSelect
+                                        data={[
+                                            { id: 1, value: 1, name: "Phạm quy" },
+                                            { id: 2, value: 2, name: "Bỏ cuộc" },
+                                        ]}
+                                        k={"name"}
+                                        v={"id"}
+                                        handleChange={(e) => {
+                                            if (e.target.value == "") {
+                                                table.options.meta?.updateData(index, id, null);
+                                            } else {
+                                                table.options.meta?.updateData(index, id, e.target.value);
+                                            }
+                                        }}
+                                        name={"name"}
+                                        value={getValue()}
+                                    />
+                                );
+                            },
+                        },
+                        {
+                            accessorKey: `${valueField}_ignore_content`,
+                            header: "Chi tiết lỗi",
+                            footer: (props) => props.column.id,
+                        },
+                        {
+                            accessorKey: `${valueField}_record_violation`,
+                            header: "Điểm trừ",
+                            footer: (props) => props.column.id,
+                        },
+                        {
+                            accessorKey: `${valueField}_record_value`,
+                            header: "Thành tích cuối cùng",
+                            footer: (props) => props.column.id,
+                        },
+                        {
+                            accessorKey: `${valueField}_point_value`,
+                            header: "Điểm (Định dạng: 00.00 / 00:00)",
+                            footer: (props) => props.column.id,
+                            cell({ getValue, row: { index, original }, column: { id }, table }) {
+                                // let hasEmptyFiled = false;
+                                // const idx = Object.values(original).findIndex((v) => v == null);
+                                // if (idx !== -1) hasEmptyFiled = true;
+                                // if (hasEmptyFiled) return null;
+                                // if (!original.isDetail) return null;
+
+                                var dataResult;
+                                const value = _content_point.convert(
+                                    content_id,
+                                    original[`${valueField}_record_value`]
+                                );
+                                useEffect(() => {
+                                    setRecord_value(original[`${valueField}_record_value`]);
+                                    table.options.meta?.updateData(index, id, value);
+                                }, [original[`${valueField}_record_value`]]);
+                                const [record_value, setRecord_value] = useState(
+                                    original[`${valueField}_record_value`]
+                                );
+
+                                if (valueType == 2) {
+                                    if (
+                                        (original[`${valueField}_record_value`] &&
+                                            canParseToNumber(original[`${valueField}_record_value`].toString())) ||
+                                        (original[`${valueField}_record_value`] &&
+                                            original[`${valueField}_record_value`].toString().split(":").length > 1 &&
+                                            original[`${valueField}_record_value`] &&
+                                            original[`${valueField}_record_value`].toString().split(":")[1].split("")
+                                                .length > 1)
+                                    ) {
+                                        setCanSubmit(true);
+
+                                        dataResult = <div>{value}</div>;
+                                    } else {
+                                        setCanSubmit(false);
+                                        dataResult = <strong className="text-danger">Sai định dạng</strong>;
+                                    }
+                                }
+                                if (valueType == 1) {
+                                    if (
+                                        original[`${valueField}_record_value`] &&
+                                        canParseToNumber(original[`${valueField}_record_value`].toString())
+                                    ) {
+                                        //console.log(value);
+                                        setCanSubmit(true);
+                                        // table.options.meta?.updateData(index, id, value);
+                                        dataResult = <div>{value}</div>;
+                                    } else {
+                                        setCanSubmit(false);
+                                        <strong className="text-danger">Sai định dạng</strong>;
+                                    }
+                                }
+                                //table.options.meta?.updateData(index, id, value);
+                                return dataResult;
+                            },
+                        },
+                    ],
+                };
+                newCols.push(colSpecial);
                 setColumns(newCols);
                 setData(lst_ticket_group);
                 console.log({ lst_ticket_group });
@@ -200,30 +314,36 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
     const ref = useRef<ITanTableRef<TLotsDrawMember>>(null);
     return (
         <div>
-            <TanTable ref={ref} data={data} getRowId={getLotDrawId} columns={columns} />
-            <Col xs="12" className="gap-2" style={{ display: "flex" }}>
-                <Btn
-                    color="primary"
-                    type="button"
-                    onClick={() => {
-                        const data = ref.current?.getData();
-                        if (data) {
-                            if (canSubmit) {
-                                handleSubmitLotsDraw(data);
-                            } else {
-                                toast.error("Có dữ liệu nhập sai định dạng! Kiểm tra lại");
-                            }
-                        }
-                    }}
-                >
-                    Xác nhận
-                </Btn>
-                {onCancel ? (
-                    <Btn color="primary" type="button" onClick={onCancel}>
-                        Đóng
-                    </Btn>
-                ) : null}
-            </Col>
+            {data.length > 0 ? (
+                <div>
+                    <TanTable ref={ref} data={data} getRowId={getLotDrawId} columns={columns} />
+                    <Col xs="12" className="gap-2 justify-content-center" style={{ display: "flex" }}>
+                        <Btn
+                            color="primary"
+                            type="button"
+                            onClick={() => {
+                                const data = ref.current?.getData();
+                                if (data) {
+                                    if (canSubmit) {
+                                        handleSubmitLotsDraw(data);
+                                    } else {
+                                        toast.error("Có dữ liệu nhập sai định dạng! Kiểm tra lại");
+                                    }
+                                }
+                            }}
+                        >
+                            Xác nhận
+                        </Btn>
+                        {onCancel ? (
+                            <Btn color="primary" type="button" onClick={onCancel}>
+                                Đóng
+                            </Btn>
+                        ) : null}
+                    </Col>
+                </div>
+            ) : (
+                <H3 className="text-center">Chưa cập nhật kết quả bốc thăm cho nội dung</H3>
+            )}
         </div>
     );
 };
