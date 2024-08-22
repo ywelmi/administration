@@ -216,13 +216,13 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                             footer: (props) => props.column.id,
                         },
                         {
-                            accessorKey: `${valueField}_point_value`,
-                            header: "Điểm cuối cùng",
+                            accessorKey: `${valueField}_record_value`,
+                            header: "Thành tích cuối cùng",
                             footer: (props) => props.column.id,
                         },
                         {
                             accessorKey: `${valueField}_point_value`,
-                            header: " Định dạng: 00.00 / 00:00",
+                            header: "Điểm (Định dạng: 00.00 / 00:00)",
                             footer: (props) => props.column.id,
                             cell({ getValue, row: { index, original }, column: { id }, table }) {
                                 // let hasEmptyFiled = false;
