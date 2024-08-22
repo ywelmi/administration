@@ -8,6 +8,7 @@ import { N } from "../../name-conversion";
 import { getContentConfig, getPointConfig, lotsdrawResultTableGet, lotsdrawResultUpdate } from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
 import { DRank } from "../../type/enum";
+import { InputSelect } from "../../Component/InputSelect";
 
 interface ILotsDrawSubmitForm {
     // lotsdraw: TLotsDrawMember[];
@@ -89,12 +90,9 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                             columns: [
                                 {
                                     accessorKey: `${field}_record_value`,
-                                    header: (
-                                        <p>
-                                            {N[`${field}_record_value`]} <br />{" "}
-                                            {valueType == 2 ? "(Giờ: phút: giây. mili giây)" : "(Nhập dạng số)"}
-                                        </p>
-                                    ),
+                                    header:
+                                        N[`${field}_record_value`] +
+                                        (valueType == 2 ? "(Giờ: phút: giây. mili giây)" : "(Nhập dạng số)"),
                                     footer: (props) => props.column.id,
                                 },
                                 {
@@ -169,6 +167,61 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                         newCols.push(col);
                     }
                 });
+                const colSpecial: ColumnDef<any> = {
+                    // accessorKey: field,
+                    footer: (props) => props.column.id,
+                    header: "Xử lý vi phạm",
+                    columns: [
+                        {
+                            accessorKey: `content1_ignore_type`,
+                            header: "Lỗi",
+                            footer: (props) => props.column.id,
+                            cell({ getValue, row: { index, original }, column: { id }, table }) {
+                                // let hasEmptyFiled = false;
+                                // const idx = Object.values(original).findIndex((v) => v == null);
+                                // if (idx !== -1) hasEmptyFiled = true;
+                                // if (hasEmptyFiled) return null;
+                                // if (!original.isDetail) return null;
+
+                                return (
+                                    <InputSelect
+                                        data={[
+                                            { id: 1, value: 1, name: "Phạm quy" },
+                                            { id: 2, value: 2, name: "Bỏ cuộc" },
+                                        ]}
+                                        k={"name"}
+                                        v={"id"}
+                                        handleChange={(e) => {
+                                            if (e.target.value == "") {
+                                                table.options.meta?.updateData(index, id, null);
+                                            } else {
+                                                table.options.meta?.updateData(index, id, e.target.value);
+                                            }
+                                        }}
+                                        name={"name"}
+                                        value={getValue()}
+                                    />
+                                );
+                            },
+                        },
+                        {
+                            accessorKey: `content1_ignore_content`,
+                            header: "Chi tiết lỗi",
+                            footer: (props) => props.column.id,
+                        },
+                        {
+                            accessorKey: `content1_record_violation`,
+                            header: "Điểm trừ",
+                            footer: (props) => props.column.id,
+                        },
+                        {
+                            accessorKey: `content1_point_value`,
+                            header: "Điểm cuối cùng",
+                            footer: (props) => props.column.id,
+                        },
+                    ],
+                };
+                newCols.push(colSpecial);
                 setColumns(newCols);
                 setData(lst_ticket_group);
                 console.log({ lst_ticket_group });
@@ -203,7 +256,7 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
             {data.length > 0 ? (
                 <div>
                     <TanTable ref={ref} data={data} getRowId={getLotDrawId} columns={columns} />
-                    <Col xs="12" className="gap-2" style={{ display: "flex" }}>
+                    <Col xs="12" className="gap-2 justify-content-center" style={{ display: "flex" }}>
                         <Btn
                             color="primary"
                             type="button"
