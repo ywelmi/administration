@@ -5,6 +5,7 @@ import { LotsDrawSubmitResultForm } from "./LotsDrawSubmitResultAtheleForm";
 import { LotsDrawUpdateAtheleForm } from "./LotsDrawUpdateAtheleForm";
 import { H3 } from "../../AbstractElements";
 import { LotsDrawSubmitGroupResultForm } from "./LotsDrawSubmitResultGroupForm";
+import { Modal } from "reactstrap";
 
 interface ILotsDrawSubmitModal {
     lotsdraw?: TLotsDraw[];
@@ -23,7 +24,7 @@ const useLotsDrawSubmitModal = ({ sportId, team_id, content_id, title }: ILotsDr
     };
 
     const LotsDrawSubmitModal = () => (
-        <CommonModal modalBodyClassName=" text-start" isOpen={opened} toggle={handleToggle}>
+        <Modal modalBodyClassName=" text-start" fullscreen isOpen={opened} toggle={handleToggle}>
             <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
                 <H3 className="modal-header justify-content-center border-0">Cập nhật kết quả thi đấu</H3>
                 <LotsDrawSubmitResultForm
@@ -34,7 +35,7 @@ const useLotsDrawSubmitModal = ({ sportId, team_id, content_id, title }: ILotsDr
                     onCancel={() => setOpened(false)}
                 />
             </div>
-        </CommonModal>
+        </Modal>
     );
 
     return { LotsDrawSubmitModal, handleToggle };
@@ -47,7 +48,7 @@ const useLotsDrawSubmitGroupModal = ({ sportId, team_id, content_id, title }: IL
     };
 
     const LotsDrawSubmitGroupResultModal = () => (
-        <CommonModal modalBodyClassName=" text-start" isOpen={opened} toggle={handleToggle}>
+        <Modal modalBodyClassName=" text-start" fullscreen isOpen={opened} toggle={handleToggle}>
             <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
                 <H3 className="modal-header justify-content-center border-0">Cập nhật kết quả thi đấu</H3>
                 <LotsDrawSubmitGroupResultForm
@@ -58,7 +59,7 @@ const useLotsDrawSubmitGroupModal = ({ sportId, team_id, content_id, title }: IL
                     onCancel={() => setOpened(false)}
                 />
             </div>
-        </CommonModal>
+        </Modal>
     );
 
     return { LotsDrawSubmitGroupResultModal, handleToggle };
