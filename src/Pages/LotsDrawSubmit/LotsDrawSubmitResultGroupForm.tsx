@@ -89,7 +89,7 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                             header: name,
                             columns: [
                                 {
-                                    accessorKey: `${field}_record_value`,
+                                    accessorKey: `${field}_record1_value`,
                                     header:
                                         N[`${field}_record_value`] +
                                         (valueType == 2 ? "(Giờ: phút: giây. mili giây)" : "(Nhập dạng số)"),
