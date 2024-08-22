@@ -2,11 +2,12 @@ import {
   TAge,
   TMartialArt,
   TMartialArtArmyGroup,
+  TMartialArtTurnWithSet,
   TWeigh,
 } from "../type/martialArt";
 import { TTablequalifyingKnockout } from "../type/tablequalifyingKnockout";
 import { baseGetParams } from "./_getParams";
-import { httpDel, httpGet, httpPost } from "./_request";
+import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
 export const martialArtsGet = async (sportId: string) => {
   return httpGet<TMartialArt[]>(`/sports/${sportId}/SportContents`);
@@ -28,6 +29,16 @@ export const generateMartialArtContentTree = async (
     `/sports/content/${contentId}/tree-plan?sportId=${sportId}`,
     {}
   );
+};
+
+export const martialArtTurnWithSetUpdate = async (
+  turn: TMartialArtTurnWithSet
+) => {
+  return httpPut(`/tableknockoutmatchs/${turn.id}`, turn);
+};
+
+export const martialArtTurnWithSetGet = async (turnId: string) => {
+  return httpGet(`/tableknockoutmatchs/${turnId}/match_sets`);
 };
 
 export const getMartialArtContentTree = async (

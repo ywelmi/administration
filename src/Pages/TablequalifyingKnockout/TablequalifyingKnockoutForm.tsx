@@ -137,6 +137,7 @@ const useTablequalifyingKnockout = ({
   return { TablequalifyingKnockoutModal, handleToggle };
 };
 
+import { ETable } from "../../type/enum";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
 import { TabMatchTurn } from "../MatchReport/MatchReportForm";
 import { ListSetReport, useSetReportPopover } from "../MatchReport/SetReport";
@@ -290,7 +291,7 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
           toggle={handleToggle}
           title="Trận nhỏ"
         >
-          <TabMatchTurn></TabMatchTurn>
+          <TabMatchTurn tableType={ETable.KNOCKOUT}></TabMatchTurn>
           {/* <TablequalifyingKnockoutMatchReportForm
             onSubmit={handleSubmit}
             {...rest}

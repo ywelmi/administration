@@ -65,5 +65,9 @@
   "match_time": "Buổi đấu",
   "set_count": "Số séc",
   "win_set_count": "Số séc thắng",
-  "note": "Ghi chú"
+  "note": "Ghi chú",
+  "team1_minus_point": "Điểm trừ đội 1",
+  "team2_minus_point": "Điểm trừ đội 2",
+  "team1_plus_point": "Điểm cộng đội 1",
+  "team2_plus_point": "Điểm cộng đội 2"
 }

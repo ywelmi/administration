@@ -133,7 +133,14 @@ const useGenTreeMartialArt = ({
   return { GenTreeMartialArtModal, handleToggle };
 };
 
+import {
+  martialArtTurnWithSetGet,
+  martialArtTurnWithSetUpdate,
+} from "../../Service/martialArt";
+import { ETable } from "../../type/enum";
+import { TMatchTurn } from "../../type/matchTurn";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
+import { MatchTurnSet } from "../MatchReport/MatchAction/MatchTurn/MatchTurnSet";
 import { ListSetReport, useSetReportPopover } from "../MatchReport/SetReport";
 
 export interface ITablequalifyingKnockoutMatchReportForm {
@@ -248,7 +255,14 @@ const useTablequalifyingKnockoutMatchReportModal = ({
 };
 
 export const TablequalifyingKnockoutMatchReportModal = forwardRef(
-  ({ onSubmit, ...rest }: ITablequalifyingMatchReportModal, ref) => {
+  (
+    {
+      onSubmit,
+      tablequalifyingKnockoutMatchReport,
+      ...rest
+    }: ITablequalifyingMatchReportModal,
+    ref
+  ) => {
     const [opened, setOpened] = useState(false);
 
     const handleToggle = () => {
@@ -281,12 +295,23 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
           modalBodyClassName="social-profile text-start"
           isOpen={opened}
           toggle={handleToggle}
+          title="Võ chiến đấu"
         >
-          <TablequalifyingKnockoutMatchReportForm
+          {tablequalifyingKnockoutMatchReport?.id ? (
+            <MatchTurnSet
+              tableType={ETable.MARTIALART}
+              matchTurns={[
+                { id: tablequalifyingKnockoutMatchReport.id } as TMatchTurn,
+              ]}
+              matchTurnSetsUpdate={martialArtTurnWithSetUpdate}
+              matchTurnSetsGet={martialArtTurnWithSetGet}
+            />
+          ) : null}
+          {/* <TablequalifyingKnockoutMatchReportForm
             onSubmit={handleSubmit}
             {...rest}
             onCancel={() => setOpened(false)}
-          />
+          /> */}
         </CommonModal>
       </div>
     );

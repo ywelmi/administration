@@ -1,3 +1,5 @@
+import { TTurnSet } from "./matchTurn";
+
 export interface TMartialArt {
   sport_id: string;
   code: string;
@@ -30,4 +32,16 @@ export interface TMartialArtArmyGroup {
   gender: 0;
   content_id: string;
   lst_member: string[];
+}
+
+export interface TMartialArtSet extends TTurnSet {
+  team1_minus_point: 0;
+  team2_minus_point: 0;
+  team1_plus_point: 0;
+  team2_plus_point: 0;
+}
+
+export interface TMartialArtTurnWithSet extends TMartialArtSet {
+  id: string;
+  sets: TMartialArtSet[];
 }
