@@ -167,13 +167,14 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                         newCols.push(col);
                     }
                 });
+                const valueField = lst_map_sport_content.filter((e) => e.id == content_id)[0].field;
                 const colSpecial: ColumnDef<any> = {
                     // accessorKey: field,
                     footer: (props) => props.column.id,
                     header: "Xử lý vi phạm",
                     columns: [
                         {
-                            accessorKey: `content1_ignore_type`,
+                            accessorKey: `${valueField}_ignore_type`,
                             header: "Lỗi",
                             footer: (props) => props.column.id,
                             cell({ getValue, row: { index, original }, column: { id }, table }) {
@@ -205,19 +206,79 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                             },
                         },
                         {
-                            accessorKey: `content1_ignore_content`,
+                            accessorKey: `${valueField}_ignore_content`,
                             header: "Chi tiết lỗi",
                             footer: (props) => props.column.id,
                         },
                         {
-                            accessorKey: `content1_record_violation`,
+                            accessorKey: `${valueField}_record_violation`,
                             header: "Điểm trừ",
                             footer: (props) => props.column.id,
                         },
                         {
-                            accessorKey: `content1_point_value`,
+                            accessorKey: `${valueField}_point_value`,
                             header: "Điểm cuối cùng",
                             footer: (props) => props.column.id,
+                        },
+                        {
+                            accessorKey: `${valueField}_point_value`,
+                            header: " Định dạng: 00.00 / 00:00",
+                            footer: (props) => props.column.id,
+                            cell({ getValue, row: { index, original }, column: { id }, table }) {
+                                // let hasEmptyFiled = false;
+                                // const idx = Object.values(original).findIndex((v) => v == null);
+                                // if (idx !== -1) hasEmptyFiled = true;
+                                // if (hasEmptyFiled) return null;
+                                // if (!original.isDetail) return null;
+
+                                var dataResult;
+                                const value = _content_point.convert(
+                                    content_id,
+                                    original[`${valueField}_record_value`]
+                                );
+                                useEffect(() => {
+                                    setRecord_value(original[`${valueField}_record_value`]);
+                                    table.options.meta?.updateData(index, id, value);
+                                }, [original[`${valueField}_record_value`]]);
+                                const [record_value, setRecord_value] = useState(
+                                    original[`${valueField}_record_value`]
+                                );
+
+                                if (valueType == 2) {
+                                    if (
+                                        (original[`${valueField}_record_value`] &&
+                                            canParseToNumber(original[`${valueField}_record_value`].toString())) ||
+                                        (original[`${valueField}_record_value`] &&
+                                            original[`${valueField}_record_value`].toString().split(":").length > 1 &&
+                                            original[`${valueField}_record_value`] &&
+                                            original[`${valueField}_record_value`].toString().split(":")[1].split("")
+                                                .length > 1)
+                                    ) {
+                                        setCanSubmit(true);
+
+                                        dataResult = <div>{value}</div>;
+                                    } else {
+                                        setCanSubmit(false);
+                                        dataResult = <strong className="text-danger">Sai định dạng</strong>;
+                                    }
+                                }
+                                if (valueType == 1) {
+                                    if (
+                                        original[`${valueField}_record_value`] &&
+                                        canParseToNumber(original[`${valueField}_record_value`].toString())
+                                    ) {
+                                        //console.log(value);
+                                        setCanSubmit(true);
+                                        // table.options.meta?.updateData(index, id, value);
+                                        dataResult = <div>{value}</div>;
+                                    } else {
+                                        setCanSubmit(false);
+                                        <strong className="text-danger">Sai định dạng</strong>;
+                                    }
+                                }
+                                //table.options.meta?.updateData(index, id, value);
+                                return dataResult;
+                            },
                         },
                     ],
                 };
