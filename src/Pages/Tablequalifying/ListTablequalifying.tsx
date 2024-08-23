@@ -111,11 +111,6 @@ const TablequalifyingTableAction = ({
   //   });
   // };
 
-  // const { handleToggle: toggleMatch, TablequalifyingMatchModal } =
-  //   useModalPageTablequalifyingMatch({
-  //     tableId: tablequalifying.id,
-  //   });
-
   const navigate = useNavigate();
 
   return (

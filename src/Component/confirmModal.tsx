@@ -2,11 +2,12 @@ import { toast } from "react-toastify";
 import { Btn } from "../AbstractElements";
 
 const CONFIRM_ID = "confirm-modal";
-const confirmModal = async () => {
+const confirmModal = async (title?: string) => {
   const p = new Promise((resolve) => {
     const M = () => {
       return (
         <div>
+          {title ? <div className="text-center text-lg">{title}</div> : null}
           <div className="text-center text-lg">Đồng ý ???</div>
           <div className="flex gap-2">
             <Btn
