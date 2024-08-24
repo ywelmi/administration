@@ -6,6 +6,7 @@ export type TDict = {
 export enum ETable {
     KNOCKOUT = 0,
     QUALIFYING = 1,
+    MARTIALART = 2,
 }
 
 export const DGender = ["Nữ", "Nam"];

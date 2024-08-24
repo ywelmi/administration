@@ -7,48 +7,11 @@ import {
   useState,
 } from "react";
 import {
-  knockoutMatchTurnCreate,
-  knockoutMatchTurnDelete,
-  knockoutMatchTurnSetGet,
-  knockoutMatchTurnSetUpdate,
-  knockoutMatchTurnUpdate,
   qualifyingMatchTurnCreate,
-  qualifyingMatchTurnDelete,
-  qualifyingMatchTurnSetGet,
-  qualifyingMatchTurnSetUpdate,
   qualifyingMatchTurnsGet,
-  qualifyingMatchTurnUpdate,
 } from "../../../../Service/matchTurn";
 import { TMatchTurn } from "../../../../type/matchTurn";
-
-interface IMatchTurnQuery {
-  matchTurnCreate:
-    | typeof qualifyingMatchTurnCreate
-    | typeof knockoutMatchTurnCreate;
-  matchTurnsGet: () => ReturnType<typeof qualifyingMatchTurnsGet>;
-  matchTurnUpdate:
-    | typeof qualifyingMatchTurnUpdate
-    | typeof knockoutMatchTurnUpdate;
-  matchTurnDel:
-    | typeof qualifyingMatchTurnDelete
-    | typeof knockoutMatchTurnDelete;
-  matchTurnSetsUpdate:
-    | typeof knockoutMatchTurnSetUpdate
-    | typeof qualifyingMatchTurnSetUpdate;
-  matchTurnSetsGet:
-    | typeof knockoutMatchTurnSetGet
-    | typeof qualifyingMatchTurnSetGet;
-}
-
-interface IMatchTurnContext extends IMatchTurnQuery {
-  matchId: string;
-  setMatchId: (id: string) => void;
-  matchTurns: TMatchTurn[];
-
-  updateMatchTurn: (m: TMatchTurn) => void;
-  createMatchTurn: (m: TMatchTurn) => void;
-  delMatchTurn: (id: string) => void;
-}
+import { IMatchTurnContext, IMatchTurnQuery } from "./type";
 
 const MatchTurnContext = createContext<IMatchTurnContext>({
   matchId: "",
@@ -63,13 +26,9 @@ const MatchTurnContext = createContext<IMatchTurnContext>({
     Promise.resolve({} as ReturnType<typeof qualifyingMatchTurnCreate>),
   matchTurnDel: () =>
     Promise.resolve({} as ReturnType<typeof qualifyingMatchTurnCreate>),
-  matchTurnSetsGet: () =>
-    Promise.resolve({} as ReturnType<typeof qualifyingMatchTurnSetGet>),
   updateMatchTurn: () => {},
   createMatchTurn: () => {},
   delMatchTurn: () => {},
-  matchTurnSetsUpdate: () =>
-    Promise.resolve({} as ReturnType<typeof qualifyingMatchTurnSetUpdate>),
 });
 
 export interface IMatchTurnProvider extends PropsWithChildren, IMatchTurnQuery {
@@ -87,8 +46,6 @@ const MatchTurnProvider = ({
   matchTurnsGet,
   matchTurnUpdate,
   matchTurnDel,
-  matchTurnSetsUpdate,
-  matchTurnSetsGet,
 }: IMatchTurnProvider) => {
   const [matchId, setMatchId] = useState(initMatchId);
   useEffect(() => {
@@ -152,10 +109,6 @@ const MatchTurnProvider = ({
         matchId,
         setMatchId,
         matchTurns,
-        matchTurnSetsUpdate,
-        matchTurnSetsGet,
-        // matchTurnsWithSets,
-        // setMatchTurnsWithSets,
       }}
     >
       {children}

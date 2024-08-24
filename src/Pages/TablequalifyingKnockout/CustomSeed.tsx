@@ -7,8 +7,6 @@ import { getFilterByValue } from "../../Service/_getParams";
 import {
   knockoutMatchTurnCreate,
   knockoutMatchTurnDelete,
-  knockoutMatchTurnSetGet,
-  knockoutMatchTurnSetUpdate,
   knockoutMatchTurnsGet,
   knockoutMatchTurnUpdate,
 } from "../../Service/matchTurn";
@@ -213,8 +211,8 @@ const CustomSeed = ({
                 matchTurnUpdate={knockoutMatchTurnUpdate}
                 matchTurnDel={knockoutMatchTurnDelete}
                 matchTurnCreate={knockoutMatchTurnCreate}
-                matchTurnSetsUpdate={knockoutMatchTurnSetUpdate}
-                matchTurnSetsGet={knockoutMatchTurnSetGet}
+                // matchTurnSetsUpdate={knockoutMatchTurnSetUpdate}
+                // matchTurnSetsGet={knockoutMatchTurnSetGet}
               >
                 <TablequalifyingKnockoutMatchReportModal
                   onClose={() => {

@@ -15,8 +15,16 @@ import {
 import * as Yup from "yup";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import {
+  knockoutMatchTurnSetGet,
+  knockoutMatchTurnSetUpdate,
+  qualifyingMatchTurnSetGet,
+  qualifyingMatchTurnSetUpdate,
+} from "../../Service/matchTurn";
+import { ETable } from "../../type/enum";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import { MatchTurnForm } from "./MatchAction/MatchTurn/MatchTurnForm";
+import { MatchTurnForm } from "./MatchAction/MatchTurn/MatchTurn";
+import { useMatchTurnContext } from "./MatchAction/MatchTurn/matchTurnContext";
 import { MatchTurnSet } from "./MatchAction/MatchTurn/MatchTurnSet";
 import { ListSetReport } from "./SetReport";
 
@@ -177,7 +185,7 @@ const useMatchReportForm = ({ onClose }: IMatchReportFormHook) => {
       toggle={handleToggle}
       title="Trận nhỏ"
     >
-      <TabMatchTurn></TabMatchTurn>
+      {/* <TabMatchTurn ></TabMatchTurn> */}
     </CommonModal>
   );
 
@@ -189,8 +197,22 @@ enum ETabTurn {
   TURN = 1,
 }
 
-const TabMatchTurn = () => {
+interface ITabMatchTurn {
+  tableType: ETable;
+}
+
+const TabMatchTurn = ({ tableType }: ITabMatchTurn) => {
   const [tabId, setTabId] = useState<ETabTurn>(ETabTurn.TURN);
+  const { matchTurns } = useMatchTurnContext();
+  const matchTurnSetsUpdate =
+    tableType === ETable.KNOCKOUT
+      ? knockoutMatchTurnSetUpdate
+      : qualifyingMatchTurnSetUpdate;
+  const matchTurnSetsGet =
+    tableType === ETable.KNOCKOUT
+      ? knockoutMatchTurnSetGet
+      : qualifyingMatchTurnSetGet;
+
   return (
     <>
       <Nav tabs>
@@ -216,7 +238,13 @@ const TabMatchTurn = () => {
           <MatchTurnForm />
         </TabPane>
         <TabPane tabId={ETabTurn.SET}>
-          <MatchTurnSet />
+          <MatchTurnSet
+            tableType={ETable.QUALIFYING}
+            showTurn
+            matchTurns={matchTurns}
+            matchTurnSetsUpdate={matchTurnSetsUpdate}
+            matchTurnSetsGet={matchTurnSetsGet}
+          />
           {/* <TablequalifyingMatchReportForm
             onSubmit={(v) => {
               console.log({ v });
