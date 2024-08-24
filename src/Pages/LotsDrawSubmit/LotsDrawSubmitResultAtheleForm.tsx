@@ -16,6 +16,7 @@ interface ILotsDrawSubmitForm {
     sportId: string;
     org_id: string;
     content_id: string;
+    gender?: number;
     // onSubmit: () => void;
 }
 
@@ -43,7 +44,13 @@ const defaultColumns: ColumnDef<TLotsDrawMember>[] = [
                 footer: (props) => props.column.id,
                 header: N["rank"],
                 cell(props) {
-                    return <div className="form-control">{DRank[parseInt(props.getValue() as string)]}</div>;
+                    return (
+                        <div className="form-control">
+                            {DRank.filter((e) => e.code == props.getValue()).length > 0
+                                ? DRank.filter((e) => e.code == props.getValue())[0].name
+                                : "Đang xử lý"}
+                        </div>
+                    );
                 },
             },
             {
@@ -80,7 +87,7 @@ const canParseToNumber = (str: string) => {
         return !isNaN(num) && isFinite(num);
     }
 };
-const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, onCancel }: ILotsDrawSubmitForm) => {
+const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, gender, onCancel }: ILotsDrawSubmitForm) => {
     const [columns, setColumns] = useState<ColumnDef<TLotsDrawMember>[]>(defaultColumns);
     const _content_point = window._content_point;
     const [data, setData] = useState<TLotsDrawMember[]>([]);

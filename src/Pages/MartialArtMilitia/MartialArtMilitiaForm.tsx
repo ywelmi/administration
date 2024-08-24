@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { ColumnDef } from "@tanstack/react-table";
 import {
-    martialArtMilitiaArmyGroupGetAll,
     martialArtMilitiaArmyGroupGetLotsdraw,
     martialArtMilitiaArmyGroupGetUpdate,
 } from "../../Service/martialArtMilitia";
@@ -70,32 +69,32 @@ const MartialArtMilitiaForm = ({ MartialArtMilitia, onCancel, onSubmit }: IMarti
     );
 };
 
-const useMartialArtMilitiaModal = ({ sportId, content_id, onSubmit, ...rest }: any) => {
+const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
     const [data, setData] = useState<TMartialArtMilitiaArmyGroupGet[]>([]);
 
     const [opened, setOpened] = useState(false);
     const handleToggle = () => {
         setOpened((s) => !s);
     };
-    const fetch_data = useCallback(() => {
-        (async () => {
-            const contents = await martialArtMilitiaArmyGroupGetLotsdraw().then((res) => {
-                return res.data;
+    const fetch_data = () => {
+        if (sportId) {
+            martialArtMilitiaArmyGroupGetLotsdraw(sportId).then((res) => {
+                console.log(res);
+                setData(res.data);
             });
-            console.log(contents);
-            setData(contents);
-        })();
-    }, []);
+        }
+    };
 
     useEffect(() => {
+        console.log("come here");
         fetch_data();
-    }, []);
+    }, [sportId]);
     const handleSubmit = (MartialArtMilitia: TLotsDraw[]) => {
         const dataSubmit = MartialArtMilitia.map((e: TLotsDraw) => {
             return {
                 id: e.id,
                 sport_id: e.sport_id,
-                content_id: content_id,
+
                 team_id: e.team_id,
                 ticket_index: e.ticket_index,
                 has_ranking: true,

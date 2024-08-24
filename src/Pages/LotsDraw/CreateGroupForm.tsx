@@ -39,7 +39,10 @@ const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
         accessorKey: "rank",
         footer: (props) => props.column.id,
         header: N["rank"],
-        cell: (props) => DRank[props.getValue() as number],
+        cell: (props) =>
+            DRank.filter((e) => e.code == props.getValue()).length > 0
+                ? DRank.filter((e) => e.code == props.getValue())[0].name
+                : "Đang xử lý",
     },
     {
         accessorKey: "gender",

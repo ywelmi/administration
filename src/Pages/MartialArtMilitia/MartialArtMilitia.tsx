@@ -29,7 +29,10 @@ import { useOrgStore } from "../../store/org";
 import { TTeammember } from "../../type/teammember";
 import { getFilterByValue, getMoreFilterByValue } from "../../Service/_getParams";
 import { teamsGet } from "../../Service/team";
-import { useMartialArtMilitiaResultModal } from "./MartialArtMilitiaFormResult";
+import { useLotsDrawSubmitGroupModal } from "./MartialArtMilitiaFormResult";
+import { useConfigStore } from "../../store/config";
+import { TLotsDraw } from "../../type/lotsdraw";
+import { getContentSport, lotsdrawScheduleGet, lotsdrawsGet, lotsdrawUpdate } from "../../Service/lotsdraw";
 
 // import {  } from "./MartialArtMilitiaForm";
 // import { useMartialArtMilitiaScheduleModal } from "./MartialArtMilitiaSchedule";
@@ -163,6 +166,16 @@ interface IListMartialArtMilitia {
     selectableRowSelected?: (row: TMartialArtMilitiaArmyGroupGet) => boolean;
     tableRef?: Ref<ITanTableRef<TMartialArtMilitiaArmyGroupGet>>;
 }
+interface IListLotsDraw {
+    showAction?: boolean;
+    selectableRows?: boolean;
+    onRowSelect?: (row: TLotsDraw, e: React.MouseEvent<Element, MouseEvent>) => void;
+    onSelectedRowsChange?: (v: { allSelected: boolean; selectedCount: number; selectedRows: TLotsDraw[] }) => void;
+    columns?: ColumnDef<TLotsDraw>[];
+    data?: TLotsDraw[];
+    selectableRowSelected?: (row: TLotsDraw) => boolean;
+    tableRef?: Ref<ITanTableRef<TLotsDraw>>;
+}
 const userAction: ColumnDef<TMartialArtMilitiaArmyGroupGet> = {
     id: "actions",
 
@@ -174,7 +187,8 @@ const userAction: ColumnDef<TMartialArtMilitiaArmyGroupGet> = {
 
         const { addMartialArtMilitias, deleteMartialArtMilitia } = useMartialArtMilitiaStore();
         const fetchData = useCallback(() => {
-            groupGetAll()
+            const sportFilter = getMoreFilterByValue("sport_id", "=", group.sport_id);
+            groupGetAll({ filter: `[${sportFilter}]` })
                 .then((res) => {
                     console.log("response here");
                     console.log(res.data.data);
@@ -237,85 +251,6 @@ const tableColumns: ColumnDef<TMartialArtMilitiaArmyGroupGet>[] = [
             return <div className="">{props.getValue() as string}</div>;
         },
     },
-    {
-        accessorKey: "match_hour",
-        footer: (props) => props.column.id,
-        header: N["match_hour"],
-        cell({ getValue, row: { index, original }, column: { id }, table }) {
-            return (
-                <ReactDatePicker
-                    className="form-control"
-                    name="match_hour"
-                    selected={original.match_hour ? convertHoursToDate(original.match_hour) : undefined}
-                    onChange={(date) =>
-                        table.options.meta?.updateData(index, id, `${date?.getHours()}:${date?.getMinutes()}`)
-                    }
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeFormat="HH:mm"
-                    dateFormat="HH:mm"
-                    timeIntervals={15}
-                    timeCaption="Giờ"
-                    locale={"vi"}
-                />
-            );
-        },
-    },
-    {
-        accessorKey: "match_date",
-        footer: (props) => props.column.id,
-        header: N["match_date"],
-        cell({ getValue, row: { index, original }, column: { id }, table }) {
-            return (
-                <ReactDatePicker
-                    className="form-control"
-                    name="date_join_army"
-                    showYearDropdown
-                    // selected={new Date(getValue() as string || new Date())}
-                    value={original.match_date ? convertToDate(original.match_date) : undefined}
-                    onChange={(date) => {
-                        table.options.meta?.updateData(index, id, date?.toISOString());
-                    }}
-                    locale={"vi"}
-                    dateFormat={"dd/MM/yyyy"}
-                />
-            );
-        },
-    },
-    {
-        accessorKey: "match_time",
-        footer: (props) => props.column.id,
-        header: N["match_time"],
-    },
-    {
-        accessorKey: "locations",
-        footer: (props) => props.column.id,
-        header: N["locations"],
-    },
-    {
-        // accessorKey: "locations",
-        header: "Kết quả thi đấu",
-        footer: (props) => props.column.id,
-        cell({ getValue, row: { index, original }, column: { id }, table }) {
-            // let hasEmptyFiled = false;
-            // const idx = Object.values(original).findIndex((v) => v == null);
-            // if (idx !== -1) hasEmptyFiled = true;
-            // if (hasEmptyFiled) return null;
-
-            const { MartialArtMilitiaModal, handleToggle } = useMartialArtMilitiaResultModal({
-                sportId: original.sport_id,
-                orgId: original.org_id,
-                onsubmit: (e: any) => alert(e),
-            });
-            return (
-                <Btn className="btn btn-info edit" onClick={handleToggle}>
-                    <i className="icon-pencil-alt" />
-                    Cập nhật
-                    <MartialArtMilitiaModal />
-                </Btn>
-            );
-        },
-    },
 ];
 
 const isUpdated = (d: TMartialArtMilitiaArmyGroupGet) => {
@@ -362,20 +297,145 @@ const ListMartialArtMilitia = ({
     console.log({ tableData });
     return (
         <div className="table-responsive">
-            <TanTable ref={tableRef} data={tableData} getRowId={getLotDrawId} columns={displayColumns} />
+            <TanTable ref={tableRef} data={tableData} getRowId={getMartialArtMilitiaId} columns={displayColumns} />
         </div>
     );
 };
 
-const getLotDrawId = (d: TMartialArtMilitiaArmyGroupGet) => d.id;
-
+const getLotDrawId = (d: TLotsDraw) => d.id;
+const getMartialArtMilitiaId = (d: TMartialArtMilitiaArmyGroupGet) => d.id;
 //Component render page lots draw
 const PageMartialArtMilitia = () => {
+    const tableResultColumns: ColumnDef<TLotsDraw>[] = [
+        {
+            accessorKey: "team_name",
+            footer: (props) => props.column.id,
+            header: N["team_name"],
+            cell(props) {
+                return <div className="form-control">{props.getValue() as string}</div>;
+            },
+        },
+        {
+            accessorKey: "ticket_index",
+            footer: (props) => props.column.id,
+            header: N["ticket_index"],
+            cell(props) {
+                return <div className="">{props.getValue() as string}</div>;
+            },
+        },
+
+        {
+            accessorKey: "match_hour",
+            footer: (props) => props.column.id,
+            header: N["match_hour"],
+            cell({ getValue, row: { index, original }, column: { id }, table }) {
+                return (
+                    <ReactDatePicker
+                        className="form-control"
+                        name="match_hour"
+                        // selected={new Date(original.match_date as string || new Date())}
+                        value={original.match_hour}
+                        onChange={(date) =>
+                            table.options.meta?.updateData(index, id, `${date?.getHours()}:${date?.getMinutes()}`)
+                        }
+                        showTimeSelect
+                        showTimeSelectOnly
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        timeCaption="Giờ"
+                        locale={"vi"}
+                    />
+                );
+            },
+        },
+        {
+            accessorKey: "match_date",
+            footer: (props) => props.column.id,
+            header: N["match_date"],
+            cell({ getValue, row: { index, original }, column: { id }, table }) {
+                return (
+                    <ReactDatePicker
+                        className="form-control"
+                        name="date_join_army"
+                        showYearDropdown
+                        // selected={new Date(getValue() as string || new Date())}
+                        value={original.match_date ? convertToDate(original.match_date) : undefined}
+                        onChange={(date) => {
+                            table.options.meta?.updateData(index, id, date?.toISOString());
+                        }}
+                        locale={"vi"}
+                        dateFormat={"dd/MM/yyyy"}
+                    />
+                );
+            },
+        },
+        {
+            accessorKey: "locations",
+            footer: (props) => props.column.id,
+            header: N["locations"],
+        },
+        {
+            // accessorKey: "locations",
+            header: "Kết quả thi đấu",
+            footer: (props) => props.column.id,
+            cell({ getValue, row: { index, original }, column: { id }, table }) {
+                // let hasEmptyFiled = false;
+                // const idx = Object.values(original).findIndex((v) => v == null);
+                // if (idx !== -1) hasEmptyFiled = true;
+                // if (hasEmptyFiled) return null;
+
+                const { LotsDrawSubmitGroupResultModal, handleToggle } = useLotsDrawSubmitGroupModal({
+                    sportId: original.sport_id,
+
+                    content_id: content,
+                    team_id: original.org_id,
+                });
+                return (
+                    <Btn className="btn btn-info edit" onClick={handleToggle}>
+                        <i className="icon-pencil-alt" />
+                        Cập nhật
+                        <LotsDrawSubmitGroupResultModal />
+                    </Btn>
+                );
+            },
+        },
+    ];
+
+    const ListContentLotsDraw = ({
+        showAction,
+        onRowSelect,
+        onSelectedRowsChange,
+        columns = [...tableResultColumns],
+        data = [],
+        tableRef,
+        selectableRowSelected,
+    }: IListLotsDraw) => {
+        // if (columns.length > 0 && showAction) {
+        //   columns = [...columns, {
+        //     name: "#",
+        //     cell: (row: TLotsDrawColumn) => <LotsDrawTableAction lotsdraw={row} />,
+        //     sortable: true,
+        //   }];
+        // }
+        //
+        //
+        const tableData = data.map((d) => ({ ...d }));
+
+        console.log({ tableData });
+        return (
+            <div className="table-responsive">
+                <TanTable ref={tableRef} data={tableData} getRowId={getLotDrawId} columns={columns} />
+            </div>
+        );
+    };
     const { MartialArtMilitias, addMartialArtMilitias } = useMartialArtMilitiaStore();
     const [sportId, setSportId] = useState("");
-
+    const [stateMartial, setStateMartial] = useState("manager");
     const { sport_id: paramSportId } = useParams();
     const { orgs } = useOrgStore();
+    const { sportSelector } = useConfigStore();
+    const { sports } = useSportStore();
+    const sportMartialArtMilitia = sports.find((s) => s.point_unit === 2);
     useEffect(() => {
         if (paramSportId) {
             setSportId(paramSportId);
@@ -383,10 +443,12 @@ const PageMartialArtMilitia = () => {
     }, [paramSportId]);
     const [gender, setGender] = useState<any>("");
     const [orgName, setOrgName] = useState<any>(null);
-
+    const [dataLotsdraw, setDataLotsdraw] = useState<any>([]);
     const [type, setType] = useState<any>(null);
-    const fetchData = useCallback(() => {
-        groupGetAll()
+    const [content, setContent] = useState<any>(null);
+    const fetchDataGroup = useCallback(() => {
+        const sportFilter = getMoreFilterByValue("sport_id", "=", sportMartialArtMilitia?.id!);
+        groupGetAll({ filter: `[${sportFilter}]` })
             .then((res) => {
                 console.log("response here");
                 console.log(res.data.data);
@@ -396,71 +458,152 @@ const PageMartialArtMilitia = () => {
             })
             .catch((err) => console.log({ err }));
     }, []);
+    const fetchDataLotsdraw = useCallback((content_id: any) => {
+        if (sportMartialArtMilitia!.id && content_id) {
+            setType(content_id);
+            lotsdrawsGet(sportMartialArtMilitia!.id, content_id)
+                .then((res) => {
+                    const { data, status } = res;
+                    console.log({ data });
+                    if (status === 200) {
+                        setDataLotsdraw(data);
+                    }
+                })
+                .catch((err) => console.log({ err }));
+        }
+    }, []);
     useEffect(() => {
         (async () => {
-            // const members = await teammembersGet({ filter: memberFilter }).then((res) => {
-            //     const {
-            //         data: { data },
-            //     } = res;
-            //     return data;
-            // });
-            // setOrgMembers(members);
-            var allFilter: any[] = [];
-            if (orgName) {
-                const orgFilter = getMoreFilterByValue("org_id", "=", orgName);
-                allFilter = [...allFilter, orgFilter];
-            }
+            if (stateMartial == "manager") {
+                var allFilter: any[] = [];
+                if (orgName) {
+                    const orgFilter = getMoreFilterByValue("org_id", "=", orgName);
+                    allFilter = [...allFilter, orgFilter];
+                }
+                if (type) {
+                    const typeFilter = getMoreFilterByValue("content_name", "=", type);
+                    allFilter = [...allFilter, typeFilter];
+                }
+                if (gender) {
+                    const genderFilter = getMoreFilterByValue("gender", "=", gender);
+                    allFilter = [...allFilter, genderFilter];
+                }
+                if (sportMartialArtMilitia?.id) {
+                    const sportFilter = getMoreFilterByValue("sport_id", "=", sportMartialArtMilitia?.id);
+                    allFilter = [...allFilter, sportFilter];
+                }
+                const group = await groupGetAll({ filter: `[${allFilter}]` }).then((res) => {
+                    const {
+                        data: { data },
+                    } = res;
 
-            if (gender) {
-                const genderFilter = getMoreFilterByValue("gender", "=", gender);
-                allFilter = [...allFilter, genderFilter];
+                    return data;
+                });
+                console.log("new");
+                console.log(group);
+                addMartialArtMilitias(group);
+            } else {
+                fetchDataLotsdraw(content);
             }
-            const group = await groupGetAll({ filter: `[${allFilter}]` }).then((res) => {
-                const {
-                    data: { data },
-                } = res;
-
-                return data;
-            });
-            console.log("new");
-            console.log(group);
-            addMartialArtMilitias(group);
         })();
     }, [type, orgName, gender]);
     useEffect(() => {
-        fetchData();
-        fetch_data_content();
+        if (sportMartialArtMilitia!.id) {
+            stateMartial == "manager" ? fetchDataGroup() : fetchDataLotsdraw(content);
+        }
+    }, [stateMartial, content]);
+
+    const refGroup = useRef<ITanTableRef<TMartialArtMilitiaArmyGroupGet>>(null);
+    const ref = useRef<ITanTableRef<TLotsDraw>>(null);
+    const listTypeGroup = [
+        { id: 1, name: "Thi đấu đôi", number: 2, gender: 1 },
+
+        { id: 2, name: "Đồng diễn", number: 100, gender: 0 },
+    ];
+    const autoCallUpdateSchedule = useCallback((content_id: any) => {
+        lotsdrawsGet(sportMartialArtMilitia!.id, "")
+            .then((res) => {
+                const { data, status } = res;
+                console.log({ data });
+                if (status === 200) {
+                    if (data && sportMartialArtMilitia!.id) {
+                        const dataSubmit = data!.map((e: TLotsDraw) => {
+                            return {
+                                id: e.id,
+                                team_name: e.team_name,
+                                org_id: e.org_id,
+                                sport_id: e.sport_id,
+                                content_id: content_id,
+                                team_id: e.team_id,
+                                ticket_index: e.ticket_index,
+                                has_ranking: true,
+                                match_hour: e.match_hour,
+                                match_date: e.match_date,
+                                locations: e.locations,
+                            };
+                        });
+                        lotsdrawUpdate(sportMartialArtMilitia!.id, content_id, dataSubmit)
+                            .then((res) => {
+                                const { data, status } = res;
+                                if (status === 200) {
+                                    setDataLotsdraw(dataSubmit);
+                                    fetchDataLotsdraw(content);
+                                }
+                            })
+                            .catch((err) => {
+                                toast.error(err.data);
+                                console.log({ err });
+                            });
+                        lotsdrawScheduleGet(3, sportMartialArtMilitia!.id, content_id).then((res) => {
+                            const { data, status } = res;
+                            if (status === 200) toast.info("Đã cập nhật thông tin làn lượt");
+                        });
+                        return;
+                    }
+                }
+            })
+            .catch((err) => console.log({ err }));
     }, []);
-
-    const ref = useRef<ITanTableRef<TMartialArtMilitiaArmyGroupGet>>(null);
-
     const handleUpdate = useCallback(() => {
         const newData = ref.current?.getData();
+        console.log(newData);
+        if (newData && sportMartialArtMilitia!.id && content) {
+            const dataSubmit = newData!.map((e: TLotsDraw) => {
+                return {
+                    id: e.id,
+                    sport_id: e.sport_id,
+                    content_id: content,
+                    team_id: e.team_id,
+                    ticket_index: e.ticket_index,
+                    has_ranking: true,
+                    match_hour: e.match_hour,
+                    match_date: e.match_date,
+                    locations: e.locations,
+                };
+            });
 
-        if (newData) {
-            martialArtMilitiaArmyGroupGetUpdate(newData)
+            lotsdrawUpdate(sportMartialArtMilitia!.id, content, dataSubmit)
                 .then((res) => {
                     const { data, status } = res;
                     if (status === 200) {
-                        console.log({ data });
-                        fetchData();
-
                         toast.success(N["success"]);
+                        fetchDataLotsdraw(content);
                     }
                 })
                 .catch((err) => {
+                    toast.error(N["failed"] + err);
                     console.log({ err });
-                    toast.error(err.data);
                 });
+
             return;
         }
-    }, [sportId]);
+    }, []);
     const handleAddNew = (e: any) => {
         martialArtMilitiaArmyGroupCreate(e)
             .then((res) => {
                 if (res.status === 200) {
                     toast.success(N["success"]);
-                    fetchData();
+                    fetchDataGroup();
                 }
             })
             .catch((err) => {
@@ -469,16 +612,17 @@ const PageMartialArtMilitia = () => {
             });
         return;
     };
+
     const { handleToggle: toggleMartialArtMilitiaModal, MartialArtMilitiaModal: MartialArtMilitiaAddModal } =
         useMartialArtMilitiaModal({
-            sportId: sportId,
-            content_id: type ? type.id : "",
+            sportId: sportMartialArtMilitia!.id! ?? sportId,
+
             onSubmit: () => {
-                fetchData();
+                fetchDataGroup();
             },
         });
     const { handleToggle: handleToggleAddModal, TeamModal: TeamAddModal } = useGroupModal({
-        sportId: sportId,
+        sportId: sportMartialArtMilitia!.id!,
         onSubmit: (e) => {
             handleAddNew(e);
         },
@@ -487,7 +631,7 @@ const PageMartialArtMilitia = () => {
     const listContent = useRef<any>([]);
     const fetch_data_content = () => {
         (async () => {
-            const contents = await martialArtMilitiaArmyGroupGetContent().then((res) => {
+            const contents = await martialArtMilitiaArmyGroupGetContent(sportMartialArtMilitia!.id!).then((res) => {
                 return res.data;
             });
             console.log(contents);
@@ -502,83 +646,191 @@ const PageMartialArtMilitia = () => {
                     <Col sm="12">
                         <Card>
                             <CardHeader className="pb-0 card-no-border">
-                                <div className="d-flex justify-content-center">
-                                    <H3 className="text-center">Môn Võ Dân quân tự vệ</H3>
-                                    <div
-                                        className="btn btn-primary"
-                                        onClick={() => {
-                                            handleToggleAddModal();
-                                        }}
-                                    >
-                                        <i className="fa fa-plus" />
-                                        &nbsp;
-                                        {"Tạo đội thi đấu"}
-                                    </div>
-                                    <TeamAddModal />
-                                </div>
-                                <Row className="m-t-10">
-                                    <Col md={6}>
-                                        <InputSelect
-                                            title={"Đơn vị"}
-                                            data={orgs}
-                                            k="name"
-                                            name="org_id"
-                                            v="id"
-                                            handleChange={(e) => {
-                                                e.target.value != "" ? setOrgName(e.target.value) : setOrgName(null);
-                                            }}
-                                            value={orgName}
-                                        />
-                                    </Col>
-                                    <Col md={6}>
-                                        <InputSelect
-                                            title={"Giới tính"}
-                                            data={[
-                                                { id: 1, name: "Nam" },
-                                                { id: 2, name: "Nữ" },
-                                                { id: 0, name: "Tất cả" },
-                                            ]}
-                                            k="name"
-                                            name="name"
-                                            v="id"
-                                            handleChange={(e) => {
-                                                e.target.value != "" ? setGender(e.target.value) : setGender(null);
-                                            }}
-                                            value={gender}
-                                        />
-                                    </Col>
-                                </Row>
-
-                                <div className="d-flex justify-content-center">
-                                    <div className="flex gap-2 mt-4">
-                                        <div
-                                            className="btn btn-primary"
-                                            onClick={() => {
-                                                handleUpdate();
-                                            }}
-                                        >
-                                            <i className="fa fa-edit" />
-                                            {"Cập nhật lịch"}
+                                {stateMartial == "manager" ? (
+                                    <>
+                                        <div className="d-flex justify-content-center">
+                                            <H3 className="text-center">Danh sách thi đấu võ Dân quân tự vệ</H3>
+                                            <div
+                                                className="btn btn-info"
+                                                onClick={() => {
+                                                    setStateMartial("update");
+                                                }}
+                                            >
+                                                <i className="fa fa-plus" />
+                                                &nbsp;
+                                                {"Cập nhật kết quả thi đấu"}
+                                            </div>
                                         </div>
-                                        <div
-                                            className="btn btn-danger"
-                                            onClick={() => {
-                                                toggleMartialArtMilitiaModal();
-
-                                                // setTimeout(() => fetchData(sportId), 2000);
-                                            }}
-                                        >
-                                            <i className="fa fa-plus" /> &nbsp;
-                                            {"Cập nhật kết quả bốc thăm"}
+                                        <div className="d-flex justify-content-center">
+                                            <div
+                                                className="btn btn-primary"
+                                                onClick={() => {
+                                                    handleToggleAddModal();
+                                                }}
+                                            >
+                                                <i className="fa fa-plus" />
+                                                &nbsp;
+                                                {"Tạo đội thi đấu"}
+                                            </div>
+                                            <TeamAddModal />
                                         </div>
-                                    </div>
-                                </div>
+                                        <Row className="m-t-10">
+                                            <Col md={4}>
+                                                <InputSelect
+                                                    title={"Đơn vị"}
+                                                    data={orgs}
+                                                    k="name"
+                                                    name="org_id"
+                                                    v="id"
+                                                    handleChange={(e) => {
+                                                        e.target.value != ""
+                                                            ? setOrgName(e.target.value)
+                                                            : setOrgName(null);
+                                                    }}
+                                                    value={orgName}
+                                                />
+                                            </Col>
+                                            <Col md={4}>
+                                                <InputSelect
+                                                    title={"Giới tính"}
+                                                    data={[
+                                                        { id: 1, name: "Nam" },
+                                                        { id: 2, name: "Nữ" },
+                                                        { id: 0, name: "Tất cả" },
+                                                    ]}
+                                                    k="name"
+                                                    name="name"
+                                                    v="id"
+                                                    handleChange={(e) => {
+                                                        e.target.value != ""
+                                                            ? setGender(e.target.value)
+                                                            : setGender(null);
+                                                    }}
+                                                    value={gender}
+                                                />
+                                            </Col>
+                                            <Col md={4}>
+                                                <InputSelect
+                                                    title={"Nội dung"}
+                                                    data={listTypeGroup}
+                                                    k="name"
+                                                    name="name"
+                                                    v="name"
+                                                    handleChange={(e) => {
+                                                        e.target.value != "" ? setType(e.target.value) : setType(null);
+                                                        fetchDataLotsdraw(e.target.value);
+                                                    }}
+                                                    value={type}
+                                                />
+                                            </Col>
+                                        </Row>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="d-flex justify-content-center">
+                                            <H3 className="text-center">Cập nhật kết quả thi đấu Dân quân tự vệ</H3>
+                                            <div
+                                                className="btn btn-info"
+                                                onClick={() => {
+                                                    setStateMartial("manager");
+                                                }}
+                                            >
+                                                <i className="fa fa-arrow-left" aria-hidden="true"></i>
+                                                &nbsp;
+                                                {"Quay lại"}
+                                            </div>
+                                        </div>
+                                        <Col className=" offset-4 m-t-10" md={4}>
+                                            <InputSelect
+                                                title={"Nội dung"}
+                                                data={listContent.current}
+                                                k="name"
+                                                name="name"
+                                                v="id"
+                                                handleChange={(e) => {
+                                                    e.target.value != "" ? setContent(e.target.value) : setType(null);
+                                                }}
+                                                value={content}
+                                            />
+                                        </Col>
+                                        <div className="d-flex justify-content-center">
+                                            <div className="flex gap-2 mt-4">
+                                                <div
+                                                    className="btn btn-primary"
+                                                    onClick={() => {
+                                                        handleUpdate();
+                                                    }}
+                                                >
+                                                    <i className="fa fa-edit" />
+                                                    {"Cập nhật lịch"}
+                                                </div>
+                                                <div
+                                                    className="btn btn-danger"
+                                                    onClick={() => {
+                                                        toggleMartialArtMilitiaModal();
 
-                                <MartialArtMilitiaAddModal />
+                                                        // setTimeout(() => fetchData(sportId), 2000);
+                                                    }}
+                                                >
+                                                    <i className="fa fa-plus" /> &nbsp;
+                                                    {"Cập nhật kết quả bốc thăm"}
+                                                </div>
+                                            </div>
+
+                                            <MartialArtMilitiaAddModal />
+                                        </div>
+                                    </>
+                                )}
                             </CardHeader>
                             <CardBody>
                                 <>
-                                    <ListMartialArtMilitia tableRef={ref} data={MartialArtMilitias} showAction />
+                                    {stateMartial == "manager" ? (
+                                        <ListMartialArtMilitia
+                                            tableRef={refGroup}
+                                            data={MartialArtMilitias}
+                                            showAction
+                                        />
+                                    ) : dataLotsdraw.length > 0 ? (
+                                        <>
+                                            <div className="d-flex justify-content-center mt-2">
+                                                <div
+                                                    className="btn btn-warning text-dark"
+                                                    onClick={() => {
+                                                        if (content) {
+                                                            autoCallUpdateSchedule(content);
+
+                                                            // setTimeout(() => fetchData(sportId), 2000);
+                                                        } else {
+                                                            toast.warn("Mời chọn môn thi");
+                                                        }
+                                                    }}
+                                                >
+                                                    <i className="fa fa-plus" /> &nbsp;
+                                                    {"Làm mới bốc thăm nội dung"}
+                                                </div>
+                                            </div>
+                                            <ListContentLotsDraw tableRef={ref} data={dataLotsdraw} showAction />
+                                        </>
+                                    ) : (
+                                        <div className="d-flex justify-content-center mt-2">
+                                            <H3 className="text-danger text-center">Chưa cập nhật bốc thăm nội dung</H3>
+                                            <div
+                                                className="btn btn-warning text-dark"
+                                                onClick={() => {
+                                                    if (content) {
+                                                        autoCallUpdateSchedule(content);
+
+                                                        // setTimeout(() => fetchData(sportId), 2000);
+                                                    } else {
+                                                        toast.warn("Mời chọn môn thi");
+                                                    }
+                                                }}
+                                            >
+                                                <i className="fa fa-plus" /> &nbsp;
+                                                {"Làm mới bốc thăm nội dung"}
+                                            </div>
+                                        </div>
+                                    )}
                                 </>
                             </CardBody>
                         </Card>
