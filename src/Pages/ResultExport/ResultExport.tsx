@@ -23,16 +23,16 @@ const ListComboBox = () => {
         unitType == "LLTT" ? setListSport(sportsMain) : setListSport(sportsSub);
     }, []);
     const handleChangeBlock = (value: any) => {
-        // setBlock(value);
-        // if (value != "all") {
-        //   if (value == "Thường trực") {
-        //     setListSport(sportsMain);
-        //   } else {
-        //     setListSport(sportsSub);
-        //   }
-        // } else {
-        //   setListSport(sports);
-        // }
+        setBlock(value);
+        if (value != "all") {
+            if (value == "Thường trực") {
+                setListSport(sportsMain);
+            } else {
+                setListSport(sportsSub);
+            }
+        } else {
+            setListSport(sports);
+        }
     };
     const handleChangeType = (value: any) => {
         setTypeExport(value);
@@ -94,7 +94,7 @@ const ListComboBox = () => {
                     </Input>
                 </div>
 
-                {/* <div className="m-10">
+                <div className="m-10">
                     <H6 className="text-primary text-center m-10">Chọn khối thi đấu</H6>
                     <Input
                         type="select"
@@ -138,7 +138,7 @@ const ListComboBox = () => {
                             Lực lượng Dân quân tự vệ
                         </option>
                     </Input>
-                </div> */}
+                </div>
                 {typeExport == "Theo môn" && (
                     <div className="m-10">
                         <H6 className="text-primary text-center m-10">Chọn môn thi đấu</H6>

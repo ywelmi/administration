@@ -12,7 +12,7 @@ export interface TLotsDraw {
     team_name?: string;
     isDetail?: boolean;
     content_id: string;
-    content_type: string;
+    content_type?: string;
 }
 export interface TLotsDrawUpdateAthele {
     team_id: string;
