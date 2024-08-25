@@ -77,8 +77,9 @@ const TablequalifyingForm = ({
 
   useEffect(() => {
     (async () => {
-      if (initTablequalifying?.sport_id) {
-        const { sport_id } = initTablequalifying;
+      if (formik.values.sport_id) {
+        const { sport_id } = formik.values;
+        console.log({sport_id})
         if (sport_id) {
           const filter = getFilterByValue("sport_id", "=", sport_id);
           const sportTeams = await teamsGet({ filter }).then((res) => {
@@ -92,12 +93,13 @@ const TablequalifyingForm = ({
             }
           });
 
+          // console.log({sportTeams})
           const noTableTeams = await teamsNoTableGet(sport_id).then((res) => {
             const { data, status } = res;
             if (status === 200) return data;
           });
 
-          // console.log({ sportTeams, noTableTeams });
+          console.log({ sportTeams, noTableTeams });
           if (sportTeams?.length) {
             //&& noTableTeams?.length) {
             const sportTeamIds = sportTeams.map((t) => t.id);
@@ -141,7 +143,7 @@ const TablequalifyingForm = ({
         }
       }
     })();
-  }, [initTablequalifying?.sport_id]);
+  }, [formik.values.sport_id]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -165,7 +167,7 @@ const TablequalifyingForm = ({
             </Label>
             {/* <ListSport data={sports} /> */}
             <InputSelect
-              title="Cuộc thi"
+              title="Môn thi"
               data={sports}
               k="name"
               name="sport_id"
@@ -177,34 +179,38 @@ const TablequalifyingForm = ({
             />
           </Col>
         ) : null}
-        <Col md="12" className="form-check checkbox-primary">
-          <Label for="listTeams" check>
-            {t("Team")}
-          </Label>
+        {teams?.length ? (
+          <Col md="12" className="form-check checkbox-primary">
+            <Label for="listTeams" check>
+              {t("Team")}
+            </Label>
 
-          <ListTeam
-            data={teams}
-            onSelectedRowsChange={({ selectedRows }) => {
-              console.log({ selectedRows });
-              if (selectedRows.length === formik.values.listTeams?.length) {
-                return;
-              }
-              formik.setFieldValue(
-                "listTeams",
-                selectedRows.map((row) => row.id)
-              );
-            }}
-            selectableRowSelected={(r) => {
-              return (
-                !r?.id ||
-                // !!formik.values.listTeams?.map((id) => id)
-                !!formik.values.listTeams
-                  // preSelectedTeams
-                  ?.includes(r.id)
-              );
-            }}
-          />
-        </Col>
+            <ListTeam
+              data={teams}
+              onSelectedRowsChange={({ selectedRows }) => {
+                console.log({ selectedRows });
+                if (selectedRows.length === formik.values.listTeams?.length) {
+                  return;
+                }
+                formik.setFieldValue(
+                  "listTeams",
+                  selectedRows.map((row) => row.id)
+                );
+              }}
+              selectableRowSelected={(r) => {
+                return (
+                  !r?.id ||
+                  // !!formik.values.listTeams?.map((id) => id)
+                  !!formik.values.listTeams
+                    // preSelectedTeams
+                    ?.includes(r.id)
+                );
+              }}
+            />
+          </Col>
+        ) : (
+          <div color="warning">Không có đội thi</div>
+        )}
         <Col xs="12" className="gap-2" style={{ display: "flex" }}>
           <Btn color="primary" type="submit">
             Xác nhận
