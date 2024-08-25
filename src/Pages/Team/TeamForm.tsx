@@ -183,7 +183,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                             handleChange={(e) => {
                                 formik.handleChange(e);
                             }}
-                            value={competitions[0].id}
+                            value={formik.values.competition_id}
                         />
                     </Col>
                 ) : null}
@@ -196,6 +196,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                             name="org_id"
                             v="id"
                             handleChange={(e) => {
+                                formik.setFieldValue("competition_id", competitions[0].id);
                                 formik.handleChange(e);
                             }}
                             value={formik.values.org_id}
