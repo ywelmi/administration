@@ -30,6 +30,10 @@ export const teammembersByContent = (sportId: string, contentId: string) => {
   );
 };
 
+export const sportContentMemmberCount = async (contentId: string) => {
+  return httpGet<number>(`/sports/content/${contentId}/count-member`);
+};
+
 export const getTeammemberPhoto = async (
   fileId: string,
   height: number = 100,
