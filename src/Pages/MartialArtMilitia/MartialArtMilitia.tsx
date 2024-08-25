@@ -460,7 +460,7 @@ const PageMartialArtMilitia = () => {
     }, []);
     const fetchDataLotsdraw = useCallback((content_id: any) => {
         if (sportMartialArtMilitia!.id && content_id) {
-            setType(content_id);
+            setContent(content_id);
             lotsdrawsGet(sportMartialArtMilitia!.id, content_id)
                 .then((res) => {
                     const { data, status } = res;
@@ -508,7 +508,7 @@ const PageMartialArtMilitia = () => {
         })();
     }, [type, orgName, gender]);
     useEffect(() => {
-        if (sportMartialArtMilitia!.id) {
+        if (sportMartialArtMilitia) {
             stateMartial == "manager" ? fetchDataGroup() : fetchDataLotsdraw(content);
         }
     }, [stateMartial, content]);
@@ -521,6 +521,7 @@ const PageMartialArtMilitia = () => {
         { id: 2, name: "Đồng diễn", number: 100, gender: 0 },
     ];
     const autoCallUpdateSchedule = useCallback((content_id: any) => {
+        setContent(content_id);
         lotsdrawsGet(sportMartialArtMilitia!.id, "")
             .then((res) => {
                 const { data, status } = res;
@@ -566,8 +567,8 @@ const PageMartialArtMilitia = () => {
     }, []);
     const handleUpdate = useCallback(() => {
         const newData = ref.current?.getData();
-        console.log(newData);
-        if (newData && sportMartialArtMilitia!.id && content) {
+
+        if (newData && sportMartialArtMilitia!.id) {
             const dataSubmit = newData!.map((e: TLotsDraw) => {
                 return {
                     id: e.id,
@@ -597,7 +598,7 @@ const PageMartialArtMilitia = () => {
 
             return;
         }
-    }, []);
+    }, [content]);
     const handleAddNew = (e: any) => {
         martialArtMilitiaArmyGroupCreate(e)
             .then((res) => {
@@ -615,14 +616,14 @@ const PageMartialArtMilitia = () => {
 
     const { handleToggle: toggleMartialArtMilitiaModal, MartialArtMilitiaModal: MartialArtMilitiaAddModal } =
         useMartialArtMilitiaModal({
-            sportId: sportMartialArtMilitia!.id! ?? sportId,
+            sportId: sportMartialArtMilitia ? sportMartialArtMilitia!.id! : sportId,
 
             onSubmit: () => {
                 fetchDataGroup();
             },
         });
     const { handleToggle: handleToggleAddModal, TeamModal: TeamAddModal } = useGroupModal({
-        sportId: sportMartialArtMilitia!.id!,
+        sportId: sportMartialArtMilitia ? sportMartialArtMilitia!.id! : sportId,
         onSubmit: (e) => {
             handleAddNew(e);
         },
@@ -748,19 +749,17 @@ const PageMartialArtMilitia = () => {
                                                 name="name"
                                                 v="id"
                                                 handleChange={(e) => {
-                                                    e.target.value != "" ? setContent(e.target.value) : setType(null);
+                                                    setContent(e.target.value);
+                                                    // setType(e.target.value);
+
+                                                    //autoCallUpdateSchedule(e.target.value);
                                                 }}
                                                 value={content}
                                             />
                                         </Col>
                                         <div className="d-flex justify-content-center">
                                             <div className="flex gap-2 mt-4">
-                                                <div
-                                                    className="btn btn-primary"
-                                                    onClick={() => {
-                                                        handleUpdate();
-                                                    }}
-                                                >
+                                                <div className="btn btn-primary" onClick={handleUpdate}>
                                                     <i className="fa fa-edit" />
                                                     {"Cập nhật lịch"}
                                                 </div>
