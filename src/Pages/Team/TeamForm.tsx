@@ -175,7 +175,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                             handleChange={(e) => {
                                 formik.handleChange(e);
                             }}
-                            value={competitions[0].id}
+                            value={formik.values.competition_id}
                         />
                     </Col>
                 ) : null}
