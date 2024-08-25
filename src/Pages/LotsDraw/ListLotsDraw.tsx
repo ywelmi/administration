@@ -598,7 +598,7 @@ const PageLotsDraw = () => {
         martialArtMilitiaArmyGroupCreate(e)
             .then((res) => {
                 if (res.status === 200) {
-                    handleUpdate();
+                    handleUpdate(selectedContentSport);
                 }
             })
             .catch((err) => {
@@ -729,42 +729,45 @@ const PageLotsDraw = () => {
         },
         [sportId]
     );
-    const handleUpdate = useCallback(() => {
-        const newData = ref.current?.getData();
+    const handleUpdate = useCallback(
+        (content_id_update: string) => {
+            const newData = ref.current?.getData();
 
-        if (newData && sportId) {
-            const dataSubmit = newData!.map((e: TLotsDraw) => {
-                return {
-                    id: e.id,
-                    sport_id: e.sport_id,
-                    content_id: selectedContentSport,
-                    team_id: e.team_id,
-                    ticket_index: e.ticket_index,
-                    has_ranking: true,
-                    match_hour: e.match_hour,
-                    match_date: e.match_date,
-                    locations: e.locations,
-                };
-            });
-
-            lotsdrawUpdate(sportId, selectedContentSport, dataSubmit)
-                .then((res) => {
-                    const { data, status } = res;
-                    if (status === 200) {
-                        toast.success(N["success"]);
-                        fetchData(sportId);
-                        fetchDataTable(sportId, selectedContentSport);
-                    }
-                })
-                .catch((err) => {
-                    toast.error(N["failed"]);
-                    console.log({ err });
+            if (newData && sportId) {
+                const dataSubmit = newData!.map((e: TLotsDraw) => {
+                    return {
+                        id: e.id,
+                        sport_id: e.sport_id,
+                        content_id: content_id_update,
+                        team_id: e.team_id,
+                        ticket_index: e.ticket_index,
+                        has_ranking: true,
+                        match_hour: e.match_hour,
+                        match_date: e.match_date,
+                        locations: e.locations,
+                    };
                 });
 
-            return;
-        }
-        toast.error(N["failed"]);
-    }, [sportId]);
+                lotsdrawUpdate(sportId, content_id_update, dataSubmit)
+                    .then((res) => {
+                        const { data, status } = res;
+                        if (status === 200) {
+                            toast.success(N["success"]);
+                            fetchData(sportId);
+                            fetchDataTable(sportId, content_id_update);
+                        }
+                    })
+                    .catch((err) => {
+                        toast.error(N["failed"]);
+                        console.log({ err });
+                    });
+
+                return;
+            }
+            toast.error(N["failed"]);
+        },
+        [sportId]
+    );
 
     const { handleToggle: toggleLotsDrawModal, LotsDrawModal: LotsDrawAddModal } = useLotsDrawModal({
         sportId: sportId,
@@ -1029,7 +1032,8 @@ const PageLotsDraw = () => {
                                                             <div
                                                                 className="btn btn-primary "
                                                                 onClick={() => {
-                                                                    if (selectedContentSport != "") handleUpdate();
+                                                                    if (selectedContentSport != "")
+                                                                        handleUpdate(selectedContentSport);
                                                                     else {
                                                                         toast.warn("Mời chọn môn thi");
                                                                     }

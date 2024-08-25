@@ -360,7 +360,7 @@ const GroupForm = ({ team: initTeam, onSubmit, onCancel, sportId }: IGroupForm) 
                             formik.setFieldValue("sport_id", sportId);
                             formik.setFieldValue("content_id", formik.values.content_id);
                             if (formik.values.type && formik.values.content_id) {
-                                numberAtheleSelected > 2
+                                numberAtheleSelected > 1
                                     ? formik.submitForm()
                                     : toast.error(
                                           "Chọn đúng số lượng thành viên cần thiết: (Tối thiểu " + numberAthele + ")"
