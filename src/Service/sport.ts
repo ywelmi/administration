@@ -39,7 +39,7 @@ export const sportXuatPhieuDiem = async (id: string): Promise<void> => {
         document.body.removeChild(link);
     } catch (error) {
         console.error("Download failed:", error);
-        toast.error("Không có Hội thi");
+        toast.error("Download failed:" + error);
     }
 };
 export const sportXuatPhieuKhoaTham = async (id: string): Promise<void> => {
@@ -57,7 +57,7 @@ export const sportXuatPhieuKhoaTham = async (id: string): Promise<void> => {
         document.body.removeChild(link);
     } catch (error) {
         console.error("Download failed:", error);
-        toast.error("Không có Hội thi");
+        toast.error("Download failed:" + error);
     }
 };
 export const sportXuatXepHang = async (id: string): Promise<void> => {

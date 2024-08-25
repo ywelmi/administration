@@ -24,11 +24,11 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
     return (
         <UL className="action simple-list flex-row" id={sport.id}>
             <>
-                <LI className="edit btn">
+                <LI className=" d-flex justify-content-between">
                     <Btn color="warning" type="button" onClick={handleDownloadClick}>
                         Biên bản thi đấu
                     </Btn>
-                    <Btn color="warning" type="button" onClick={handleDownloadTicketClick}>
+                    <Btn color="success" type="button" className="m-l-20" onClick={handleDownloadTicketClick}>
                         Phiếu khóa thăm
                     </Btn>
                 </LI>
@@ -111,7 +111,6 @@ const ListSport = ({
                 data={filteredItems}
                 pagination
                 subHeader
-                subHeaderComponent={subHeaderComponentMemo}
                 highlightOnHover
                 striped
                 persistTableHead
