@@ -185,7 +185,6 @@ const useRoundUpdateModal = ({ onSubmit, ...rest }: IRoundUpdateModal) => {
       isOpen={opened}
       toggle={handleToggle}
     >
-      yolo
       <RoundUpdatePairForm
         onSubmit={handleSubmit}
         {...rest}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -21,6 +21,8 @@ import { N } from "../../name-conversion";
 import {
   tablequalifyingMatchCreate,
   tablequalifyingMatchDelete,
+  tablequalifyingMatchMembersGet,
+  tablequalifyingMatchsGen,
   tablequalifyingMatchUpdate,
 } from "../../Service/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
@@ -149,7 +151,7 @@ const tableColumns = (
     const col = c as keyof TTablequalifyingColumn;
     switch (col) {
       case "match_day":
-        return convertToDate(row[col]);
+        return row[col] ? convertToDate(row[col]) : "";
     }
     return row?.[col]
       ? (row[col as keyof TTablequalifyingColumn] || "").toString()
@@ -223,10 +225,15 @@ const ListTablequalifyingMatch = ({
 
 const PageTablequalifyingMatch = () => {
   const { t } = useTranslation();
-  const { updateTableId, addTablequalifyingMatch, tablequalifyingMatchs } =
-    useTablequalifyingMatchStore();
+  const {
+    updateTableId,
+    addTablequalifyingMatch,
+    tablequalifyingMatchs,
+    addTablequalifyingMatchs,
+  } = useTablequalifyingMatchStore();
   const { table_id } = useParams();
 
+  console.log({ PageTablequalifyingMatch: tablequalifyingMatchs });
   useEffect(() => {
     if (table_id) {
       // const filterValue = getFilterByValue("sport_id", "=", table_id);
@@ -278,6 +285,48 @@ const PageTablequalifyingMatch = () => {
     },
   });
 
+  const handleMatchGen = useCallback(() => {
+    if (!table_id) {
+      toast.error(N["failed"]);
+      return;
+    }
+    // tablequalifyingMatchMembersGet(table_id).then(
+    //   res => {
+    //     const {data, status} = res
+    //     if (status!== 200){
+    //       toast.error(N['failed'])
+    //       return
+    //     }
+    //     if(!data?.length){
+    //       toast.error("Bảng không có đội nào")
+    //     }
+    //     // const table = {
+    //     //   "sport_id": "154D83EC-66F7-44C1-A2D3-84F821A9181E",
+    //     //   "name": "Bảng B",
+    //     //   "index": 0,
+    //     //   "listTeams": [
+    //     //     "99F001F0-5C5F-49D5-B22C-0C01164E7CB6"
+    //     //   ]
+    //     // }
+    //   }
+
+    // )
+
+    console.log({ table_id });
+    tablequalifyingMatchsGen(table_id)
+      .then((res) => {
+        const { data, status } = res;
+        console.log({ data, status });
+        if (status === 200) {
+          addTablequalifyingMatchs(data);
+          toast.success(N["success"]);
+        }
+      })
+      .catch((err) => {
+        toast.error(err?.data ? err.data : N["failed"]);
+        console.log(err);
+      });
+  }, [table_id]);
   return (
     <div className="page-body">
       <Breadcrumbs mainTitle={"Lịch thi đấu"} parent={"HTTQ2024"} />
@@ -286,10 +335,20 @@ const PageTablequalifyingMatch = () => {
           <Col sm="12">
             <Card>
               <CardHeader className="pb-0 card-no-border">
-                <div className="btn btn-primary" onClick={handleToggleAddModal}>
-                  <i className="fa fa-plus" />
-                  {"Thêm mới"}
+                <div className="flex gap-2">
+                  <div
+                    className="btn btn-primary"
+                    onClick={handleToggleAddModal}
+                  >
+                    <i className="fa fa-plus" />
+                    {"Thêm mới"}
+                  </div>
+                  <div className="btn btn-secondary" onClick={handleMatchGen}>
+                    <i className="fa fa-plus" />
+                    {"Sinh các trận"}
+                  </div>
                 </div>
+
                 <TablequalifyingAddModal />
               </CardHeader>
               <CardBody>
