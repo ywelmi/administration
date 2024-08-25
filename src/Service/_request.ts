@@ -81,7 +81,7 @@ const httpPost: <T = any, R = AxiosResponse<T, any>, D = any>(
   config?: AxiosRequestConfig<D> | undefined,
 ) => {
   const interceptData =
-    data as (D & { columns: string[] | string; filter: string[] | string });
+    data as (D & { columns: string[] | string; filter: string[] | string, take: number | undefined });
   if (
     Object.prototype.hasOwnProperty.call(interceptData, "columns") &&
     !!interceptData
@@ -100,6 +100,12 @@ const httpPost: <T = any, R = AxiosResponse<T, any>, D = any>(
   //     interceptData["filter"] = `[${filter.join(",")}]`;
   //   }
   // }
+  if (
+    !Object.prototype.hasOwnProperty.call(interceptData, "take") &&
+    !!interceptData
+  ) {
+    interceptData["take"] = 10000000;
+  }
 
   return req.post(url, interceptData, config) as Promise<R>;
 };

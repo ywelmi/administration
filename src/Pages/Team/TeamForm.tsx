@@ -13,7 +13,7 @@ import { useCompetitionStore } from "../../store/competition";
 import { useConfigStore } from "../../store/config";
 import { useOrgStore } from "../../store/org";
 import { useSportStore } from "../../store/sport";
-import { DGender, DRank } from "../../type/enum";
+import { DGender, DRank, DUnit } from "../../type/enum";
 import { TTeam } from "../../type/team";
 import { TTeammember } from "../../type/teammember";
 import { convertToDate } from "../../utils/date";
@@ -131,7 +131,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
             const { org_id: f_org_id } = formik.values;
             if (f_org_id) {
                 const memberFilter = getFilterByValue("org_id", "=", f_org_id);
-                const members = await teammembersGet({
+                let members = await teammembersGet({
                     filter: memberFilter,
                 }).then((res) => {
                     const {
@@ -139,6 +139,14 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                     } = res;
                     return data;
                 });
+                switch (unitType) {
+                    case "LLTT":
+                        members = members.filter((m) => m.has_army);
+                        break;
+                    case "DQTV":
+                        members = members.filter((m) => m.has_militia);
+                        break;
+                }
                 setOrgMembers(members);
             }
         })();
@@ -220,8 +228,10 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                         columns={tableTeammemberColumns}
                         onSelectedRowsChange={({ selectedRows }) => {
                             if (
-                                selectedRows.length === formik.values.list_team_member?.length ||
-                                selectedRows.length === formik.values.list_member_id?.length
+                                selectedRows.length ===
+                                    formik.values.list_team_member?.length ||
+                                selectedRows.length ===
+                                    formik.values.list_member_id?.length
                             ) {
                                 return;
                             }
@@ -237,7 +247,10 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                             );
                         }}
                         selectableRowSelected={(r) => {
-                            return !!team.list_member_id?.includes(r.id) || !!team.list_team_member?.includes(r.id);
+                            return (
+                                !!team.list_member_id?.includes(r.id) ||
+                                !!team.list_team_member?.includes(r.id)
+                            );
                         }}
                     />
                 </Col>
@@ -285,7 +298,11 @@ const useTeamModal = ({ onSubmit, ...rest }: ITeamModal) => {
             isOpen={opened}
             toggle={handleToggle}
         >
-            <TeamForm onSubmit={handleSubmit} {...rest} onCancel={() => setOpened(false)} />
+            <TeamForm
+                onSubmit={handleSubmit}
+                {...rest}
+                onCancel={() => setOpened(false)}
+            />
         </CommonModal>
     );
 

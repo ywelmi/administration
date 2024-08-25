@@ -321,28 +321,28 @@ const TanTableComponent = <T,>(
             </table>
             <div className="h-2" />
             <div className="flex items-center gap-2 justify-center">
-                <button
+                <button type="button" 
                     className="border rounded p-1"
                     onClick={() => table.setPageIndex(0)}
                     disabled={!table.getCanPreviousPage()}
                 >
                     {"<<"}
                 </button>
-                <button
+                <button type="button" 
                     className="border rounded p-1"
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
                     {"<"}
                 </button>
-                <button
+                <button type="button" 
                     className="border rounded p-1"
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
                     {">"}
                 </button>
-                <button
+                <button type="button" 
                     className="border rounded p-1"
                     onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                     disabled={!table.getCanNextPage()}
@@ -382,10 +382,10 @@ const TanTableComponent = <T,>(
             </div>
             {/* <div>{table.getRowModel().rows.length} Rows</div> */}
             {/* <div> */}
-            {/*   <button onClick={() => rerender()}>Force Rerender</button> */}
+            {/*   <button type="button"  onClick={() => rerender()}>Force Rerender</button> */}
             {/* </div> */}
             {/* <div> */}
-            {/*   <button onClick={() => refreshData()}>Refresh Data</button> */}
+            {/*   <button type="button"  onClick={() => refreshData()}>Refresh Data</button> */}
             {/* </div> */}
         </div>
     );
