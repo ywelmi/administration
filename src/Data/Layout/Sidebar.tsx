@@ -1,6 +1,9 @@
+import { sportFilterByUnitType } from "../../store/_utils";
+import { useSportStore } from "../../store/sport";
 import { DUnitType } from "../../type/enum";
 
 export const useMenuList = () => {
+    const { sports } = useSportStore();
     const menuList = [
         {
             Items: [
@@ -56,44 +59,74 @@ export const useMenuList = () => {
                             type: "link",
                             lanClass: "lan-4",
                         },
-                        {
-                            title: "Môn vòng bảng",
-                            type: "link",
-                            lanClass: "lan-3",
-                            children: [
-                                {
-                                    path: "/tablequalifyings/list",
-                                    title: "Vòng bảng",
+                        ...(() => {
+                            let filteredSports = sportFilterByUnitType(sports, "LLTT");
+                            filteredSports = filteredSports.filter((s) => s.point_unit === 4);
+                            return filteredSports.map((s) => {
+                                return {
+                                    path: `/tablequalifyings/list/${s.id}`,
+                                    title: `Môn ${s.name}`,
                                     type: "link",
-                                    lanClass: "lan-4",
-                                },
-                                {
-                                    path: "/tablequalifyings/knockout",
-                                    title: "Vòng loại",
-                                    type: "link",
-                                    lanClass: "lan-4",
-                                },
-                            ],
-                        },
+                                    lanClass: "lan-3",
+                                };
+                            });
+                        })(),
+                        // {
+                        //   title: "Môn vòng bảng",
+                        //   type: "link",
+                        //   lanClass: "lan-3",
+                        //   children: [
+                        //     {
+                        //       path: "/tablequalifyings/list",
+                        //       title: "Vòng bảng",
+                        //       type: "link",
+                        //       lanClass: "lan-4",
+                        //     },
+                        //     {
+                        //       path: "/tablequalifyings/knockout",
+                        //       title: "Vòng loại",
+                        //       type: "link",
+                        //       lanClass: "lan-4",
+                        //     },
+                        //   ],
+                        // },
                         {
-                            title: "Môn loại trực tiếp",
-                            type: "link",
-                            lanClass: "lan-3",
-                            children: [
-                                {
-                                    path: "/martialart/list",
-                                    title: "Môn võ chiến đấu",
-                                    type: "link",
-                                    lanClass: "lan-4",
-                                },
-                            ],
-                        },
-                        {
-                            path: "/lotsdraw/list/",
-                            title: "Môn bốc thăm",
+                            path: "/martialart/list",
+                            title: "Môn võ chiến đấu",
                             type: "link",
                             lanClass: "lan-4",
                         },
+                        // {
+                        //   title: "Môn loại trực tiếp",
+                        //   type: "link",
+                        //   lanClass: "lan-3",
+                        //   children: [
+                        //     {
+                        //       path: "/martialart/list",
+                        //       title: "Môn võ chiến đấu",
+                        //       type: "link",
+                        //       lanClass: "lan-4",
+                        //     },
+                        //   ],
+                        // },
+                        // {
+                        //   path: "/lotsdraw/list/",
+                        //   title: "Môn bốc thăm",
+                        //   type: "link",
+                        //   lanClass: "lan-4",
+                        // },
+                        ...(() => {
+                            let filteredSports = sportFilterByUnitType(sports, "LLTT");
+                            filteredSports = filteredSports.filter((s) => s.point_unit === 1 || s.point_unit === 2);
+                            return filteredSports.map((s) => {
+                                return {
+                                    path: `/lotsdraw/list/${s.id}`,
+                                    title: `Môn ${s.name}`,
+                                    type: "link",
+                                    lanClass: "lan-3",
+                                };
+                            });
+                        })(),
                         // {
                         //   path: "/progress",
                         //   title: "Tiến độ thi đấu",
@@ -103,13 +136,6 @@ export const useMenuList = () => {
                         {
                             path: "/reportresult",
                             title: "Biên bản thi đấu",
-                            type: "link",
-                            lanClass: "lan-4",
-                        },
-                        {
-                            path: "/resultexport",
-                            title: "Bảng xếp hạng",
-
                             type: "link",
                             lanClass: "lan-4",
                         },
@@ -133,18 +159,36 @@ export const useMenuList = () => {
                             type: "link",
                             lanClass: "lan-4",
                         },
+                        ...(() => {
+                            let filteredSports = sportFilterByUnitType(sports, "DQTV");
+                            filteredSports = filteredSports.filter((s) => s.point_unit === 4);
+                            return filteredSports.map((s) => {
+                                return {
+                                    path: `/tablequalifyings/list/${s.id}`,
+                                    title: `Môn ${s.name}`,
+                                    type: "link",
+                                    lanClass: "lan-3",
+                                };
+                            });
+                        })(),
                         {
                             path: "/martialartmilitia",
                             title: "Võ DQTV",
                             type: "link",
                             lanClass: "lan-4",
                         },
-                        {
-                            path: "/lotsdraw/list/",
-                            title: "Môn bốc thăm",
-                            type: "link",
-                            lanClass: "lan-4",
-                        },
+                        ...(() => {
+                            let filteredSports = sportFilterByUnitType(sports, "DQTV");
+                            filteredSports = filteredSports.filter((s) => s.point_unit === 1);
+                            return filteredSports.map((s) => {
+                                return {
+                                    path: `/lotsdraw/list/${s.id}`,
+                                    title: `Môn ${s.name}`,
+                                    type: "link",
+                                    lanClass: "lan-3",
+                                };
+                            });
+                        })(),
                         // {
                         //   path: "/progress",
                         //   title: "Tiến độ thi đấu",
@@ -157,13 +201,13 @@ export const useMenuList = () => {
                             type: "link",
                             lanClass: "lan-4",
                         },
-                        {
-                            path: "/resultexport",
-                            title: "Bảng xếp hạng",
+                        // {
+                        //   path: "/resultexport",
+                        //   title: "Bảng xếp hạng",
 
-                            type: "link",
-                            lanClass: "lan-4",
-                        },
+                        //   type: "link",
+                        //   lanClass: "lan-4",
+                        // },
                         // {
                         //   path: "#",
                         //   title: "Nhập điểm - Not",
@@ -204,6 +248,13 @@ export const useMenuList = () => {
                     lanClass: "lan-1",
                     //path: "/teammember/list",
                     type: "link",
+                },
+                {
+                    path: "/resultexport",
+                    title: "Bảng xếp hạng",
+                    type: "link",
+                    icon: "fa fa-th",
+                    lanClass: "lan-1",
                 },
             ],
         },

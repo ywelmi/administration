@@ -1,162 +1,39 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { Ref, useCallback, useEffect, useRef } from "react";
-import { Card, CardBody, CardHeader, Col, Container, Input, InputGroup, InputGroupText, Row } from "reactstrap";
+import { ColumnDef } from "@tanstack/react-table";
+import { Ref, useCallback, useEffect, useRef, useState } from "react";
+import ReactDatePicker from "react-datepicker";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Card, CardBody, CardHeader, Col, Container, Input, InputGroupText, Row } from "reactstrap";
+import { Btn, H1, H2, H3 } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import { BasicDataTables, DataTables } from "../../utils/Constant";
-import { TLotsDraw } from "../../type/lotsdraw";
-import { useMemo, useState } from "react";
+import { InputSelect } from "../../Component/InputSelect";
+import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
+import { N } from "../../name-conversion";
+import { getMoreFilterByValue } from "../../Service/_getParams";
 import {
     getContentSport,
-    lotsdrawsGet,
     getNumberAthele,
+    lotsdrawResultTableGet,
+    lotsdrawScheduleGet,
+    lotsdrawsGet,
     // lotsdrawCreate,
     // lotsdrawDelete,
     lotsdrawUpdate,
-    lotsdrawGroupGetAll,
-    lotsdrawScheduleGet,
-    groupUpdate,
-    lotsdrawResultTableGet,
 } from "../../Service/lotsdraw";
-import { toast } from "react-toastify";
-import { N } from "../../name-conversion";
-import { InputSelect } from "../../Component/InputSelect";
+import { martialArtArmyGroupDelete } from "../../Service/martialArt";
+import { groupGetAll, martialArtMilitiaArmyGroupCreate } from "../../Service/martialArtMilitia";
+import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
-import { ColumnDef } from "@tanstack/react-table";
-import ReactDatePicker from "react-datepicker";
+import { TLotsDraw } from "../../type/lotsdraw";
 import { convertToDate } from "../../utils/date";
-import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
-import { Btn, H2, H3, H5, LI } from "../../AbstractElements";
 import {
     useLotsDrawSubmitGroupModal,
     useLotsDrawSubmitModal,
     useLotsDrawUpdateAtheleModal,
 } from "../LotsDrawSubmit/LotsDrawSubmitForm";
+import { useTeamAtheleModal } from "./CreateGroupForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
-import { useTeamAtheleModal } from "./CreateGroupForm";
-import {
-    groupGetAll,
-    martialArtMilitiaArmyGroupCreate,
-    martialArtMilitiaArmyGroupGetUpdate,
-} from "../../Service/martialArtMilitia";
-import { martialArtArmyGroupDelete, martialArtArmyGroupGetAll } from "../../Service/martialArt";
-import { getMoreFilterByValue } from "../../Service/_getParams";
-import { useConfigStore } from "../../store/config";
-import { se } from "date-fns/locale";
-// const LotsDrawTableAction = (
-//   { lotsdraw }: { lotsdraw: TLotsDrawColumn },
-// ) => {
-//   const { updateLotsDraw, deleteLotsDraw } =
-//     useLotsDrawStore();
-//   const { addLotsDrawMatch } = useLotsDrawMatchStore();
-//   const { t } = useTranslation();
-//
-//   const handleUpdateLotsDraw = (lotsdraw: TLotsDraw) => {
-//     lotsdrawUpdate(lotsdraw).then(
-//       (res) => {
-//         const { status, data } = res;
-//         if (status === 200) {
-//           updateLotsDraw(data as TLotsDraw);
-//           toast.success(t("success"));
-//           return;
-//         }
-//
-//         return Promise.reject(status);
-//       },
-//     ).catch((err) => {
-//       toast.error(t("error"));
-//       console.log({ err });
-//     });
-//   };
-//
-//   const {
-//     handleToggle: handleToggleUpdateModal,
-//     LotsDrawModal: LotsDrawUpdateModal,
-//   } = useLotsDrawModal({
-//     onSubmit: handleUpdateLotsDraw,
-//     lotsdraw,
-//   });
-//
-//   const handleConfirmDel =  async () => {
-//     if (confirm) {
-//     if (confirm) {
-//       lotsdrawDelete(lotsdraw.id).then((res) => {
-//         const { status, data } = res;
-//         console.log({ status, data });
-//         if (status === 200) {
-//           toast.success(t("success"));
-//           deleteLotsDraw(lotsdraw.id);
-//           return;
-//         }
-//         return Promise.reject(status);
-//       })
-//         .catch((err) => {
-//           toast.error(t(err?.response?.data || "error"));
-//           console.log({ err });
-//         });
-//     }
-//     return;
-//   };
-//
-//   // const handleAddLotsDrawMatch = (
-//   //   lotsdrawMatch: Omit<TLotsDrawMatch, "id">,
-//   // ) => {
-//   //   lotsdrawMatchCreate(lotsdrawMatch).then(
-//   //     (res) => {
-//   //       const { status, data } = res;
-//   //       if (status === 200) {
-//   //         addLotsDrawMatch(data);
-//   //         toast.info(t("success"));
-//   //         return;
-//   //       }
-//   //       return Promise.reject(status);
-//   //     },
-//   //   ).catch((err) => {
-//   //     toast.error(t("error"));
-//   //     console.log({ err });
-//   //   });
-//   // };
-//
-//   // const { handleToggle: toggleMatch, LotsDrawMatchModal } =
-//   //   useModalPageLotsDrawMatch({
-//   //     tableId: lotsdraw.id,
-//   //   });
-//
-//   const navigate = useNavigate();
-//
-//   return (
-//     <UL className="action simple-list flex-row" id={lotsdraw.id}>
-//       <LI className="edit btn">
-//         <i
-//           className="icon-pencil-alt"
-//           onClick={handleToggleUpdateModal}
-//         />
-//         <LotsDrawUpdateModal />
-//       </LI>
-//       <LI className="delete btn" onClick={handleConfirmDel}>
-//         <i className="icon-trash cursor-pointer" />
-//       </LI>
-//
-//       <LI
-//         className="edit btn"
-//         onClick={() =>
-//           navigate(`/lotsdraws/match/${lotsdraw.id}`)}
-//       >
-//         <i className="icon-folder" />
-//         Lập lịch
-//       </LI>
-//       <LI
-//         className="edit btn"
-//         onClick={() =>
-//           navigate(`/lotsdraws/match-report/${lotsdraw.id}`)}
-//       >
-//         <i className="icon-slice cursor-pointer">
-//         </i>
-//         Nhập kết quả
-//       </LI>
-//     </UL>
-//   );
-// };
 
 interface IListLotsDraw {
     showAction?: boolean;
@@ -580,11 +457,24 @@ const PageLotsDraw = () => {
             ? setListSport(sportsMain.filter((e) => e.point_unit == 1))
             : setListSport(sportsSub.filter((e) => e.point_unit == 1));
     }, []);
+    const { selectSport } = useSportStore();
+
+    const updateSportId = useCallback(
+        (v: string) => {
+            selectSport(v);
+            setSportId(v);
+
+            setData([]);
+            setSelectedContentSport("");
+        },
+        [selectSport]
+    );
+
     useEffect(() => {
         if (paramSportId) {
-            setSportId(paramSportId);
+            updateSportId(paramSportId);
         }
-    }, [paramSportId]);
+    }, [paramSportId, updateSportId]);
     //danh sách các nội dung thi đấu của môn
     const [contentSport, setContent] = useState<any>([]);
     // kiểm tra đã cập nhật thăm đơn vị chưa
@@ -801,7 +691,7 @@ const PageLotsDraw = () => {
                     <Col sm="12">
                         <Card>
                             <CardHeader className="pb-0 card-no-border">
-                                <Row className="d-flex justify-content-center">
+                                {/* <Row className="d-flex justify-content-center">
                                     <Col md={6}>
                                         <InputSelect
                                             title={N["sport"]}
@@ -818,7 +708,7 @@ const PageLotsDraw = () => {
                                             }}
                                         />
                                     </Col>
-                                </Row>
+                                </Row> */}
                                 {sportId && (
                                     <div className="d-flex justify-content-center">
                                         <div className="flex gap-2 mt-4">
@@ -846,6 +736,9 @@ const PageLotsDraw = () => {
                                 {sportId ? (
                                     <>
                                         <div className=" justify-content-center">
+                                            <H1 className="text-center m-10">
+                                                {sports.filter((e) => e.id == sportId)[0].name}
+                                            </H1>
                                             <Row className="justify-content-center">
                                                 <Col md={5}>
                                                     <div className="m-b-10">
@@ -881,6 +774,9 @@ const PageLotsDraw = () => {
                                                             Lịch và kết quả thi đấu nội dung{" "}
                                                             <span className="text-danger">
                                                                 {(contentSport &&
+                                                                    contentSport.filter(
+                                                                        (e: any) => e.id == selectedContentSport
+                                                                    ).length > 0 &&
                                                                     contentSport.filter(
                                                                         (e: any) => e.id == selectedContentSport
                                                                     )[0].name) ??
