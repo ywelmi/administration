@@ -11,6 +11,7 @@ const confirmModal = async (title?: string) => {
           <div className="text-center text-lg">Đồng ý ???</div>
           <div className="flex gap-2">
             <Btn
+              type="button"
               color="danger"
               onClick={() => {
                 resolve(true);
@@ -20,6 +21,7 @@ const confirmModal = async (title?: string) => {
               Xác nhận
             </Btn>
             <Btn
+              type="button"
               color="primary"
               onClick={() => {
                 resolve(false);
