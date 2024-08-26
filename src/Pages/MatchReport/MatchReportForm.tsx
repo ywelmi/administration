@@ -141,7 +141,7 @@ const TablequalifyingMatchReportForm = ({
           </Btn>
         </SetReportPopover> */}
         {formik.errors.sets ? (
-          <div className="invalid-text">Mời nhập séc</div>
+          <div className="invalid-input">Mời nhập séc</div>
         ) : null}
         <Col md="12" className="form-check checkbox-primary">
           <Label for="sets" check>
