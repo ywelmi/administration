@@ -4,7 +4,7 @@ import ReactDatePicker from "react-datepicker";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Card, CardBody, CardHeader, Col, Container, Input, InputGroupText, Row } from "reactstrap";
-import { Btn, H2, H3 } from "../../AbstractElements";
+import { Btn, H1, H2, H3 } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { InputSelect } from "../../Component/InputSelect";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
@@ -18,13 +18,10 @@ import {
     lotsdrawsGet,
     // lotsdrawCreate,
     // lotsdrawDelete,
-    lotsdrawUpdate
+    lotsdrawUpdate,
 } from "../../Service/lotsdraw";
 import { martialArtArmyGroupDelete } from "../../Service/martialArt";
-import {
-    groupGetAll,
-    martialArtMilitiaArmyGroupCreate
-} from "../../Service/martialArtMilitia";
+import { groupGetAll, martialArtMilitiaArmyGroupCreate } from "../../Service/martialArtMilitia";
 import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
 import { TLotsDraw } from "../../type/lotsdraw";
@@ -37,120 +34,6 @@ import {
 import { useTeamAtheleModal } from "./CreateGroupForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
-// const LotsDrawTableAction = (
-//   { lotsdraw }: { lotsdraw: TLotsDrawColumn },
-// ) => {
-//   const { updateLotsDraw, deleteLotsDraw } =
-//     useLotsDrawStore();
-//   const { addLotsDrawMatch } = useLotsDrawMatchStore();
-//   const { t } = useTranslation();
-//
-//   const handleUpdateLotsDraw = (lotsdraw: TLotsDraw) => {
-//     lotsdrawUpdate(lotsdraw).then(
-//       (res) => {
-//         const { status, data } = res;
-//         if (status === 200) {
-//           updateLotsDraw(data as TLotsDraw);
-//           toast.success(t("success"));
-//           return;
-//         }
-//
-//         return Promise.reject(status);
-//       },
-//     ).catch((err) => {
-//       toast.error(t("error"));
-//       console.log({ err });
-//     });
-//   };
-//
-//   const {
-//     handleToggle: handleToggleUpdateModal,
-//     LotsDrawModal: LotsDrawUpdateModal,
-//   } = useLotsDrawModal({
-//     onSubmit: handleUpdateLotsDraw,
-//     lotsdraw,
-//   });
-//
-//   const handleConfirmDel =  async () => {
-//     if (confirm) {
-//     if (confirm) {
-//       lotsdrawDelete(lotsdraw.id).then((res) => {
-//         const { status, data } = res;
-//         console.log({ status, data });
-//         if (status === 200) {
-//           toast.success(t("success"));
-//           deleteLotsDraw(lotsdraw.id);
-//           return;
-//         }
-//         return Promise.reject(status);
-//       })
-//         .catch((err) => {
-//           toast.error(t(err?.response?.data || "error"));
-//           console.log({ err });
-//         });
-//     }
-//     return;
-//   };
-//
-//   // const handleAddLotsDrawMatch = (
-//   //   lotsdrawMatch: Omit<TLotsDrawMatch, "id">,
-//   // ) => {
-//   //   lotsdrawMatchCreate(lotsdrawMatch).then(
-//   //     (res) => {
-//   //       const { status, data } = res;
-//   //       if (status === 200) {
-//   //         addLotsDrawMatch(data);
-//   //         toast.info(t("success"));
-//   //         return;
-//   //       }
-//   //       return Promise.reject(status);
-//   //     },
-//   //   ).catch((err) => {
-//   //     toast.error(t("error"));
-//   //     console.log({ err });
-//   //   });
-//   // };
-//
-//   // const { handleToggle: toggleMatch, LotsDrawMatchModal } =
-//   //   useModalPageLotsDrawMatch({
-//   //     tableId: lotsdraw.id,
-//   //   });
-//
-//   const navigate = useNavigate();
-//
-//   return (
-//     <UL className="action simple-list flex-row" id={lotsdraw.id}>
-//       <LI className="edit btn">
-//         <i
-//           className="icon-pencil-alt"
-//           onClick={handleToggleUpdateModal}
-//         />
-//         <LotsDrawUpdateModal />
-//       </LI>
-//       <LI className="delete btn" onClick={handleConfirmDel}>
-//         <i className="icon-trash cursor-pointer" />
-//       </LI>
-//
-//       <LI
-//         className="edit btn"
-//         onClick={() =>
-//           navigate(`/lotsdraws/match/${lotsdraw.id}`)}
-//       >
-//         <i className="icon-folder" />
-//         Lập lịch
-//       </LI>
-//       <LI
-//         className="edit btn"
-//         onClick={() =>
-//           navigate(`/lotsdraws/match-report/${lotsdraw.id}`)}
-//       >
-//         <i className="icon-slice cursor-pointer">
-//         </i>
-//         Nhập kết quả
-//       </LI>
-//     </UL>
-//   );
-// };
 
 interface IListLotsDraw {
     showAction?: boolean;
@@ -574,15 +457,18 @@ const PageLotsDraw = () => {
             ? setListSport(sportsMain.filter((e) => e.point_unit == 1))
             : setListSport(sportsSub.filter((e) => e.point_unit == 1));
     }, []);
-  const { selectSport } = useSportStore();
+    const { selectSport } = useSportStore();
 
-      const updateSportId = useCallback(
-    (v: string) => {
-      selectSport(v);
-      setSportId(v);
-    },
-    [selectSport]
-  );
+    const updateSportId = useCallback(
+        (v: string) => {
+            selectSport(v);
+            setSportId(v);
+
+            setData([]);
+            setSelectedContentSport("");
+        },
+        [selectSport]
+    );
 
     useEffect(() => {
         if (paramSportId) {
@@ -850,6 +736,9 @@ const PageLotsDraw = () => {
                                 {sportId ? (
                                     <>
                                         <div className=" justify-content-center">
+                                            <H1 className="text-center m-10">
+                                                {sports.filter((e) => e.id == sportId)[0].name}
+                                            </H1>
                                             <Row className="justify-content-center">
                                                 <Col md={5}>
                                                     <div className="m-b-10">
@@ -885,6 +774,9 @@ const PageLotsDraw = () => {
                                                             Lịch và kết quả thi đấu nội dung{" "}
                                                             <span className="text-danger">
                                                                 {(contentSport &&
+                                                                    contentSport.filter(
+                                                                        (e: any) => e.id == selectedContentSport
+                                                                    ).length > 0 &&
                                                                     contentSport.filter(
                                                                         (e: any) => e.id == selectedContentSport
                                                                     )[0].name) ??
@@ -1066,4 +958,3 @@ const PageLotsDraw = () => {
     );
 };
 export { PageLotsDraw };
-
