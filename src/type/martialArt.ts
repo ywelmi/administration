@@ -9,6 +9,9 @@ export interface TMartialArt {
   age_id: string;
   weight_id: string;
   id: string;
+
+  min_member_count?: number;
+  member_count?: number;
 }
 
 export interface TWeigh {

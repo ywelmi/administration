@@ -28,14 +28,10 @@ interface ITeammemberForm {
 interface ITeammemberModal extends ITeammemberForm {}
 
 interface ITeammemberPopover extends ITeammemberForm {}
-const TeammemberForm = ({
-    teammember: initTeammember,
-    onSubmit,
-    omitColumns,
-    onCancel,
-}: ITeammemberForm) => {
+const TeammemberForm = ({ teammember: initTeammember, onSubmit, omitColumns, onCancel }: ITeammemberForm) => {
     const { orgs } = useOrgStore();
     const { competitions } = useCompetitionStore();
+
     const teammember: Partial<TTeammember> = initTeammember
         ? initTeammember
         : {
@@ -153,20 +149,9 @@ const TeammemberForm = ({
                         className="form-control"
                         name="date_of_issue"
                         showYearDropdown
-                        selected={
-                            new Date(formik.values.date_of_issue || new Date())
-                        }
-                        value={
-                            formik.values.date_of_issue
-                                ? convertToDate(formik.values.date_of_issue)
-                                : undefined
-                        }
-                        onChange={(date) =>
-                            formik.setFieldValue(
-                                "date_of_issue",
-                                date?.toISOString()
-                            )
-                        }
+                        selected={new Date(formik.values.date_of_issue || new Date())}
+                        value={formik.values.date_of_issue ? convertToDate(formik.values.date_of_issue) : undefined}
+                        onChange={(date) => formik.setFieldValue("date_of_issue", date?.toISOString())}
                         locale={"vi"}
                         dateFormat={"dd/MM/yyyy"}
                     />
@@ -208,10 +193,10 @@ const TeammemberForm = ({
                 <Col md="12">
                     <InputSelect
                         title="Cấp bậc"
-                        data={DRank.map((item, i) => ({ item, i }))}
-                        k="item"
+                        data={DRank}
+                        k="name"
                         name="rank"
-                        v="i"
+                        v="code"
                         handleChange={(e) => {
                             formik.handleChange(e);
                         }}
@@ -226,6 +211,8 @@ const TeammemberForm = ({
                         name="gender"
                         v="i"
                         handleChange={(e) => {
+                            console.log(DRank);
+                            console.log(DGender.map((item, i) => ({ item, i })));
                             formik.handleChange(e);
                         }}
                         value={formik.values.gender}
@@ -240,14 +227,8 @@ const TeammemberForm = ({
                         name="dob"
                         showYearDropdown
                         selected={new Date(formik.values.dob || new Date())}
-                        value={
-                            formik.values.dob
-                                ? convertToDate(formik.values.dob)
-                                : undefined
-                        }
-                        onChange={(date) =>
-                            formik.setFieldValue("dob", date?.toISOString())
-                        }
+                        value={formik.values.dob ? convertToDate(formik.values.dob) : undefined}
+                        onChange={(date) => formik.setFieldValue("dob", date?.toISOString())}
                         locale={"vi"}
                         dateFormat={"dd/MM/yyyy"}
                     />
@@ -260,20 +241,9 @@ const TeammemberForm = ({
                         className="form-control"
                         name="date_join_army"
                         showYearDropdown
-                        selected={
-                            new Date(formik.values.date_join_army || new Date())
-                        }
-                        value={
-                            formik.values.date_join_army
-                                ? convertToDate(formik.values.date_join_army)
-                                : undefined
-                        }
-                        onChange={(date) =>
-                            formik.setFieldValue(
-                                "date_join_army",
-                                date?.toISOString()
-                            )
-                        }
+                        selected={new Date(formik.values.date_join_army || new Date())}
+                        value={formik.values.date_join_army ? convertToDate(formik.values.date_join_army) : undefined}
+                        onChange={(date) => formik.setFieldValue("date_join_army", date?.toISOString())}
                         locale={"vi"}
                         dateFormat={"dd/MM/yyyy"}
                     />
@@ -351,11 +321,7 @@ const useTeammemberModal = ({ onSubmit, ...rest }: ITeammemberModal) => {
             isOpen={opened}
             toggle={handleToggle}
         >
-            <TeammemberForm
-                onSubmit={handleSubmit}
-                {...rest}
-                onCancel={() => setOpened(false)}
-            />
+            <TeammemberForm onSubmit={handleSubmit} {...rest} onCancel={() => setOpened(false)} />
         </CommonModal>
     );
 
@@ -373,23 +339,11 @@ const useTeammemberPopover = ({ onSubmit, ...rest }: ITeammemberPopover) => {
         setOpened(false);
     };
 
-    const TeammemberPopover = ({
-        children,
-        target,
-    }: React.PropsWithChildren<{ target: string }>) => (
+    const TeammemberPopover = ({ children, target }: React.PropsWithChildren<{ target: string }>) => (
         <div>
             {children}
-            <Popovers
-                isOpen={opened}
-                placement="auto"
-                target={target}
-                trigger="click"
-            >
-                <TeammemberForm
-                    onSubmit={handleSubmit}
-                    {...rest}
-                    onCancel={() => setOpened(false)}
-                />
+            <Popovers isOpen={opened} placement="auto" target={target} trigger="click">
+                <TeammemberForm onSubmit={handleSubmit} {...rest} onCancel={() => setOpened(false)} />
             </Popovers>
         </div>
     );

@@ -15,13 +15,12 @@ import {
 } from "reactstrap";
 import { LI, UL } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
-import CommonButtonsToolTip from "../../Component/Buttons/CommonButtons/CommonButtonsToolTip";
 import { confirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
-import { tablequalifyingGen } from "../../Service/tablequalifying";
 import {
   tablequalifyingMatchCreate,
   tablequalifyingMatchDelete,
+  tablequalifyingMatchsGen,
   tablequalifyingMatchUpdate,
 } from "../../Service/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
@@ -232,6 +231,7 @@ const PageTablequalifyingMatch = () => {
   } = useTablequalifyingMatchStore();
   const { table_id } = useParams();
 
+  console.log({ PageTablequalifyingMatch: tablequalifyingMatchs });
   useEffect(() => {
     if (table_id) {
       // const filterValue = getFilterByValue("sport_id", "=", table_id);
@@ -283,29 +283,48 @@ const PageTablequalifyingMatch = () => {
     },
   });
 
-  const handleGenTablequalifying = useCallback(async () => {
-    if (table_id) {
-      console.log({ table_id });
-      const { confirm } = await confirmModal(
-        "Sinh lịch đấu sẽ thiết lập lại cả các lịch cũ"
-      );
-      if (confirm)
-        tablequalifyingGen(table_id)
-          .then((res) => {
-            const { data, status } = res;
-            console.log({ data, status });
-            if (status === 200) {
-              addTablequalifyingMatchs(data);
-              toast.success(N["success"]);
-            }
-          })
-          .catch((err) => {
-            toast.error(err?.data ? err.data : toast.error(N["failed"]));
-            console.log({ err });
-          });
+  const handleMatchGen = useCallback(() => {
+    if (!table_id) {
+      toast.error(N["failed"]);
+      return;
     }
-  }, [table_id]);
+    // tablequalifyingMatchMembersGet(table_id).then(
+    //   res => {
+    //     const {data, status} = res
+    //     if (status!== 200){
+    //       toast.error(N['failed'])
+    //       return
+    //     }
+    //     if(!data?.length){
+    //       toast.error("Bảng không có đội nào")
+    //     }
+    //     // const table = {
+    //     //   "sport_id": "154D83EC-66F7-44C1-A2D3-84F821A9181E",
+    //     //   "name": "Bảng B",
+    //     //   "index": 0,
+    //     //   "listTeams": [
+    //     //     "99F001F0-5C5F-49D5-B22C-0C01164E7CB6"
+    //     //   ]
+    //     // }
+    //   }
 
+    // )
+
+    console.log({ table_id });
+    tablequalifyingMatchsGen(table_id)
+      .then((res) => {
+        const { data, status } = res;
+        console.log({ data, status });
+        if (status === 200) {
+          addTablequalifyingMatchs(data);
+          toast.success(N["success"]);
+        }
+      })
+      .catch((err) => {
+        toast.error(err?.data ? err.data : N["failed"]);
+        console.log(err);
+      });
+  }, [table_id]);
   return (
     <div className="page-body">
       <Breadcrumbs mainTitle={"Lịch thi đấu"} parent={"HTTQ2024"} />
@@ -322,19 +341,12 @@ const PageTablequalifyingMatch = () => {
                     <i className="fa fa-plus" />
                     {"Thêm mới"}
                   </div>
-                  <div
-                    className="btn btn-danger"
-                    id="gen-table"
-                    onClick={handleGenTablequalifying}
-                  >
+                  <div className="btn btn-secondary" onClick={handleMatchGen}>
                     <i className="fa fa-plus" />
-                    {"Sinh lịch đấu"}
+                    {"Sinh các trận"}
                   </div>
-                  <CommonButtonsToolTip
-                    toolTipText="Sinh lịch đấu sẽ thiết lập lại cả các lịch cũ"
-                    id="gen-table"
-                  />
                 </div>
+
                 <TablequalifyingAddModal />
               </CardHeader>
               <CardBody>

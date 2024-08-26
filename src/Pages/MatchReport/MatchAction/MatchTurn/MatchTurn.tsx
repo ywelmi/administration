@@ -69,6 +69,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
         matchTurnDel,
         delMatchTurn,
       } = useMatchTurnContext();
+
       const handleUpdateMatchTurn = (matchTurn: TMatchTurn) => {
         console.log({ handleUpdateMatchTurn: matchTurn });
         if (matchTurn?.id.includes(PREF_TMP_ID)) {
@@ -81,6 +82,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
               if (status === 200) {
                 toast.success(N["success"]);
                 createMatchTurn(data);
+                delMatchTurn(matchTurn.id);
                 console.log({ createMatchTurn: data });
               }
             })
@@ -164,7 +166,8 @@ export const MatchTurnForm = ({
 }: IMatchTurnForm) => {
   const { matchTurns, matchId } = useMatchTurnContext();
 
-  const [data, setData] = useState<TMatchTurn[]>(matchTurns || []);
+  const [data, setData] = useState<TMatchTurn[]>([]);
+  // const [data, setData] = useState<TMatchTurn[]>(matchTurns || []);
 
   // console.log({ MatchTurnFormMatchTurns: matchTurns });
   useEffect(() => {

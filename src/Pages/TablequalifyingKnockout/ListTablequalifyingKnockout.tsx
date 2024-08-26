@@ -91,7 +91,7 @@ const PageTablequalifyingKnockout = () => {
                 />
                 <div
                   ref={addBtnRef}
-                  className="btn btn-primary"
+                  className="btn btn-primary mt-2"
                   onClick={handleToggleAddModal}
                 >
                   <i className="fa fa-plus" />

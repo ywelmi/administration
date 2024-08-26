@@ -69,5 +69,7 @@
   "team1_minus_point": "Điểm trừ đội 1",
   "team2_minus_point": "Điểm trừ đội 2",
   "team1_plus_point": "Điểm cộng đội 1",
-  "team2_plus_point": "Điểm cộng đội 2"
+  "team2_plus_point": "Điểm cộng đội 2",
+  "member_count": "Số lượng VĐV tham gia",
+  "min_member_count": "Số lượng VĐV tối thiểu"
 }

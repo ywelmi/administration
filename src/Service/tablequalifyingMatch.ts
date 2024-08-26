@@ -1,3 +1,4 @@
+import { TTablequalifying } from "../type/tablequalifying";
 import {
   TTablequalifyingMatch,
   TTablequalifyingMatchReport,
@@ -39,6 +40,7 @@ export const tablequalifyingMatchReportUpdate = (
   );
 };
 
+// Lấy toàn bộ đội có trong một bảng đấu
 export const tablequalifyingMatchMembersGet = (tableId: string) => {
   return httpGet<TTableQualifyingMember[]>(
     `tablequalifyings/${tableId}/TableQualifyingMembers`
@@ -56,4 +58,10 @@ export const tablequalifyingMatchUpdate = (
     `tablequalifyingmatchs/${tablequalifyingMatchResult.id}`,
     tablequalifyingMatchResult
   );
+};
+
+
+//auto gen số trận trong bảng
+export const tablequalifyingMatchsGen = (tableId: string) => {
+  return httpPost(`tablequalifyings/${tableId}/auto_gen_match`, {});
 };

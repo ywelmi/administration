@@ -13,11 +13,11 @@ interface ILotsDrawSubmitModal {
     sportId: string;
     team_id: string;
     content_id: string;
-    title?: string;
+    gender?: number;
     // onSubmit: (lotsdraw: TLotsDraw[]) => void;
 }
 
-const useLotsDrawSubmitModal = ({ sportId, team_id, content_id, title }: ILotsDrawSubmitModal) => {
+const useLotsDrawSubmitModal = ({ sportId, team_id, content_id, gender }: ILotsDrawSubmitModal) => {
     const [opened, setOpened] = useState(false);
     const handleToggle = () => {
         setOpened((s) => !s);
@@ -32,6 +32,7 @@ const useLotsDrawSubmitModal = ({ sportId, team_id, content_id, title }: ILotsDr
                     // onSubmit={() => setOpened(false)}
                     org_id={team_id}
                     content_id={content_id}
+                    gender={gender}
                     onCancel={() => setOpened(false)}
                 />
             </div>
@@ -41,7 +42,7 @@ const useLotsDrawSubmitModal = ({ sportId, team_id, content_id, title }: ILotsDr
     return { LotsDrawSubmitModal, handleToggle };
 };
 
-const useLotsDrawSubmitGroupModal = ({ sportId, team_id, content_id, title }: ILotsDrawSubmitModal) => {
+const useLotsDrawSubmitGroupModal = ({ sportId, team_id, content_id, gender }: ILotsDrawSubmitModal) => {
     const [opened, setOpened] = useState(false);
     const handleToggle = () => {
         setOpened((s) => !s);
@@ -65,7 +66,7 @@ const useLotsDrawSubmitGroupModal = ({ sportId, team_id, content_id, title }: IL
     return { LotsDrawSubmitGroupResultModal, handleToggle };
 };
 
-const useLotsDrawUpdateAtheleModal = ({ sportId, team_id, content_id, title }: ILotsDrawSubmitModal) => {
+const useLotsDrawUpdateAtheleModal = ({ sportId, team_id, content_id, gender }: ILotsDrawSubmitModal) => {
     const [opened, setOpened] = useState(false);
 
     const handleToggle = () => {

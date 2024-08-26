@@ -308,7 +308,7 @@ const PageTablequalifying = () => {
         return Promise.reject(status);
       })
       .catch((err) => {
-        toast.error(t("error"));
+        toast.error(err?.data ? err.data : t("error"));
         console.log({ err });
       });
   };
