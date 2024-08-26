@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,7 +16,6 @@ import {
 import { LI, UL } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { confirmModal } from "../../Component/confirmModal";
-import { InputSelect } from "../../Component/InputSelect";
 import { N } from "../../name-conversion";
 import { getFilterByValue } from "../../Service/_getParams";
 import {
@@ -24,7 +23,6 @@ import {
   tablequalifyingDelete,
   tablequalifyingUpdate,
 } from "../../Service/tablequalifying";
-import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
 import { useTablequalifyingStore } from "../../store/tablequalifying";
 import { TTablequalifying } from "../../type/tablequalifying";
@@ -264,23 +262,26 @@ const PageTablequalifying = () => {
   const { tablequalifyings, addTablequalifying, updateGetFilter, filters } =
     useTablequalifyingStore();
   const { selectSport } = useSportStore();
-  const { sportSelector } = useConfigStore();
-  const { sports } = useSportStore(sportSelector());
+  // const { sportSelector } = useConfigStore();
+  // const { sports } = useSportStore(sportSelector());
   const [sportId, setSportId] = useState("");
   const navigate = useNavigate();
 
   const { sport_id: paramSportId } = useParams();
 
-  const updateSportId = (v: string) => {
-    selectSport(v);
-    setSportId(v);
-  };
+  const updateSportId = useCallback(
+    (v: string) => {
+      selectSport(v);
+      setSportId(v);
+    },
+    [selectSport]
+  );
 
   useEffect(() => {
     if (paramSportId) {
       updateSportId(paramSportId);
     }
-  }, [paramSportId]);
+  }, [paramSportId, updateSportId]);
 
   useEffect(() => {
     if (sportId) {
@@ -334,7 +335,7 @@ const PageTablequalifying = () => {
           <Col sm="12">
             <Card>
               <CardHeader className="pb-0 card-no-border">
-                <InputSelect
+                {/* <InputSelect
                   title={N["sport"]}
                   data={sports.filter(({ point_unit }) => {
                     return point_unit !== 1 && point_unit !== 2;
@@ -344,7 +345,7 @@ const PageTablequalifying = () => {
                   name="sport"
                   value={sportId}
                   handleChange={(e) => updateSportId(e.target.value)}
-                />
+                /> */}
                 <div className="flex gap-2 mt-2">
                   <div
                     className="btn btn-primary"
