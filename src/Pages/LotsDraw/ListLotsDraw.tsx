@@ -709,7 +709,7 @@ const PageLotsDraw = () => {
                                         />
                                     </Col>
                                 </Row> */}
-                                {sportId && (
+                                {sportId && sports.filter((e) => e.id == sportId).length > 0 && (
                                     <div className="d-flex justify-content-center">
                                         <div className="flex gap-2 mt-4">
                                             <div
@@ -733,11 +733,13 @@ const PageLotsDraw = () => {
                                 <LotsDrawAddModal />
                             </CardHeader>
                             <CardBody>
-                                {sportId ? (
+                                {sportId && sports.filter((e) => e.id == sportId).length > 0 ? (
                                     <>
                                         <div className=" justify-content-center">
                                             <H1 className="text-center m-10">
-                                                {sports.filter((e) => e.id == sportId)[0].name}
+                                                {sports &&
+                                                    sports.filter((e) => e.id == sportId).length > 0 &&
+                                                    sports.filter((e) => e.id == sportId)[0].name}
                                             </H1>
                                             <Row className="justify-content-center">
                                                 <Col md={5}>
