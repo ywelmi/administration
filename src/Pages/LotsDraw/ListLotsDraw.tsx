@@ -34,6 +34,7 @@ import {
 import { useTeamAtheleModal } from "./CreateGroupForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
+import LotsdrawTabs from "./navbar_item";
 
 interface IListLotsDraw {
     showAction?: boolean;
@@ -683,6 +684,7 @@ const PageLotsDraw = () => {
             handleAddNew(e);
         },
     });
+
     return (
         <div className="page-body">
             <Breadcrumbs mainTitle={"Thi đấu bốc thăm"} parent={"HTTQ2024"} />

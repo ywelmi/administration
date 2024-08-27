@@ -1,0 +1,322 @@
+import { ColumnDef } from "@tanstack/react-table";
+import { Ref, useCallback, useEffect, useRef, useState } from "react";
+import ReactDatePicker from "react-datepicker";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Card, CardBody, CardHeader, Col, Container, Input, InputGroupText, Row } from "reactstrap";
+import { Btn, H1, H2, H3, H5 } from "../../AbstractElements";
+import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
+import { InputSelect } from "../../Component/InputSelect";
+import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
+import { N } from "../../name-conversion";
+import { getMoreFilterByValue } from "../../Service/_getParams";
+import {
+    getContentSport,
+    getNumberAthele,
+    lotsdrawResultTableGet,
+    lotsdrawScheduleGet,
+    lotsdrawsGet,
+    // lotsdrawCreate,
+    // lotsdrawDelete,
+    lotsdrawUpdate,
+} from "../../Service/lotsdraw";
+import { martialArtArmyGroupDelete } from "../../Service/martialArt";
+import { groupGetAll, martialArtMilitiaArmyGroupCreate } from "../../Service/martialArtMilitia";
+import { useConfigStore } from "../../store/config";
+import { useSportStore } from "../../store/sport";
+import { TLotsDraw } from "../../type/lotsdraw";
+import { convertToDate } from "../../utils/date";
+import {
+    useLotsDrawSubmitGroupModal,
+    useLotsDrawSubmitModal,
+    useLotsDrawUpdateAtheleModal,
+} from "../LotsDrawSubmit/LotsDrawSubmitForm";
+import { useTeamAtheleModal } from "./CreateGroupForm";
+import { useLotsDrawModal } from "./LotsDrawForm";
+import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
+import LotsdrawTabs from "./navbar_item";
+import NavBar from "./navbar";
+import { useViewLotsDrawScheduleModal } from "./ViewLotsdrawTicket";
+
+interface IListLotsDraw {
+    showAction?: boolean;
+    selectableRows?: boolean;
+    onRowSelect?: (row: TLotsDraw, e: React.MouseEvent<Element, MouseEvent>) => void;
+    onSelectedRowsChange?: (v: { allSelected: boolean; selectedCount: number; selectedRows: TLotsDraw[] }) => void;
+    columns?: ColumnDef<TLotsDraw>[];
+    data?: TLotsDraw[];
+    selectableRowSelected?: (row: TLotsDraw) => boolean;
+    tableRef?: Ref<ITanTableRef<TLotsDraw>>;
+}
+
+const tableUnitColumns: ColumnDef<TLotsDraw>[] = [
+    {
+        accessorKey: "team_name",
+        footer: (props) => props.column.id,
+        header: N["team_name"],
+        cell(props) {
+            return <div className="form-control">{props.getValue() as string}</div>;
+        },
+    },
+    {
+        accessorKey: "ticket_index",
+        footer: (props) => props.column.id,
+        header: N["ticket_index"],
+        cell(props) {
+            return <div className="">{props.getValue() as string}</div>;
+        },
+    },
+];
+const isUpdated = (d: TLotsDraw) => {
+    const detailCols: (keyof TLotsDraw)[] = ["ticket_index", "match_hour", "match_date", "locations"];
+    for (const c of detailCols) {
+        if (!Object.keys(d).includes(c)) {
+            return false;
+        }
+    }
+    return true;
+};
+
+const ListUnitLotsDraw = ({
+    showAction,
+    onRowSelect,
+    onSelectedRowsChange,
+    columns = [...tableUnitColumns],
+    data = [],
+    tableRef,
+    selectableRowSelected,
+}: IListLotsDraw) => {
+    // if (columns.length > 0 && showAction) {
+    //   columns = [...columns, {
+    //     name: "#",
+    //     cell: (row: TLotsDrawColumn) => <LotsDrawTableAction lotsdraw={row} />,
+    //     sortable: true,
+    //   }];
+    // }
+    //
+    //
+    const tableData = data.map((d) => ({ ...d, isDetail: isUpdated(d) }));
+
+    console.log({ tableData });
+    return (
+        <div className="table-responsive">
+            <TanTable ref={tableRef} data={tableData} getRowId={getLotDrawId} columns={columns} />
+        </div>
+    );
+};
+
+const getLotDrawId = (d: TLotsDraw) => d.id;
+
+//Component render page lots draw
+const PageUpdateLotsdrawTicket = () => {
+    const { sportSelector, unitType } = useConfigStore();
+    const { sports, sportsMain, sportsSub } = useSportStore(sportSelector());
+    const [sportId, setSportId] = useState("");
+    const [listSport, setListSport] = useState(sports);
+    const { sport_id: paramSportId } = useParams();
+    // số VĐV thi đấu trong 1 lượt
+    const [contentSport, setContent] = useState<any>([]);
+    const [numberPlayedPerRound, setNumberPlayedPerRound] = useState<any>(null);
+    // số VĐV thi đấu trong 1 lượt
+    const [selectedContentSport, setSelectedContentSport] = useState<string>("");
+    const [contentType, setContentType] = useState<any>("");
+    useEffect(() => {
+        unitType == "LLTT"
+            ? setListSport(sportsMain.filter((e) => e.point_unit == 1))
+            : setListSport(sportsSub.filter((e) => e.point_unit == 1));
+    }, []);
+    const { selectSport } = useSportStore();
+
+    const updateSportId = useCallback(
+        (v: string) => {
+            selectSport(v);
+            setSportId(v);
+        },
+        [selectSport]
+    );
+
+    useEffect(() => {
+        if (paramSportId) {
+            updateSportId(paramSportId);
+        }
+    }, [paramSportId, updateSportId]);
+    //danh sách các nội dung thi đấu của môn
+    const numberAthele = useRef<any>();
+    // kiểm tra đã cập nhật thăm đơn vị chưa
+    const [gender, setGender] = useState(0);
+    // dữ liệu bảng thăm theo đơn vị
+    const [dataUnit, setDataUnit] = useState<TLotsDraw[]>([]);
+
+    useEffect(() => {
+        if (sportId) {
+            fetchData(sportId);
+        }
+    }, [sportId]);
+
+    const handleSelectContent = (id: any) => {
+        getNumberAthele(id)
+            .then((res) => {
+                const { data, status } = res;
+                console.log({ data });
+                if (status === 200) numberAthele.current = data;
+                setNumberPlayedPerRound(data);
+            })
+            .catch((err) => console.log({ err }));
+        setSelectedContentSport(id);
+    };
+    const fetchData = useCallback((sportId: string) => {
+        getContentSport(sportId)
+            .then((res) => {
+                const { data, status } = res;
+                console.log({ data });
+                if (status === 200) setContent(data);
+            })
+            .catch((err) => console.log({ err }));
+        lotsdrawsGet(sportId, "")
+            .then((res) => {
+                const { data, status } = res;
+                console.log({ data });
+                if (status === 200) {
+                    setDataUnit(data);
+                }
+            })
+            .catch((err) => console.log({ err }));
+    }, []);
+
+    const ref = useRef<ITanTableRef<TLotsDraw>>(null);
+
+    const { LotsDrawScheduleModal: LotsDrawScheduleModal, handleToggle: toggleLotsDrawScheduleModal } =
+        useLotsDrawScheduleModal({
+            sportId: sportId,
+            content_id: selectedContentSport,
+            numberPerRound: numberPlayedPerRound,
+            numberOfTeam: dataUnit.length,
+        });
+    const { ViewLotsDrawScheduleModal: ViewLotsDrawScheduleModal, handleToggle: toggleViewLotsDrawScheduleModal } =
+        useViewLotsDrawScheduleModal({
+            sportId: sportId,
+            content_id: selectedContentSport,
+            numberPerRound: numberPlayedPerRound,
+            numberOfTeam: dataUnit.length,
+        });
+
+    return (
+        <Container fluid>
+            <Row>
+                <Col sm="12">
+                    <Card>
+                        <CardHeader className="pb-0 card-no-border"></CardHeader>
+                        <CardBody>
+                            <div className="m-b-10">
+                                {contentSport.length > 0 && (
+                                    <InputSelect
+                                        title={"Chọn nội dung thi đấu"}
+                                        data={contentSport.sort((a: any, b: any) => a.indexs - b.indexs)}
+                                        k="name"
+                                        v="id"
+                                        name="sport"
+                                        value={selectedContentSport}
+                                        handleChange={(e) => {
+                                            setSelectedContentSport(e.target.value);
+                                            setGender(
+                                                contentSport.filter((el: any) => el.id == e.target.value)[0].gender
+                                            );
+                                            setContentType(
+                                                contentSport.filter((el: any) => el.id == e.target.value)[0]
+                                                    .content_type
+                                            );
+                                            handleSelectContent(e.target.value);
+                                        }}
+                                    />
+                                )}
+                            </div>
+                            {selectedContentSport != "" && (
+                                <>
+                                    <div className="d-flex justify-content-center">
+                                        <>
+                                            {/* <div className="d-flex align-items-center">
+                                                <H5 className="text-center">Số VĐV thi đấu trong 1 lượt:</H5>
+                                                <Row className="d-flex justify-content-center align-items-center m-l-10">
+                                                    <Col
+                                                        md={3}
+                                                        className="d-flex justify-content-center align-items-center"
+                                                    >
+                                                        <Btn
+                                                            className={`bg-primary btn-xs`}
+                                                            onClick={() =>
+                                                                setNumberPlayedPerRound((value: any) => value + 1)
+                                                            }
+                                                        >
+                                                            <i className="fa fa-plus" />
+                                                        </Btn>
+                                                    </Col>
+                                                    <Col
+                                                        md={6}
+                                                        className="d-flex justify-content-center align-items-center"
+                                                    >
+                                                        <Input
+                                                            className="me-1"
+                                                            type="number"
+                                                            value={numberPlayedPerRound}
+                                                            onChange={(e) =>
+                                                                setNumberPlayedPerRound(parseInt(e.target.value))
+                                                            }
+                                                            min={2}
+                                                            readOnly
+                                                        />
+                                                    </Col>
+                                                    <Col
+                                                        md={3}
+                                                        className="d-flex justify-content-center align-items-center"
+                                                    >
+                                                        <Btn
+                                                            className={`bg-primary btn-xs`}
+                                                            onClick={() => {
+                                                                if (numberPlayedPerRound == 2) return;
+                                                                setNumberPlayedPerRound((value: any) => value - 1);
+                                                            }}
+                                                        >
+                                                            <i className="fa fa-minus" />
+                                                        </Btn>
+                                                    </Col>
+                                                </Row>
+                                            </div> */}
+                                        </>
+                                    </div>
+                                    <ViewLotsDrawScheduleModal />
+                                    <LotsDrawScheduleModal />
+                                    <ListUnitLotsDraw tableRef={ref} data={dataUnit} showAction />
+                                    <div className="d-flex justify-content-center m-10">
+                                        <Btn
+                                            className="btn btn-info m-l-10"
+                                            onClick={() => {
+                                                selectedContentSport != ""
+                                                    ? toggleLotsDrawScheduleModal()
+                                                    : alert("Chưa chọn nội dung thi");
+                                            }}
+                                        >
+                                            Cập nhật khóa thăm
+                                        </Btn>
+                                    </div>
+                                    <div className="d-flex justify-content-center m-10">
+                                        <Btn
+                                            className="btn btn-success m-l-10"
+                                            onClick={() => {
+                                                selectedContentSport != ""
+                                                    ? toggleViewLotsDrawScheduleModal()
+                                                    : alert("Chưa chọn nội dung thi");
+                                            }}
+                                        >
+                                            Xem khóa thăm
+                                        </Btn>
+                                    </div>
+                                </>
+                            )}
+                        </CardBody>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
+    );
+};
+export { PageUpdateLotsdrawTicket };

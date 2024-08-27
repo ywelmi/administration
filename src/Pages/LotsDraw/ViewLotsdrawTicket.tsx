@@ -1,4 +1,4 @@
-import { Col, Input, InputGroup, InputGroupText, Row } from "reactstrap";
+import { Col, Input, Row } from "reactstrap";
 import { TLotsDraw } from "../../type/lotsdraw";
 import { Btn, H3, H5 } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
@@ -33,6 +33,11 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, 
     const numberWay = ["I", "II", "III", "IV", "V", "VI"].slice(0, numberPerRound);
     return (
         <div>
+            <div className="d-flex justify-content-between">
+                <div className="rounded-[50%] p-1" onClick={() => onCancel()}>
+                    <i className="icon-close " />
+                </div>
+            </div>
             <Row className="d-flex">
                 <Row className="d-flex align-items-center">
                     <Col md={2}>
@@ -76,97 +81,62 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, 
                     )
                 )}
             </Row>
-            <Col xs="12" className="gap-2 d-flex justify-content-center m-t-10">
-                <Btn color="primary" type="button" onClick={() => {}}>
-                    Xác nhận
-                </Btn>
-                {onCancel ? (
-                    <Btn color="primary" type="button" onClick={onCancel}>
-                        Đóng
-                    </Btn>
-                ) : null}
-            </Col>
         </div>
     );
 };
 
-const InputGroupCell = ({ onConfirm }: any) => {
-    const [numberRow, setNumberRow] = useState(0);
-    const [numberColumn, setNumberColumn] = useState(0);
+const useViewLotsDrawScheduleModal = ({ sportId, content_id, numberPerRound, numberOfTeam }: any) => {
+    const [data, setData] = useState<TLotsDraw[]>([]);
 
-    return (
-        <>
-            <Row>
-                <Col md={3} className="d-flex"></Col>
-                <Col md={3} className="d-flex">
-                    <InputGroup className="relative">
-                        <InputGroupText>Số VĐV thi đấu 1 lượt</InputGroupText>
-                        <Input
-                            type="number"
-                            className="text-center "
-                            value={numberRow}
-                            onChange={(e) => {
-                                setNumberRow(parseInt(e.target.value));
-                            }}
-                        />
-                    </InputGroup>
-                </Col>
-                <Col md={3} className="d-flex">
-                    <InputGroup className="relative">
-                        <InputGroupText>Số đợt thi đấu</InputGroupText>
-                        <Input
-                            type="number"
-                            className="text-center "
-                            value={numberColumn}
-                            onChange={(e) => {
-                                setNumberColumn(parseInt(e.target.value));
-                            }}
-                        />
-                    </InputGroup>
-                </Col>
-                <Col md={3} className="d-flex"></Col>
-            </Row>
-            <div className="d-flex justify-content-center m-20">
-                <Btn className={`bg-primary`} onClick={() => onConfirm()}>
-                    Tạo lịch khóa thăm &nbsp;
-                    <i className="fa fa-plus" />
-                </Btn>
-            </div>
-        </>
-    );
-};
-
-const useLotsDrawScheduleModal = ({ sportId, content_id, numberPerRound, numberOfTeam }: any) => {
-    const [showInput, setShowInput] = useState(false);
     const [opened, setOpened] = useState(false);
     const handleToggle = () => {
         setOpened((s) => !s);
     };
 
-    const LotsDrawScheduleModal = () => (
+    // const handleSubmit = (lotsdraw: TLotsDraw[]) => {
+    //     lotsdrawUpdate(sportId, lotsdraw)
+    //         .then((res) => {
+    //             const { data, status } = res;
+    //             if (status === 200) {
+    //                 console.log({ success: data });
+    //                 toast.success(N["success"]);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             console.log({ err });
+    //             toast.error(N["failed"]);
+    //         });
+    //     setOpened(false);
+    // };
+
+    // useEffect(() => {
+    //     if (sportId) {
+    //         lotsdrawsGet(sportId)
+    //             .then((res) => {
+    //                 const { data, status } = res;
+    //                 console.log({ data });
+    //                 if (status === 200) setData(data);
+    //             })
+    //             .catch((err) => console.log({ err }));
+    //     }
+    // }, [sportId]);
+
+    const ViewLotsDrawScheduleModal = () => (
         <CommonModal modalBodyClassName=" text-start" isOpen={opened} toggle={handleToggle}>
             <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
-                {!showInput && <InputGroupCell onConfirm={() => setShowInput(true)} />}
-                {showInput && (
-                    <>
-                        <H3 className="modal-header justify-content-center border-0">Lịch thi đấu</H3>
-                        <LotsDrawSchedule
-                            numberPerRound={numberPerRound}
-                            numberOfTeam={numberOfTeam}
-                            sport_id={sportId}
-                            content_id={content_id}
-                            onCancel={() => {
-                                setShowInput(false);
-                                setOpened(false);
-                            }}
-                        />
-                    </>
-                )}
+                <H3 className="modal-header justify-content-center border-0">Lịch thi đấu</H3>
+                <LotsDrawSchedule
+                    numberPerRound={numberPerRound}
+                    numberOfTeam={numberOfTeam}
+                    sport_id={sportId}
+                    content_id={content_id}
+                    onCancel={() => setOpened(false)}
+                />
             </div>
         </CommonModal>
     );
 
-    return { LotsDrawScheduleModal, handleToggle };
+    return { ViewLotsDrawScheduleModal, handleToggle };
 };
 
-export { LotsDrawSchedule, useLotsDrawScheduleModal };
+export { LotsDrawSchedule, useViewLotsDrawScheduleModal };
