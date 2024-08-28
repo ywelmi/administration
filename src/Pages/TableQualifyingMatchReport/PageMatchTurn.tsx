@@ -1,17 +1,7 @@
 import { useFormik } from "formik";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Col,
-  Input,
-  Label,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  TabContent,
-  TabPane,
-} from "reactstrap";
+import { Col, Input, Label, Row } from "reactstrap";
 import * as Yup from "yup";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
@@ -23,7 +13,6 @@ import {
 } from "../../Service/matchTurn";
 import { ETable } from "../../type/enum";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import { MatchTurnDirectoryForm } from "../MatchTurn/MatchTurnDirectory";
 import { useMatchTurnContext } from "../MatchTurn/hook";
 import { MatchTurnSetWrapper } from "../MatchTurnSet";
 import { ListSetReport } from "./SetReport";
@@ -192,17 +181,11 @@ const useMatchReportForm = ({ onClose }: IMatchReportFormHook) => {
   return { TablequalifyingMatchReportModal, handleToggle };
 };
 
-enum ETabTurn {
-  SET = 2,
-  TURN = 1,
-}
-
 interface ITabMatchTurn {
   tableType: ETable;
 }
 
 const TabMatchTurn = ({ tableType }: ITabMatchTurn) => {
-  const [tabId, setTabId] = useState<ETabTurn>(ETabTurn.TURN);
   const { matchTurns } = useMatchTurnContext();
   const matchTurnSetsUpdate =
     tableType === ETable.KNOCKOUT
@@ -216,55 +199,10 @@ const TabMatchTurn = ({ tableType }: ITabMatchTurn) => {
   return (
     <MatchTurnSetWrapper
       tableType={ETable.QUALIFYING}
-      showTurn
       matchTurns={matchTurns}
       matchTurnSetsUpdate={matchTurnSetsUpdate}
       matchTurnSetsGet={matchTurnSetsGet}
     />
-  );
-  return (
-    <>
-      <Nav tabs>
-        <NavItem>
-          <NavLink
-            active={tabId === ETabTurn.TURN}
-            onClick={() => setTabId(ETabTurn.TURN)}
-          >
-            Trận nhỏ
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink
-            active={tabId === ETabTurn.SET}
-            onClick={() => setTabId(ETabTurn.SET)}
-          >
-            Séc đấu
-          </NavLink>
-        </NavItem>
-      </Nav>
-      <TabContent activeTab={tabId}>
-        <TabPane tabId={ETabTurn.TURN}>
-          <MatchTurnDirectoryForm />
-        </TabPane>
-        <TabPane tabId={ETabTurn.SET}>
-          <MatchTurnSetWrapper
-            tableType={ETable.QUALIFYING}
-            showTurn
-            matchTurns={matchTurns}
-            matchTurnSetsUpdate={matchTurnSetsUpdate}
-            matchTurnSetsGet={matchTurnSetsGet}
-          />
-          {/* <TablequalifyingMatchReportForm
-            onSubmit={(v) => {
-              console.log({ v });
-            }}
-            matchReport={matchReport}
-            // {...rest}
-            // onCancel={() => setOpened(false)}
-          /> */}
-        </TabPane>
-      </TabContent>
-    </>
   );
 };
 

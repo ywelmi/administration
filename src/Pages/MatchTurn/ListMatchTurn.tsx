@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Btn, LI, UL } from "../../AbstractElements";
 import { InputSelectConfirm } from "../../Component/InputSelect";
@@ -7,6 +7,7 @@ import { TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { HocModal, IHocModalRef } from "../../Component/Ui-Kits/Modal/HocModal";
 import { confirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
+import { useMatchTurnStore } from "../../store/matchTurn";
 import { DMatchTurnTeam, ETable } from "../../type/enum";
 import { TMatchTurnResult } from "../../type/matchTurn";
 import { MatchTurnSetWrapper } from "../MatchTurnSet";
@@ -97,6 +98,7 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
       table,
     }) {
       const { matchTurnDel, delMatchTurn } = useMatchTurnContext();
+      const { increaseCounter } = useMatchTurnStore();
 
       // const handleUpdateMatchTurn = (matchTurn: TMatchTurnResult) => {
       //   console.log({ handleUpdateMatchTurn: matchTurn });
@@ -175,11 +177,15 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
           </LI>
           <LI
             className="edit btn"
-            onClick={() => setModalRef.current?.handleToggle()}
+            onClick={() => setModalRef.current?.toggle()}
           >
             <i className="icon-signal cursor-pointer" />
             Nhập séc
-            <HocModal title="Séc đấu" ref={setModalRef}>
+            <HocModal
+              title="Séc đấu"
+              ref={setModalRef}
+              onClose={increaseCounter}
+            >
               <MatchTurnSetWrapper
                 tableType={ETable.QUALIFYING}
                 matchTurns={
@@ -206,6 +212,15 @@ const ListMatchTurn = () => {
     matchTurnDirectoryRef.current?.open();
   };
 
+  const refreshData = useCallback(() => {
+    fetchMatchTurns().then((d) => setData(d));
+  }, [fetchMatchTurns]);
+
+  const { counter } = useMatchTurnStore();
+  useEffect(() => {
+    refreshData();
+  }, [counter, refreshData]);
+
   return (
     <>
       <TanTable
@@ -222,7 +237,7 @@ const ListMatchTurn = () => {
         <Button id="MatchTurnDirectoryPopover">Thêm trận</Button>
       </MatchTurnDirectoryPopover> */}
       <MatchTurnDirectoryModal
-        onClose={() => fetchMatchTurns().then((d) => setData(d))}
+        onClose={refreshData}
         ref={matchTurnDirectoryRef}
       ></MatchTurnDirectoryModal>
     </>

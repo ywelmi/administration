@@ -12,7 +12,7 @@ interface IMatchTurnModal {
   onClose?: () => void;
 }
 
-const ListMatchTurnModal = forwardRef<IMatchTurnModalProps>(
+const ListMatchTurnModal = forwardRef<IMatchTurnModalProps, IMatchTurnModal>(
   ({ onClose }: IMatchTurnModal, ref) => {
     const [opened, setOpened] = useState(false);
 

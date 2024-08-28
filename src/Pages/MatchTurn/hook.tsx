@@ -6,7 +6,10 @@ const useMatchTurnContext = () => {
   return useContext({ ...MatchTurnContext });
 };
 
-const useMatchTurnModal = () => {
+interface IMatchTurnModal {
+  onClose?: () => void;
+}
+const useMatchTurnModal = ({ onClose }: IMatchTurnModal) => {
   const ref = useRef<IMatchTurnModalProps>(null);
   const props = {
     toggle: () => ref.current?.toggle(),
@@ -14,7 +17,9 @@ const useMatchTurnModal = () => {
     open: () => ref.current?.open(),
   };
 
-  const ListMatchTurn = () => <ListMatchTurnModal ref={ref} />;
+  const ListMatchTurn = () => (
+    <ListMatchTurnModal ref={ref} onClose={onClose} />
+  );
   return {
     ListMatchTurn,
     ...props,

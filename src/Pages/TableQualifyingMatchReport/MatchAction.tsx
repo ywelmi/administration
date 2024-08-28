@@ -1,15 +1,16 @@
 import { useCallback } from "react";
-import { LI, UL } from "../../../AbstractElements";
-import { getFilterByValue } from "../../../Service/_getParams";
+import { LI, UL } from "../../AbstractElements";
+import { getFilterByValue } from "../../Service/_getParams";
 import {
   qualifyingMatchTurnCreate,
   qualifyingMatchTurnDelete,
   qualifyingMatchTurnsGet,
   qualifyingMatchTurnUpdate,
-} from "../../../Service/matchTurn";
-import { TTablequalifyingMatch } from "../../../type/tablequalifyingMatch";
-import { useMatchTurnModal } from "../../MatchTurn/hook";
-import { MatchTurnWrapper } from "../../MatchTurn/matchTurnContext";
+} from "../../Service/matchTurn";
+import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
+import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
+import { useMatchTurnModal } from "../MatchTurn/hook";
+import { MatchTurnWrapper } from "../MatchTurn/matchTurnContext";
 
 type TTablequalifyingColumn = TTablequalifyingMatch;
 
@@ -61,13 +62,16 @@ const TablequalifyingTableAction = ({
   }, [matchReport?.id]);
 
   // const ref = useRef<IHocModalRef>(null);
-  const { open: openModal, ListMatchTurn } = useMatchTurnModal();
+  const { increaseCounter } = useTablequalifyingMatchStore();
+  const { open: openModal, ListMatchTurn } = useMatchTurnModal({
+    onClose: increaseCounter,
+  });
 
   return (
     <UL className="action simple-list flex-row" id={tablequalifyingMatch.id}>
       <LI className="edit btn" onClick={openModal}>
         <i className="icon-pencil-alt" />
-        Cập nhật
+        Cập nhật kết quả
         <MatchTurnWrapper
           matchId={matchReport.id}
           matchTurnsGet={matchTurnsGet}

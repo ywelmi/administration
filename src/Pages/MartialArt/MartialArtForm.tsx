@@ -136,8 +136,11 @@ const useGenTreeMartialArt = ({
 import { ETable } from "../../type/enum";
 import { TMatchTurn } from "../../type/matchTurn";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import { ListSetReport, useSetReportPopover } from "../MatchReport/SetReport";
 import { MatchTurnSetWrapper } from "../MatchTurnSet";
+import {
+  ListSetReport,
+  useSetReportPopover,
+} from "../TableQualifyingMatchReport/SetReport";
 
 export interface ITablequalifyingKnockoutMatchReportForm {
   tablequalifyingKnockoutMatchReport?: Partial<TTablequalifyingMatchReport>;
