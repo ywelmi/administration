@@ -2,13 +2,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Btn, LI, UL } from "../../AbstractElements";
-import { InputSelectConfirm } from "../../Component/InputSelect";
 import { TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { HocModal, IHocModalRef } from "../../Component/Ui-Kits/Modal/HocModal";
 import { confirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
 import { useMatchTurnStore } from "../../store/matchTurn";
-import { DMatchTurnTeam, ETable } from "../../type/enum";
+import { ETable } from "../../type/enum";
 import { TMatchTurnResult } from "../../type/matchTurn";
 import { MatchTurnSetWrapper } from "../MatchTurnSet";
 import {
@@ -64,30 +63,32 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
     footer: (props) => props.column.id,
     header: N["name"],
     cell: ({ getValue, row: { index }, column: { id }, table }) => {
-      // return getValue() as string
-      return (
-        <InputSelectConfirm
-          name="name"
-          data={DMatchTurnTeam.map((t) => ({ k: t, v: t }))}
-          k={"k"}
-          v={"v"}
-          placeHolder={getValue() as string}
-          handleChange={(e) => {
-            table.options.meta?.updateData(index, id, e.target.value);
-          }}
-        ></InputSelectConfirm>
-      );
+      return getValue() as string;
+      // return (
+      //   <InputSelectConfirm
+      //     name="name"
+      //     data={DMatchTurnTeam.map((t) => ({ k: t, v: t }))}
+      //     k={"k"}
+      //     v={"v"}
+      //     placeHolder={getValue() as string}
+      //     handleChange={(e) => {
+      //       table.options.meta?.updateData(index, id, e.target.value);
+      //     }}
+      //   ></InputSelectConfirm>
+      // );
     },
   },
   {
     accessorKey: "set_count",
     footer: (props) => props.column.id,
     header: N["set_count"],
+    cell: ({ getValue }) => getValue() as string,
   },
   {
     accessorKey: "win_set_count",
     footer: (props) => props.column.id,
     header: N["win_set_count"],
+    cell: ({ getValue }) => getValue() as string,
   },
   {
     id: "actions",
@@ -146,8 +147,9 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
         if (confirm) {
           console.log({ deleteMatchTurnId: matchTurn.id });
           const matchId = matchTurn.id;
+          table.options.meta?.removeData(index);
           if (matchId.includes(PREF_TMP_ID)) {
-            table.options.meta?.removeData(index);
+            // table.options.meta?.removeData(index);
           } else
             matchTurnDel(matchId)
               .then((res) => {
@@ -163,6 +165,7 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
                 console.log({ err });
               })
               .finally(() => delMatchTurn(matchId));
+          increaseCounter();
         }
         return;
       };
@@ -213,7 +216,10 @@ const ListMatchTurn = () => {
   };
 
   const refreshData = useCallback(() => {
-    fetchMatchTurns().then((d) => setData(d));
+    fetchMatchTurns().then((d) => {
+      console.log({ d });
+      setData(d);
+    });
   }, [fetchMatchTurns]);
 
   const { counter } = useMatchTurnStore();

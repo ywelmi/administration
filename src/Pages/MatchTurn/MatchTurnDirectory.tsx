@@ -91,7 +91,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
               if (status === 200) {
                 toast.success(N["success"]);
                 createMatchTurn(data);
-                delMatchTurn(matchTurn.id);
+                table.options.meta?.updateData(index, id, data);
                 console.log({ createMatchTurn: data });
               }
             })
@@ -135,6 +135,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
                 console.log({ matchTurnDel: data });
                 if (status === 200) {
                   toast.success(N["success"]);
+                  delMatchTurn(matchTurn.id);
                   return;
                 }
               })
@@ -142,7 +143,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
                 toast.error(N["error"]);
                 console.log({ err });
               })
-              .finally(() => delMatchTurn(matchId));
+              .finally(() => table.options.meta?.removeData(index));
         }
         return;
       };
