@@ -1,9 +1,5 @@
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { LI, UL } from "../../../AbstractElements";
-import {
-  HocModal,
-  IHocModalRef,
-} from "../../../Component/Ui-Kits/Modal/HocModal";
 import { getFilterByValue } from "../../../Service/_getParams";
 import {
   qualifyingMatchTurnCreate,
@@ -11,12 +7,9 @@ import {
   qualifyingMatchTurnsGet,
   qualifyingMatchTurnUpdate,
 } from "../../../Service/matchTurn";
-import { tablequalifyingMatchReportUpdate } from "../../../Service/tablequalifyingMatch";
-import { useTablequalifyingMatchStore } from "../../../store/tablequalifyingMatch";
-import { ETable } from "../../../type/enum";
 import { TTablequalifyingMatch } from "../../../type/tablequalifyingMatch";
-import { TabMatchTurn } from "../MatchReportForm";
-import { MatchTurnWrapper } from "./MatchTurn";
+import { useMatchTurnModal } from "../../MatchTurn/hook";
+import { MatchTurnWrapper } from "../../MatchTurn/matchTurnContext";
 
 type TTablequalifyingColumn = TTablequalifyingMatch;
 
@@ -34,29 +27,29 @@ const TablequalifyingTableAction = ({
     sets: [],
   };
 
-  const { increaseCounter } = useTablequalifyingMatchStore();
+  // const { increaseCounter } = useTablequalifyingMatchStore();
 
-  const handleReportFormClose = () => {
-    tablequalifyingMatchReportUpdate(matchReport)
-      .then((res) => {
-        const { status } = res;
-        if (status === 200) {
-          increaseCounter();
-        }
-      })
-      .then((err) => {
-        console.log({ err });
-      });
-  };
+  // const handleReportFormClose = () => {
+  //   tablequalifyingMatchReportUpdate(matchReport)
+  //     .then((res) => {
+  //       const { status } = res;
+  //       if (status === 200) {
+  //         increaseCounter();
+  //       }
+  //     })
+  //     .then((err) => {
+  //       console.log({ err });
+  //     });
+  // };
 
   // const {
   //   handleToggle: handleToggleUpdateModal,
   //   TablequalifyingMatchReportModal: TablequalifyingUpdateModal,
   // } = useMatchReportForm({ onClose: () => handleReportFormClose() });
 
-  const handleToggleUpdateModal = () => {
-    ref.current?.handleToggle();
-  };
+  // const handleToggleUpdateModal = () => {
+  //   ref.current?.handleToggle();
+  // };
 
   const matchTurnsGet = useCallback(async () => {
     if (matchReport?.id) {
@@ -67,12 +60,12 @@ const TablequalifyingTableAction = ({
     return Promise.reject("no match id");
   }, [matchReport?.id]);
 
-  // console.log({ TablequalifyingTableActionmatchReport: matchReport });
+  // const ref = useRef<IHocModalRef>(null);
+  const { open: openModal, ListMatchTurn } = useMatchTurnModal();
 
-  const ref = useRef<IHocModalRef>(null);
   return (
     <UL className="action simple-list flex-row" id={tablequalifyingMatch.id}>
-      <LI className="edit btn" onClick={handleToggleUpdateModal}>
+      <LI className="edit btn" onClick={openModal}>
         <i className="icon-pencil-alt" />
         Cập nhật
         <MatchTurnWrapper
@@ -81,13 +74,15 @@ const TablequalifyingTableAction = ({
           matchTurnUpdate={qualifyingMatchTurnUpdate}
           matchTurnDel={qualifyingMatchTurnDelete}
           matchTurnCreate={qualifyingMatchTurnCreate}
+          match={tablequalifyingMatch}
           // matchTurnSetsUpdate={qualifyingMatchTurnSetUpdate}
           // matchTurnSetsGet={qualifyingMatchTurnSetGet}
         >
+          <ListMatchTurn />
           {/* <TablequalifyingUpdateModal /> */}
-          <HocModal title="Trận nhỏ" ref={ref} onClose={handleReportFormClose}>
+          {/* <HocModal title="Trận nhỏ" ref={ref} onClose={handleReportFormClose}>
             <TabMatchTurn tableType={ETable.QUALIFYING}></TabMatchTurn>
-          </HocModal>
+          </HocModal> */}
         </MatchTurnWrapper>
       </LI>
     </UL>

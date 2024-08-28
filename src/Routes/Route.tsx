@@ -4,7 +4,7 @@ import { PageLotsDraw } from "../Pages/LotsDraw/ListLotsDraw";
 import { PageMartialArt } from "../Pages/MartialArt/ListMartialArt";
 import { MartialArtKnockout } from "../Pages/MartialArt/MartialArtKnockout";
 import { PageMartialArtMilitia } from "../Pages/MartialArtMilitia/MartialArtMilitia";
-import { PageTablequalifyingMatchReport } from "../Pages/MatchReport/ListTablequalifyingMatchReport";
+import { PageTablequalifyingMatchReport } from "../Pages/MatchReport/ListMatchReport";
 import { ListOrg } from "../Pages/Org/ListOrg";
 import { PageReportResult } from "../Pages/Report Result/ReportResult";
 import { PageResultExport } from "../Pages/ResultExport/ResultExport";

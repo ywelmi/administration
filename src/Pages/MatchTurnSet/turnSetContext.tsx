@@ -1,17 +1,17 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { createContext, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { DefaultColumn } from "../../../../Component/Tables/TanTable/Column";
-import { N } from "../../../../name-conversion";
+import { DefaultColumn } from "../../Component/Tables/TanTable/Column";
+import { N } from "../../name-conversion";
 import {
   knockoutMatchTurnSetGet,
   qualifyingMatchTurnSetGet,
   qualifyingMatchTurnSetUpdate,
-} from "../../../../Service/matchTurn";
-import { ETable } from "../../../../type/enum";
-import { TMartialArtTurnWithSet } from "../../../../type/martialArt";
-import { TTurnSet } from "../../../../type/matchTurn";
-import { ITurnSetContext, ITurnSetProvider } from "./type";
+} from "../../Service/matchTurn";
+import { ETable } from "../../type/enum";
+import { TMartialArtTurnWithSet } from "../../type/martialArt";
+import { TTurnSet } from "../../type/matchTurn";
+import { ITurnSetContext, ITurnSetProvider } from "../MatchTurn/type";
 
 const TurnSetContext = createContext<ITurnSetContext>({
   matchTurnWithSets: [],
@@ -30,7 +30,6 @@ const TurnSetProvider = ({
   matchTurns,
   tableType,
 }: ITurnSetProvider) => {
-  // const { matchTurns } = useMatchTurnContext();
   const [data, setData] = useState<TMartialArtTurnWithSet[]>([]);
   const [cols, setCols] = useState<ColumnDef<TMartialArtTurnWithSet>[]>([]);
 

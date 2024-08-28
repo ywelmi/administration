@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 import {
   martialArtTurnWithSetGet,
   martialArtTurnWithSetUpdate,
-} from "../../../../Service/martialArt";
+} from "../../Service/martialArt";
 import {
   knockoutMatchTurnCreate,
   knockoutMatchTurnDelete,
@@ -16,9 +16,10 @@ import {
   qualifyingMatchTurnSetUpdate,
   qualifyingMatchTurnsGet,
   qualifyingMatchTurnUpdate,
-} from "../../../../Service/matchTurn";
-import { ETable } from "../../../../type/enum";
-import { TMatchTurn, TMatchTurnWithSet } from "../../../../type/matchTurn";
+} from "../../Service/matchTurn";
+import { ETable } from "../../type/enum";
+import { TMatchTurnResult, TMatchTurnWithSet } from "../../type/matchTurn";
+import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 
 export interface ITurnSetQuery {
   matchTurnSetsUpdate:
@@ -39,7 +40,7 @@ export interface ITurnSetContext extends ITurnSetQuery {
 
 export interface ITurnSetProvider extends ITurnSetQuery, PropsWithChildren {
   tableType: ETable;
-  matchTurns: TMatchTurn[];
+  matchTurns: TMatchTurnResult[];
 }
 
 export interface IMatchTurnQuery {
@@ -57,9 +58,11 @@ export interface IMatchTurnQuery {
 export interface IMatchTurnContext extends IMatchTurnQuery {
   matchId: string;
   setMatchId: (id: string) => void;
-  matchTurns: TMatchTurn[];
+  match: TTablequalifyingMatch;
+  matchTurns: TMatchTurnResult[];
 
-  updateMatchTurn: (m: TMatchTurn) => void;
-  createMatchTurn: (m: TMatchTurn) => void;
+  fetchMatchTurns: () => Promise<TMatchTurnResult[]>;
+  updateMatchTurn: (m: TMatchTurnResult) => void;
+  createMatchTurn: (m: TMatchTurnResult) => void;
   delMatchTurn: (id: string) => void;
 }

@@ -23,9 +23,9 @@ import {
 } from "../../Service/matchTurn";
 import { ETable } from "../../type/enum";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import { MatchTurnForm } from "./MatchAction/MatchTurn/MatchTurn";
-import { useMatchTurnContext } from "./MatchAction/MatchTurn/matchTurnContext";
-import { MatchTurnSet } from "./MatchAction/MatchTurn/MatchTurnSet";
+import { MatchTurnDirectoryForm } from "../MatchTurn/MatchTurnDirectory";
+import { useMatchTurnContext } from "../MatchTurn/hook";
+import { MatchTurnSetWrapper } from "../MatchTurnSet";
 import { ListSetReport } from "./SetReport";
 
 const Schema = Yup.object({
@@ -214,6 +214,15 @@ const TabMatchTurn = ({ tableType }: ITabMatchTurn) => {
       : qualifyingMatchTurnSetGet;
 
   return (
+    <MatchTurnSetWrapper
+      tableType={ETable.QUALIFYING}
+      showTurn
+      matchTurns={matchTurns}
+      matchTurnSetsUpdate={matchTurnSetsUpdate}
+      matchTurnSetsGet={matchTurnSetsGet}
+    />
+  );
+  return (
     <>
       <Nav tabs>
         <NavItem>
@@ -235,10 +244,10 @@ const TabMatchTurn = ({ tableType }: ITabMatchTurn) => {
       </Nav>
       <TabContent activeTab={tabId}>
         <TabPane tabId={ETabTurn.TURN}>
-          <MatchTurnForm />
+          <MatchTurnDirectoryForm />
         </TabPane>
         <TabPane tabId={ETabTurn.SET}>
-          <MatchTurnSet
+          <MatchTurnSetWrapper
             tableType={ETable.QUALIFYING}
             showTurn
             matchTurns={matchTurns}
