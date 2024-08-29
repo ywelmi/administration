@@ -230,8 +230,12 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
 
                                         dataResult = <div>{value}</div>;
                                     } else {
-                                        setCanSubmit(false);
-                                        dataResult = <strong className="text-danger">Sai định dạng</strong>;
+                                        if (original[`${valueField}_record1_value`]) {
+                                            setCanSubmit(false);
+                                            dataResult = <strong className="text-danger">Sai định dạng</strong>;
+                                        } else {
+                                            dataResult = <></>;
+                                        }
                                     }
                                 }
                                 if (valueType == 1) {
@@ -244,8 +248,12 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
                                         // table.options.meta?.updateData(index, id, value);
                                         dataResult = <div>{value}</div>;
                                     } else {
-                                        setCanSubmit(false);
-                                        <strong className="text-danger">Sai định dạng</strong>;
+                                        if (original[`${valueField}_record1_value`]) {
+                                            setCanSubmit(false);
+                                            dataResult = <strong className="text-danger">Sai định dạng</strong>;
+                                        } else {
+                                            dataResult = <></>;
+                                        }
                                     }
                                 }
                                 //table.options.meta?.updateData(index, id, value);
