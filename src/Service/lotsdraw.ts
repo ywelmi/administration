@@ -54,8 +54,8 @@ export const getContentConfig = async (content_id: string) => {
 };
 
 // Thực hiện Cập nhật điểm cho đơn vị theo môn thi bốc thăm
-export const lotsdrawResultUpdate = (orgId: string, lotsdrawResult: any) => {
-    return httpPut(`/sportcontents/${orgId}/update_sport_result`, lotsdrawResult);
+export const lotsdrawResultUpdate = (content_id: string, lotsdrawResult: any) => {
+    return httpPut(`/sportcontents/${content_id}/update_sport_result`, lotsdrawResult);
 };
 
 // Thực hiện Cập nhật điểm cho đơn vị theo môn thi bốc thăm

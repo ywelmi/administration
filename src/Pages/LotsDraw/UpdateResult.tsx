@@ -114,7 +114,7 @@ const PageUpdateResult = () => {
     const [listSport, setListSport] = useState(sports);
     const { sport_id: paramSportId } = useParams();
     // số VĐV thi đấu trong 1 lượt
-
+    const [contentType, setContentType] = useState<any>("");
     // số VĐV thi đấu trong 1 lượt
     const [selectedContentSport, setSelectedContentSport] = useState<string>("");
 
@@ -175,6 +175,10 @@ const PageUpdateResult = () => {
         sportId: sportId,
     });
 
+    const { LotsDrawSubmitGroupResultModal, handleToggleGroup } = useLotsDrawSubmitGroupModal({
+        content_id: selectedContentSport,
+        sportId: sportId,
+    });
     return (
         <Container fluid>
             <Row>
@@ -196,19 +200,31 @@ const PageUpdateResult = () => {
                                                     value={selectedContentSport}
                                                     handleChange={(e) => {
                                                         setSelectedContentSport(e.target.value);
-
+                                                        setContentType(
+                                                            contentSport.filter((el: any) => el.id == e.target.value)[0]
+                                                                .content_type
+                                                        );
                                                         handleSelectContent(e.target.value);
                                                     }}
                                                 />
                                             )}
                                         </div>
-                                        {selectedContentSport != "" && (
+                                        {selectedContentSport != "" && contentType == 1 ? (
                                             <div className="d-flex justify-content-center">
                                                 {" "}
                                                 <Btn className="btn btn-info edit" onClick={handleToggle}>
                                                     <i className="icon-pencil-alt" />
                                                     Cập nhật
                                                     <LotsDrawSubmitModal />
+                                                </Btn>
+                                            </div>
+                                        ) : (
+                                            <div className="d-flex justify-content-center">
+                                                {" "}
+                                                <Btn className="btn btn-info edit" onClick={handleToggleGroup}>
+                                                    <i className="icon-pencil-alt" />
+                                                    Cập nhật
+                                                    <LotsDrawSubmitGroupResultModal />
                                                 </Btn>
                                             </div>
                                         )}

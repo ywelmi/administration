@@ -35,6 +35,7 @@ import { useTeamAtheleModal } from "./CreateGroupForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
 import LotsdrawTabs from "./navbar_item";
+import { TGroup } from "../../type/team";
 
 interface IListLotsDraw {
     showAction?: boolean;
@@ -46,62 +47,6 @@ interface IListLotsDraw {
     selectableRowSelected?: (row: TLotsDraw) => boolean;
     tableRef?: Ref<ITanTableRef<TLotsDraw>>;
 }
-
-const tableUnitColumns: ColumnDef<TLotsDraw>[] = [
-    {
-        accessorKey: "team_name",
-        footer: (props) => props.column.id,
-        header: N["team_name"],
-        cell(props) {
-            return <div className="form-control">{props.getValue() as string}</div>;
-        },
-    },
-    {
-        accessorKey: "ticket_index",
-        footer: (props) => props.column.id,
-        header: N["ticket_index"],
-        cell(props) {
-            return <div className="">{props.getValue() as string}</div>;
-        },
-    },
-];
-const isUpdated = (d: TLotsDraw) => {
-    const detailCols: (keyof TLotsDraw)[] = ["ticket_index", "match_hour", "match_date", "locations"];
-    for (const c of detailCols) {
-        if (!Object.keys(d).includes(c)) {
-            return false;
-        }
-    }
-    return true;
-};
-
-const ListUnitLotsDraw = ({
-    showAction,
-    onRowSelect,
-    onSelectedRowsChange,
-    columns = [...tableUnitColumns],
-    data = [],
-    tableRef,
-    selectableRowSelected,
-}: IListLotsDraw) => {
-    // if (columns.length > 0 && showAction) {
-    //   columns = [...columns, {
-    //     name: "#",
-    //     cell: (row: TLotsDrawColumn) => <LotsDrawTableAction lotsdraw={row} />,
-    //     sortable: true,
-    //   }];
-    // }
-    //
-    //
-    const tableData = data.map((d) => ({ ...d, isDetail: isUpdated(d) }));
-
-    console.log({ tableData });
-    return (
-        <div className="table-responsive">
-            <TanTable ref={tableRef} data={tableData} getRowId={getLotDrawId} columns={columns} />
-        </div>
-    );
-};
 
 const getLotDrawId = (d: TLotsDraw) => d.id;
 
@@ -170,7 +115,7 @@ const PageUpdateAtheleTicket = () => {
         // }
         //
         //
-        const tableData = data.map((d) => ({ ...d, isDetail: isUpdated(d) }));
+        const tableData = data.map((d) => ({ ...d }));
 
         console.log({ tableData });
         return (
@@ -179,7 +124,7 @@ const PageUpdateAtheleTicket = () => {
             </div>
         );
     };
-    const tableGroupColumns: ColumnDef<TLotsDraw>[] = [
+    const tableContentGroupColumns: ColumnDef<TLotsDraw>[] = [
         {
             accessorKey: "team_name",
             footer: (props) => props.column.id,
@@ -196,156 +141,12 @@ const PageUpdateAtheleTicket = () => {
                 return <div className="">{props.getValue() as string}</div>;
             },
         },
-
-        {
-            accessorKey: "match_hour",
-            footer: (props) => props.column.id,
-            header: N["match_hour"],
-            cell({ getValue, row: { index, original }, column: { id }, table }) {
-                return (
-                    <ReactDatePicker
-                        className="form-control"
-                        name="match_hour"
-                        // selected={new Date(original.match_date as string || new Date())}
-                        value={original.match_hour}
-                        onChange={(date) =>
-                            table.options.meta?.updateData(index, id, `${date?.getHours()}:${date?.getMinutes()}`)
-                        }
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeFormat="HH:mm"
-                        timeIntervals={15}
-                        timeCaption="Giờ"
-                        locale={"vi"}
-                    />
-                );
-            },
-        },
-        {
-            accessorKey: "match_date",
-            footer: (props) => props.column.id,
-            header: N["match_date"],
-            cell({ getValue, row: { index, original }, column: { id }, table }) {
-                return (
-                    <ReactDatePicker
-                        className="form-control"
-                        name="date_join_army"
-                        showYearDropdown
-                        // selected={new Date(getValue() as string || new Date())}
-                        value={original.match_date ? convertToDate(original.match_date) : undefined}
-                        onChange={(date) => {
-                            table.options.meta?.updateData(index, id, date?.toISOString());
-                        }}
-                        locale={"vi"}
-                        dateFormat={"dd/MM/yyyy"}
-                    />
-                );
-            },
-        },
-        {
-            accessorKey: "locations",
-            footer: (props) => props.column.id,
-            header: N["locations"],
-        },
-
-        {
-            // accessorKey: "locations",
-            header: "Kết quả thi đấu",
-            footer: (props) => props.column.id,
-            cell({ getValue, row: { index, original }, column: { id }, table }) {
-                // let hasEmptyFiled = false;
-                // const idx = Object.values(original).findIndex((v) => v == null);
-                // if (idx !== -1) hasEmptyFiled = true;
-                // if (hasEmptyFiled) return null;
-                // if (!original.isDetail) return null;
-
-                const { LotsDrawSubmitGroupResultModal, handleToggle } = useLotsDrawSubmitGroupModal({
-                    sportId: original.sport_id,
-                    team_id: original.org_id,
-                    content_id: original.content_id,
-                });
-                return (
-                    <Btn
-                        className="btn btn-info edit"
-                        onClick={() => {
-                            lotsdrawResultTableGet(original.org_id, original.sport_id, original.content_id).then(
-                                async (res) => {
-                                    const {
-                                        data: { lst_ticket_group, lst_map_sport_content },
-                                        status,
-                                    } = res;
-                                    console.log(lst_ticket_group.length);
-                                    if (status !== 200) return;
-                                    if (lst_ticket_group.length > 0) {
-                                        handleToggle();
-                                    } else {
-                                        toast.error("Đơn vị này chưa tạo đội thi đấu");
-                                        return <></>;
-                                    }
-                                }
-                            );
-                        }}
-                    >
-                        <i className="icon-pencil-alt" />
-                        Cập nhật
-                        <LotsDrawSubmitGroupResultModal />
-                    </Btn>
-                );
-            },
-        },
-        {
-            // accessorKey: "locations",
-            header: "Hủy đăng ký ",
-            footer: (props) => props.column.id,
-            cell({ getValue, row: { index, original }, column: { id }, table }) {
-                // let hasEmptyFiled = false;
-                // const idx = Object.values(original).findIndex((v) => v == null);
-                // if (idx !== -1) hasEmptyFiled = true;
-                // if (hasEmptyFiled) return null;
-                // if (!original.isDetail) return null;
-
-                const handleToggle = useCallback((sportId: string) => {
-                    const teamFilter = getMoreFilterByValue("team_id", "=", original.team_id);
-
-                    groupGetAll({ filter: `[${teamFilter}]` })
-                        .then((res) => {
-                            const { data, status } = res;
-                            if (status === 200) {
-                                martialArtArmyGroupDelete(data.data[0].id)
-                                    .then((res) => {
-                                        const { data, status } = res;
-                                        if (status === 200) {
-                                            toast.success(N["success"]);
-                                            fetchData(sportId);
-                                            fetchDataTable(sportId, selectedContentSport);
-                                        }
-                                    })
-                                    .catch((err) => {
-                                        toast.error(N["failed"]);
-                                        console.log({ err });
-                                    });
-                            }
-                        })
-                        .catch((err) => {
-                            toast.error(N["failed"]);
-                            console.log({ err });
-                        });
-                }, []);
-
-                return (
-                    <Btn className="btn btn-danger edit" onClick={() => handleToggle(sportId)}>
-                        <i className="icon-pencil-alt" />
-                        Hủy đăng ký đội
-                    </Btn>
-                );
-            },
-        },
     ];
-    const ListGroupLotsDraw = ({
+    const ListContentGroupLotsDraw = ({
         showAction,
         onRowSelect,
         onSelectedRowsChange,
-        columns = [...tableGroupColumns],
+        columns = [...tableContentGroupColumns],
         data = [],
         tableRef,
         selectableRowSelected,
@@ -359,7 +160,7 @@ const PageUpdateAtheleTicket = () => {
         // }
         //
         //
-        const tableData = data.map((d) => ({ ...d, isDetail: isUpdated(d) }));
+        const tableData = data.map((d) => ({ ...d }));
 
         console.log({ tableData });
         return (
@@ -368,6 +169,7 @@ const PageUpdateAtheleTicket = () => {
             </div>
         );
     };
+
     const { sportSelector, unitType } = useConfigStore();
     const { sports, sportsMain, sportsSub } = useSportStore(sportSelector());
     const [sportId, setSportId] = useState("");
@@ -409,20 +211,7 @@ const PageUpdateAtheleTicket = () => {
     // dữ liệu bảng thăm theo nội dung
     const [data, setData] = useState<TLotsDraw[]>([]);
     // dữ liệu bảng thăm theo đơn vị
-    const [dataUnit, setDataUnit] = useState<TLotsDraw[]>([]);
-    const handleAddNew = (e: any) => {
-        martialArtMilitiaArmyGroupCreate(e)
-            .then((res) => {
-                if (res.status === 200) {
-                    handleUpdate(selectedContentSport);
-                }
-            })
-            .catch((err) => {
-                toast.error(err.data);
-                console.log({ err });
-            });
-        return;
-    };
+
     useEffect(() => {
         if (sportId) {
             fetchData(sportId);
@@ -450,15 +239,6 @@ const PageUpdateAtheleTicket = () => {
                 if (status === 200) setContent(data);
             })
             .catch((err) => console.log({ err }));
-        lotsdrawsGet(sportId, "")
-            .then((res) => {
-                const { data, status } = res;
-                console.log({ data });
-                if (status === 200) {
-                    setDataUnit(data);
-                }
-            })
-            .catch((err) => console.log({ err }));
     }, []);
 
     const fetchDataTable = useCallback((sportId: string, content_id: string) => {
@@ -479,6 +259,7 @@ const PageUpdateAtheleTicket = () => {
                         }
                     })
                     .catch((err) => console.log({ err }));
+
                 // lotsdrawScheduleGet(numberPlayedPerRound, sportId, content_id).then((res) => {
                 //     const { data, status } = res;
                 //     if (status === 200) toast.info("Đã cập nhật thông tin làn lượt");
@@ -487,6 +268,7 @@ const PageUpdateAtheleTicket = () => {
             .catch((err) => console.log({ err }));
     }, []);
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
+
     const autoCallUpdateSchedule = useCallback(
         (content_id: any) => {
             lotsdrawsGet(sportId, "")
@@ -570,14 +352,6 @@ const PageUpdateAtheleTicket = () => {
         [sportId]
     );
 
-    const { handleToggle: handleToggleAddModal, TeamModal: TeamAddModal } = useTeamAtheleModal({
-        sportId: sportId,
-        content_id: selectedContentSport,
-        onSubmit: (e) => {
-            handleAddNew(e);
-        },
-    });
-
     return (
         <Container fluid>
             <Row>
@@ -631,44 +405,20 @@ const PageUpdateAtheleTicket = () => {
                                                 </div>
                                             </div>
                                         )}
-                                        {contentType == "2" && (
-                                            <div className="d-flex justify-content-center m-t-10">
-                                                <div
-                                                    className="btn btn-primary"
-                                                    onClick={() => {
-                                                        handleToggleAddModal();
-                                                    }}
-                                                >
-                                                    <i className="fa fa-plus" />
-                                                    &nbsp;
-                                                    {"Tạo đội tiếp sức"}
-                                                </div>
-                                                <TeamAddModal />
-                                            </div>
-                                        )}
+
                                         {data.length > 0 ? (
                                             <div>
                                                 {contentType == 1 ? (
                                                     <ListContentLotsDraw tableRef={ref} data={data} showAction />
                                                 ) : (
-                                                    <ListGroupLotsDraw tableRef={ref} data={data} showAction />
-                                                )}
-
-                                                <div className="d-flex justify-content-end">
-                                                    <div
-                                                        className="btn btn-primary "
-                                                        onClick={() => {
-                                                            if (selectedContentSport != "")
-                                                                handleUpdate(selectedContentSport);
-                                                            else {
-                                                                toast.warn("Mời chọn môn thi");
-                                                            }
-                                                        }}
-                                                    >
-                                                        <i className="fa fa-edit" />
-                                                        {"Cập nhật lịch"}
+                                                    <div className="d-flex">
+                                                        <ListContentGroupLotsDraw
+                                                            tableRef={ref}
+                                                            data={data}
+                                                            showAction
+                                                        />
                                                     </div>
-                                                </div>
+                                                )}
                                             </div>
                                         ) : (
                                             <></>

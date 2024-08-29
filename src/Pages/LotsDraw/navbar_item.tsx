@@ -5,7 +5,7 @@ import { PageMartialArtMilitia } from "../MartialArtMilitia/MartialArtMilitia";
 import { PageUpdateLotsDrawUnit } from "./UpdateLotsdrawUnit";
 import { PageUpdateLotsdrawTicket } from "./UpdateLotsdrawTicket";
 import { PageUpdateAtheleTicket } from "./UpdateAtheleTicket";
-import { LotsDrawSubmitResultForm } from "../LotsDrawSubmit/LotsDrawSubmitResultAtheleForm";
+import { LotsDrawSubmitResultForm } from "../LotsDrawSubmit/LotsDrawSubmitResultAtheleForm1";
 import { PageUpdateResult } from "./UpdateResult";
 import { PageExportContentReport } from "./ExportContentReport";
 

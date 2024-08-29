@@ -37,6 +37,7 @@ import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
 import LotsdrawTabs from "./navbar_item";
 import NavBar from "./navbar";
 import { useViewLotsDrawScheduleModal } from "./ViewLotsdrawTicket";
+import { TGroup } from "../../type/team";
 
 interface IListLotsDraw {
     showAction?: boolean;
@@ -106,9 +107,87 @@ const ListUnitLotsDraw = ({
 };
 
 const getLotDrawId = (d: TLotsDraw) => d.id;
+const getGroupId = (d: TGroup) => d.id;
+
+interface IListGroup {
+    showAction?: boolean;
+    selectableRows?: boolean;
+    onRowSelect?: (row: TGroup, e: React.MouseEvent<Element, MouseEvent>) => void;
+    onSelectedRowsChange?: (v: { allSelected: boolean; selectedCount: number; selectedRows: TGroup[] }) => void;
+    columns?: ColumnDef<TGroup>[];
+    data?: TGroup[];
+    selectableRowSelected?: (row: TGroup) => boolean;
+    tableRef?: Ref<ITanTableRef<TGroup>>;
+}
 
 //Component render page lots draw
 const PageUpdateLotsdrawTicket = () => {
+    const tableGroupColumns: ColumnDef<TGroup>[] = [
+        {
+            accessorKey: "name",
+            footer: (props) => props.column.id,
+            header: N["team_name"] + " tiếp sức",
+            cell(props) {
+                return <div className="form-control">{props.getValue() as string}</div>;
+            },
+        },
+        // {
+        //     accessorKey: "ticket_index",
+        //     footer: (props) => props.column.id,
+        //     header: N["ticket_index"],
+        //     cell(props) {
+        //         return <div className="">{props.getValue() as string}</div>;
+        //     },
+        // },
+        {
+            accessorKey: "team_member_name",
+            footer: (props) => props.column.id,
+            header: "Thành viên",
+            cell(props) {
+                return <div className="">{props.getValue() as string}</div>;
+            },
+        },
+        {
+            footer: (props) => props.column.id,
+            header: "Thành viên",
+            cell({ getValue, row: { index, original }, column: { id }, table }) {
+                return (
+                    <Btn className="btn btn-danger edit" onClick={() => handleDeleteGroup(original.id)}>
+                        <i className="icon-pencil-alt" />
+                        Hủy đăng ký đội
+                    </Btn>
+                );
+            },
+        },
+    ];
+
+    const ListGroupLotsDraw = ({
+        showAction,
+        onRowSelect,
+        onSelectedRowsChange,
+        columns = [...tableGroupColumns],
+        data = [],
+        tableRef,
+        selectableRowSelected,
+    }: IListGroup) => {
+        // if (columns.length > 0 && showAction) {
+        //   columns = [...columns, {
+        //     name: "#",
+        //     cell: (row: TLotsDrawColumn) => <LotsDrawTableAction lotsdraw={row} />,
+        //     sortable: true,
+        //   }];
+        // }
+        //
+        //
+        const tableData = data.map((d) => ({ ...d }));
+
+        console.log({ tableData });
+        return (
+            <div className="table-responsive">
+                <TanTable ref={tableRef} data={tableData} getRowId={getGroupId} columns={columns} />
+            </div>
+        );
+    };
     const { sportSelector, unitType } = useConfigStore();
     const { sports, sportsMain, sportsSub } = useSportStore(sportSelector());
     const [sportId, setSportId] = useState("");
@@ -120,6 +199,7 @@ const PageUpdateLotsdrawTicket = () => {
     // số VĐV thi đấu trong 1 lượt
     const [selectedContentSport, setSelectedContentSport] = useState<string>("");
     const [contentType, setContentType] = useState<any>("");
+    const refGroup = useRef<ITanTableRef<TGroup>>(null);
     useEffect(() => {
         unitType == "LLTT"
             ? setListSport(sportsMain.filter((e) => e.point_unit == 1))
@@ -146,14 +226,14 @@ const PageUpdateLotsdrawTicket = () => {
     const [gender, setGender] = useState(0);
     // dữ liệu bảng thăm theo đơn vị
     const [dataUnit, setDataUnit] = useState<TLotsDraw[]>([]);
-
+    const [dataGroup, setDataGroup] = useState<TGroup[]>([]);
     useEffect(() => {
         if (sportId) {
             fetchData(sportId);
         }
     }, [sportId]);
 
-    const handleSelectContent = (id: any) => {
+    const handleSelectContent = (id: any, content_type: any) => {
         getNumberAthele(id)
             .then((res) => {
                 const { data, status } = res;
@@ -164,6 +244,33 @@ const PageUpdateLotsdrawTicket = () => {
             .catch((err) => console.log({ err }));
         fetchData(sportId);
         setSelectedContentSport(id);
+        if (content_type == 2) {
+            const contentFilter = getMoreFilterByValue("content_id", "=", id);
+
+            groupGetAll({ filter: `[${contentFilter}]` })
+                .then((res) => {
+                    const { data, status } = res;
+                    console.log({ data });
+                    if (status === 200) {
+                        setDataGroup(data.data);
+                    }
+                })
+                .catch((err) => console.log({ err }));
+        }
+    };
+    const handleDeleteGroup = (id: any) => {
+        martialArtArmyGroupDelete(id)
+            .then((res) => {
+                const { data, status } = res;
+                if (status === 200) {
+                    toast.success(N["success"]);
+                    fetchDataGroup();
+                }
+            })
+            .catch((err) => {
+                toast.error(N["failed"]);
+                console.log({ err });
+            });
     };
     const fetchData = useCallback((sportId: string) => {
         getContentSport(sportId)
@@ -183,7 +290,32 @@ const PageUpdateLotsdrawTicket = () => {
             })
             .catch((err) => console.log({ err }));
     }, []);
+    const fetchDataGroup = () => {
+        const contentFilter = getMoreFilterByValue("content_id", "=", selectedContentSport);
 
+        groupGetAll({ filter: `[${contentFilter}]` })
+            .then((res) => {
+                const { data, status } = res;
+                console.log({ data });
+                if (status === 200) {
+                    setDataGroup(data.data);
+                }
+            })
+            .catch((err) => console.log({ err }));
+    };
+    const handleAddNew = (e: any) => {
+        martialArtMilitiaArmyGroupCreate(e)
+            .then((res) => {
+                if (res.status === 200) {
+                    fetchDataGroup();
+                }
+            })
+            .catch((err) => {
+                toast.error(err.data);
+                console.log({ err });
+            });
+        return;
+    };
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
 
     const { LotsDrawScheduleModal: LotsDrawScheduleModal, handleToggle: toggleLotsDrawScheduleModal } =
@@ -200,6 +332,13 @@ const PageUpdateLotsdrawTicket = () => {
             numberPerRound: numberPlayedPerRound,
             numberOfTeam: dataUnit.length,
         });
+    const { handleToggle: handleToggleAddModal, TeamModal: TeamAddModal } = useTeamAtheleModal({
+        sportId: sportId,
+        content_id: selectedContentSport,
+        onSubmit: (e) => {
+            handleAddNew(e);
+        },
+    });
 
     return (
         <Container fluid>
@@ -226,7 +365,11 @@ const PageUpdateLotsdrawTicket = () => {
                                                 contentSport.filter((el: any) => el.id == e.target.value)[0]
                                                     .content_type
                                             );
-                                            handleSelectContent(e.target.value);
+                                            handleSelectContent(
+                                                e.target.value,
+                                                contentSport.filter((el: any) => el.id == e.target.value)[0]
+                                                    .content_type
+                                            );
                                         }}
                                     />
                                 )}
@@ -286,14 +429,38 @@ const PageUpdateLotsdrawTicket = () => {
                                     </div>
                                     <ViewLotsDrawScheduleModal />
                                     <LotsDrawScheduleModal />
-                                    <ListUnitLotsDraw tableRef={ref} data={dataUnit} showAction />
+                                    {contentType == "2" && (
+                                        <div className="d-flex justify-content-center m-t-10">
+                                            <div
+                                                className="btn btn-primary"
+                                                onClick={() => {
+                                                    handleToggleAddModal();
+                                                }}
+                                            >
+                                                <i className="fa fa-plus" />
+                                                &nbsp;
+                                                {"Tạo đội tiếp sức"}
+                                            </div>
+                                            <TeamAddModal />
+                                        </div>
+                                    )}
+                                    <div className="d-flex">
+                                        <ListUnitLotsDraw tableRef={ref} data={dataUnit} showAction />
+                                        {dataGroup.length > 0
+                                            ? contentType == 2 && (
+                                                  <ListGroupLotsDraw tableRef={refGroup} data={dataGroup} showAction />
+                                              )
+                                            : contentType == 2 && (
+                                                  <H3 className="text-center">Chưa có đội nào được tạo</H3>
+                                              )}
+                                    </div>
                                     <div className="d-flex justify-content-center m-10">
                                         <Btn
                                             className="btn btn-info m-l-10"
                                             onClick={() => {
-                                                selectedContentSport != ""
+                                                dataGroup.length == dataUnit.length
                                                     ? toggleLotsDrawScheduleModal()
-                                                    : alert("Chưa chọn nội dung thi");
+                                                    : toast.error("Chưa đăng ký đủ số đội vào nội dung thi");
                                             }}
                                         >
                                             Cập nhật khóa thăm

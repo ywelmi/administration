@@ -103,9 +103,9 @@ const PageExportContentReport = () => {
                         <CardBody>
                             {sportId && sports.filter((e) => e.id == sportId).length > 0 && (
                                 <div className="d-flex justify-content-center">
-                                    <div className="flex gap-2 mt-4">
+                                    <div className="flex  ">
                                         <div
-                                            className="btn btn-danger"
+                                            className="btn btn-info"
                                             onClick={() => {
                                                 if (sportId) {
                                                     sportXuatXepHang(sportId);
@@ -116,7 +116,7 @@ const PageExportContentReport = () => {
                                                 }
                                             }}
                                         >
-                                            <i className="fa fa-plus" /> &nbsp;
+                                            <i className="fa fa-download" /> &nbsp;
                                             {"Tải xuống biên bản thi đấu"}
                                         </div>
                                     </div>

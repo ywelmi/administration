@@ -21,13 +21,23 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, 
                 console.log(schedule);
                 res.data.lst_member_ticket.forEach((ticket: TLotsDrawMatrix) => {
                     if (ticket.turn > 0 && ticket.turn_index > 0) {
-                        updateMatrix(
-                            schedule,
-                            ticket.turn - 1,
-                            ticket.turn_index - 1,
-                            ticket.ticket_index.toString() + ticket.ticket_code,
-                            ticket.id
-                        );
+                        if (ticket.ticket_code) {
+                            updateMatrix(
+                                schedule,
+                                ticket.turn - 1,
+                                ticket.turn_index - 1,
+                                ticket.ticket_index.toString() + ticket.ticket_code,
+                                ticket.id
+                            );
+                        } else {
+                            updateMatrix(
+                                schedule,
+                                ticket.turn - 1,
+                                ticket.turn_index - 1,
+                                ticket.ticket_index.toString(),
+                                ticket.id
+                            );
+                        }
                     }
                 });
             } else {

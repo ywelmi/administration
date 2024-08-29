@@ -1,12 +1,12 @@
 import { TLotsDraw } from "../../type/lotsdraw";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useState } from "react";
-import { LotsDrawSubmitResultForm } from "./LotsDrawSubmitResultAtheleForm";
+import { LotsDrawSubmitResultForm } from "./LotsDrawSubmitResultAtheleForm1";
 import { LotsDrawUpdateAtheleForm } from "./LotsDrawUpdateAtheleForm";
 import { H3 } from "../../AbstractElements";
 import { LotsDrawSubmitGroupResultForm } from "./LotsDrawSubmitResultGroupForm";
 import { Modal } from "reactstrap";
-import { LotsDrawSubmitResultAllForm } from "./LotsDrawSubmitResultForm";
+import { LotsDrawSubmitResultAllForm } from "./LotsDrawSubmitResultAtheleForm";
 
 interface ILotsDrawSubmitModal {
     lotsdraw?: TLotsDraw[];
@@ -66,20 +66,20 @@ const useLotsDrawSubmitAllModal = ({ sportId, content_id }: any) => {
     return { LotsDrawSubmitModal, handleToggle };
 };
 
-const useLotsDrawSubmitGroupModal = ({ sportId, team_id, content_id, gender }: ILotsDrawSubmitModal) => {
+const useLotsDrawSubmitGroupModal = ({ sportId, content_id, gender }: any) => {
     const [opened, setOpened] = useState(false);
-    const handleToggle = () => {
+    const handleToggleGroup = () => {
         setOpened((s) => !s);
     };
 
     const LotsDrawSubmitGroupResultModal = () => (
-        <Modal modalBodyClassName=" text-start" fullscreen isOpen={opened} toggle={handleToggle}>
+        <Modal modalBodyClassName=" text-start" fullscreen isOpen={opened} toggle={handleToggleGroup}>
             <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
                 <H3 className="modal-header justify-content-center border-0">Cập nhật kết quả thi đấu</H3>
                 <LotsDrawSubmitGroupResultForm
                     sportId={sportId}
                     // onSubmit={() => setOpened(false)}
-                    org_id={team_id}
+
                     content_id={content_id}
                     onCancel={() => setOpened(false)}
                 />
@@ -87,7 +87,7 @@ const useLotsDrawSubmitGroupModal = ({ sportId, team_id, content_id, gender }: I
         </Modal>
     );
 
-    return { LotsDrawSubmitGroupResultModal, handleToggle };
+    return { LotsDrawSubmitGroupResultModal, handleToggleGroup };
 };
 
 const useLotsDrawUpdateAtheleModal = ({ sportId, team_id, content_id, gender }: ILotsDrawSubmitModal) => {

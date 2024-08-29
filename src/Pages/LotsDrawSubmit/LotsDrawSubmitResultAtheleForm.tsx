@@ -14,9 +14,9 @@ interface ILotsDrawSubmitForm {
     // lotsdraw: TLotsDrawMember[];
     onCancel?: () => void;
     sportId: string;
-    org_id: string;
+
     content_id: string;
-    gender?: number;
+
     // onSubmit: () => void;
 }
 
@@ -87,13 +87,13 @@ const canParseToNumber = (str: string) => {
         return !isNaN(num) && isFinite(num);
     }
 };
-const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, gender, onCancel }: ILotsDrawSubmitForm) => {
+const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDrawSubmitForm) => {
     const [columns, setColumns] = useState<ColumnDef<TLotsDrawMember>[]>(defaultColumns);
     const _content_point = window._content_point;
     const [data, setData] = useState<TLotsDrawMember[]>([]);
     const [canSubmit, setCanSubmit] = useState(false);
     useEffect(() => {
-        lotsdrawResultTableGet(org_id, sportId, content_id)
+        lotsdrawResultTableGet("", sportId, content_id)
             .then(async (res) => {
                 const {
                     data: { lst_ticket_member, lst_map_sport_content },
@@ -263,14 +263,14 @@ const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, gender, onCance
             .catch((err) => {
                 console.log({ err });
             });
-    }, [sportId, org_id]);
+    }, [sportId]);
 
     const handleSubmitLotsDraw = (results: TLotsDrawMember[]) => {
         const dataSubmit = {
             listTicketMember: results,
             content_id: content_id,
         };
-        lotsdrawResultUpdate(org_id, dataSubmit)
+        lotsdrawResultUpdate(content_id, dataSubmit)
             .then((res) => {
                 const { data, status } = res;
                 if (status !== 200) return;
@@ -315,4 +315,4 @@ const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, gender, onCance
     );
 };
 
-export { LotsDrawSubmitResultForm };
+export { LotsDrawSubmitResultAllForm };

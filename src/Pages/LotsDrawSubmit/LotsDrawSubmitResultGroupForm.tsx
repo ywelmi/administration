@@ -14,7 +14,7 @@ interface ILotsDrawSubmitForm {
     // lotsdraw: TLotsDrawMember[];
     onCancel?: () => void;
     sportId: string;
-    org_id: string;
+
     content_id: string;
     // onSubmit: () => void;
 }
@@ -56,13 +56,13 @@ const canParseToNumber = (str: string) => {
         return !isNaN(num) && isFinite(num);
     }
 };
-const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }: ILotsDrawSubmitForm) => {
+const LotsDrawSubmitGroupResultForm = ({ sportId, content_id, onCancel }: ILotsDrawSubmitForm) => {
     const [columns, setColumns] = useState<ColumnDef<TLotsDrawMember>[]>(defaultColumns);
     const _content_point = window._content_point;
     const [data, setData] = useState<TLotsDrawMember[]>([]);
     const [canSubmit, setCanSubmit] = useState(false);
     useEffect(() => {
-        lotsdrawResultTableGet(org_id, sportId, content_id)
+        lotsdrawResultTableGet("", sportId, content_id)
             .then(async (res) => {
                 const {
                     data: { lst_ticket_group, lst_map_sport_content },
@@ -109,53 +109,63 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                                         var dataResult;
                                         const value = _content_point.convert(
                                             content_id,
-                                            original[`${field}_record_value`]
+                                            original[`${field}_record1_value`]
                                         );
                                         useEffect(() => {
-                                            setRecord_value(original[`${field}_record_value`]);
+                                            setRecord_value(original[`${field}_record1_value`]);
                                             table.options.meta?.updateData(index, id, value);
-                                        }, [original[`${field}_record_value`]]);
+                                        }, [original[`${field}_record1_value`]]);
                                         const [record_value, setRecord_value] = useState(
-                                            original[`${field}_record_value`]
+                                            original[`${field}_record1_value`]
                                         );
 
                                         if (valueType == 2) {
                                             if (
-                                                (original[`${field}_record_value`] &&
-                                                    canParseToNumber(original[`${field}_record_value`].toString())) ||
-                                                (original[`${field}_record_value`] &&
-                                                    original[`${field}_record_value`].toString().split(":").length >
+                                                (original[`${field}_record1_value`] &&
+                                                    canParseToNumber(original[`${field}_record1_value`].toString())) ||
+                                                (original[`${field}_record1_value`] &&
+                                                    original[`${field}_record1_value`].toString().split(":").length >
                                                         1 &&
-                                                    original[`${field}_record_value`] &&
-                                                    original[`${field}_record_value`].toString().split(":")[1].split("")
-                                                        .length > 1)
+                                                    original[`${field}_record1_value`] &&
+                                                    original[`${field}_record1_value`]
+                                                        .toString()
+                                                        .split(":")[1]
+                                                        .split("").length > 1)
                                             ) {
                                                 setCanSubmit(true);
 
                                                 dataResult = <div>{value}</div>;
                                             } else {
-                                                setCanSubmit(false);
-                                                dataResult = (
-                                                    <strong className="text-danger">
-                                                        Sai định dạng
-                                                        <br />
-                                                        Định dạng: 00.00 / 00:00
-                                                    </strong>
-                                                );
+                                                if (original[`${field}_record1_value`]) {
+                                                    setCanSubmit(false);
+                                                    dataResult = (
+                                                        <strong className="text-danger">
+                                                            Sai định dạng
+                                                            <br />
+                                                            Định dạng: 00.00 / 00:00
+                                                        </strong>
+                                                    );
+                                                } else {
+                                                    dataResult = <></>;
+                                                }
                                             }
                                         }
                                         if (valueType == 1) {
                                             if (
-                                                original[`${field}_record_value`] &&
-                                                canParseToNumber(original[`${field}_record_value`].toString())
+                                                original[`${field}_record1_value`] &&
+                                                canParseToNumber(original[`${field}_record1_value`].toString())
                                             ) {
                                                 //console.log(value);
                                                 setCanSubmit(true);
                                                 // table.options.meta?.updateData(index, id, value);
                                                 dataResult = <div>{value}</div>;
                                             } else {
-                                                setCanSubmit(false);
-                                                <strong className="text-danger">Sai định dạng</strong>;
+                                                if (original[`${field}_record1_value`]) {
+                                                    setCanSubmit(false);
+                                                    <strong className="text-danger">Sai định dạng</strong>;
+                                                } else {
+                                                    dataResult = <></>;
+                                                }
                                             }
                                         }
                                         //table.options.meta?.updateData(index, id, value);
@@ -258,8 +268,12 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
 
                                         dataResult = <div>{value}</div>;
                                     } else {
-                                        setCanSubmit(false);
-                                        dataResult = <strong className="text-danger">Sai định dạng</strong>;
+                                        if (original[`${valueField}_record_value`]) {
+                                            setCanSubmit(false);
+                                            dataResult = <strong className="text-danger">Sai định dạng</strong>;
+                                        } else {
+                                            dataResult = <></>;
+                                        }
                                     }
                                 }
                                 if (valueType == 1) {
@@ -272,8 +286,12 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                                         // table.options.meta?.updateData(index, id, value);
                                         dataResult = <div>{value}</div>;
                                     } else {
-                                        setCanSubmit(false);
-                                        <strong className="text-danger">Sai định dạng</strong>;
+                                        if (original[`${valueField}_record_value`]) {
+                                            setCanSubmit(false);
+                                            <strong className="text-danger">Sai định dạng</strong>;
+                                        } else {
+                                            dataResult = <></>;
+                                        }
                                     }
                                 }
                                 //table.options.meta?.updateData(index, id, value);
@@ -290,14 +308,14 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
             .catch((err) => {
                 console.log({ err });
             });
-    }, [sportId, org_id]);
+    }, [sportId]);
 
     const handleSubmitLotsDraw = (results: TLotsDrawMember[]) => {
         const dataSubmit = {
             listTicketMember: results,
             content_id: content_id,
         };
-        lotsdrawResultUpdate(org_id, dataSubmit)
+        lotsdrawResultUpdate(content_id, dataSubmit)
             .then((res) => {
                 const { data, status } = res;
                 if (status !== 200) return;
