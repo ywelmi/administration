@@ -54,7 +54,6 @@ const MatchTurnProvider = ({
   useEffect(() => {
     setMatchId(initMatchId);
   }, [initMatchId]);
-  // const [matchTurnWithSets, setMatchTurnsWithSets] = useState<TMatchTurnWithSet[]>([]);
   const [matchTurns, setMatchTurns] = useState<TMatchTurnResult[]>([]);
 
   const fetchMatchTurns = useCallback(async () => {

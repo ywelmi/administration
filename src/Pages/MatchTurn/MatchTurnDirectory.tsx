@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from "react";
 import { toast } from "react-toastify";
@@ -13,7 +14,10 @@ import { Button, Col } from "reactstrap";
 import { Btn, LI, Popovers, UL } from "../../AbstractElements";
 import { confirmModal } from "../../Component/confirmModal";
 import { InputSelectConfirm } from "../../Component/InputSelect";
-import { TanTable } from "../../Component/Tables/TanTable/TanTble";
+import {
+  ITanTableRef,
+  TanTable,
+} from "../../Component/Tables/TanTable/TanTble";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { N } from "../../name-conversion";
 import { DMatchTurnTeam } from "../../type/enum";
@@ -187,8 +191,8 @@ export const MatchTurnDirectoryForm = ({
 
   const insertNewTempRow = useCallback(() => {
     console.log("insertNewTempRow");
-    setData((prev) => {
-      console.log({ prev });
+    setData(() => {
+      const prev = tableRef.current?.getData();
       const newRowId = getUniqueId(PREF_TMP_ID);
       const newRow: TMatchTurn = {
         id: newRowId,
@@ -199,14 +203,18 @@ export const MatchTurnDirectoryForm = ({
         win_set_count: 0,
       };
       console.log({ newRow });
+      if (!prev) return [newRow];
       return [...prev, newRow];
     });
   }, [matchId]);
+
+  const tableRef = useRef<ITanTableRef<TMatchTurn>>(null);
 
   return (
     <div className="table-responsive">
       <Button onClick={insertNewTempRow}>Thêm mới</Button>
       <TanTable
+        ref={tableRef}
         data={data}
         columns={displayColumns}
         // onSelectedRowsChange={onSelectedRowsChange}

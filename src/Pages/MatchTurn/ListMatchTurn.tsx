@@ -172,6 +172,7 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
 
       const setModalRef = useRef<IHocModalRef>(null);
 
+      console.log({ ListMatchTurn: matchTurn });
       return (
         <UL className="action simple-list flex-row" id={matchTurn.id}>
           <LI className="delete btn" onClick={handleConfirmDel}>
@@ -191,10 +192,10 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
             >
               <MatchTurnSetWrapper
                 tableType={ETable.QUALIFYING}
-                matchTurns={
+                matchTurn={
                   // { id: tablequalifyingKnockoutMatchReport.id } as TMatchTurn,
                   // matchTurns
-                  [matchTurn]
+                  matchTurn
                 }
               />
             </HocModal>

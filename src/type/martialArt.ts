@@ -44,7 +44,7 @@ export interface TMartialArtSet extends TTurnSet {
   team2_plus_point: 0;
 }
 
-export interface TMartialArtTurnWithSet extends TMartialArtSet {
+export interface TMartialArtTurnWithSet {
   id: string;
   sets: TMartialArtSet[];
 }

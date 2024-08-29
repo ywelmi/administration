@@ -213,6 +213,7 @@ const CustomSeed = ({
                 const match = listTablequalifyingKnockout.find(
                   ({ id }) => id === bracketId
                 );
+                console.log({ knockoutMatch: match });
                 if (!match) return null;
 
                 return (

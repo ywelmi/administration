@@ -2,6 +2,7 @@ import {
   TAge,
   TMartialArt,
   TMartialArtArmyGroup,
+  TMartialArtSet,
   TMartialArtTurnWithSet,
   TWeigh,
 } from "../type/martialArt";
@@ -32,13 +33,13 @@ export const generateMartialArtContentTree = async (
 };
 
 export const martialArtTurnWithSetUpdate = async (
-  turn: TMartialArtTurnWithSet
+  turnSets: TMartialArtTurnWithSet
 ) => {
-  return httpPut(`/tableknockoutmatchs/${turn.id}`, turn);
+  return httpPut(`/tableknockoutmatchs/${turnSets.id}`, turnSets);
 };
 
 export const martialArtTurnWithSetGet = async (turnId: string) => {
-  return httpGet(`/tableknockoutmatchs/${turnId}/match_sets`);
+  return httpGet<TMartialArtSet[]>(`/tableknockoutmatchs/${turnId}/match_sets`);
 };
 
 export const getMartialArtContentTree = async (

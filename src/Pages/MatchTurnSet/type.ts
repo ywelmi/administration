@@ -1,0 +1,44 @@
+import { ColumnDef } from "@tanstack/react-table";
+import { PropsWithChildren } from "react";
+import {
+  martialArtTurnWithSetGet,
+  martialArtTurnWithSetUpdate,
+} from "../../Service/martialArt";
+import {
+  knockoutMatchTurnSetGet,
+  knockoutMatchTurnSetUpdate,
+  qualifyingMatchTurnSetGet,
+  qualifyingMatchTurnSetUpdate,
+} from "../../Service/matchTurn";
+import { ETable } from "../../type/enum";
+import { TMartialArtSet } from "../../type/martialArt";
+import { TMatchTurnResult } from "../../type/matchTurn";
+
+export interface ITurnSetQuery {
+  matchTurnSetsUpdate:
+    | typeof knockoutMatchTurnSetUpdate
+    | typeof qualifyingMatchTurnSetUpdate
+    | typeof martialArtTurnWithSetUpdate;
+  matchTurnSetsGet:
+    | typeof knockoutMatchTurnSetGet
+    | typeof qualifyingMatchTurnSetGet
+    | typeof martialArtTurnWithSetGet;
+}
+
+export interface ITurnSetContext extends ITurnSetQuery {
+  sets: TMartialArtSet[];
+  setSets: (sets: TMartialArtSet[]) => void;
+  matchTurn: TMatchTurnResult;
+  insertNewSet: () => void;
+  cols: ColumnDef<TMartialArtSet>[];
+  isEditing: boolean;
+  finishEdit: () => void;
+  startEdit: () => void;
+  removeSet: (idx: number) => void;
+  updateSet: (idx: number, set: TMartialArtSet) => void;
+}
+
+export interface ITurnSetProvider extends ITurnSetQuery, PropsWithChildren {
+  tableType: ETable;
+  matchTurn: TMatchTurnResult;
+}

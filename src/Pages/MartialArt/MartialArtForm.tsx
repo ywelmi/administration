@@ -134,7 +134,6 @@ const useGenTreeMartialArt = ({
 };
 
 import { ETable } from "../../type/enum";
-import { TMatchTurn } from "../../type/matchTurn";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
 import { MatchTurnSetWrapper } from "../MatchTurnSet";
 import {
@@ -292,9 +291,7 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
           {tablequalifyingKnockoutMatchReport?.id ? (
             <MatchTurnSetWrapper
               tableType={ETable.MARTIALART}
-              matchTurns={[
-                { id: tablequalifyingKnockoutMatchReport.id } as TMatchTurn,
-              ]}
+              matchTurn={{ id: tablequalifyingKnockoutMatchReport.id }}
               // matchTurnSetsUpdate={martialArtTurnWithSetUpdate}
               // matchTurnSetsGet={martialArtTurnWithSetGet}
             />

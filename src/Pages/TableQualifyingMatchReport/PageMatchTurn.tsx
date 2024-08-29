@@ -14,7 +14,6 @@ import {
 import { ETable } from "../../type/enum";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
 import { useMatchTurnContext } from "../MatchTurn/hook";
-import { MatchTurnSetWrapper } from "../MatchTurnSet";
 import { ListSetReport } from "./SetReport";
 
 const Schema = Yup.object({
@@ -196,14 +195,13 @@ const TabMatchTurn = ({ tableType }: ITabMatchTurn) => {
       ? knockoutMatchTurnSetGet
       : qualifyingMatchTurnSetGet;
 
-  return (
-    <MatchTurnSetWrapper
-      tableType={ETable.QUALIFYING}
-      matchTurns={matchTurns}
-      matchTurnSetsUpdate={matchTurnSetsUpdate}
-      matchTurnSetsGet={matchTurnSetsGet}
-    />
-  );
+  return null;
+  // <MatchTurnSetWrapper
+  //   tableType={ETable.QUALIFYING}
+  //   matchTurn={matchTurns}
+  //   matchTurnSetsUpdate={matchTurnSetsUpdate}
+  //   matchTurnSetsGet={matchTurnSetsGet}
+  // />
 };
 
 export { TablequalifyingMatchReportForm, TabMatchTurn, useMatchReportForm };
