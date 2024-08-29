@@ -14,9 +14,9 @@ interface ILotsDrawSubmitForm {
     // lotsdraw: TLotsDrawMember[];
     onCancel?: () => void;
     sportId: string;
-
+    org_id: string;
     content_id: string;
-
+    gender?: number;
     // onSubmit: () => void;
 }
 
@@ -87,13 +87,13 @@ const canParseToNumber = (str: string) => {
         return !isNaN(num) && isFinite(num);
     }
 };
-const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDrawSubmitForm) => {
+const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, gender, onCancel }: ILotsDrawSubmitForm) => {
     const [columns, setColumns] = useState<ColumnDef<TLotsDrawMember>[]>(defaultColumns);
     const _content_point = window._content_point;
     const [data, setData] = useState<TLotsDrawMember[]>([]);
     const [canSubmit, setCanSubmit] = useState(false);
     useEffect(() => {
-        lotsdrawResultTableGet("", sportId, content_id)
+        lotsdrawResultTableGet(org_id, sportId, content_id)
             .then(async (res) => {
                 const {
                     data: { lst_ticket_member, lst_map_sport_content },
@@ -230,12 +230,8 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
 
                                         dataResult = <div>{value}</div>;
                                     } else {
-                                        if (original[`${valueField}_record1_value`]) {
-                                            setCanSubmit(false);
-                                            dataResult = <strong className="text-danger">Sai định dạng</strong>;
-                                        } else {
-                                            dataResult = <></>;
-                                        }
+                                        setCanSubmit(false);
+                                        dataResult = <strong className="text-danger">Sai định dạng</strong>;
                                     }
                                 }
                                 if (valueType == 1) {
@@ -248,12 +244,8 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
                                         // table.options.meta?.updateData(index, id, value);
                                         dataResult = <div>{value}</div>;
                                     } else {
-                                        if (original[`${valueField}_record1_value`]) {
-                                            setCanSubmit(false);
-                                            dataResult = <strong className="text-danger">Sai định dạng</strong>;
-                                        } else {
-                                            dataResult = <></>;
-                                        }
+                                        setCanSubmit(false);
+                                        <strong className="text-danger">Sai định dạng</strong>;
                                     }
                                 }
                                 //table.options.meta?.updateData(index, id, value);
@@ -271,14 +263,14 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
             .catch((err) => {
                 console.log({ err });
             });
-    }, [sportId]);
+    }, [sportId, org_id]);
 
     const handleSubmitLotsDraw = (results: TLotsDrawMember[]) => {
         const dataSubmit = {
             listTicketMember: results,
             content_id: content_id,
         };
-        lotsdrawResultUpdate(content_id, dataSubmit)
+        lotsdrawResultUpdate(org_id, dataSubmit)
             .then((res) => {
                 const { data, status } = res;
                 if (status !== 200) return;
@@ -323,4 +315,4 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
     );
 };
 
-export { LotsDrawSubmitResultAllForm };
+export { LotsDrawSubmitResultForm };
