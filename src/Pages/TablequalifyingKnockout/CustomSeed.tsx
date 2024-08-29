@@ -46,8 +46,12 @@ const CustomSeed = ({
   roundIndex,
   seedIndex,
 }: IRenderSeedProps) => {
-  const { fetchTablequalifyingKnockout, sportId, knockoutTeams } =
-    useKnockoutContext();
+  const {
+    fetchTablequalifyingKnockout,
+    sportId,
+    knockoutTeams,
+    listTablequalifyingKnockout,
+  } = useKnockoutContext();
 
   const bracketId = seed.id;
 
@@ -205,35 +209,45 @@ const CustomSeed = ({
               </button>
             )}
             {isFilledPair && !isUpdatingTeam ? (
-              <MatchTurnWrapper
-                matchId={bracketId as string}
-                matchTurnsGet={matchTurnsGet}
-                matchTurnUpdate={knockoutMatchTurnUpdate}
-                matchTurnDel={knockoutMatchTurnDelete}
-                matchTurnCreate={knockoutMatchTurnCreate}
-                // matchTurnSetsUpdate={knockoutMatchTurnSetUpdate}
-                // matchTurnSetsGet={knockoutMatchTurnSetGet}
-              >
-                <TablequalifyingKnockoutMatchReportModal
-                  onClose={() => {
-                    tablequalifyingKnockoutResultUpdate(bracketId as string)
-                      .then((res) => {
-                        const { status } = res;
-                        if (status === 200) {
-                          refreshKnockoutBrackets();
-                        }
-                      })
-                      .catch((err) => {
-                        console.log({ err });
-                      });
-                  }}
-                  // onSubmit={handleUpdateKnockoutMatch}
-                  // tablequalifyingKnockoutMatchReport={{
-                  //   id: seed.id.toString(),
-                  //   sets: [],
-                  // }}
-                />
-              </MatchTurnWrapper>
+              (() => {
+                const match = listTablequalifyingKnockout.find(
+                  ({ id }) => id === bracketId
+                );
+                if (!match) return null;
+
+                return (
+                  <MatchTurnWrapper
+                    match={match}
+                    matchId={bracketId as string}
+                    matchTurnsGet={matchTurnsGet}
+                    matchTurnUpdate={knockoutMatchTurnUpdate}
+                    matchTurnDel={knockoutMatchTurnDelete}
+                    matchTurnCreate={knockoutMatchTurnCreate}
+                    // matchTurnSetsUpdate={knockoutMatchTurnSetUpdate}
+                    // matchTurnSetsGet={knockoutMatchTurnSetGet}
+                  >
+                    <TablequalifyingKnockoutMatchReportModal
+                      onClose={() => {
+                        tablequalifyingKnockoutResultUpdate(bracketId as string)
+                          .then((res) => {
+                            const { status } = res;
+                            if (status === 200) {
+                              refreshKnockoutBrackets();
+                            }
+                          })
+                          .catch((err) => {
+                            console.log({ err });
+                          });
+                      }}
+                      // onSubmit={handleUpdateKnockoutMatch}
+                      // tablequalifyingKnockoutMatchReport={{
+                      //   id: seed.id.toString(),
+                      //   sets: [],
+                      // }}
+                    />
+                  </MatchTurnWrapper>
+                );
+              })()
             ) : (
               <div>Chưa đủ </div>
             )}

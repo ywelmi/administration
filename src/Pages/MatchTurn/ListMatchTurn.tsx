@@ -217,7 +217,6 @@ const ListMatchTurn = () => {
 
   const refreshData = useCallback(() => {
     fetchMatchTurns().then((d) => {
-      console.log({ d });
       setData(d);
     });
   }, [fetchMatchTurns]);
