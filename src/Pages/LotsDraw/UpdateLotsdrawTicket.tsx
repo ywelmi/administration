@@ -162,6 +162,7 @@ const PageUpdateLotsdrawTicket = () => {
                 setNumberPlayedPerRound(data);
             })
             .catch((err) => console.log({ err }));
+        fetchData(sportId);
         setSelectedContentSport(id);
     };
     const fetchData = useCallback((sportId: string) => {

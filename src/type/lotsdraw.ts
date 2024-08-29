@@ -54,6 +54,18 @@ export interface TLotsDrawMember {
     content5_point_value?: string;
 }
 
+export interface TLotsDrawMatrix {
+    id: string;
+    sport_id: string;
+    team_id: string;
+    content_id: string;
+    ticket_index: number;
+    turn: number;
+    turn_index: number;
+    indexs: number;
+    ticket_code: string;
+}
+
 export interface TLotsDrawSportContent {
     field: string;
     name: string;

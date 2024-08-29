@@ -27,6 +27,7 @@ import { useSportStore } from "../../store/sport";
 import { TLotsDraw } from "../../type/lotsdraw";
 import { convertToDate } from "../../utils/date";
 import {
+    useLotsDrawSubmitAllModal,
     useLotsDrawSubmitGroupModal,
     useLotsDrawSubmitModal,
     useLotsDrawUpdateAtheleModal,
@@ -169,11 +170,9 @@ const PageUpdateResult = () => {
             })
             .catch((err) => console.log({ err }));
     }, []);
-    const { LotsDrawSubmitGroupResultModal, handleToggle } = useLotsDrawSubmitGroupModal({
-        content_id: "c62990ce-ebde-49e2-ba52-61b0b2f87274",
-        team_id: "5d93a571-3a66-46ca-8357-7bbf121acf23",
-        sportId: "cf394b2a-d151-4fdd-b7ec-73c693dede57",
-        gender: 0,
+    const { LotsDrawSubmitModal, handleToggle } = useLotsDrawSubmitAllModal({
+        content_id: selectedContentSport,
+        sportId: sportId,
     });
 
     return (
@@ -203,11 +202,16 @@ const PageUpdateResult = () => {
                                                 />
                                             )}
                                         </div>
-                                        <Btn className="btn btn-info edit" onClick={handleToggle}>
-                                            <i className="icon-pencil-alt" />
-                                            Cập nhật
-                                            <LotsDrawSubmitGroupResultModal />
-                                        </Btn>
+                                        {selectedContentSport != "" && (
+                                            <div className="d-flex justify-content-center">
+                                                {" "}
+                                                <Btn className="btn btn-info edit" onClick={handleToggle}>
+                                                    <i className="icon-pencil-alt" />
+                                                    Cập nhật
+                                                    <LotsDrawSubmitModal />
+                                                </Btn>
+                                            </div>
+                                        )}
                                     </>
                                 </>
                             ) : (

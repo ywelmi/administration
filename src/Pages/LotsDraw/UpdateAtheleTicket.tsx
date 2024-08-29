@@ -479,10 +479,10 @@ const PageUpdateAtheleTicket = () => {
                         }
                     })
                     .catch((err) => console.log({ err }));
-                lotsdrawScheduleGet(numberPlayedPerRound, sportId, content_id).then((res) => {
-                    const { data, status } = res;
-                    if (status === 200) toast.info("Đã cập nhật thông tin làn lượt");
-                });
+                // lotsdrawScheduleGet(numberPlayedPerRound, sportId, content_id).then((res) => {
+                //     const { data, status } = res;
+                //     if (status === 200) toast.info("Đã cập nhật thông tin làn lượt");
+                // });
             })
             .catch((err) => console.log({ err }));
     }, []);
@@ -508,6 +508,7 @@ const PageUpdateAtheleTicket = () => {
                                     locations: e.locations,
                                 };
                             });
+                            console.log(dataSubmit);
                             lotsdrawUpdate(sportId, content_id, dataSubmit)
                                 .then((res) => {
                                     const { data, status } = res;
@@ -611,23 +612,25 @@ const PageUpdateAtheleTicket = () => {
                                                 />
                                             )}
                                         </div>
-                                        <div className="d-flex justify-content-center m-10">
-                                            <div
-                                                className="btn btn-warning text-dark"
-                                                onClick={() => {
-                                                    if (selectedContentSport != "") {
-                                                        autoCallUpdateSchedule(selectedContentSport);
+                                        {selectedContentSport != "" && (
+                                            <div className="d-flex justify-content-center m-10">
+                                                <div
+                                                    className="btn btn-warning text-dark"
+                                                    onClick={() => {
+                                                        if (selectedContentSport != "") {
+                                                            autoCallUpdateSchedule(selectedContentSport);
 
-                                                        // setTimeout(() => fetchData(sportId), 2000);
-                                                    } else {
-                                                        toast.warn("Mời chọn nội dung thi đấu");
-                                                    }
-                                                }}
-                                            >
-                                                <i className="fa fa-recycle" /> &nbsp;
-                                                {"Làm mới cập nhật VĐV"}
+                                                            // setTimeout(() => fetchData(sportId), 2000);
+                                                        } else {
+                                                            toast.warn("Mời chọn nội dung thi đấu");
+                                                        }
+                                                    }}
+                                                >
+                                                    <i className="fa fa-recycle" /> &nbsp;
+                                                    {"Làm mới cập nhật VĐV"}
+                                                </div>
                                             </div>
-                                        </div>
+                                        )}
                                         {contentType == "2" && (
                                             <div className="d-flex justify-content-center m-t-10">
                                                 <div

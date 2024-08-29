@@ -1,36 +1,115 @@
 import { Col, Input, InputGroup, InputGroupText, Row } from "reactstrap";
-import { TLotsDraw } from "../../type/lotsdraw";
+import { TLotsDraw, TLotsDrawMatrix } from "../../type/lotsdraw";
 import { Btn, H3, H5 } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useEffect, useRef, useState } from "react";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { ColumnDef } from "@tanstack/react-table";
-import { lotsdrawScheduleGet, lotsdrawsGet, lotsdrawUpdate } from "../../Service/lotsdraw";
+import {
+    lotsdrawScheduleConfirm,
+    lotsdrawScheduleGet,
+    lotsdrawScheduleUpdate,
+    lotsdrawsGet,
+    lotsdrawUpdate,
+} from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
+import { forEach } from "lodash";
+import { t } from "i18next";
 
-const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, onCancel }: any) => {
+const LotsDrawSchedule = ({ member_count, turn_count, sport_id, content_id, onCancel }: any) => {
     const [schedule, setSchedule] = useState<any>([]);
-
+    const [validConfirm, setValidConfirm] = useState<any>(true);
+    const listTicketValid = useRef([]);
+    const [matrix, setMatrix] = useState<any>(
+        Array.from({ length: turn_count }, () => Array(member_count).fill({ ticket: "", id: undefined }))
+    );
     const fetch_data = async () => {
-        await lotsdrawScheduleGet(numberPerRound, sport_id, content_id).then((res) => {
-            console.log(res.data);
+        const listTicket = await lotsdrawScheduleUpdate(member_count, turn_count, sport_id, content_id).then((res) => {
             setSchedule(res.data);
+            return res.data;
+        });
+
+        listTicket.lst_member_ticket.forEach((ticket: TLotsDrawMatrix) => {
+            if (ticket.turn > 0 && ticket.turn_index > 0) {
+                updateMatrix(
+                    ticket.turn - 1,
+                    ticket.turn_index - 1,
+                    ticket.ticket_index.toString() + ticket.ticket_code,
+                    ticket.id
+                );
+            }
+        });
+
+        listTicketValid.current = listTicket.lst_member_ticket
+            .map((e: any) => {
+                if (e.ticket_index && e.ticket_code) {
+                    return e.ticket_index + e.ticket_code;
+                }
+            })
+            .filter((item: any) => item !== undefined);
+    };
+    const updateListTicketMatrix = () => {
+        var newListTicket: { id: any; content_id: any; turn: any; turn_index: any }[] = [];
+
+        matrix.forEach((round: any, indexRound: any) => {
+            round.forEach((match: any, indexMatch: any) => {
+                if (match.ticket != "") {
+                    var newItem = schedule.lst_member_ticket.filter(
+                        (item: TLotsDrawMatrix) => item.ticket_index + item.ticket_code == match.ticket
+                    )[0];
+                    console.log(
+                        schedule.lst_member_ticket.filter(
+                            (item: TLotsDrawMatrix) => item.ticket_index + item.ticket_code == match.ticket
+                        )
+                    );
+                    newListTicket.push({
+                        id: newItem.id,
+                        content_id: newItem.content_id,
+                        turn: indexRound + 1,
+                        turn_index: indexMatch + 1,
+                    });
+                }
+            });
+        });
+        lotsdrawScheduleConfirm(newListTicket, content_id).then(async (res) => {
+            if (res.status == 200) {
+                toast.success("Cập nhật khóa thăm thành công");
+                await fetch_data();
+            } else {
+                toast.error(res.data);
+            }
         });
     };
     useEffect(() => {
         fetch_data();
-        //
     }, []);
-    const handleInputChange = (roundIndex: number, matchIndex: number, value: string) => {
+    const updateMatrix = (roundIndex: number, matchIndex: number, ticket: string, id?: string) => {
         // Create a copy of the current schedule
-        const newSchedule = [...schedule];
+        const newSchedule = [...matrix];
         // Update the specific match ticket
-        newSchedule[roundIndex][matchIndex] = { ...newSchedule[roundIndex][matchIndex], ticket: value };
+        newSchedule[roundIndex][matchIndex] = {
+            ...newSchedule[roundIndex][matchIndex],
+            ticket: ticket,
+            id: id,
+        };
         // Update the state with the new schedule
-        setSchedule(newSchedule);
+
+        setMatrix(newSchedule);
+        if (!checkValidTicket(ticket)) {
+            setValidConfirm(false);
+        } else {
+            setValidConfirm(true);
+        }
     };
-    const numberWay = ["I", "II", "III", "IV", "V", "VI"].slice(0, numberPerRound);
+    const checkValidTicket = (ticket: string) => {
+        if (listTicketValid.current!.filter((e) => e == ticket.trim()).length == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    };
+    const numberWay = ["I", "II", "III", "IV", "V", "VI"].slice(0, member_count);
     return (
         <div>
             <Row className="d-flex">
@@ -46,7 +125,7 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, 
                     </Col>
                 </Row>
 
-                {schedule.map((round: any, roundIndex: any) =>
+                {matrix.map((round: any, roundIndex: any) =>
                     round.length > 0 ? (
                         <Row className="d-flex align-items-center">
                             <Col md={2}>
@@ -59,7 +138,7 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, 
                                         className="text-center "
                                         value={match.ticket}
                                         onChange={(e) => {
-                                            handleInputChange(roundIndex, matchIndex, e.target.value);
+                                            updateMatrix(roundIndex, matchIndex, e.target.value);
                                         }}
                                     />
 
@@ -77,7 +156,13 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, 
                 )}
             </Row>
             <Col xs="12" className="gap-2 d-flex justify-content-center m-t-10">
-                <Btn color="primary" type="button" onClick={() => {}}>
+                <Btn
+                    color="primary"
+                    type="button"
+                    onClick={() => {
+                        validConfirm ? updateListTicketMatrix() : toast.error("Sai định dạng");
+                    }}
+                >
                     Xác nhận
                 </Btn>
                 {onCancel ? (
@@ -127,7 +212,7 @@ const InputGroupCell = ({ onConfirm }: any) => {
                 <Col md={3} className="d-flex"></Col>
             </Row>
             <div className="d-flex justify-content-center m-20">
-                <Btn className={`bg-primary`} onClick={() => onConfirm()}>
+                <Btn className={`bg-primary`} onClick={() => onConfirm(numberRow, numberColumn)}>
                     Tạo lịch khóa thăm &nbsp;
                     <i className="fa fa-plus" />
                 </Btn>
@@ -136,8 +221,10 @@ const InputGroupCell = ({ onConfirm }: any) => {
     );
 };
 
-const useLotsDrawScheduleModal = ({ sportId, content_id, numberPerRound, numberOfTeam }: any) => {
+const useLotsDrawScheduleModal = ({ sportId, content_id }: any) => {
     const [showInput, setShowInput] = useState(false);
+    const [numberRow, setNumberRow] = useState(0);
+    const [numberColumn, setNumberColumn] = useState(0);
     const [opened, setOpened] = useState(false);
     const handleToggle = () => {
         setOpened((s) => !s);
@@ -146,13 +233,21 @@ const useLotsDrawScheduleModal = ({ sportId, content_id, numberPerRound, numberO
     const LotsDrawScheduleModal = () => (
         <CommonModal modalBodyClassName=" text-start" isOpen={opened} toggle={handleToggle}>
             <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
-                {!showInput && <InputGroupCell onConfirm={() => setShowInput(true)} />}
+                {!showInput && (
+                    <InputGroupCell
+                        onConfirm={(row: any, column: any) => {
+                            setShowInput(true);
+                            setNumberRow(row);
+                            setNumberColumn(column);
+                        }}
+                    />
+                )}
                 {showInput && (
                     <>
                         <H3 className="modal-header justify-content-center border-0">Lịch thi đấu</H3>
                         <LotsDrawSchedule
-                            numberPerRound={numberPerRound}
-                            numberOfTeam={numberOfTeam}
+                            member_count={numberRow}
+                            turn_count={numberColumn}
                             sport_id={sportId}
                             content_id={content_id}
                             onCancel={() => {

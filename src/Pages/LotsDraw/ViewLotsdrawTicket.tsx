@@ -1,5 +1,5 @@
 import { Col, Input, Row } from "reactstrap";
-import { TLotsDraw } from "../../type/lotsdraw";
+import { TLotsDraw, TLotsDrawMatrix } from "../../type/lotsdraw";
 import { Btn, H3, H5 } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useEffect, useRef, useState } from "react";
@@ -13,21 +13,43 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, 
     const [schedule, setSchedule] = useState<any>([]);
 
     const fetch_data = async () => {
-        await lotsdrawScheduleGet(numberPerRound, sport_id, content_id).then((res) => {
-            console.log(res.data);
-            setSchedule(res.data);
+        await lotsdrawScheduleGet(sport_id, content_id).then((res) => {
+            if (res.status == 200) {
+                var schedule = Array.from({ length: res.data.turn_count }, () =>
+                    Array(res.data.member_count).fill({ ticket: "", id: undefined })
+                );
+                console.log(schedule);
+                res.data.lst_member_ticket.forEach((ticket: TLotsDrawMatrix) => {
+                    if (ticket.turn > 0 && ticket.turn_index > 0) {
+                        updateMatrix(
+                            schedule,
+                            ticket.turn - 1,
+                            ticket.turn_index - 1,
+                            ticket.ticket_index.toString() + ticket.ticket_code,
+                            ticket.id
+                        );
+                    }
+                });
+            } else {
+                toast.error("Chưa có dữ liệu khóa thăm");
+            }
         });
     };
     useEffect(() => {
         fetch_data();
         //
     }, []);
-    const handleInputChange = (roundIndex: number, matchIndex: number, value: string) => {
+    const updateMatrix = (schedule: any, roundIndex: number, matchIndex: number, ticket: string, id?: string) => {
         // Create a copy of the current schedule
         const newSchedule = [...schedule];
         // Update the specific match ticket
-        newSchedule[roundIndex][matchIndex] = { ...newSchedule[roundIndex][matchIndex], ticket: value };
+        newSchedule[roundIndex][matchIndex] = {
+            ...newSchedule[roundIndex][matchIndex],
+            ticket: ticket,
+            id: id,
+        };
         // Update the state with the new schedule
+
         setSchedule(newSchedule);
     };
     const numberWay = ["I", "II", "III", "IV", "V", "VI"].slice(0, numberPerRound);
@@ -63,9 +85,7 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, 
                                         key={match + roundIndex + matchIndex}
                                         className="text-center "
                                         value={match.ticket}
-                                        onChange={(e) => {
-                                            handleInputChange(roundIndex, matchIndex, e.target.value);
-                                        }}
+                                        readOnly
                                     />
 
                                     // <div>

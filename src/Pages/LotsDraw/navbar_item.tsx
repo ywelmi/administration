@@ -7,6 +7,7 @@ import { PageUpdateLotsdrawTicket } from "./UpdateLotsdrawTicket";
 import { PageUpdateAtheleTicket } from "./UpdateAtheleTicket";
 import { LotsDrawSubmitResultForm } from "../LotsDrawSubmit/LotsDrawSubmitResultAtheleForm";
 import { PageUpdateResult } from "./UpdateResult";
+import { PageExportContentReport } from "./ExportContentReport";
 
 const LotsdrawTabs: React.FC<TabContentProps> = ({ basicTab, setActiveTab }) => {
     return (
@@ -21,7 +22,7 @@ const LotsdrawTabs: React.FC<TabContentProps> = ({ basicTab, setActiveTab }) => 
                 <PageUpdateAtheleTicket />
             </TabPane>
             <TabPane tabId="4">
-                <PageUpdateAtheleTicket />
+                <PageExportContentReport />
             </TabPane>
             <TabPane tabId="5">
                 <PageUpdateResult />
