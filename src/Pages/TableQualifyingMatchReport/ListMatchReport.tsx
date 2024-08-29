@@ -1,13 +1,23 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useParams } from "react-router-dom";
-import { Card, CardBody, Col, Container, Input, Label, Row } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Container,
+  Input,
+  Label,
+  Row,
+} from "reactstrap";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { N } from "../../name-conversion";
 import { tablequalifyingMatchsGet } from "../../Service/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
 import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 import { SearchTableButton } from "../../utils/Constant";
+import { convertToDate } from "../../utils/date";
 import TablequalifyingTableAction from "./MatchAction";
 
 type TTablequalifyingColumn = TTablequalifyingMatch;
@@ -45,6 +55,10 @@ const tableColumns = (
   sortable: true,
   selector: (row: TTablequalifyingColumn) => {
     const col = c as keyof TTablequalifyingColumn;
+    switch (col) {
+      case "match_day":
+        return row[col] ? convertToDate(row[col]) : "";
+    }
     const v =
       row?.[col] !== null
         ? row[col as keyof TTablequalifyingColumn]
@@ -161,13 +175,13 @@ const PageTablequalifyingMatchReport = () => {
         <Row>
           <Col sm="12">
             <Card>
-              {/* <CardHeader className="pb-0 card-no-border"> */}
-              {/*   <div className="btn btn-primary" onClick={handleToggleAddModal}> */}
-              {/*     <i className="fa fa-plus" /> */}
-              {/*     {"Thêm mới"} */}
-              {/*   </div> */}
-              {/*   <TablequalifyingAddModal /> */}
-              {/* </CardHeader> */}
+              <CardHeader className="pb-0 card-no-border">
+                {/* <div className="btn btn-primary" onClick={handleToggleAddModal}>
+                  <i className="fa fa-plus" />
+                  {"Thêm mới"}
+                </div>
+                <TablequalifyingAddModal /> */}
+              </CardHeader>
               <CardBody>
                 <ListTablequalifyingMatchReport
                   data={tablequalifyingMatchReports}

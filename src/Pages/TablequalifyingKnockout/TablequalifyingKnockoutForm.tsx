@@ -139,8 +139,11 @@ const useTablequalifyingKnockout = ({
 
 import { ETable } from "../../type/enum";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import { TabMatchTurn } from "../MatchReport/MatchReportForm";
-import { ListSetReport, useSetReportPopover } from "../MatchReport/SetReport";
+import { TabMatchTurn } from "../TableQualifyingMatchReport/PageMatchTurn";
+import {
+  ListSetReport,
+  useSetReportPopover,
+} from "../TableQualifyingMatchReport/SetReport";
 import { useKnockoutContext } from "./context";
 
 export interface ITablequalifyingKnockoutMatchReportForm {

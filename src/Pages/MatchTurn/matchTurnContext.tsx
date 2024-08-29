@@ -2,18 +2,19 @@ import {
   createContext,
   PropsWithChildren,
   useCallback,
-  useContext,
   useEffect,
   useState,
 } from "react";
 import {
   qualifyingMatchTurnCreate,
   qualifyingMatchTurnsGet,
-} from "../../../../Service/matchTurn";
-import { TMatchTurn } from "../../../../type/matchTurn";
+} from "../../Service/matchTurn";
+import { TMatchTurnResult } from "../../type/matchTurn";
+import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 import { IMatchTurnContext, IMatchTurnQuery } from "./type";
 
-const MatchTurnContext = createContext<IMatchTurnContext>({
+export const MatchTurnContext = createContext<IMatchTurnContext>({
+  match: {} as TTablequalifyingMatch,
   matchId: "",
   setMatchId: () => {},
   matchTurns: [],
@@ -32,16 +33,18 @@ const MatchTurnContext = createContext<IMatchTurnContext>({
 });
 
 export interface IMatchTurnProvider extends PropsWithChildren, IMatchTurnQuery {
+  match: TTablequalifyingMatch;
   matchId: string;
 }
 
-// const _combineMatchTurnsAndSets = (matchTurns: TMatchTurn[], sets: []) => {
+// const _combineMatchTurnsAndSets = (matchTurns: TMatchTurnResult[], sets: []) => {
 //   return [] as TMatchTurnWithSet[];
 // };
 
 const MatchTurnProvider = ({
   children,
   matchId: initMatchId = "",
+  match,
   matchTurnCreate: matchTurnCreate,
   matchTurnsGet,
   matchTurnUpdate,
@@ -52,10 +55,10 @@ const MatchTurnProvider = ({
     setMatchId(initMatchId);
   }, [initMatchId]);
   // const [matchTurnWithSets, setMatchTurnsWithSets] = useState<TMatchTurnWithSet[]>([]);
-  const [matchTurns, setMatchTurns] = useState<TMatchTurn[]>([]);
+  const [matchTurns, setMatchTurns] = useState<TMatchTurnResult[]>([]);
 
-  useEffect(() => {
-    matchTurnsGet()
+  const fetchMatchTurns = useCallback(async () => {
+    return matchTurnsGet()
       .then((res) => {
         // console.log({ res });
         const {
@@ -66,19 +69,24 @@ const MatchTurnProvider = ({
           setMatchTurns(data);
           console.log({ setMatchTurns: data });
         }
+        return data;
       })
       .catch((err) => {
         console.log({ err });
       });
-  }, [matchId, matchTurnsGet]);
+  }, [matchTurnsGet]);
 
-  const updateMatchTurn = useCallback((matchTurn: TMatchTurn) => {
+  useEffect(() => {
+    fetchMatchTurns();
+  }, [fetchMatchTurns]);
+
+  const updateMatchTurn = useCallback((matchTurn: TMatchTurnResult) => {
     setMatchTurns((prev) => {
       return [...prev.map((m) => (m.id === matchTurn.id ? matchTurn : m))];
     });
   }, []);
 
-  const createMatchTurn = useCallback((matchTurn: TMatchTurn) => {
+  const createMatchTurn = useCallback((matchTurn: TMatchTurnResult) => {
     setMatchTurns((prev) => [...prev, matchTurn]);
   }, []);
 
@@ -107,8 +115,10 @@ const MatchTurnProvider = ({
         createMatchTurn,
         delMatchTurn,
         matchId,
+        match,
         setMatchId,
         matchTurns,
+        fetchMatchTurns,
       }}
     >
       {children}
@@ -116,8 +126,10 @@ const MatchTurnProvider = ({
   );
 };
 
-const useMatchTurnContext = () => {
-  return useContext({ ...MatchTurnContext });
+export interface IMatchTurnWrapper extends IMatchTurnProvider {}
+
+const MatchTurnWrapper = ({ children, ...rest }: IMatchTurnWrapper) => {
+  return <MatchTurnProvider {...rest}>{children}</MatchTurnProvider>;
 };
 
-export { MatchTurnProvider, useMatchTurnContext };
+export { MatchTurnProvider, MatchTurnWrapper };

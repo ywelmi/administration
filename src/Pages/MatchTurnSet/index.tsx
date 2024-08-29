@@ -1,15 +1,25 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useContext, useMemo } from "react";
 import { toast } from "react-toastify";
-import { LI, UL } from "../../../../AbstractElements";
-import { InputSelectConfirm } from "../../../../Component/InputSelect";
-import { TanTable } from "../../../../Component/Tables/TanTable/TanTble";
-import { N } from "../../../../name-conversion";
-import { DMatchTurnTeam } from "../../../../type/enum";
-import { TMartialArtTurnWithSet } from "../../../../type/martialArt";
-import { TMatchTurn, TMatchTurnWithSet } from "../../../../type/matchTurn";
+import { LI, UL } from "../../AbstractElements";
+import { InputSelectConfirm } from "../../Component/InputSelect";
+import { TanTable } from "../../Component/Tables/TanTable/TanTble";
+import { N } from "../../name-conversion";
+import {
+  martialArtTurnWithSetGet,
+  martialArtTurnWithSetUpdate,
+} from "../../Service/martialArt";
+import {
+  knockoutMatchTurnSetGet,
+  knockoutMatchTurnSetUpdate,
+  qualifyingMatchTurnSetGet,
+  qualifyingMatchTurnSetUpdate,
+} from "../../Service/matchTurn";
+import { DMatchTurnTeam, ETable } from "../../type/enum";
+import { TMartialArtTurnWithSet } from "../../type/martialArt";
+import { TMatchTurn, TMatchTurnWithSet } from "../../type/matchTurn";
+import { ITurnSetProvider } from "../MatchTurn/type";
 import { TurnSetContext, TurnSetProvider } from "./turnSetContext";
-import { ITurnSetProvider } from "./type";
 
 const displayColumns: ColumnDef<TMatchTurnWithSet>[] = [
   {
@@ -113,29 +123,20 @@ const displayColumns: ColumnDef<TMatchTurnWithSet>[] = [
 
 const _getRowId = (r: TMatchTurn) => r.id;
 
-interface IMatchTurnSet {
-  showTurn?: boolean;
-}
+interface IMatchTurnSet {}
 
-const MatchTurnSet = ({ showTurn }: IMatchTurnSet) => {
+const MatchTurnSet = () => {
   const { cols, matchTurnWithSets } = useContext(TurnSetContext);
   console.log({ matchTurnWithSets });
 
   const columns = useMemo(() => {
-    if (!showTurn) {
-      return [
-        // ...displayColumns.slice(0, -1),
-        ...cols,
-        displayColumns[displayColumns.length - 1],
-      ];
-    }
     return [
-      ...displayColumns.slice(0, -1),
+      // ...displayColumns.slice(0, -1),
       ...cols,
       displayColumns[displayColumns.length - 1],
     ];
     // return [...displayColumns.slice(0, -1), ...cols, displayColumns[-1]];
-  }, [cols, showTurn]);
+  }, [cols]);
 
   return (
     <div className="table-responsive">
@@ -149,12 +150,29 @@ const MatchTurnSet = ({ showTurn }: IMatchTurnSet) => {
 };
 
 const MatchTurnSetWrapper = (props: ITurnSetProvider & IMatchTurnSet) => {
-  const { showTurn } = props;
+  const { tableType } = props;
+  const matchTurnSetsUpdate =
+    tableType === ETable.MARTIALART
+      ? martialArtTurnWithSetUpdate
+      : ETable.KNOCKOUT
+      ? knockoutMatchTurnSetUpdate
+      : qualifyingMatchTurnSetUpdate;
+  const matchTurnSetsGet =
+    tableType === ETable.MARTIALART
+      ? martialArtTurnWithSetGet
+      : ETable.KNOCKOUT
+      ? knockoutMatchTurnSetGet
+      : qualifyingMatchTurnSetGet;
+
   return (
-    <TurnSetProvider {...props}>
-      <MatchTurnSet showTurn={showTurn} />
+    <TurnSetProvider
+      {...props}
+      matchTurnSetsUpdate={matchTurnSetsUpdate}
+      matchTurnSetsGet={matchTurnSetsGet}
+    >
+      <MatchTurnSet />
     </TurnSetProvider>
   );
 };
 
-export { MatchTurnSetWrapper as MatchTurnSet };
+export { MatchTurnSetWrapper };

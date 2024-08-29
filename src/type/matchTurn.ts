@@ -7,6 +7,12 @@ export interface TMatchTurn {
   win_set_count: number;
 }
 
+export interface TMatchTurnResult extends TMatchTurn {
+  win_team_id: string;
+  team1_set_win_count: number;
+  team2_set_win_count: number;
+}
+
 export interface TTurnSet {
   // for add Only
   team1_point: number;

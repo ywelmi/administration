@@ -1,21 +1,30 @@
 import { ColumnDef } from "@tanstack/react-table";
 import omit from "lodash/omit";
-import { useCallback, useEffect, useState } from "react";
+import {
+  forwardRef,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import { toast } from "react-toastify";
-import { Button } from "reactstrap";
-import { LI, UL } from "../../../../AbstractElements";
-import { confirmModal } from "../../../../Component/confirmModal";
-import { InputSelectConfirm } from "../../../../Component/InputSelect";
-import { TanTable } from "../../../../Component/Tables/TanTable/TanTble";
-import { N } from "../../../../name-conversion";
-import { DMatchTurnTeam } from "../../../../type/enum";
-import { TMatchTurn } from "../../../../type/matchTurn";
-import { getUniqueId } from "../../../../utils/id";
-import { useMatchTurnContext } from "./matchTurnContext";
+import { Button, Col } from "reactstrap";
+import { Btn, LI, Popovers, UL } from "../../AbstractElements";
+import { confirmModal } from "../../Component/confirmModal";
+import { InputSelectConfirm } from "../../Component/InputSelect";
+import { TanTable } from "../../Component/Tables/TanTable/TanTble";
+import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { N } from "../../name-conversion";
+import { DMatchTurnTeam } from "../../type/enum";
+import { TMatchTurn } from "../../type/matchTurn";
+import { getUniqueId } from "../../utils/id";
+import { useMatchTurnContext } from "./hook";
 
 interface IMatchTurnForm {
   onCancel?: () => void;
 }
+
 const displayColumns: ColumnDef<TMatchTurn>[] = [
   {
     accessorKey: "indexs",
@@ -82,7 +91,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
               if (status === 200) {
                 toast.success(N["success"]);
                 createMatchTurn(data);
-                delMatchTurn(matchTurn.id);
+                table.options.meta?.updateData(index, id, data);
                 console.log({ createMatchTurn: data });
               }
             })
@@ -126,6 +135,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
                 console.log({ matchTurnDel: data });
                 if (status === 200) {
                   toast.success(N["success"]);
+                  delMatchTurn(matchTurn.id);
                   return;
                 }
               })
@@ -133,7 +143,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
                 toast.error(N["error"]);
                 console.log({ err });
               })
-              .finally(() => delMatchTurn(matchId));
+              .finally(() => table.options.meta?.removeData(index));
         }
         return;
       };
@@ -159,7 +169,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
 const _getRowId = (r: TMatchTurn) => r.id;
 const PREF_TMP_ID = "matchTurn";
 
-export const MatchTurnForm = ({
+export const MatchTurnDirectoryForm = ({
   // matchTurn,
   // onSubmit,
   onCancel,
@@ -171,7 +181,7 @@ export const MatchTurnForm = ({
 
   // console.log({ MatchTurnFormMatchTurns: matchTurns });
   useEffect(() => {
-    console.log({ changematchTurns: matchTurns });
+    console.log({ MatchTurnDirectoryFormChangematchTurns: matchTurns });
     setData(matchTurns);
   }, [matchTurns]);
 
@@ -203,16 +213,122 @@ export const MatchTurnForm = ({
         // selectableRowSelected={selectableRowSelected}
         getRowId={_getRowId}
       />
-      {/* <Col xs="12" className="gap-2" style={{ display: "flex" }}>
-        <Btn color="primary" type="button">
+      <Col xs="12" className="gap-2" style={{ display: "flex" }}>
+        {/* <Btn color="primary" type="button">
           Xác nhận
-        </Btn>
+        </Btn> */}
         {onCancel ? (
           <Btn color="primary" type="button" onClick={onCancel}>
             Đóng
           </Btn>
         ) : null}
-      </Col> */}
+      </Col>
     </div>
   );
 };
+
+interface IMatchTurnDirectoryPopover extends IMatchTurnForm, PropsWithChildren {
+  target: string;
+}
+
+const MatchTurnDirectoryPopover = forwardRef(
+  ({ children, target, ...rest }: IMatchTurnDirectoryPopover, ref) => {
+    const [opened, setOpened] = useState(false);
+    // const handleToggle = () => {
+    //   setOpened((s) => !s);
+    // };
+
+    useImperativeHandle(ref, () => ({
+      handleToggle: () => {
+        setOpened((s) => !s);
+      },
+    }));
+
+    // const handleSubmit = (teammember: TMatchTurnDirectory) => {
+    //   onSubmit(teammember);
+    //   setOpened(false);
+    // };
+
+    // const MatchTurnDirectoryPopover = (
+    //   { children, target }: React.PropsWithChildren<{ target: string }>,
+    // ) => (
+    return (
+      <div>
+        {children}
+        <Popovers
+          isOpen={opened}
+          placement="right-end"
+          target={target}
+          trigger="click"
+        >
+          <MatchTurnDirectoryForm
+            // onSubmit={handleSubmit}
+            {...rest}
+            onCancel={() => setOpened(false)}
+          />
+        </Popovers>
+      </div>
+    );
+    // );
+
+    // return { MatchTurnDirectoryPopover, handleToggle };
+  }
+);
+
+export interface IMatchTurnDirectoryModal
+  extends IMatchTurnForm,
+    PropsWithChildren {
+  // target: string;
+  onClose?: () => void;
+}
+
+export interface IMatchTurnDirectoryModalProps {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+}
+
+const MatchTurnDirectoryModal = forwardRef<
+  IMatchTurnDirectoryModalProps,
+  IMatchTurnDirectoryModal
+>(({ onClose }: IMatchTurnDirectoryModal, ref) => {
+  const [opened, setOpened] = useState(false);
+
+  const handleToggle = useCallback(() => {
+    setOpened((s) => {
+      s && onClose && onClose();
+      return !s;
+    });
+    // onClose?.();
+  }, [onClose]);
+
+  useImperativeHandle<
+    IMatchTurnDirectoryModalProps,
+    IMatchTurnDirectoryModalProps
+  >(
+    ref,
+    () => ({
+      toggle: handleToggle,
+      close: () => setOpened(false),
+      open: () => setOpened(true),
+    }),
+    [handleToggle]
+  );
+
+  return (
+    <CommonModal
+      backdrop="static"
+      modalBodyClassName="social-profile text-start"
+      isOpen={opened}
+      toggle={handleToggle}
+      title="Trận đấu nhỏ"
+    >
+      <MatchTurnDirectoryForm
+        // onSubmit={handleSubmit}
+        onCancel={handleToggle}
+      />
+    </CommonModal>
+  );
+});
+
+export { MatchTurnDirectoryModal, MatchTurnDirectoryPopover };

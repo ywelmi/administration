@@ -17,7 +17,7 @@ import {
 } from "../../Service/tablequalifyingKnockout";
 import { TTablequalifyingKnockoutMatchReport } from "../../type/tablequalifyingKnockout";
 import { ICustomSeedProps } from "../../typing/treeRound";
-import { MatchTurnWrapper } from "../MatchReport/MatchAction/MatchTurn";
+import { MatchTurnWrapper } from "../MatchTurn/matchTurnContext";
 import { useKnockoutContext } from "./context";
 import { TablequalifyingKnockoutMatchReportModal } from "./TablequalifyingKnockoutForm";
 
