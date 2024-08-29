@@ -411,13 +411,7 @@ const PageUpdateAtheleTicket = () => {
                                                 {contentType == 1 ? (
                                                     <ListContentLotsDraw tableRef={ref} data={data} showAction />
                                                 ) : (
-                                                    <div className="d-flex">
-                                                        <ListContentGroupLotsDraw
-                                                            tableRef={ref}
-                                                            data={data}
-                                                            showAction
-                                                        />
-                                                    </div>
+                                                    <ListContentGroupLotsDraw tableRef={ref} data={data} showAction />
                                                 )}
                                             </div>
                                         ) : (
