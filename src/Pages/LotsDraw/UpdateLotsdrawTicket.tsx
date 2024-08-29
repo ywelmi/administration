@@ -444,23 +444,27 @@ const PageUpdateLotsdrawTicket = () => {
                                             <TeamAddModal />
                                         </div>
                                     )}
-                                    <div className="d-flex">
+                                    <div className="d-flex justify-content-center">
                                         <ListUnitLotsDraw tableRef={ref} data={dataUnit} showAction />
-                                        {dataGroup.length > 0
-                                            ? contentType == 2 && (
-                                                  <ListGroupLotsDraw tableRef={refGroup} data={dataGroup} showAction />
-                                              )
-                                            : contentType == 2 && (
-                                                  <H3 className="text-center">Chưa có đội nào được tạo</H3>
-                                              )}
+                                        {contentType == 2 && dataGroup.length > 0 ? (
+                                            <ListGroupLotsDraw tableRef={refGroup} data={dataGroup} showAction />
+                                        ) : (
+                                            contentType == 2 && (
+                                                <H3 className="text-center">Chưa có đội nào được tạo</H3>
+                                            )
+                                        )}
                                     </div>
                                     <div className="d-flex justify-content-center m-10">
                                         <Btn
                                             className="btn btn-info m-l-10"
                                             onClick={() => {
-                                                dataGroup.length == dataUnit.length
-                                                    ? toggleLotsDrawScheduleModal()
-                                                    : toast.error("Chưa đăng ký đủ số đội vào nội dung thi");
+                                                if (contentType == 2) {
+                                                    dataGroup.length == dataUnit.length
+                                                        ? toggleLotsDrawScheduleModal()
+                                                        : toast.error("Chưa đăng ký đủ số đội vào nội dung thi");
+                                                } else {
+                                                    toggleLotsDrawScheduleModal();
+                                                }
                                             }}
                                         >
                                             Cập nhật khóa thăm
