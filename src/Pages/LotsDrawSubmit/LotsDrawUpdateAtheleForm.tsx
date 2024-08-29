@@ -41,6 +41,7 @@ const LotsDrawUpdateAtheleForm = ({ sportId, team_id, content_id, onCancel }: IL
                         accessorKey: "member_id",
                         header: "Tên vận động viên",
                         footer: (props) => props.column.id,
+
                         cell({ getValue, row: { index, original }, column: { id }, table }) {
                             // let hasEmptyFiled = false;
                             // const idx = Object.values(original).findIndex((v) => v == null);
@@ -88,6 +89,23 @@ const LotsDrawUpdateAtheleForm = ({ sportId, team_id, content_id, onCancel }: IL
                         accessorKey: "ticket_code",
                         footer: (props) => props.column.id,
                         header: "Mã thăm cá nhân",
+                        cell(props) {
+                            return <div className="form-control">{props.getValue() as string}</div>;
+                        },
+                    },
+
+                    {
+                        accessorKey: "ticket_index",
+                        footer: (props) => props.column.id,
+                        header: "Làn bơi/Đường chạy",
+                        cell(props) {
+                            return <div className="form-control">{props.getValue() as string}</div>;
+                        },
+                    },
+                    {
+                        accessorKey: "ticket_index",
+                        footer: (props) => props.column.id,
+                        header: "Đợt bơi/Lượt chạy",
                         cell(props) {
                             return <div className="form-control">{props.getValue() as string}</div>;
                         },

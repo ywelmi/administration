@@ -1,4 +1,10 @@
-import { ILotsDrawResultTemplate, TLotsDraw, TLotsDrawMember, TLotsDrawUpdateAthele } from "../type/lotsdraw";
+import {
+    ILotsDrawResultTemplate,
+    TLotsDraw,
+    TLotsDrawMatrix,
+    TLotsDrawMember,
+    TLotsDrawUpdateAthele,
+} from "../type/lotsdraw";
 import { baseGetParams } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
 
@@ -27,8 +33,7 @@ export const lotsdrawUpdate = (sportId: string, content_id: string, lotsdraw: an
 
 // lấy danh sách Cập nhật điểm cho đơn vị theo môn thi
 export const lotsdrawResultTableGet = (org_id: string, sport_id: string, content_id: string) => {
-    return httpPost<ILotsDrawResultTemplate>(`orgs/${org_id}/SportTicketMembers`, {
-        org_id,
+    return httpPost<ILotsDrawResultTemplate>(`sportcontents/${content_id}/sport_ticket_members`, {
         sport_id,
         content_id,
     });
@@ -49,8 +54,8 @@ export const getContentConfig = async (content_id: string) => {
 };
 
 // Thực hiện Cập nhật điểm cho đơn vị theo môn thi bốc thăm
-export const lotsdrawResultUpdate = (orgId: string, lotsdrawResult: any) => {
-    return httpPut(`/orgs/${orgId}/SportTicketMembers`, lotsdrawResult);
+export const lotsdrawResultUpdate = (content_id: string, lotsdrawResult: any) => {
+    return httpPut(`/sportcontents/${content_id}/update_sport_result`, lotsdrawResult);
 };
 
 // Thực hiện Cập nhật điểm cho đơn vị theo môn thi bốc thăm
@@ -61,14 +66,25 @@ export const lotsdrawGroupGetAll = async (params = baseGetParams) => {
     return httpPost<any>(`/teamsportgroups/padding_filter`, params);
 };
 // lấy danh sách Cập nhật điểm cho đơn vị theo môn thi
-export const lotsdrawScheduleGet = (member_count: number, sport_id: string, content_id: string) => {
-    return httpPost<any>(`/sports/${sport_id}/matrix_ticket`, {
+export const lotsdrawScheduleGet = (sport_id: string, content_id: string) => {
+    return httpGet<any>(`/sportcontents/${content_id}/get_matrix_ticket/`, {});
+};
+export const lotsdrawScheduleUpdate = (
+    member_count: number,
+    turn_count: string,
+    sport_id: string,
+    content_id: string
+) => {
+    return httpPost<any>(`/sportcontents/${content_id}/update_matrix_ticket`, {
         member_count,
         sport_id,
         content_id,
+        turn_count,
     });
 };
-
+export const lotsdrawScheduleConfirm = (listTicket: any, content_id: string) => {
+    return httpPut<any>(`/sportcontents/${content_id}/update_turn_member`, listTicket);
+};
 export const groupUpdate = (sport_id: string, lotsdraw: Partial<TLotsDraw>[]) => {
     return httpPut(`/sports/${sport_id}/TeamSports`, lotsdraw);
 };
