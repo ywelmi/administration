@@ -19,12 +19,11 @@ export interface TLotsDrawUpdateAthele {
     member_id: string;
     member_name: string;
     ticket_index: number;
-    match_time?: string;
+
     clothers_number?: string;
     ticket_code: string;
-    match_hour?: string;
-    match_date?: string;
-    locations?: string;
+    turn: number;
+    turn_index: number;
 }
 
 export interface TLotsDrawMember {

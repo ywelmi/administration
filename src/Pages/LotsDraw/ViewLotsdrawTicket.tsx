@@ -11,6 +11,7 @@ import { N } from "../../name-conversion";
 
 const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, onCancel }: any) => {
     const [schedule, setSchedule] = useState<any>([]);
+    const [numberWay, setNumberWay] = useState<any>([]);
 
     const fetch_data = async () => {
         await lotsdrawScheduleGet(sport_id, content_id).then((res) => {
@@ -18,6 +19,7 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, 
                 var schedule = Array.from({ length: res.data.turn_count }, () =>
                     Array(res.data.member_count).fill({ ticket: "", id: undefined })
                 );
+                setNumberWay(["I", "II", "III", "IV", "V", "VI"].slice(0, res.data.member_count));
                 console.log(schedule);
                 res.data.lst_member_ticket.forEach((ticket: TLotsDrawMatrix) => {
                     if (ticket.turn > 0 && ticket.turn_index > 0) {
@@ -62,26 +64,23 @@ const LotsDrawSchedule = ({ numberPerRound, numberOfTeam, sport_id, content_id, 
 
         setSchedule(newSchedule);
     };
-    const numberWay = ["I", "II", "III", "IV", "V", "VI"].slice(0, numberPerRound);
+
     return (
         <div>
-            <div className="d-flex justify-content-between">
-                <div className="rounded-[50%] p-1" onClick={() => onCancel()}>
-                    <i className="icon-close " />
-                </div>
-            </div>
             <Row className="d-flex">
-                <Row className="d-flex align-items-center">
-                    <Col md={2}>
-                        <h4 className="text-center m-10">Đợt/ đường</h4>
-                    </Col>
+                {schedule.length > 0 && (
+                    <Row className="d-flex align-items-center">
+                        <Col md={2}>
+                            <h4 className="text-center m-10">Đợt/ đường</h4>
+                        </Col>
 
-                    <Col md={10} className="d-flex justify-content-between  ">
-                        {numberWay.map((way) => (
-                            <Input className="text-center font-weight-bold border-0" readOnly value={way} />
-                        ))}
-                    </Col>
-                </Row>
+                        <Col md={10} className="d-flex justify-content-between  ">
+                            {numberWay.map((way: any) => (
+                                <Input className="text-center font-weight-bold border-0" readOnly value={way} />
+                            ))}
+                        </Col>
+                    </Row>
+                )}
 
                 {schedule.map((round: any, roundIndex: any) =>
                     round.length > 0 ? (

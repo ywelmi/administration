@@ -4,7 +4,7 @@ import ReactDatePicker from "react-datepicker";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Card, CardBody, CardHeader, Col, Container, Input, InputGroupText, Row } from "reactstrap";
-import { Btn, H1, H2, H3, H5 } from "../../AbstractElements";
+import { Btn, H1, H2, H3, H5, P } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { InputSelect } from "../../Component/InputSelect";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
@@ -13,12 +13,14 @@ import { getMoreFilterByValue } from "../../Service/_getParams";
 import {
     getContentSport,
     getNumberAthele,
+    getScheduleContent,
     lotsdrawResultTableGet,
     lotsdrawScheduleGet,
     lotsdrawsGet,
     // lotsdrawCreate,
     // lotsdrawDelete,
     lotsdrawUpdate,
+    updateScheduleContent,
 } from "../../Service/lotsdraw";
 import { martialArtArmyGroupDelete } from "../../Service/martialArt";
 import { groupGetAll, martialArtMilitiaArmyGroupCreate } from "../../Service/martialArtMilitia";
@@ -38,6 +40,7 @@ import LotsdrawTabs from "./navbar_item";
 import NavBar from "./navbar";
 import { useViewLotsDrawScheduleModal } from "./ViewLotsdrawTicket";
 import { TGroup } from "../../type/team";
+import { ContentSchedule } from "./ContentSchedule";
 
 interface IListLotsDraw {
     showAction?: boolean;
@@ -227,6 +230,7 @@ const PageUpdateLotsdrawTicket = () => {
     // dữ liệu bảng thăm theo đơn vị
     const [dataUnit, setDataUnit] = useState<TLotsDraw[]>([]);
     const [dataGroup, setDataGroup] = useState<TGroup[]>([]);
+
     useEffect(() => {
         if (sportId) {
             fetchData(sportId);
@@ -243,7 +247,7 @@ const PageUpdateLotsdrawTicket = () => {
             })
             .catch((err) => console.log({ err }));
         fetchData(sportId);
-        setSelectedContentSport(id);
+
         if (content_type == 2) {
             const contentFilter = getMoreFilterByValue("content_id", "=", id);
 
@@ -257,6 +261,7 @@ const PageUpdateLotsdrawTicket = () => {
                 })
                 .catch((err) => console.log({ err }));
         }
+        setSelectedContentSport(id);
     };
     const handleDeleteGroup = (id: any) => {
         martialArtArmyGroupDelete(id)
@@ -272,6 +277,7 @@ const PageUpdateLotsdrawTicket = () => {
                 console.log({ err });
             });
     };
+
     const fetchData = useCallback((sportId: string) => {
         getContentSport(sportId)
             .then((res) => {
@@ -429,8 +435,9 @@ const PageUpdateLotsdrawTicket = () => {
                                     </div>
                                     <ViewLotsDrawScheduleModal />
                                     <LotsDrawScheduleModal />
+                                    <ContentSchedule content_id={selectedContentSport} />
                                     {contentType == "2" && (
-                                        <div className="d-flex justify-content-center m-t-10">
+                                        <div className="d-flex justify-content-center m-b-10">
                                             <div
                                                 className="btn btn-primary"
                                                 onClick={() => {

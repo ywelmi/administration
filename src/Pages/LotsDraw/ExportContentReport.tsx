@@ -36,7 +36,7 @@ import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
 import LotsdrawTabs from "./navbar_item";
 import NavBar from "./navbar";
-import { sportXuatXepHang } from "../../Service/sport";
+import { sportXuatPhieuDiem, sportXuatXepHang } from "../../Service/sport";
 
 const PageExportContentReport = () => {
     const { sportSelector, unitType } = useConfigStore();
@@ -108,7 +108,7 @@ const PageExportContentReport = () => {
                                             className="btn btn-info"
                                             onClick={() => {
                                                 if (sportId) {
-                                                    sportXuatXepHang(sportId);
+                                                    sportXuatPhieuDiem(sportId);
 
                                                     // setTimeout(() => fetchData(sportId), 2000);
                                                 } else {
