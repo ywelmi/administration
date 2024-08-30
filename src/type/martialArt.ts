@@ -10,8 +10,8 @@ export interface TMartialArt {
   weight_id: string;
   id: string;
 
-  min_member_count?: number;
-  member_count?: number;
+  min_member_count: number;
+  member_ligible: number;
 }
 
 export interface TWeigh {
@@ -47,4 +47,8 @@ export interface TMartialArtSet extends TTurnSet {
 export interface TMartialArtTurnWithSet {
   id: string;
   sets: TMartialArtSet[];
+
+  // Dành cho các môn có đôi nam nữ
+  lst_member_team1: string[];
+  lst_member_team2: string[];
 }

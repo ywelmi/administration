@@ -40,10 +40,6 @@ export interface IMatchTurnProvider extends PropsWithChildren, IMatchTurnQuery {
   tableType: ETable;
 }
 
-// const _combineMatchTurnsAndSets = (matchTurns: TMatchTurnResult[], sets: []) => {
-//   return [] as TMatchTurnWithSet[];
-// };
-
 const MatchTurnProvider = ({
   children,
   matchId: initMatchId = "",
@@ -103,10 +99,6 @@ const MatchTurnProvider = ({
       return newData;
     });
   }, []);
-
-  // const matchTurnsWithSets = useMemo<TMatchTurnWithSet[]>(() => {
-  //   return _combineMatchTurnsAndSets(matchTurns, []);
-  // }, [matchTurns]);
 
   return (
     <MatchTurnContext.Provider

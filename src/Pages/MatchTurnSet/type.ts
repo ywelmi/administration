@@ -11,8 +11,8 @@ import {
   qualifyingMatchTurnSetUpdate,
 } from "../../Service/matchTurn";
 import { ETable } from "../../type/enum";
-import { TMartialArtSet } from "../../type/martialArt";
-import { TMatchTurnResult } from "../../type/matchTurn";
+import { TMartialArtSet, TMartialArtTurnWithSet } from "../../type/martialArt";
+import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 
 export interface ITurnSetQuery {
   matchTurnSetsUpdate:
@@ -28,7 +28,9 @@ export interface ITurnSetQuery {
 export interface ITurnSetContext extends ITurnSetQuery {
   sets: TMartialArtSet[];
   setSets: (sets: TMartialArtSet[]) => void;
-  matchTurn: TMatchTurnResult;
+  matchTurn: TMartialArtTurnWithSet;
+  // setMatchTurn: (s: TMartialArtTurnWithSet) => void;
+  match: TTablequalifyingMatch;
   insertNewSet: () => void;
   cols: ColumnDef<TMartialArtSet>[];
   isEditing: boolean;
@@ -40,5 +42,6 @@ export interface ITurnSetContext extends ITurnSetQuery {
 
 export interface ITurnSetProvider extends ITurnSetQuery, PropsWithChildren {
   tableType: ETable;
-  matchTurn: TMatchTurnResult;
+  matchTurn: TMartialArtTurnWithSet;
+  match: TTablequalifyingMatch;
 }

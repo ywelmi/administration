@@ -31,6 +31,6 @@ export interface TDetailedTurnSet extends TTurnSet {
   id: string;
 }
 
-export interface TMatchTurnWithSet extends TMatchTurn {
-  sets: TTurnSet[];
-}
+// export interface TMatchTurnWithSet extends TMatchTurn {
+//   sets: TTurnSet[];
+// }

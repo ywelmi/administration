@@ -1,8 +1,8 @@
+import { TMartialArtTurnWithSet } from "../type/martialArt";
 import {
   TDetailedTurnSet,
   TMatchTurn,
   TMatchTurnResult,
-  TMatchTurnWithSet,
 } from "../type/matchTurn";
 import { baseGetParams, IListResponse } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
@@ -41,7 +41,7 @@ export const knockoutMatchTurnSetsGet = (matchTurnId: string) => {
 
 // --with sets--
 export const knockoutMatchTurnSetUpdate = (
-  matchTurnWithSets: Pick<TMatchTurnWithSet, "id" | "sets">
+  matchTurnWithSets: Pick<TMartialArtTurnWithSet, "id" | "sets">
 ) => {
   return httpPut<TMatchTurnResult>(
     `/tableknockoutmatchturns/${matchTurnWithSets.id}/update_result`,
@@ -85,7 +85,7 @@ export const qualifyingMatchTurnDelete = (id: string) => {
 
 // --with sets--
 export const qualifyingMatchTurnSetUpdate = (
-  matchTurnWithSets: Pick<TMatchTurnWithSet, "id" | "sets">
+  matchTurnWithSets: Pick<TMartialArtTurnWithSet, "id" | "sets">
 ) => {
   return httpPut<TMatchTurnResult>(
     `/tablequalifyingmatchturns/${matchTurnWithSets.id}/update_result`,

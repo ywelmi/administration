@@ -102,6 +102,7 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
       const { increaseCounter } = useMatchTurnStore();
       const { tableType } = useContext(MatchTurnContext);
 
+      const { match } = useMatchTurnContext();
       // const handleUpdateMatchTurn = (matchTurn: TMatchTurnResult) => {
       //   console.log({ handleUpdateMatchTurn: matchTurn });
       //   if (matchTurn?.id.includes(PREF_TMP_ID)) {
@@ -193,6 +194,7 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
               onClose={increaseCounter}
             >
               <MatchTurnSetWrapper
+                match={match}
                 tableType={tableType}
                 matchTurn={
                   // { id: tablequalifyingKnockoutMatchReport.id } as TMatchTurn,

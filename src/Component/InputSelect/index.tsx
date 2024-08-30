@@ -1,3 +1,4 @@
+import Multiselect from "multiselect-react-dropdown";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Input, InputGroup, InputGroupText } from "reactstrap";
 
@@ -141,4 +142,56 @@ const InputSelectConfirm = <T,>({
     </div>
   );
 };
-export { InputSelect, InputSelectConfirm };
+
+interface IInputMultipleSelect<T> {
+  title?: string;
+  data: (T & { [ki: string]: any })[];
+  selectedData: (T & { [ki: string]: any })[];
+  onSelect: (
+    a: (T & { [ki: string]: any })[],
+    s: T & { [ki: string]: any }
+  ) => void;
+  onRemove: (
+    a: (T & { [ki: string]: any })[],
+    s: T & { [ki: string]: any }
+  ) => void;
+  k: keyof T;
+  v: keyof T;
+  name: string;
+}
+
+const InputMultipleSelect = <T,>({
+  title,
+  data,
+  selectedData,
+  k,
+  v,
+  onSelect,
+  onRemove,
+}: IInputMultipleSelect<T>) => {
+  const inputData = data.map((item) => ({
+    name: item[k],
+    id: item[v],
+  }));
+  return (
+    <InputGroup className="relative">
+      {title ? (
+        <InputGroupText>
+          <strong>{title}</strong>
+        </InputGroupText>
+      ) : null}
+      <div className="form-control">
+        <Multiselect
+          placeholder="Nhấn chọn..."
+          options={inputData} // Options to display in the dropdown
+          selectedValues={selectedData} // Preselected value to persist in dropdown
+          onSelect={onSelect} // Function will trigger on select event
+          onRemove={onRemove} // Function will trigger on remove event
+          displayValue="name" // Property name to display in the dropdown options
+        />
+      </div>
+    </InputGroup>
+  );
+};
+
+export { InputMultipleSelect, InputSelect, InputSelectConfirm };

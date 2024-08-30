@@ -6,15 +6,18 @@ import {
   qualifyingMatchTurnSetUpdate,
 } from "../../Service/matchTurn";
 import { ETable } from "../../type/enum";
-import { TMartialArtSet } from "../../type/martialArt";
-import { TMatchTurnResult } from "../../type/matchTurn";
+import { TMartialArtSet, TMartialArtTurnWithSet } from "../../type/martialArt";
+import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 import { ITurnSetContext, ITurnSetProvider } from "./type";
 
 const TurnSetContext = createContext<ITurnSetContext>({
   isEditing: false,
   sets: [],
+
+  // setMatchTurn: () => {},
   setSets: () => {},
-  matchTurn: {} as TMatchTurnResult,
+  matchTurn: {} as TMartialArtTurnWithSet,
+  match: {} as TTablequalifyingMatch,
   insertNewSet: () => {},
   removeSet: () => {},
   cols: [],
@@ -33,10 +36,15 @@ const TurnSetProvider = ({
   matchTurnSetsGet,
   matchTurn,
   tableType,
+  match,
 }: ITurnSetProvider) => {
   const [isEditing, setIsEditing] = useState(false);
   const [cols, setCols] = useState<ColumnDef<TMartialArtSet>[]>([]);
   const [sets, setSets] = useState<TMartialArtSet[]>([]);
+  // const [matchTurn, setMatchTurn] = useState(initMatchTurn);
+  // useEffect(() => {
+  //   setMatchTurn(initMatchTurn);
+  // }, [initMatchTurn]);
   console.log({ ITurnSetProviderTableType: tableType, matchTurnSetsUpdate });
 
   const startEdit = useCallback(() => {
@@ -179,38 +187,12 @@ const TurnSetProvider = ({
         matchTurnSetsGet,
         matchTurnSetsUpdate,
         matchTurn,
+        match,
       }}
     >
       {children}
     </TurnSetContext.Provider>
   );
 };
-
-// const _fetchFulMatchTurnsWithSets = async (
-//   matchTurns: TMatchTurnResult[],
-//   matchTurnSetsGet: typeof knockoutMatchTurnSetGet
-// ): Promise<TMartialArtTurnWithSet[]> => {
-//   return Promise.all(
-//     matchTurns.map((turn) =>
-//       matchTurnSetsGet(turn.id).then((res) => {
-//         const { status, data } = res;
-//         console.log({ matchTurnSetsGetData: data });
-//         if (status === 200)
-//           return {
-//             ...turn,
-//             sets: data,
-//             // sets: data.map(({ team1_point, team2_point, note }) => ({
-//             //   team1_point,
-//             //   team2_point,
-//             //   note,
-//             // })),
-//           } as TMartialArtTurnWithSet;
-
-//         console.log({ err: { status, data } });
-//         return Promise.reject();
-//       })
-//     )
-//   );
-// };
 
 export { TurnSetContext, TurnSetProvider };

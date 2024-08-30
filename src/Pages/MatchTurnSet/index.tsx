@@ -1,13 +1,22 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { useCallback, useContext, useMemo, useRef } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "react-toastify";
-import { Card, CardBody, CardHeader } from "reactstrap";
+import { Card, CardBody, CardHeader, Col } from "reactstrap";
 import { LI, UL } from "../../AbstractElements";
+import { InputMultipleSelect } from "../../Component/InputSelect";
 import {
   ITanTableRef,
   TanTable,
 } from "../../Component/Tables/TanTable/TanTble";
 import { N } from "../../name-conversion";
+import { getFilterByValue } from "../../Service/_getParams";
 import {
   martialArtTurnWithSetGet,
   martialArtTurnWithSetUpdate,
@@ -18,8 +27,10 @@ import {
   qualifyingMatchTurnSetGet,
   qualifyingMatchTurnSetUpdate,
 } from "../../Service/matchTurn";
+import { teamsGet } from "../../Service/team";
 import { ETable } from "../../type/enum";
 import { TMartialArtSet, TMartialArtTurnWithSet } from "../../type/martialArt";
+import { TTeammeberTiny } from "../../type/teammember";
 import { TurnSetContext, TurnSetProvider } from "./turnSetContext";
 import { ITurnSetProvider } from "./type";
 
@@ -32,38 +43,10 @@ const displayColumns: ColumnDef<TMartialArtSet>[] = [
       column: { id },
       table,
     }) {
-      const { matchTurnSetsUpdate, removeSet, updateSet } =
-        useContext(TurnSetContext);
+      const { removeSet } = useContext(TurnSetContext);
 
-      // const handleUpdateMatchTurn = (
-      //   matchTurn: TMatchTurnWithSet | TMartialArtTurnWithSet
-      // ) => {
-      //   console.log({ handleUpdateMatchTurn: matchTurn });
-      //   const { id, sets } = matchTurn;
-      //   const matchTurnSubmit = {
-      //     id,
-      //     sets,
-      //   };
-      //   matchTurnSetsUpdate(
-      //     matchTurnSubmit as (typeof matchTurnSetsUpdate.arguments)[0]
-      //   )
-      //     .then((res) => {
-      //       const { status, data } = res;
-      //       if (status === 200) {
-      //         toast.success(N["success"]);
-      //         console.log({ qualifyingMatchTurnSetUpdate: data });
-      //       }
-      //     })
-      //     .catch((err) => {
-      //       toast.error(err?.data ? err.data : N["failed"]);
-      //     });
-      // };
-
-      // const { insertNewSet: insertRowSet } = useContext(TurnSetContext);
       const handleConfirmDel = useCallback(async () => {
         removeSet(index);
-        // console.log({ row: matchTurn });
-        // table.options.meta?.removeData(index);
       }, [index, removeSet]);
 
       return (
@@ -88,14 +71,37 @@ const displayColumns: ColumnDef<TMartialArtSet>[] = [
   },
 ];
 
+interface ITeamConfig
+  extends Pick<
+    TMartialArtTurnWithSet,
+    "lst_member_team1" | "lst_member_team2"
+  > {}
+
 const MatchTurnSets = () => {
-  const { cols, sets, insertNewSet, matchTurnSetsUpdate, matchTurn, setSets } =
-    useContext(TurnSetContext);
-  console.log({ matchTurnWithSets: sets });
+  const {
+    cols,
+    sets,
+    insertNewSet,
+    matchTurnSetsUpdate,
+    matchTurn,
+    // setMatchTurn,
+    setSets,
+    match,
+  } = useContext(TurnSetContext);
+  console.log({ matchTurnWithSets: sets, match });
 
   const columns = useMemo(() => {
     return [...cols, displayColumns[displayColumns.length - 1]];
   }, [cols]);
+
+  const [teamConfig, setTeamConfig] = useState<ITeamConfig>({
+    lst_member_team1: matchTurn?.lst_member_team1 || [],
+    lst_member_team2: matchTurn?.lst_member_team2 || [],
+  });
+
+  // useEffect(() => {
+  //   setMatchTurn(prev => ({...prev, ...teamConfig}));
+  // }, [ setMatchTurn, teamConfig])
 
   const tableRef = useRef<ITanTableRef<TMartialArtSet>>(null);
 
@@ -105,10 +111,11 @@ const MatchTurnSets = () => {
     console.log({ handleUpdateMatchTurn: matchTurn });
     const { id } = matchTurn;
 
-    const matchTurnSubmit: TMartialArtTurnWithSet = {
+    const matchTurnSubmit = {
       id,
       sets: tableSets,
-    };
+      ...teamConfig,
+    } as TMartialArtTurnWithSet;
 
     console.log({ matchTurnSubmit });
     matchTurnSetsUpdate(matchTurnSubmit)
@@ -131,7 +138,6 @@ const MatchTurnSets = () => {
 
   const handleInsertNewSet = useCallback(() => {
     updateSetsFromTable();
-    // const tableSets = tableRef.current?.getData();
     insertNewSet();
   }, [insertNewSet, updateSetsFromTable]);
 
@@ -143,36 +149,139 @@ const MatchTurnSets = () => {
             <i className="fa fa-plus" />
             {"Thêm mới"}
           </div>
+          <TeammembersSelect
+            team1_id={match.team1_id}
+            team2_id={match.team2_id}
+            onChange={(c) => setTeamConfig(c)}
+            lst_member_team1={teamConfig.lst_member_team1}
+            lst_member_team2={teamConfig.lst_member_team2}
+          />
         </CardHeader>
         <CardBody>
-          <TanTable
-            data={sets}
-            columns={columns}
-            ref={tableRef}
-            // getRowId={_getRowId}
-          />
+          <TanTable data={sets} columns={columns} ref={tableRef} />
         </CardBody>
-        {/* {tableRef?.current?.isChanged && ( */}
-        <div className="btn btn-primary" onClick={handleUpdateMatchTurn}>
-          <i className="fa fa-plus" />
-          {"Lưu"}
-        </div>
-        {/* )} */}
-
-        {/* <div
-          className="btn btn-secondary"
-          onClick={() => tableRef.current?.reset()}
-        >
-          <i className="fa fa-plus" />
-          {"Hủy thay đổi"}
-        </div> */}
+        <Col md={12}>
+          <div className="btn btn-primary m-4" onClick={handleUpdateMatchTurn}>
+            <i className="fa fa-edit" />
+            {"Lưu"}
+          </div>
+        </Col>
       </Card>
     </div>
   );
 };
 
+interface ITeammemberSelect
+  extends Pick<
+    TMartialArtTurnWithSet,
+    "lst_member_team1" | "lst_member_team2"
+  > {
+  team1_id: string;
+  team2_id: string;
+  onChange: (c: ITeamConfig) => void;
+}
+
+const TeammembersSelect = ({
+  team1_id,
+  team2_id,
+  lst_member_team1,
+  onChange,
+  lst_member_team2,
+}: ITeammemberSelect) => {
+  const [team1Mems, setTeam1Mems] = useState<TTeammeberTiny[]>([]);
+  const [team2Mems, setTeam2Mems] = useState<TTeammeberTiny[]>([]);
+
+  useEffect(() => {
+    if (team1_id) {
+      const filter = getFilterByValue("id", ">", team1_id);
+      teamsGet({ filter }).then((res) => {
+        const {
+          data: { data },
+          status,
+        } = res;
+        if (status === 200 && data?.length > 0) {
+          const team = data[0];
+          const mems: TTeammeberTiny[] = [];
+          team.member_ids?.forEach((id, i) => {
+            mems.push({ id, name: team.member_names?.[i] || "" });
+          });
+          setTeam1Mems(mems);
+        }
+      });
+    }
+  }, [team1_id]);
+
+  useEffect(() => {
+    if (team2_id) {
+      const filter = getFilterByValue("id", ">", team2_id);
+      teamsGet({ filter }).then((res) => {
+        const {
+          data: { data },
+          status,
+        } = res;
+        if (status === 200 && data?.length > 0) {
+          const team = data[0];
+          const mems: TTeammeberTiny[] = [];
+          team.member_ids?.forEach((id, i) => {
+            mems.push({ id, name: team.member_names?.[i] || "" });
+          });
+          setTeam2Mems(mems);
+        }
+      });
+    }
+  }, [team2_id]);
+
+  return (
+    <div className="flex flex-col gap-2 mt-3">
+      <InputMultipleSelect
+        title="Đội 1"
+        data={team1Mems}
+        k="name"
+        v="id"
+        name="Đội 1"
+        selectedData={team1Mems.filter(({ id }) =>
+          lst_member_team1.includes(id)
+        )}
+        onSelect={(v) => {
+          onChange({
+            lst_member_team1: v.map(({ id }) => id),
+            lst_member_team2,
+          });
+        }}
+        onRemove={(v) => {
+          onChange({
+            lst_member_team1: v.map(({ id }) => id),
+            lst_member_team2,
+          });
+        }}
+      />
+      <InputMultipleSelect
+        title="Đội 2"
+        data={team2Mems}
+        k="name"
+        v="id"
+        name="Đội 2"
+        selectedData={team2Mems.filter(({ id }) =>
+          lst_member_team2.includes(id)
+        )}
+        onSelect={(v) => {
+          onChange({
+            lst_member_team2: v.map(({ id }) => id),
+            lst_member_team1,
+          });
+        }}
+        onRemove={(v) => {
+          onChange({
+            lst_member_team2: v.map(({ id }) => id),
+            lst_member_team1,
+          });
+        }}
+      />
+    </div>
+  );
+};
 const MatchTurnSetWrapper = (
-  props: Pick<ITurnSetProvider, "tableType" | "matchTurn">
+  props: Pick<ITurnSetProvider, "tableType" | "matchTurn" | "match">
 ) => {
   const { tableType } = props;
   const matchTurnSetsUpdate =

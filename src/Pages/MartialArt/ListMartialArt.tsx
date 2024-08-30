@@ -14,7 +14,6 @@ import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
 import { DGender } from "../../type/enum";
 import { TMartialArt } from "../../type/martialArt";
-import { sportContentMemmberCount } from "../../Service/teammember";
 // import "./style.css";
 
 interface IListMartialArt {
@@ -50,9 +49,9 @@ const tableColumns: ColumnDef<TMartialArt>[] = [
     filterFn: "weakEquals",
   },
   {
-    accessorKey: "member_count",
+    accessorKey: "member_ligible",
     footer: (props) => props.column.id,
-    header: N["member_count"],
+    header: N["member_ligible"],
     cell: (props) => props.getValue() as string,
   },
   {
@@ -183,23 +182,9 @@ const PageMartialArt = () => {
       .then(async (res) => {
         const { data, status } = res;
         if (status === 200 && data?.length) {
-          const listContentExtra = await Promise.all(
-            data.map(async (d) => {
-              const { id } = d;
-              const memberCount = await sportContentMemmberCount(id).then(
-                (res) => res.data
-              );
-              return { ...d, member_count: memberCount };
-            })
+          const listContentsHaveMemmbers = data.filter(
+            (d) => d.member_ligible > d.min_member_count
           );
-          const listContentsHaveMemmbers = listContentExtra.filter(
-            (c) =>
-              c?.min_member_count &&
-              c?.member_count &&
-              c?.min_member_count <= c?.member_count
-          );
-          console.log({ listContentsHaveMemmbers });
-
           setData(listContentsHaveMemmbers);
         }
       })
