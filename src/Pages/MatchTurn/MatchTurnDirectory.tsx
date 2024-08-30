@@ -11,7 +11,7 @@ import {
 } from "react";
 import { toast } from "react-toastify";
 import { Button, Col } from "reactstrap";
-import { Btn, LI, Popovers, UL } from "../../AbstractElements";
+import { Btn, LI, UL } from "../../AbstractElements";
 import { confirmModal } from "../../Component/confirmModal";
 import { InputSelectConfirm } from "../../Component/InputSelect";
 import {
@@ -21,7 +21,7 @@ import {
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { N } from "../../name-conversion";
 import { DMatchTurnTeam } from "../../type/enum";
-import { TMatchTurn } from "../../type/matchTurn";
+import { TMatchTurn, TMatchTurnResult } from "../../type/matchTurn";
 import { getUniqueId } from "../../utils/id";
 import { useMatchTurnContext } from "./hook";
 
@@ -94,7 +94,7 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
               console.log({ status, data });
               if (status === 200) {
                 toast.success(N["success"]);
-                createMatchTurn(data);
+                createMatchTurn(data as TMatchTurnResult);
                 table.options.meta?.updateData(index, id, data);
                 console.log({ createMatchTurn: data });
               }
@@ -235,58 +235,9 @@ export const MatchTurnDirectoryForm = ({
   );
 };
 
-interface IMatchTurnDirectoryPopover extends IMatchTurnForm, PropsWithChildren {
-  target: string;
-}
-
-const MatchTurnDirectoryPopover = forwardRef(
-  ({ children, target, ...rest }: IMatchTurnDirectoryPopover, ref) => {
-    const [opened, setOpened] = useState(false);
-    // const handleToggle = () => {
-    //   setOpened((s) => !s);
-    // };
-
-    useImperativeHandle(ref, () => ({
-      handleToggle: () => {
-        setOpened((s) => !s);
-      },
-    }));
-
-    // const handleSubmit = (teammember: TMatchTurnDirectory) => {
-    //   onSubmit(teammember);
-    //   setOpened(false);
-    // };
-
-    // const MatchTurnDirectoryPopover = (
-    //   { children, target }: React.PropsWithChildren<{ target: string }>,
-    // ) => (
-    return (
-      <div>
-        {children}
-        <Popovers
-          isOpen={opened}
-          placement="right-end"
-          target={target}
-          trigger="click"
-        >
-          <MatchTurnDirectoryForm
-            // onSubmit={handleSubmit}
-            {...rest}
-            onCancel={() => setOpened(false)}
-          />
-        </Popovers>
-      </div>
-    );
-    // );
-
-    // return { MatchTurnDirectoryPopover, handleToggle };
-  }
-);
-
 export interface IMatchTurnDirectoryModal
   extends IMatchTurnForm,
     PropsWithChildren {
-  // target: string;
   onClose?: () => void;
 }
 
@@ -339,4 +290,4 @@ const MatchTurnDirectoryModal = forwardRef<
   );
 });
 
-export { MatchTurnDirectoryModal, MatchTurnDirectoryPopover };
+export { MatchTurnDirectoryModal };

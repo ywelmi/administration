@@ -9,15 +9,17 @@ import {
   qualifyingMatchTurnCreate,
   qualifyingMatchTurnsGet,
 } from "../../Service/matchTurn";
+import { ETable } from "../../type/enum";
 import { TMatchTurnResult } from "../../type/matchTurn";
 import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 import { IMatchTurnContext, IMatchTurnQuery } from "./type";
 
-export const MatchTurnContext = createContext<IMatchTurnContext>({
+const MatchTurnContext = createContext<IMatchTurnContext>({
   match: {} as TTablequalifyingMatch,
   matchId: "",
   setMatchId: () => {},
   matchTurns: [],
+  tableType: {} as ETable,
 
   matchTurnCreate: () =>
     Promise.resolve({} as ReturnType<typeof qualifyingMatchTurnCreate>),
@@ -35,6 +37,7 @@ export const MatchTurnContext = createContext<IMatchTurnContext>({
 export interface IMatchTurnProvider extends PropsWithChildren, IMatchTurnQuery {
   match: TTablequalifyingMatch;
   matchId: string;
+  tableType: ETable;
 }
 
 // const _combineMatchTurnsAndSets = (matchTurns: TMatchTurnResult[], sets: []) => {
@@ -49,6 +52,7 @@ const MatchTurnProvider = ({
   matchTurnsGet,
   matchTurnUpdate,
   matchTurnDel,
+  tableType,
 }: IMatchTurnProvider) => {
   const [matchId, setMatchId] = useState(initMatchId);
   useEffect(() => {
@@ -86,6 +90,7 @@ const MatchTurnProvider = ({
   }, []);
 
   const createMatchTurn = useCallback((matchTurn: TMatchTurnResult) => {
+    console.log({ createMatchTurn: matchTurn });
     setMatchTurns((prev) => [...prev, matchTurn]);
   }, []);
 
@@ -118,6 +123,7 @@ const MatchTurnProvider = ({
         setMatchId,
         matchTurns,
         fetchMatchTurns,
+        tableType,
       }}
     >
       {children}
@@ -131,4 +137,4 @@ const MatchTurnWrapper = ({ children, ...rest }: IMatchTurnWrapper) => {
   return <MatchTurnProvider {...rest}>{children}</MatchTurnProvider>;
 };
 
-export { MatchTurnProvider, MatchTurnWrapper };
+export { MatchTurnContext, MatchTurnProvider, MatchTurnWrapper };

@@ -15,6 +15,7 @@ import {
   tablequalifyingKnockoutResultUpdate,
   tablequalifyingKnockoutUpdate,
 } from "../../Service/tablequalifyingKnockout";
+import { ETable } from "../../type/enum";
 import { TTablequalifyingKnockoutMatchReport } from "../../type/tablequalifyingKnockout";
 import { ICustomSeedProps } from "../../typing/treeRound";
 import { MatchTurnWrapper } from "../MatchTurn/matchTurnContext";
@@ -224,6 +225,7 @@ const CustomSeed = ({
                     matchTurnUpdate={knockoutMatchTurnUpdate}
                     matchTurnDel={knockoutMatchTurnDelete}
                     matchTurnCreate={knockoutMatchTurnCreate}
+                    tableType={ETable.KNOCKOUT}
                     // matchTurnSetsUpdate={knockoutMatchTurnSetUpdate}
                     // matchTurnSetsGet={knockoutMatchTurnSetGet}
                   >

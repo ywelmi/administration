@@ -7,6 +7,7 @@ import {
   qualifyingMatchTurnsGet,
   qualifyingMatchTurnUpdate,
 } from "../../Service/matchTurn";
+import { ETable } from "../../type/enum";
 import { TMatchTurnResult } from "../../type/matchTurn";
 import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 
@@ -27,6 +28,7 @@ export interface IMatchTurnContext extends IMatchTurnQuery {
   setMatchId: (id: string) => void;
   match: TTablequalifyingMatch;
   matchTurns: TMatchTurnResult[];
+  tableType: ETable;
 
   fetchMatchTurns: () => Promise<TMatchTurnResult[]>;
   updateMatchTurn: (m: TMatchTurnResult) => void;

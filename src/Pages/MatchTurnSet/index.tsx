@@ -100,12 +100,14 @@ const MatchTurnSets = () => {
   const tableRef = useRef<ITanTableRef<TMartialArtSet>>(null);
 
   const handleUpdateMatchTurn = () => {
+    const tableSets = tableRef.current?.getData();
+    if (!tableSets) return;
     console.log({ handleUpdateMatchTurn: matchTurn });
     const { id } = matchTurn;
 
     const matchTurnSubmit: TMartialArtTurnWithSet = {
       id,
-      sets,
+      sets: tableSets,
     };
 
     console.log({ matchTurnSubmit });
@@ -129,6 +131,7 @@ const MatchTurnSets = () => {
 
   const handleInsertNewSet = useCallback(() => {
     updateSetsFromTable();
+    // const tableSets = tableRef.current?.getData();
     insertNewSet();
   }, [insertNewSet, updateSetsFromTable]);
 
@@ -175,16 +178,17 @@ const MatchTurnSetWrapper = (
   const matchTurnSetsUpdate =
     tableType === ETable.MARTIALART
       ? martialArtTurnWithSetUpdate
-      : ETable.KNOCKOUT
+      : tableType === ETable.KNOCKOUT
       ? knockoutMatchTurnSetUpdate
       : qualifyingMatchTurnSetUpdate;
   const matchTurnSetsGet =
     tableType === ETable.MARTIALART
       ? martialArtTurnWithSetGet
-      : ETable.KNOCKOUT
+      : tableType === ETable.KNOCKOUT
       ? knockoutMatchTurnSetGet
       : qualifyingMatchTurnSetGet;
 
+  // console.log({ MatchTurnSetWrapperTableType: tableType, matchTurnSetsUpdate });
   return (
     <TurnSetProvider
       {...props}

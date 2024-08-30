@@ -134,137 +134,34 @@ const useGenTreeMartialArt = ({
 };
 
 import { ETable } from "../../type/enum";
+import { TMatchTurnResult } from "../../type/matchTurn";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
 import { MatchTurnSetWrapper } from "../MatchTurnSet";
-import {
-  ListSetReport,
-  useSetReportPopover,
-} from "../TableQualifyingMatchReport/SetReport";
 
 export interface ITablequalifyingKnockoutMatchReportForm {
   tablequalifyingKnockoutMatchReport?: Partial<TTablequalifyingMatchReport>;
   onSubmit: (tablequalifyingMatchReport: TTablequalifyingMatchReport) => void;
-  onCancel?: () => void;
+  onClose?: () => void;
 }
 
 export interface ITablequalifyingMatchReportModal
   extends ITablequalifyingKnockoutMatchReportForm {}
 
-const TablequalifyingKnockoutMatchReportForm = ({
-  tablequalifyingKnockoutMatchReport: initTablequalifyingMatchReport,
-  onSubmit,
-  onCancel,
-}: ITablequalifyingKnockoutMatchReportForm) => {
-  const tablequalifyingMatchReport: Partial<TTablequalifyingMatchReport> =
-    initTablequalifyingMatchReport
-      ? initTablequalifyingMatchReport
-      : {
-          id: "",
-          sets: [],
-        };
-
-  const { t } = useTranslation();
-  const formik = useFormik<Partial<TTablequalifyingMatchReport>>({
-    initialValues: { ...tablequalifyingMatchReport },
-    onSubmit: (value) => {
-      let submitValue = {
-        ...value,
-      } as TTablequalifyingMatchReport;
-      if (submitValue) onSubmit(submitValue);
-    },
-  });
-
-  const { SetReportPopover, handleToggle: handleToggleAddSetReport } =
-    useSetReportPopover({
-      onSubmit: (v) => {
-        const sets = formik.values.sets ?? [];
-        formik.setFieldValue("sets", [...sets, v]);
-      },
-    });
-
-  return (
-    <form onSubmit={formik.handleSubmit}>
-      <Row className="g-3">
-        <SetReportPopover target="PopoversSetReport">
-          <Btn
-            color="secondary"
-            type="button"
-            id="PopoversSetReport"
-            onClick={handleToggleAddSetReport}
-          >
-            Thêm mới séc
-          </Btn>
-        </SetReportPopover>
-        <Col md="12" className="form-check checkbox-primary">
-          <Label for="sets" check>
-            {t("sets")}
-          </Label>
-          <ListSetReport items={formik.values.sets} />
-        </Col>
-
-        <Col xs="12" className="gap-2" style={{ display: "flex" }}>
-          <Btn color="primary" type="submit">
-            Xác nhận
-          </Btn>
-          {onCancel ? (
-            <Btn color="primary" type="button" onClick={onCancel}>
-              Đóng
-            </Btn>
-          ) : null}
-        </Col>
-      </Row>
-    </form>
-  );
-};
-
-const useTablequalifyingKnockoutMatchReportModal = ({
-  onSubmit,
-  ...rest
-}: ITablequalifyingMatchReportModal) => {
-  const [opened, setOpened] = useState(false);
-
-  const handleToggle = () => {
-    setOpened((s) => !s);
-  };
-
-  const handleSubmit = (
-    tablequalifyingMatchReport: TTablequalifyingMatchReport
-  ) => {
-    onSubmit(tablequalifyingMatchReport);
-    setOpened(false);
-  };
-
-  const TablequalifyingKnockoutMatchReportModal = () => (
-    <CommonModal
-      backdrop="static"
-      modalBodyClassName="social-profile text-start"
-      isOpen={opened}
-      toggle={handleToggle}
-    >
-      <TablequalifyingKnockoutMatchReportForm
-        onSubmit={handleSubmit}
-        {...rest}
-        onCancel={() => setOpened(false)}
-      />
-    </CommonModal>
-  );
-
-  return { TablequalifyingKnockoutMatchReportModal, handleToggle };
-};
-
 export const TablequalifyingKnockoutMatchReportModal = forwardRef(
   (
     {
-      onSubmit,
       tablequalifyingKnockoutMatchReport,
-      ...rest
+      onClose,
     }: ITablequalifyingMatchReportModal,
     ref
   ) => {
     const [opened, setOpened] = useState(false);
 
     const handleToggle = () => {
-      setOpened((s) => !s);
+      setOpened((s) => {
+        if (onClose && s) onClose();
+        return !s;
+      });
     };
 
     useImperativeHandle(ref, () => ({ handleToggle }));
@@ -291,7 +188,11 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
           {tablequalifyingKnockoutMatchReport?.id ? (
             <MatchTurnSetWrapper
               tableType={ETable.MARTIALART}
-              matchTurn={{ id: tablequalifyingKnockoutMatchReport.id }}
+              matchTurn={
+                {
+                  id: tablequalifyingKnockoutMatchReport.id,
+                } as TMatchTurnResult
+              }
               // matchTurnSetsUpdate={martialArtTurnWithSetUpdate}
               // matchTurnSetsGet={martialArtTurnWithSetGet}
             />
@@ -307,9 +208,4 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
   }
 );
 
-export {
-  MartialArtForm,
-  TablequalifyingKnockoutMatchReportForm,
-  useGenTreeMartialArt,
-  useTablequalifyingKnockoutMatchReportModal,
-};
+export { MartialArtForm, useGenTreeMartialArt };

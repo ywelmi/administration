@@ -37,6 +37,7 @@ const TurnSetProvider = ({
   const [isEditing, setIsEditing] = useState(false);
   const [cols, setCols] = useState<ColumnDef<TMartialArtSet>[]>([]);
   const [sets, setSets] = useState<TMartialArtSet[]>([]);
+  console.log({ ITurnSetProviderTableType: tableType, matchTurnSetsUpdate });
 
   const startEdit = useCallback(() => {
     setIsEditing(true);

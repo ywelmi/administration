@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Btn, LI, UL } from "../../AbstractElements";
 import { TanTable } from "../../Component/Tables/TanTable/TanTble";
@@ -7,7 +7,6 @@ import { HocModal, IHocModalRef } from "../../Component/Ui-Kits/Modal/HocModal";
 import { confirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
 import { useMatchTurnStore } from "../../store/matchTurn";
-import { ETable } from "../../type/enum";
 import { TMatchTurnResult } from "../../type/matchTurn";
 import { MatchTurnSetWrapper } from "../MatchTurnSet";
 import {
@@ -15,6 +14,7 @@ import {
   MatchTurnDirectoryModal,
 } from "./MatchTurnDirectory";
 import { useMatchTurnContext } from "./hook";
+import { MatchTurnContext } from "./matchTurnContext";
 
 const PREF_TMP_ID = "matchTurn";
 // interface IListMatchTurn {
@@ -100,6 +100,7 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
     }) {
       const { matchTurnDel, delMatchTurn } = useMatchTurnContext();
       const { increaseCounter } = useMatchTurnStore();
+      const { tableType } = useContext(MatchTurnContext);
 
       // const handleUpdateMatchTurn = (matchTurn: TMatchTurnResult) => {
       //   console.log({ handleUpdateMatchTurn: matchTurn });
@@ -172,7 +173,8 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
 
       const setModalRef = useRef<IHocModalRef>(null);
 
-      console.log({ ListMatchTurn: matchTurn });
+      // console.log({ ListMatchTurn: matchTurn });
+      // console.log({ ListMatchTurnTableType: tableType });
       return (
         <UL className="action simple-list flex-row" id={matchTurn.id}>
           <LI className="delete btn" onClick={handleConfirmDel}>
@@ -191,7 +193,7 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
               onClose={increaseCounter}
             >
               <MatchTurnSetWrapper
-                tableType={ETable.QUALIFYING}
+                tableType={tableType}
                 matchTurn={
                   // { id: tablequalifyingKnockoutMatchReport.id } as TMatchTurn,
                   // matchTurns
@@ -239,9 +241,6 @@ const ListMatchTurn = () => {
       <Btn color="primary" type="button" onClick={openMatchTurnDirectoryModal}>
         Cập nhật trận
       </Btn>
-      {/* <MatchTurnDirectoryPopover target="MatchTurnDirectoryPopover">
-        <Button id="MatchTurnDirectoryPopover">Thêm trận</Button>
-      </MatchTurnDirectoryPopover> */}
       <MatchTurnDirectoryModal
         onClose={refreshData}
         ref={matchTurnDirectoryRef}

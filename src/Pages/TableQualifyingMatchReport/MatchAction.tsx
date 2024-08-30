@@ -8,6 +8,7 @@ import {
   qualifyingMatchTurnUpdate,
 } from "../../Service/matchTurn";
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
+import { ETable } from "../../type/enum";
 import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
 import { useMatchTurnModal } from "../MatchTurn/hook";
 import { MatchTurnWrapper } from "../MatchTurn/matchTurnContext";
@@ -27,30 +28,6 @@ const TablequalifyingTableAction = ({
     team2_point: 0,
     sets: [],
   };
-
-  // const { increaseCounter } = useTablequalifyingMatchStore();
-
-  // const handleReportFormClose = () => {
-  //   tablequalifyingMatchReportUpdate(matchReport)
-  //     .then((res) => {
-  //       const { status } = res;
-  //       if (status === 200) {
-  //         increaseCounter();
-  //       }
-  //     })
-  //     .then((err) => {
-  //       console.log({ err });
-  //     });
-  // };
-
-  // const {
-  //   handleToggle: handleToggleUpdateModal,
-  //   TablequalifyingMatchReportModal: TablequalifyingUpdateModal,
-  // } = useMatchReportForm({ onClose: () => handleReportFormClose() });
-
-  // const handleToggleUpdateModal = () => {
-  //   ref.current?.handleToggle();
-  // };
 
   const matchTurnsGet = useCallback(async () => {
     if (matchReport?.id) {
@@ -79,14 +56,9 @@ const TablequalifyingTableAction = ({
           matchTurnDel={qualifyingMatchTurnDelete}
           matchTurnCreate={qualifyingMatchTurnCreate}
           match={tablequalifyingMatch}
-          // matchTurnSetsUpdate={qualifyingMatchTurnSetUpdate}
-          // matchTurnSetsGet={qualifyingMatchTurnSetGet}
+          tableType={ETable.QUALIFYING}
         >
           <ListMatchTurn />
-          {/* <TablequalifyingUpdateModal /> */}
-          {/* <HocModal title="Trận nhỏ" ref={ref} onClose={handleReportFormClose}>
-            <TabMatchTurn tableType={ETable.QUALIFYING}></TabMatchTurn>
-          </HocModal> */}
         </MatchTurnWrapper>
       </LI>
     </UL>

@@ -137,9 +137,8 @@ const useTablequalifyingKnockout = ({
   return { TablequalifyingKnockoutModal, handleToggle };
 };
 
-import { ETable } from "../../type/enum";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import { TabMatchTurn } from "../TableQualifyingMatchReport/PageMatchTurn";
+import { useMatchTurnModal } from "../MatchTurn/hook";
 import {
   ListSetReport,
   useSetReportPopover,
@@ -275,6 +274,9 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
     //   setOpened(false);
     // };
 
+    // const { increaseCounter } = useTablequalifyingMatchStore();
+    const { open: openModal, ListMatchTurn } = useMatchTurnModal({});
+
     return (
       <div>
         <button
@@ -282,12 +284,14 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
           type="button"
           className="cnf-btn"
           style={{ fontSize: "10" }}
-          onClick={() => setOpened(true)}
+          // onClick={() => setOpened(true)}
+          onClick={openModal}
         >
           {/* <i className="icon-info-alt" /> */}
           Cập nhật kết quả
         </button>
-        <CommonModal
+        <ListMatchTurn />
+        {/* <CommonModal
           backdrop="static"
           modalBodyClassName="social-profile text-start"
           isOpen={opened}
@@ -295,12 +299,12 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
           title="Trận nhỏ"
         >
           <TabMatchTurn tableType={ETable.KNOCKOUT}></TabMatchTurn>
-          {/* <TablequalifyingKnockoutMatchReportForm
+          <TablequalifyingKnockoutMatchReportForm
             onSubmit={handleSubmit}
             {...rest}
             onCancel={() => setOpened(false)}
-          /> */}
-        </CommonModal>
+          />
+        </CommonModal> */}
       </div>
     );
   }
