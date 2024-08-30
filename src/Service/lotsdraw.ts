@@ -21,6 +21,12 @@ export const lotsdrawsGetNotContentId = async (sportId: string) => {
 export const getContentSport = async (sportId: string) => {
     return httpGet<[]>(`/sports/${sportId}/SportContents`);
 };
+export const getScheduleContent = async (content_id: string) => {
+    return httpGet<[]>(`/sportcontents/${content_id}/get_team_sport_content_schedule`);
+};
+export const updateScheduleContent = async (content_id: string, data: string) => {
+    return httpPut<any>(`/sportcontents/${content_id}/update_team_sport_content_schedule`, data);
+};
 // Lấy danh sách các vận động viên tham gia một nội dung thi
 export const getNumberAthele = async (contentId: string) => {
     return httpGet<number>(`/sports/content/${contentId}/count-member`);

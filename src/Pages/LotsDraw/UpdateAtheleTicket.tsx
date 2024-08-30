@@ -13,6 +13,7 @@ import { getMoreFilterByValue } from "../../Service/_getParams";
 import {
     getContentSport,
     getNumberAthele,
+    getScheduleContent,
     lotsdrawResultTableGet,
     lotsdrawScheduleGet,
     lotsdrawsGet,
@@ -176,7 +177,7 @@ const PageUpdateAtheleTicket = () => {
     const [listSport, setListSport] = useState(sports);
     const { sport_id: paramSportId } = useParams();
     // số VĐV thi đấu trong 1 lượt
-    const [numberPlayedPerRound, setNumberPlayedPerRound] = useState<number>(3);
+
     // số VĐV thi đấu trong 1 lượt
     const [selectedContentSport, setSelectedContentSport] = useState<string>("");
     const [contentType, setContentType] = useState<any>("");
@@ -269,89 +270,6 @@ const PageUpdateAtheleTicket = () => {
     }, []);
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
 
-    const autoCallUpdateSchedule = useCallback(
-        (content_id: any) => {
-            lotsdrawsGet(sportId, "")
-                .then((res) => {
-                    const { data, status } = res;
-                    console.log({ data });
-                    if (status === 200) {
-                        if (data && sportId) {
-                            const dataSubmit = data!.map((e: TLotsDraw) => {
-                                return {
-                                    id: e.id,
-                                    sport_id: e.sport_id,
-                                    content_id: content_id,
-                                    team_id: e.team_id,
-                                    ticket_index: e.ticket_index,
-                                    has_ranking: true,
-                                    match_hour: e.match_hour,
-                                    match_date: e.match_date,
-                                    locations: e.locations,
-                                };
-                            });
-                            console.log(dataSubmit);
-                            lotsdrawUpdate(sportId, content_id, dataSubmit)
-                                .then((res) => {
-                                    const { data, status } = res;
-                                    if (status === 200) {
-                                        fetchData(sportId);
-                                        fetchDataTable(sportId, content_id);
-                                    }
-                                })
-                                .catch((err) => {
-                                    toast.error(err.data);
-                                    console.log({ err });
-                                });
-
-                            return;
-                        }
-                    }
-                })
-                .catch((err) => console.log({ err }));
-        },
-        [sportId]
-    );
-    const handleUpdate = useCallback(
-        (content_id_update: string) => {
-            const newData = ref.current?.getData();
-
-            if (newData && sportId) {
-                const dataSubmit = newData!.map((e: TLotsDraw) => {
-                    return {
-                        id: e.id,
-                        sport_id: e.sport_id,
-                        content_id: content_id_update,
-                        team_id: e.team_id,
-                        ticket_index: e.ticket_index,
-                        has_ranking: true,
-                        match_hour: e.match_hour,
-                        match_date: e.match_date,
-                        locations: e.locations,
-                    };
-                });
-
-                lotsdrawUpdate(sportId, content_id_update, dataSubmit)
-                    .then((res) => {
-                        const { data, status } = res;
-                        if (status === 200) {
-                            toast.success(N["success"]);
-                            fetchData(sportId);
-                            fetchDataTable(sportId, content_id_update);
-                        }
-                    })
-                    .catch((err) => {
-                        toast.error(N["failed"]);
-                        console.log({ err });
-                    });
-
-                return;
-            }
-            toast.error(N["failed"]);
-        },
-        [sportId]
-    );
-
     return (
         <Container fluid>
             <Row>
@@ -386,25 +304,6 @@ const PageUpdateAtheleTicket = () => {
                                                 />
                                             )}
                                         </div>
-                                        {selectedContentSport != "" && (
-                                            <div className="d-flex justify-content-center m-10">
-                                                <div
-                                                    className="btn btn-warning text-dark"
-                                                    onClick={() => {
-                                                        if (selectedContentSport != "") {
-                                                            autoCallUpdateSchedule(selectedContentSport);
-
-                                                            // setTimeout(() => fetchData(sportId), 2000);
-                                                        } else {
-                                                            toast.warn("Mời chọn nội dung thi đấu");
-                                                        }
-                                                    }}
-                                                >
-                                                    <i className="fa fa-recycle" /> &nbsp;
-                                                    {"Làm mới cập nhật VĐV"}
-                                                </div>
-                                            </div>
-                                        )}
 
                                         {data.length > 0 ? (
                                             <div>

@@ -93,19 +93,18 @@ const LotsDrawUpdateAtheleForm = ({ sportId, team_id, content_id, onCancel }: IL
                             return <div className="form-control">{props.getValue() as string}</div>;
                         },
                     },
-
                     {
-                        accessorKey: "ticket_index",
+                        accessorKey: "turn",
                         footer: (props) => props.column.id,
-                        header: "Làn bơi/Đường chạy",
+                        header: "Đợt bơi/Lượt chạy",
                         cell(props) {
                             return <div className="form-control">{props.getValue() as string}</div>;
                         },
                     },
                     {
-                        accessorKey: "ticket_index",
+                        accessorKey: "turn_index",
                         footer: (props) => props.column.id,
-                        header: "Đợt bơi/Lượt chạy",
+                        header: "Làn bơi/Đường chạy",
                         cell(props) {
                             return <div className="form-control">{props.getValue() as string}</div>;
                         },
