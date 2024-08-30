@@ -256,39 +256,7 @@ const useLotsDrawScheduleModal = ({ sportId, content_id }: any) => {
                 {showInput && (
                     <>
                         <H3 className="modal-header justify-content-center border-0">Lịch thi đấu</H3>
-                        {/* <div className="d-flex">
-                            <ReactDatePicker
-                                className="form-control"
-                                name="match_hour"
-                                // selected={new Date(original.match_date as string || new Date())}
-                                value={"13-5-2024"}
-                                onChange={(date) =>
-                                    // table.options.meta?.updateData(
-                                    //     index,
-                                    //     id,
-                                    //     `${date?.getHours()}:${date?.getMinutes()}`
-                                    // )
-                                }
-                                showTimeSelect
-                                showTimeSelectOnly
-                                timeFormat="HH:mm"
-                                timeIntervals={15}
-                                timeCaption="Giờ"
-                                locale={"vi"}
-                            />
-                            <ReactDatePicker
-                        className="form-control"
-                        name="date_join_army"
-                        showYearDropdown
-                        // selected={new Date(getValue() as string || new Date())}
-                        value={original.match_date ? convertToDate(original.match_date) : undefined}
-                        onChange={(date) => {
-                            table.options.meta?.updateData(index, id, date?.toISOString());
-                        }}
-                        locale={"vi"}
-                        dateFormat={"dd/MM/yyyy"}
-                    />
-                        </div> */}
+
                         <LotsDrawSchedule
                             member_count={numberRow}
                             turn_count={numberColumn}
