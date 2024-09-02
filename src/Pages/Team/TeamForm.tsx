@@ -26,12 +26,12 @@ interface ITeamForm {
   onCancel?: () => void;
 }
 
-export const teamSchema = yup.object().shape({
+const teamSchema = yup.object().shape({
   // id: yup.string().optional(),
   competition_id: yup.string().required(),
   org_id: yup.string().required("Mời nhập đội thi"),
-  has_militia: yup.boolean().optional(),
-  has_army: yup.boolean().optional(),
+  // has_militia: yup.boolean().optional(),
+  // has_army: yup.boolean().optional(),
   sport_id: yup.string().required("Mời nhập môn thi đấu"),
   sport_name: yup.string().optional(),
   // org_name: yup.string().required(),
@@ -115,8 +115,9 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
         id: "",
         competition_id: "",
         org_id: "",
-        has_militia: unitType === "DQTV" ? true : false,
-        has_army: unitType === "LLTT" ? true : false,
+        // has_militia: unitType === "DQTV" ? true : false,
+        // has_army: unitType === "LLTT" ? true : false,
+        for_type: unitType === "LLTT" ? 1 : 2,
         sport_id: "",
         org_name: "",
         list_team_member: [], // list of teammembers' ids
@@ -133,7 +134,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
     initialValues: { ...team },
     onSubmit: (value) => {
       console.log({ submitAddTeamValue: value });
-      let submitValue = {
+      const submitValue = {
         ...value,
       } as TTeam;
       if (submitValue) onSubmit(submitValue);
