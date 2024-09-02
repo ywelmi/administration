@@ -12,6 +12,9 @@ export interface TTeam {
   list_member_id?: string[]; // PUT: list of teammembers' ids
   list_member_name?: string;
 
+  // 1: LLTT, 2: DQTV
+  for_type: number;
+
   // GET by team id
   competition_name: string;
   member_ids?: string[];

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { DUnitType } from "../type/enum";
-import { sportFilterByUnitType } from "./_utils";
+import { sportFilterByUnitType, teamFilterByUnitType } from "./_utils";
 import { SportState } from "./sport";
 import { TeamState } from "./team";
 
@@ -31,18 +31,16 @@ export const useConfigStore = create<ConfigState>()(
           // const { unitType } = useConfigStore.getState();
           const { unitType } = get();
 
-          switch (unitType) {
-            case "DQTV":
+          if (unitType) {
+            const filteredTeams = teamFilterByUnitType(state.teams, unitType);
+            if (filteredTeams) {
               return {
                 ...state,
-                teams: state.teams.filter((t) => t.has_militia),
+                teams: teamFilterByUnitType(state.teams, unitType),
               };
-            case "LLTT":
-              return { ...state, teams: state.teams.filter((t) => t.has_army) };
-
-            default:
-              return state;
+            }
           }
+          return state;
         },
       sportSelector:
         () =>
