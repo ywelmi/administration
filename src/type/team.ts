@@ -2,6 +2,7 @@
 
 export interface TTeam {
   id: string;
+  team_sport_id: string;
   competition_id: string;
   org_id: string;
   has_militia?: boolean;

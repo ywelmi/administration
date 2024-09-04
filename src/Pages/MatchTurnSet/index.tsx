@@ -24,6 +24,7 @@ import {
 import {
   knockoutMatchTurnSetGet,
   knockoutMatchTurnSetUpdate,
+  qualifyingMatchTurnMembersGet,
   qualifyingMatchTurnSetGet,
   qualifyingMatchTurnSetUpdate,
 } from "../../Service/matchTurn";
@@ -87,6 +88,7 @@ const MatchTurnSets = () => {
     // setMatchTurn,
     setSets,
     match,
+    tableType,
   } = useContext(TurnSetContext);
   console.log({ matchTurnWithSets: sets, match });
 
@@ -99,9 +101,25 @@ const MatchTurnSets = () => {
     lst_member_team2: matchTurn?.lst_member_team2 || [],
   });
 
-  // useEffect(() => {
-  //   setMatchTurn(prev => ({...prev, ...teamConfig}));
-  // }, [ setMatchTurn, teamConfig])
+  useEffect(() => {
+    if (tableType === ETable.QUALIFYING) {
+      qualifyingMatchTurnMembersGet(matchTurn.id).then((res) => {
+        const { data, status } = res;
+        if (status === 200) {
+          setTeamConfig({
+            lst_member_team1:
+              data
+                .filter((m) => m.team_id === match.team1_id)
+                .map((m) => m.member_id) || [],
+            lst_member_team2:
+              data
+                .filter((m) => m.team_id === match.team2_id)
+                .map((m) => m.member_id) || [],
+          });
+        }
+      });
+    }
+  }, [match.team1_id, match.team2_id, matchTurn, tableType]);
 
   const tableRef = useRef<ITanTableRef<TMartialArtSet>>(null);
 

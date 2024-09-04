@@ -73,5 +73,6 @@
   "member_count": "Số lượng VĐV tham gia",
   "has_member": "Số lượng VĐV tham gia",
   "min_member_count": "Số lượng VĐV tối thiểu",
-  "select_some_teammember": "Mời chọn VĐV"
+  "select_some_teammember": "Mời chọn VĐV",
+  "ignore_team_id": "Đội bỏ cuộc"
 }

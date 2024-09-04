@@ -188,6 +188,7 @@ const TurnSetProvider = ({
         matchTurnSetsUpdate,
         matchTurn,
         match,
+        tableType,
       }}
     >
       {children}

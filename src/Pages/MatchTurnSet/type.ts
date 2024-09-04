@@ -38,6 +38,7 @@ export interface ITurnSetContext extends ITurnSetQuery {
   startEdit: () => void;
   removeSet: (idx: number) => void;
   updateSet: (idx: number, set: TMartialArtSet) => void;
+  tableType?: ETable;
 }
 
 export interface ITurnSetProvider extends ITurnSetQuery, PropsWithChildren {

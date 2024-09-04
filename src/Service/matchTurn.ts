@@ -2,6 +2,7 @@ import { TMartialArtTurnWithSet } from "../type/martialArt";
 import {
   TDetailedTurnSet,
   TMatchTurn,
+  TMatchTurnMember,
   TMatchTurnResult,
 } from "../type/matchTurn";
 import { baseGetParams, IListResponse } from "./_getParams";
@@ -81,6 +82,12 @@ export const qualifyingMatchTurnUpdate = (matchTurn: TMatchTurnResult) => {
 
 export const qualifyingMatchTurnDelete = (id: string) => {
   return httpDel<TMatchTurnResult>(`/tablequalifyingmatchturns/${id}`);
+};
+
+export const qualifyingMatchTurnMembersGet = (matchTurnId: string) => {
+  return httpGet<TMatchTurnMember[]>(
+    `/tablequalifyingmatchturns/${matchTurnId}/members`
+  );
 };
 
 // --with sets--

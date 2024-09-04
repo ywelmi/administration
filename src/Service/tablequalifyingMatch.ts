@@ -1,7 +1,6 @@
-import { TTablequalifying } from "../type/tablequalifying";
 import {
   TTablequalifyingMatch,
-  TTablequalifyingMatchReport,
+  TTablequalifyingMatchTeam,
   TTableQualifyingMember,
 } from "../type/tablequalifyingMatch";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
@@ -32,11 +31,12 @@ export const tablequalifyingMatchCreate = (
   );
 };
 
-export const tablequalifyingMatchReportUpdate = (
-  tablequalifyingMatchResult: TTablequalifyingMatchReport
+export const tablequalifyingMatchListTeamUpdate = (
+  tablequalifyingMatchTeam: TTablequalifyingMatchTeam
 ) => {
-  return httpPut<TTablequalifyingMatch>(
-    `tablequalifyingMatchs/${tablequalifyingMatchResult.id}/update_result`
+  return httpPut(
+    `tablequalifyingmatchs/${tablequalifyingMatchTeam.match_id}/update_result`,
+    {}
   );
 };
 
@@ -59,7 +59,6 @@ export const tablequalifyingMatchUpdate = (
     tablequalifyingMatchResult
   );
 };
-
 
 //auto gen số trận trong bảng
 export const tablequalifyingMatchsGen = (tableId: string) => {

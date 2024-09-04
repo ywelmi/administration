@@ -28,6 +28,7 @@ export interface TTablequalifyingMatch {
   win_team_id?: string;
   match_location?: string;
   match_location_chid?: string;
+  ignore_team_id?: string;
 }
 
 export interface TTablequalifyingMatchReport {
@@ -41,6 +42,11 @@ export interface TTablequalifyingMatchReport {
     team2_point: number;
     note?: string;
   }[];
+}
+
+export interface TTablequalifyingMatchTeam {
+  match_id: string;
+  ignore_team_id?: string;
 }
 
 export interface TTableQualifyingMember {

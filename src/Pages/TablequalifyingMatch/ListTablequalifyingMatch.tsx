@@ -1,31 +1,27 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import DataTable, { TableColumn } from "react-data-table-component";
+import { ColumnDef } from "@tanstack/react-table";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Container,
-  Input,
-  Label,
-  Row,
-} from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import { LI, UL } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { confirmModal } from "../../Component/confirmModal";
+import { InputSelect } from "../../Component/InputSelect";
+import { TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { N } from "../../name-conversion";
 import {
   tablequalifyingMatchCreate,
   tablequalifyingMatchDelete,
+  tablequalifyingMatchListTeamUpdate,
   tablequalifyingMatchsGen,
   tablequalifyingMatchUpdate,
 } from "../../Service/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
-import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
-import { SearchTableButton } from "../../utils/Constant";
+import {
+  TTablequalifyingMatch,
+  TTablequalifyingMatchTeam,
+} from "../../type/tablequalifyingMatch";
 import { convertToDate } from "../../utils/date";
 import { useTablequalifyingMatchModal } from "./TablequalifyingMatchForm";
 
@@ -125,26 +121,86 @@ interface IListTablequalifyingMatch {
     selectedCount: number;
     selectedRows: TTablequalifyingMatch[];
   }) => void;
-  columns?: TableColumn<TTablequalifyingColumn>[];
+  // columns?: TableColumn<TTablequalifyingColumn>[];
+  columns?: ColumnDef<TTablequalifyingColumn>[];
   data?: TTablequalifyingMatch[];
   selectableRowSelected?: (row: TTablequalifyingMatch) => boolean;
   loading?: boolean;
 }
 
-const tableColumns = (
+const IgnoreTeamSelect = ({
+  original,
+}: {
+  original: TTablequalifyingMatch;
+}) => {
+  const teamSelect = [
+    { k: original.team1_name, v: original.team1_id },
+    { k: original.team2_name, v: original.team2_id },
+  ];
+  const { updateTablequalifyingMatch } = useTablequalifyingMatchStore();
+  const handleChangeIgnoreTeam = (e) => {
+    const { value } = e.target;
+    setValue(value);
+    const newMatchUpdate: TTablequalifyingMatchTeam = {
+      match_id: original.id,
+      ignore_team_id: value,
+    };
+    console.log({ newMatchUpdate });
+    tablequalifyingMatchListTeamUpdate(newMatchUpdate)
+      .then((res) => {
+        const { status } = res;
+        if (status === 200) {
+          toast.success(N["success"]);
+          updateTablequalifyingMatch({ ...original, ignore_team_id: value });
+        }
+      })
+      .catch((err) => {
+        toast.error(err?.data ? err.data : N["error"]);
+        console.log({ err });
+        setValue(original.ignore_team_id);
+      });
+  };
+  const [value, setValue] = useState(original.ignore_team_id);
+  return (
+    <InputSelect
+      data={teamSelect}
+      k="k"
+      v="v"
+      name="teamSelect"
+      handleChange={handleChangeIgnoreTeam}
+      value={value}
+    />
+  );
+};
+const tableColumns: ColumnDef<TTablequalifyingMatch>[] = (
   [
     "indexs",
-    // "created?",
     "team1_name",
     "team2_name",
     "match_day",
     "match_hour",
     "match_location",
     "match_location_chid",
+    "ignore_team_id",
   ] as (keyof TTablequalifyingColumn)[]
 ).map((c) => ({
-  name: N[c],
-  sortable: true,
+  accessorKey: c,
+  footer: (props) => props.column.id,
+  header: N[c],
+  cell: function Cell(props) {
+    if (c === "match_day")
+      return props.getValue()
+        ? convertToDate(props.getValue() as string)
+        : null;
+    if (c == "ignore_team_id") {
+      const {
+        row: { original },
+      } = props;
+      return <IgnoreTeamSelect original={original} />;
+    }
+    return props.getValue() as string;
+  },
+
   selector: (row: TTablequalifyingColumn) => {
     const col = c as keyof TTablequalifyingColumn;
     switch (col) {
@@ -159,63 +215,79 @@ const tableColumns = (
 
 const ListTablequalifyingMatch = ({
   showAction,
-  onRowSelect,
+  // onRowSelect,
   onSelectedRowsChange,
   columns = [...tableColumns],
   data = [],
   selectableRowSelected,
-  loading,
-}: IListTablequalifyingMatch) => {
-  const [filterText, setFilterText] = useState("");
-  const filteredItems = data.filter((item) => item);
+}: // loading,
+IListTablequalifyingMatch) => {
+  // const [filterText, setFilterText] = useState("");
+  // const filteredItems = data.filter((item) => item);
 
-  const subHeaderComponentMemo = useMemo(() => {
-    return (
-      <div
-        id="basic-1_filter"
-        className="dataTables_filter d-flex align-items-center"
-      >
-        <Label className="me-2">{SearchTableButton}:</Label>
-        <Input
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFilterText(e.target.value)
-          }
-          type="search"
-          value={filterText}
-        />
-      </div>
-    );
-  }, [filterText]);
+  // const subHeaderComponentMemo = useMemo(() => {
+  //   return (
+  //     <div
+  //       id="basic-1_filter"
+  //       className="dataTables_filter d-flex align-items-center"
+  //     >
+  //       <Label className="me-2">{SearchTableButton}:</Label>
+  //       <Input
+  //         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+  //           setFilterText(e.target.value)
+  //         }
+  //         type="search"
+  //         value={filterText}
+  //       />
+  //     </div>
+  //   );
+  // }, [filterText]);
 
   let displayColumns = [...columns];
   if (showAction) {
     displayColumns = [
       ...displayColumns,
       {
-        name: "#",
-        cell: (row: TTablequalifyingColumn) => (
-          <TablequalifyingTableAction tablequalifyingMatch={row} />
+        // name: "#",
+        // cell: (row: TTablequalifyingColumn) => (
+        //   <TablequalifyingTableAction tablequalifyingMatch={row} />
+        // ),
+        // sortable: true,
+        id: "actions",
+        header: "#",
+        cell: (props) => (
+          <TablequalifyingTableAction
+            tablequalifyingMatch={props.row.original}
+          />
         ),
-        sortable: true,
       },
     ];
   }
   return (
+    // <div className="table-responsive">
+    //   <DataTable
+    //     columns={displayColumns}
+    //     data={filteredItems}
+    //     pagination
+    //     subHeader
+    //     subHeaderComponent={subHeaderComponentMemo}
+    //     highlightOnHover
+    //     striped
+    //     persistTableHead
+    //     selectableRowsHighlight
+    //     onRowClicked={onRowSelect}
+    //     onSelectedRowsChange={onSelectedRowsChange}
+    //     selectableRows={!!onRowSelect || !!onSelectedRowsChange}
+    //     progressPending={loading}
+    //   />
+    // </div>
     <div className="table-responsive">
-      <DataTable
+      <TanTable
+        data={data}
         columns={displayColumns}
-        data={filteredItems}
-        pagination
-        subHeader
-        subHeaderComponent={subHeaderComponentMemo}
-        highlightOnHover
-        striped
-        persistTableHead
-        selectableRowsHighlight
-        onRowClicked={onRowSelect}
         onSelectedRowsChange={onSelectedRowsChange}
-        selectableRows={!!onRowSelect || !!onSelectedRowsChange}
-        progressPending={loading}
+        selectableRowSelected={selectableRowSelected}
+        getRowId={(r) => r.id}
       />
     </div>
   );
@@ -231,7 +303,7 @@ const PageTablequalifyingMatch = () => {
   } = useTablequalifyingMatchStore();
   const { table_id } = useParams();
 
-  console.log({ PageTablequalifyingMatch: tablequalifyingMatchs });
+  // console.log({ PageTablequalifyingMatch: tablequalifyingMatchs });
   useEffect(() => {
     if (table_id) {
       // const filterValue = getFilterByValue("sport_id", "=", table_id);
@@ -310,7 +382,6 @@ const PageTablequalifyingMatch = () => {
 
     // )
 
-    console.log({ table_id });
     tablequalifyingMatchsGen(table_id)
       .then((res) => {
         const { data, status } = res;

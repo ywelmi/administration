@@ -100,11 +100,24 @@ const tableTeammemberColumns: ColumnDef<TTeammember>[] = [
     cell: (props) => props.getValue() as string,
   },
   {
-    accessorKey: "competition_name",
+    accessorKey: "sport_id",
     footer: (props) => props.column.id,
-    header: N["competition_name"],
-    cell: (props) => props.getValue() as string,
+    header: N["sport_id"],
+    cell: function Sport(props) {
+      const { sportSelector } = useConfigStore();
+      const { sports } = useSportStore(sportSelector());
+      const sport_id = props.getValue() as string;
+      const sport = sports.find((s) => s.id === sport_id);
+      if (!sport?.name) return "Chưa có";
+      return sport.name;
+    },
   },
+  // {
+  //   accessorKey: "competition_name",
+  //   footer: (props) => props.column.id,
+  //   header: N["competition_name"],
+  //   cell: (props) => props.getValue() as string,
+  // },
 ];
 
 const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
@@ -278,6 +291,9 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
                 !!team.list_member_id?.includes(r.id) ||
                 !!team.list_team_member?.includes(r.id)
               );
+            }}
+            enableRowSelection={(r) => {
+              return r.original?.sport_id ? false : true;
             }}
           />
         </Col>

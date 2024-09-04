@@ -21,6 +21,7 @@ export interface TTeammember {
   id_number?: string;
   date_of_issue?: Date;
   issuing_authority: string;
+  sport_id?: string;
 }
 
 export interface TTeammeberTiny extends Pick<TTeammember, "id" | "name"> {}

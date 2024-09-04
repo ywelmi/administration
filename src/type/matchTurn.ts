@@ -31,6 +31,16 @@ export interface TDetailedTurnSet extends TTurnSet {
   id: string;
 }
 
+export interface TMatchTurnMember {
+  id: string;
+  match_turn_id: string;
+  member_id: string;
+  team_id: string;
+  math_turn_name: string;
+  team_member_name: string;
+  team_name: string;
+}
+
 // export interface TMatchTurnWithSet extends TMatchTurn {
 //   sets: TTurnSet[];
 // }

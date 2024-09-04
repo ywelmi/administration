@@ -55,6 +55,7 @@ interface ITable<T> {
   columns: ColumnDef<T>[];
   data?: T[];
   selectableRowSelected?: (row: T) => boolean; // pre selected rows condition
+  enableRowSelection?: (row: Row<T>) => boolean;
   getRowId?: (r: T) => string;
 }
 
@@ -142,6 +143,7 @@ const TanTableComponent = <T,>(
     getRowId,
     columns,
     selectableRowSelected,
+    enableRowSelection,
   }: ITable<T>,
   ref: Ref<ITanTableRef<T>>
 ) => {
@@ -227,7 +229,7 @@ const TanTableComponent = <T,>(
     state: {
       rowSelection,
     },
-    enableRowSelection: true, //enable row selection for all rows
+    enableRowSelection: enableRowSelection ? enableRowSelection : true, //enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     onRowSelectionChange: setRowSelection,
     // onStateChange
@@ -281,6 +283,18 @@ const TanTableComponent = <T,>(
           if (!srcRecord) same = false;
           else same = _.isEqual(tableRow, srcRecord);
           return same ? "#fafafa" : "#fff";
+        })(),
+        color: (() => {
+          if (
+            onSelectedRowsChange &&
+            selectableRowSelected &&
+            typeof enableRowSelection === "function"
+          ) {
+            if (!enableRowSelection(row)) {
+              return "gray";
+            }
+            return "black";
+          }
         })(),
       }),
     },
@@ -358,7 +372,11 @@ const TanTableComponent = <T,>(
               <tr key={row.id} style={table.options.meta?.getRowStyles(row)}>
                 {row.getVisibleCells().map((cell) => {
                   return (
-                    <td key={cell.id} className="border border-slate-300">
+                    <td
+                      key={cell.id}
+                      className="border border-slate-300"
+                      style={table.options.meta?.getRowStyles(row)}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
