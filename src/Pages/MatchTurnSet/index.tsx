@@ -105,6 +105,7 @@ const MatchTurnSets = () => {
     if (tableType === ETable.QUALIFYING) {
       qualifyingMatchTurnMembersGet(matchTurn.id).then((res) => {
         const { data, status } = res;
+        console.log({ selectedMembers: data });
         if (status === 200) {
           setTeamConfig({
             lst_member_team1:
@@ -211,7 +212,7 @@ const TeammembersSelect = ({
 
   useEffect(() => {
     if (team1_id) {
-      const filter = getFilterByValue("id", ">", team1_id);
+      const filter = getFilterByValue("id", "=", team1_id);
       teamsGet({ filter }).then((res) => {
         const {
           data: { data },
@@ -231,7 +232,7 @@ const TeammembersSelect = ({
 
   useEffect(() => {
     if (team2_id) {
-      const filter = getFilterByValue("id", ">", team2_id);
+      const filter = getFilterByValue("id", "=", team2_id);
       teamsGet({ filter }).then((res) => {
         const {
           data: { data },
