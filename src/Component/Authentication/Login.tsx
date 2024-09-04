@@ -1,18 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
-import { Btn, H4, H6, Image, P } from "../../AbstractElements";
+import { Btn, H4 } from "../../AbstractElements";
+import { signIn } from "../../Service/authen";
 import {
   EmailAddress,
-  ForgotPassword,
-  Href,
   Password,
-  RememberPassword,
   SignIn,
   SignInAccount,
 } from "../../utils/Constant";
-import { useState } from "react";
-import { toast } from "react-toastify";
-import { signIn } from "../../Service/authen";
 // import SocialApp from "./SocialApp";
 
 const Login = () => {
@@ -25,12 +22,14 @@ const Login = () => {
     console.log({ event });
     event.preventDefault();
     console.log({ username, password });
-    signIn({ username, password }).then(() => {
-      setTimeout(() => navigate("/dashboard/"), 2000);
-    }).catch((error) => {
-      console.log({ loginError: error });
-      toast.error("Please Enter valid email or password...!");
-    });
+    signIn({ username, password })
+      .then(() => {
+        setTimeout(() => navigate("/dashboard/"), 2000);
+      })
+      .catch((error) => {
+        console.log({ loginError: error });
+        toast.error("Please Enter valid email or password...!");
+      });
   };
   return (
     <Container fluid className="p-0">
@@ -44,7 +43,7 @@ const Login = () => {
                   onSubmit={(e) => simpleLoginHandle(e)}
                 >
                   <H4>{SignInAccount}</H4>
-                  <P>{"Enter your email & password to login"}</P>
+                  {/* <P>{"Enter your email & password to login"}</P> */}
                   <FormGroup>
                     <Label className="col-form-label">{EmailAddress}</Label>
                     <Input
