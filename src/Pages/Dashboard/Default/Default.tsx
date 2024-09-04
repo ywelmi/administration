@@ -1,12 +1,10 @@
-import ContainerDefault from "../../../Component/Dashboard/Default/Default";
-
 const Default = () => {
   return (
     <div className="page-body">
-      <ContainerDefault />
+      {/* <ContainerDefault /> */}
+      Phần mềm quản trị Hội thao
     </div>
   );
 };
 
 export default Default;
-
