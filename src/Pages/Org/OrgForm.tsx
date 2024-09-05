@@ -1,13 +1,12 @@
-import { Col, Input, InputGroup, InputGroupText, Label, Row } from "reactstrap";
-import { TOrg } from "../../type/org";
 import { useFormik } from "formik";
-import { Btn } from "../../AbstractElements";
-import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useState } from "react";
-import { useGroupStore } from "../../store/group";
-import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
-import { InputSelect } from "../../Component/InputSelect";
 import { useTranslation } from "react-i18next";
+import { Col, Input, Label, Row } from "reactstrap";
+import { Btn } from "../../AbstractElements";
+import { InputSelect } from "../../Component/InputSelect";
+import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { useGroupStore } from "../../store/group";
+import { TOrg } from "../../type/org";
 
 interface IOrgForm {
   org?: TOrg;
@@ -15,8 +14,7 @@ interface IOrgForm {
   onCancel?: () => void;
 }
 
-interface IOrgModal extends IOrgForm {
-}
+interface IOrgModal extends IOrgForm {}
 
 const OrgForm = ({ org: initOrg, onSubmit, onCancel }: IOrgForm) => {
   const org = initOrg ? initOrg : { name: "", group_id: null };
@@ -28,10 +26,7 @@ const OrgForm = ({ org: initOrg, onSubmit, onCancel }: IOrgForm) => {
     onSubmit: (value) => {
       console.log({ submitValue: value });
 
-      let submitValue = { ...value } as TOrg;
-      if (hasOwnProperty(value, "id")) {
-        submitValue["id"] = value.id as string;
-      }
+      const submitValue = { ...value } as TOrg;
 
       if (submitValue) onSubmit(submitValue);
     },
@@ -49,35 +44,31 @@ const OrgForm = ({ org: initOrg, onSubmit, onCancel }: IOrgForm) => {
             onChange={formik.handleChange}
           />
         </Col>
-        {(groups?.length)
-          ? (
-            <Col md="12">
-              <InputSelect
-                title={t("group_id")}
-                data={groups}
-                k="name"
-                name="group_id"
-                v="id"
-                handleChange={(e) => {
-                  formik.handleChange(e);
-                }}
-                value={formik.values.group_id}
-              />
-            </Col>
-          )
-          : null}
+        {groups?.length ? (
+          <Col md="12">
+            <InputSelect
+              title={t("group_id")}
+              data={groups}
+              k="name"
+              name="group_id"
+              v="id"
+              handleChange={(e) => {
+                formik.handleChange(e);
+              }}
+              value={formik.values.group_id}
+            />
+          </Col>
+        ) : null}
 
         <Col xs="12" className="gap-2" style={{ display: "flex" }}>
           <Btn color="primary" type="submit">
             Xác nhận
           </Btn>
-          {onCancel
-            ? (
-              <Btn color="primary" type="button" onClick={onCancel}>
-                Đóng
-              </Btn>
-            )
-            : null}
+          {onCancel ? (
+            <Btn color="primary" type="button" onClick={onCancel}>
+              Đóng
+            </Btn>
+          ) : null}
         </Col>
       </Row>
     </form>

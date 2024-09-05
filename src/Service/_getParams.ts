@@ -24,13 +24,21 @@ const baseGetParams: Partial<IGetFilters> = {
   columns: "",
 };
 
-const getFilterByValue = (
-  field: string,
-  o: "=" | ">" | "<" = "=",
-  v: string
-) => {
-  return `[{'f':'${field}','o':'${o}','v':'${v}'}]`;
+type Filter = {
+  f: string;
+  o: "=" | ">" | "<";
+  v: string;
 };
+
+const getFilterByValue = (filter: Filter | Filter[]) => {
+  if (Array.isArray(filter)) {
+    return `[${filter
+      .map((v) => getMoreFilterByValue(v.f, v.o, v.v))
+      .join(",")}]`;
+  }
+  return `[{'f':'${filter.f}','o':'${filter.o}','v':'${filter.v}'}]`;
+};
+
 const getMoreFilterByValue = (
   field: string,
   o: "=" | ">" | "<" = "=",

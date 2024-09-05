@@ -5,15 +5,7 @@ import { Col, Input, Label, Row } from "reactstrap";
 import * as Yup from "yup";
 import { Btn } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
-import {
-  knockoutMatchTurnSetGet,
-  knockoutMatchTurnSetUpdate,
-  qualifyingMatchTurnSetGet,
-  qualifyingMatchTurnSetUpdate,
-} from "../../Service/matchTurn";
-import { ETable } from "../../type/enum";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
-import { useMatchTurnContext } from "../MatchTurn/hook";
 import { ListSetReport } from "./SetReport";
 
 const Schema = Yup.object({
@@ -172,36 +164,10 @@ const useMatchReportForm = ({ onClose }: IMatchReportFormHook) => {
       isOpen={opened}
       toggle={handleToggle}
       title="Trận nhỏ"
-    >
-      {/* <TabMatchTurn ></TabMatchTurn> */}
-    </CommonModal>
+    ></CommonModal>
   );
 
   return { TablequalifyingMatchReportModal, handleToggle };
 };
 
-interface ITabMatchTurn {
-  tableType: ETable;
-}
-
-const TabMatchTurn = ({ tableType }: ITabMatchTurn) => {
-  const { matchTurns } = useMatchTurnContext();
-  const matchTurnSetsUpdate =
-    tableType === ETable.KNOCKOUT
-      ? knockoutMatchTurnSetUpdate
-      : qualifyingMatchTurnSetUpdate;
-  const matchTurnSetsGet =
-    tableType === ETable.KNOCKOUT
-      ? knockoutMatchTurnSetGet
-      : qualifyingMatchTurnSetGet;
-
-  return null;
-  // <MatchTurnSetWrapper
-  //   tableType={ETable.QUALIFYING}
-  //   matchTurn={matchTurns}
-  //   matchTurnSetsUpdate={matchTurnSetsUpdate}
-  //   matchTurnSetsGet={matchTurnSetsGet}
-  // />
-};
-
-export { TablequalifyingMatchReportForm, TabMatchTurn, useMatchReportForm };
+export { TablequalifyingMatchReportForm, useMatchReportForm };

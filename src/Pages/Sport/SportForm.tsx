@@ -1,13 +1,12 @@
-import { Col, Input, InputGroup, InputGroupText, Label, Row } from "reactstrap";
-import { TSport } from "../../type/sport";
-import { Field, Form as form, Formik, useFormik } from "formik";
-import { Btn } from "../../AbstractElements";
-import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { useFormik } from "formik";
 import { useState } from "react";
-import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
-import { useCompetitionStore } from "../../store/competition";
+import { Col, Input, Label, Row } from "reactstrap";
+import { Btn } from "../../AbstractElements";
 import { InputSelect } from "../../Component/InputSelect";
+import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { useCompetitionStore } from "../../store/competition";
 import { DSportLocation } from "../../type/enum";
+import { TSport } from "../../type/sport";
 
 interface ISportForm {
   sport?: TSport;
@@ -15,26 +14,24 @@ interface ISportForm {
   onCancel?: () => void;
 }
 
-interface ISportModal extends ISportForm {
-}
+interface ISportModal extends ISportForm {}
 
 const SportForm = ({ sport: initSport, onSubmit, onCancel }: ISportForm) => {
   const { competitions } = useCompetitionStore();
-  const sport = initSport ? initSport : {
-    name: "",
-    competition_id: competitions?.[0].id ?? "",
-    sport_location: "",
-  };
+  const sport = initSport
+    ? initSport
+    : {
+        name: "",
+        competition_id: competitions?.[0].id ?? "",
+        sport_location: "",
+      };
   // console.log({ competitions });
   const formik = useFormik({
     initialValues: { ...sport },
     onSubmit: (value) => {
       console.log({ submitValue: value });
 
-      let submitValue = { ...value } as TSport;
-      if (hasOwnProperty(value, "id")) {
-        submitValue["id"] = value.id as string;
-      }
+      const submitValue = { ...value } as TSport;
 
       if (submitValue) onSubmit(submitValue);
     },
@@ -66,36 +63,32 @@ const SportForm = ({ sport: initSport, onSubmit, onCancel }: ISportForm) => {
           />
         </Col>
 
-        {(competitions?.length)
-          ? (
-            <Col md="12">
-              <InputSelect
-                title="Cuộc thi"
-                data={competitions}
-                k="name"
-                name="competition_id"
-                v="id"
-                handleChange={(e) => {
-                  console.log({ selelctE: e });
-                  formik.handleChange(e);
-                }}
-                value={formik.values.competition_id}
-              />
-            </Col>
-          )
-          : null}
+        {competitions?.length ? (
+          <Col md="12">
+            <InputSelect
+              title="Cuộc thi"
+              data={competitions}
+              k="name"
+              name="competition_id"
+              v="id"
+              handleChange={(e) => {
+                console.log({ selelctE: e });
+                formik.handleChange(e);
+              }}
+              value={formik.values.competition_id}
+            />
+          </Col>
+        ) : null}
 
         <Col xs="12" className="gap-2" style={{ display: "flex" }}>
           <Btn color="primary" type="submit">
             Xác nhận
           </Btn>
-          {onCancel
-            ? (
-              <Btn color="primary" type="button" onClick={onCancel}>
-                Đóng
-              </Btn>
-            )
-            : null}
+          {onCancel ? (
+            <Btn color="primary" type="button" onClick={onCancel}>
+              Đóng
+            </Btn>
+          ) : null}
         </Col>
       </Row>
     </form>

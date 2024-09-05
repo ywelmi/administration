@@ -16,7 +16,7 @@ export const teamsGetByOrg = async (params = baseGetParams) => {
 };
 // TODO: how to filter
 export const teamsBySportGet = async (sportId: string) => {
-  const filter = getFilterByValue("sport_id", "=", sportId);
+  const filter = getFilterByValue({ f: "sport_id", o: "=", v: sportId });
   return httpPost<IListResponse<TTeam>>("/teams/padding_filter", {
     ...baseGetParams,
     filter,

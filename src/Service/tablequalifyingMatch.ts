@@ -36,7 +36,7 @@ export const tablequalifyingMatchListTeamUpdate = (
 ) => {
   return httpPut(
     `tablequalifyingmatchs/${tablequalifyingMatchTeam.match_id}/update_result`,
-    {}
+    tablequalifyingMatchTeam
   );
 };
 

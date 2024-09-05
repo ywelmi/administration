@@ -30,7 +30,7 @@ export interface ITurnSetContext extends ITurnSetQuery {
   setSets: (sets: TMartialArtSet[]) => void;
   matchTurn: TMartialArtTurnWithSet;
   // setMatchTurn: (s: TMartialArtTurnWithSet) => void;
-  match: TTablequalifyingMatch;
+  match?: TTablequalifyingMatch;
   insertNewSet: () => void;
   cols: ColumnDef<TMartialArtSet>[];
   isEditing: boolean;

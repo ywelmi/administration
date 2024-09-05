@@ -79,9 +79,13 @@ const TablequalifyingForm = ({
     (async () => {
       if (formik.values.sport_id) {
         const { sport_id } = formik.values;
-        console.log({sport_id})
+        console.log({ sport_id });
         if (sport_id) {
-          const filter = getFilterByValue("sport_id", "=", sport_id);
+          const filter = getFilterByValue({
+            f: "sport_id",
+            o: "=",
+            v: sport_id,
+          });
           const sportTeams = await teamsGet({ filter }).then((res) => {
             const {
               data: { data },

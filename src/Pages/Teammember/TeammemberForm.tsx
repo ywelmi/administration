@@ -1,6 +1,5 @@
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
-import { hasOwnProperty } from "react-bootstrap-typeahead/types/utils";
 import ReactDatePicker from "react-datepicker";
 import { ImageListType, ImageType } from "react-images-uploading";
 import { toast } from "react-toastify";
@@ -66,9 +65,6 @@ const TeammemberForm = ({
     onSubmit: (value) => {
       console.log({ submitValue: value });
       const submitValue = { ...value } as TTeammember;
-      if (hasOwnProperty(value, "id")) {
-        submitValue["id"] = value.id as string;
-      }
       if (submitValue) onSubmit(submitValue);
     },
   });

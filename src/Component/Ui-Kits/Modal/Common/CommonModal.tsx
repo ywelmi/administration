@@ -25,16 +25,21 @@ const CommonModal: React.FC<CommonModalType> = ({
       toggle={toggle}
       onClosed={onClosed}
       fullscreen={fullscreen}
+      fade={false}
+      style={{ pointerEvents: "none" }}
     >
       {(title || sizeTitle || fullTitle) && (
-        <div className="modal-header" onClick={toggle}>
+        <div className="modal-header">
           {title && <H5 className="f-w-600">{title}</H5>}
           {sizeTitle && <H4>{sizeTitle}</H4>}
           {fullTitle && <H1 className="fs-5">{fullTitle}</H1>}
-          <Btn close></Btn>
+          <Btn close onClick={toggle}></Btn>
         </div>
       )}
-      <ModalBody className={modalBodyClassName ? modalBodyClassName : ""}>
+      <ModalBody
+        className={modalBodyClassName ? modalBodyClassName : ""}
+        style={{ pointerEvents: "unset" }}
+      >
         {children}
       </ModalBody>
       {/* {(title || fullTitle) && (

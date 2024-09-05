@@ -285,7 +285,11 @@ const PageTablequalifying = () => {
 
   useEffect(() => {
     if (sportId) {
-      const filterValue = getFilterByValue("sport_id", "=", sportId);
+      const filterValue = getFilterByValue({
+        f: "sport_id",
+        o: "=",
+        v: sportId,
+      });
       updateGetFilter({ ...filters, filter: filterValue });
     } else {
       updateGetFilter({ ...filters, filter: "" });

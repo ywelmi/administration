@@ -291,20 +291,6 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
           Cập nhật kết quả
         </button>
         <ListMatchTurn />
-        {/* <CommonModal
-          backdrop="static"
-          modalBodyClassName="social-profile text-start"
-          isOpen={opened}
-          toggle={handleToggle}
-          title="Trận nhỏ"
-        >
-          <TabMatchTurn tableType={ETable.KNOCKOUT}></TabMatchTurn>
-          <TablequalifyingKnockoutMatchReportForm
-            onSubmit={handleSubmit}
-            {...rest}
-            onCancel={() => setOpened(false)}
-          />
-        </CommonModal> */}
       </div>
     );
   }

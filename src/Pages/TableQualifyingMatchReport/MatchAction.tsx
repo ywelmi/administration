@@ -32,7 +32,11 @@ const TablequalifyingTableAction = ({
   const matchTurnsGet = useCallback(async () => {
     if (matchReport?.id) {
       // get all match turns belong to that match id
-      const filter = getFilterByValue("match_id", "=", matchReport.id);
+      const filter = getFilterByValue({
+        f: "match_id",
+        o: "=",
+        v: matchReport.id,
+      });
       return qualifyingMatchTurnsGet({ filter });
     }
     return Promise.reject("no match id");

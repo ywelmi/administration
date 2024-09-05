@@ -31,11 +31,8 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
         return Promise.reject(status);
       })
       .catch((err) => {
-        const {
-          response: { data },
-        } = err;
-        toast.error(data || t("error"));
-        console.log({ err, data });
+        toast.error(err?.data ? err.data : t("error"));
+        console.log({ err });
       });
   };
 

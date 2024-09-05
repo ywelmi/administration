@@ -43,7 +43,7 @@ const HocModal = forwardRef<IHocModalRef, IHocModal>(
     return (
       <CommonModal
         backdrop="static"
-        modalBodyClassName="social-profile text-start"
+        // modalBodyClassName="social-profile text-start"
         isOpen={opened}
         toggle={handleToggle}
         title={title}

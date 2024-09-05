@@ -143,7 +143,11 @@ const CustomSeed = ({
   const matchTurnsGet = useCallback(async () => {
     if (bracketId) {
       // get all match turns belong to that match id
-      const filter = getFilterByValue("match_id", "=", bracketId as string);
+      const filter = getFilterByValue({
+        f: "match_id",
+        o: "=",
+        v: bracketId as string,
+      });
       return knockoutMatchTurnsGet({ filter });
     }
     return Promise.reject("no match id");

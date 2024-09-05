@@ -29,6 +29,7 @@ import {
   qualifyingMatchTurnSetUpdate,
 } from "../../Service/matchTurn";
 import { teamsGet } from "../../Service/team";
+import { useSportStore } from "../../store/sport";
 import { ETable } from "../../type/enum";
 import { TMartialArtSet, TMartialArtTurnWithSet } from "../../type/martialArt";
 import { TTeammeberTiny } from "../../type/teammember";
@@ -102,7 +103,7 @@ const MatchTurnSets = () => {
   });
 
   useEffect(() => {
-    if (tableType === ETable.QUALIFYING) {
+    if (tableType === ETable.QUALIFYING && match) {
       qualifyingMatchTurnMembersGet(matchTurn.id).then((res) => {
         const { data, status } = res;
         console.log({ selectedMembers: data });
@@ -120,7 +121,7 @@ const MatchTurnSets = () => {
         }
       });
     }
-  }, [match.team1_id, match.team2_id, matchTurn, tableType]);
+  }, [match, match?.team1_id, match?.team2_id, matchTurn, tableType]);
 
   const tableRef = useRef<ITanTableRef<TMartialArtSet>>(null);
 
@@ -168,13 +169,15 @@ const MatchTurnSets = () => {
             <i className="fa fa-plus" />
             {"Thêm mới"}
           </div>
-          <TeammembersSelect
-            team1_id={match.team1_id}
-            team2_id={match.team2_id}
-            onChange={(c) => setTeamConfig(c)}
-            lst_member_team1={teamConfig.lst_member_team1}
-            lst_member_team2={teamConfig.lst_member_team2}
-          />
+          {match ? (
+            <TeammembersSelect
+              team1_id={match.team1_id}
+              team2_id={match.team2_id}
+              onChange={(c) => setTeamConfig(c)}
+              lst_member_team1={teamConfig.lst_member_team1}
+              lst_member_team2={teamConfig.lst_member_team2}
+            />
+          ) : null}
         </CardHeader>
         <CardBody>
           <TanTable data={sets} columns={columns} ref={tableRef} />
@@ -209,10 +212,14 @@ const TeammembersSelect = ({
 }: ITeammemberSelect) => {
   const [team1Mems, setTeam1Mems] = useState<TTeammeberTiny[]>([]);
   const [team2Mems, setTeam2Mems] = useState<TTeammeberTiny[]>([]);
+  const { selectedSportId } = useSportStore();
 
   useEffect(() => {
     if (team1_id) {
-      const filter = getFilterByValue("id", "=", team1_id);
+      const filter = getFilterByValue([
+        { f: "id", o: "=", v: team1_id },
+        { f: "sport_id", o: "=", v: selectedSportId },
+      ]);
       teamsGet({ filter }).then((res) => {
         const {
           data: { data },
@@ -228,11 +235,14 @@ const TeammembersSelect = ({
         }
       });
     }
-  }, [team1_id]);
+  }, [team1_id, selectedSportId]);
 
   useEffect(() => {
     if (team2_id) {
-      const filter = getFilterByValue("id", "=", team2_id);
+      const filter = getFilterByValue([
+        { f: "id", o: "=", v: team2_id },
+        { f: "sport_id", o: "=", v: selectedSportId },
+      ]);
       teamsGet({ filter }).then((res) => {
         const {
           data: { data },
@@ -248,7 +258,7 @@ const TeammembersSelect = ({
         }
       });
     }
-  }, [team2_id]);
+  }, [selectedSportId, team2_id]);
 
   return (
     <div className="flex flex-col gap-2 mt-3">
@@ -299,6 +309,7 @@ const TeammembersSelect = ({
     </div>
   );
 };
+
 const MatchTurnSetWrapper = (
   props: Pick<ITurnSetProvider, "tableType" | "matchTurn" | "match">
 ) => {

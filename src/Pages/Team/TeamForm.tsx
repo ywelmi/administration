@@ -161,7 +161,11 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
     (async () => {
       const f_org_id = formik.values.org_id;
       if (f_org_id) {
-        const memberFilter = getFilterByValue("org_id", "=", f_org_id);
+        const memberFilter = getFilterByValue({
+          f: "org_id",
+          o: "=",
+          v: f_org_id,
+        });
         let members = await teammembersGet({
           filter: memberFilter,
         }).then((res) => {
@@ -293,7 +297,10 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
               );
             }}
             enableRowSelection={(r) => {
-              return r.original?.sport_id ? false : true;
+              return r.original?.sport_id &&
+                r.original.sport_id !== formik.values.sport_id
+                ? false
+                : true;
             }}
           />
         </Col>

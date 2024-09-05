@@ -188,6 +188,7 @@ const InputMultipleSelect = <T,>({
           onSelect={onSelect} // Function will trigger on select event
           onRemove={onRemove} // Function will trigger on remove event
           displayValue="name" // Property name to display in the dropdown options
+          emptyRecordMsg="Không còn dữ liệu"
         />
       </div>
     </InputGroup>

@@ -143,9 +143,11 @@ const IgnoreTeamSelect = ({
     setValue(value);
     const newMatchUpdate: TTablequalifyingMatchTeam = {
       match_id: original.id,
-      ignore_team_id: value,
     };
-    console.log({ newMatchUpdate });
+    if (value) {
+      newMatchUpdate.ignore_team_id = value;
+    }
+    console.log({ newMatchUpdate, value });
     tablequalifyingMatchListTeamUpdate(newMatchUpdate)
       .then((res) => {
         const { status } = res;
