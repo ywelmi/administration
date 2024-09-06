@@ -40,6 +40,10 @@ export const tablequalifyingMatchListTeamUpdate = (
   );
 };
 
+export const tablequalifyingMatchResultUpdate = (match_id: string) => {
+  return httpPut(`tablequalifyingmatchs/${match_id}/update_result`, {});
+};
+
 // Lấy toàn bộ đội có trong một bảng đấu
 export const tablequalifyingMatchMembersGet = (tableId: string) => {
   return httpGet<TTableQualifyingMember[]>(

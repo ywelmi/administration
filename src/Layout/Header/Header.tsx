@@ -19,10 +19,8 @@ const Header = () => {
                 </h3> */}
         <Col md={9}>
           <h3 style={{ width: "fit-content", color: "#066" }}>
-            {/* PHẦN MỀM HỖ TRỢ TỔNG HỢP, XỬ LÝ, TÍNH TOÁN KẾT QUẢ PHỤC VỤ HỘI THAO{" "}
-            <br />
-            THỂ THAO QUỐC PHÒNG NĂM 2024 */}
-            PHẦN MỀM HỖ TRỢ HỘI THAO QUỐC PHÒNG NĂM 2024
+            PHẦN MỀM HỖ TRỢ TỔNG HỢP, XỬ LÝ, TÍNH TOÁN THÀNH TÍCH THI ĐẤU
+            {/* PHẦN MỀM HỖ TRỢ tổng hợp, xử lý  HỘI THAO QUỐC PHÒNG NĂM 2024 */}
           </h3>
         </Col>
         <RightHeader />

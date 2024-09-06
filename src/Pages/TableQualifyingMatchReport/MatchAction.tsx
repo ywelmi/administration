@@ -7,6 +7,7 @@ import {
   qualifyingMatchTurnsGet,
   qualifyingMatchTurnUpdate,
 } from "../../Service/matchTurn";
+import { tablequalifyingMatchResultUpdate } from "../../Service/tablequalifyingMatch";
 import { useTablequalifyingMatchStore } from "../../store/tablequalifyingMatch";
 import { ETable } from "../../type/enum";
 import { TTablequalifyingMatch } from "../../type/tablequalifyingMatch";
@@ -44,8 +45,17 @@ const TablequalifyingTableAction = ({
 
   // const ref = useRef<IHocModalRef>(null);
   const { increaseCounter } = useTablequalifyingMatchStore();
+  const handleCloseModal = useCallback(() => {
+    tablequalifyingMatchResultUpdate(tablequalifyingMatch.id).then((res) => {
+      const { status } = res;
+      if (status === 200) {
+        increaseCounter();
+      }
+    });
+  }, [increaseCounter, tablequalifyingMatch.id]);
+
   const { open: openModal, ListMatchTurn } = useMatchTurnModal({
-    onClose: increaseCounter,
+    onClose: handleCloseModal,
   });
 
   return (
