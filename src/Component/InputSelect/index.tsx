@@ -13,6 +13,7 @@ interface IInputSelect<T> {
   handleChange: (e: TEvent) => void;
   value?: any;
   name: string;
+  disabled?: boolean;
 }
 
 interface IInputSelectConfirm<T> extends IInputSelect<T> {
@@ -26,6 +27,7 @@ const InputSelect = <T,>({
   v,
   handleChange: onChange,
   value,
+  disabled,
   ...rest
 }: IInputSelect<T>) => {
   const inputData = data.map((item) => ({
@@ -43,6 +45,7 @@ const InputSelect = <T,>({
         </InputGroupText>
       ) : null}
       <Input
+        disabled={disabled}
         minLength={24}
         innerRef={ref}
         type="select"

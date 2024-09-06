@@ -229,6 +229,7 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
           <Col md="12">
             <InputSelect
               title={t("org_id")}
+              disabled={!!initTeam}
               data={orgs}
               k="name"
               name="org_id"
@@ -297,6 +298,10 @@ const TeamForm = ({ team: initTeam, onSubmit, onCancel }: ITeamForm) => {
               );
             }}
             enableRowSelection={(r) => {
+              console.log({
+                original: r.original?.sport_id,
+                form: formik.values.sport_id,
+              });
               return r.original?.sport_id &&
                 r.original.sport_id !== formik.values.sport_id
                 ? false
