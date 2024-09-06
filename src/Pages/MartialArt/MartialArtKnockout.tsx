@@ -13,10 +13,17 @@ const MartialArtKnockout = () => {
   const { rounds: fetchedRounds, sportId, contentId } = useKnockoutContext();
 
   const genMartialArtTree = () =>
-    generateMartialArtContentTree(sportId, contentId).catch((err) => {
-      toast.error(err?.data ? err.data : N["failed"]);
-      console.log({ err });
-    });
+    generateMartialArtContentTree(sportId, contentId)
+      .then((res) => {
+        const { status } = res;
+        if (status === 200) {
+          toast.success(N["success"]);
+        }
+      })
+      .catch((err) => {
+        toast.error(err?.data ? err.data : N["failed"]);
+        console.log({ err });
+      });
 
   return (
     <div className="page-body">
