@@ -275,7 +275,7 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
     // };
 
     // const { increaseCounter } = useTablequalifyingMatchStore();
-    const { open: openModal, ListMatchTurn } = useMatchTurnModal({});
+    const { open: openModal, ListMatchTurn } = useMatchTurnModal({ onClose });
 
     return (
       <div>
