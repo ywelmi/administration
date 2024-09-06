@@ -7,7 +7,7 @@ import { LI, UL } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { confirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
-import { teamCreate, teamDelete, teamUpdate } from "../../Service/team";
+import { teamCreate, teamDelete, teamsGet, teamUpdate } from "../../Service/team";
 import { useConfigStore } from "../../store/config";
 import { useTeamStore } from "../../store/team";
 import { TTeam } from "../../type/team";
@@ -18,7 +18,7 @@ import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble"
 type TTeamColumn = Omit<TTeam, "list_member_id">;
 
 const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
-    const { updateTeam, deleteTeam } = useTeamStore();
+    const { updateTeam, deleteTeam, addTeams } = useTeamStore();
     const { t } = useTranslation();
 
     const handleUpdateTeam = (team: TTeam) => {
@@ -26,8 +26,21 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
             .then((res) => {
                 const { status, data } = res;
                 if (status === 200) {
-                    updateTeam(data as TTeam);
-                    toast.success(t("success"));
+                    teamsGet().then((res) => {
+                        const { data, status } = res;
+                        if (!data.data) return;
+                        if (status == 200) {
+                            const {
+                                data: teams,
+                                sumData: { total },
+                            } = data;
+                            addTeams(teams);
+                            toast.success(t("success"));
+                        } else {
+                            toast.error(data.data ? data.data.toString() : t("error"));
+                        }
+                    });
+
                     return;
                 }
                 return Promise.reject(status);
@@ -51,8 +64,21 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
                     const { status, data } = res;
                     console.log({ status, data });
                     if (status === 200) {
-                        toast.success(t("success"));
-                        deleteTeam(team.id);
+                        teamsGet().then((res) => {
+                            const { data, status } = res;
+                            if (!data.data) return;
+                            if (status == 200) {
+                                const {
+                                    data: teams,
+                                    sumData: { total },
+                                } = data;
+                                addTeams(teams);
+                                toast.success(t("success"));
+                            } else {
+                                toast.error(data.data ? data.data.toString() : t("error"));
+                            }
+                        });
+
                         return;
                     }
                     return Promise.reject(status);
@@ -94,21 +120,6 @@ interface IListTeam {
     tableRef?: Ref<ITanTableRef<TTeamColumn>>;
 }
 
-const tableColumns1 = (
-    [
-        // "competition_name",
-        "org_name",
-        "sport_name",
-        "list_member_name",
-    ] as (keyof Omit<TTeamColumn, "list_team_member">)[]
-).map((c) => ({
-    name: N[c],
-    sortable: true,
-    selector: (row: TTeamColumn) => {
-        const col = c as keyof TTeamColumn;
-        return row?.[col] ? row[col as keyof TTeamColumn] : ("" as string | number);
-    },
-}));
 const tableColumns: ColumnDef<TTeamColumn>[] = [
     {
         accessorKey: "org_name",
@@ -204,7 +215,7 @@ const ListTeam = ({
 const PageTeamNew = () => {
     const { t } = useTranslation();
     const { teamSelector } = useConfigStore();
-    const { addTeam, teams } = useTeamStore(teamSelector());
+    const { addTeams, teams } = useTeamStore(teamSelector());
 
     const handleAddTeam = (team: TTeam) => {
         console.log({ handleAddTeam: team });
@@ -214,8 +225,21 @@ const PageTeamNew = () => {
                 const { status, data } = res;
                 console.log({ addTeamResult: data });
                 if (status === 200) {
-                    addTeam(data as TTeam);
-                    toast.info(t("success"));
+                    teamsGet().then((res) => {
+                        const { data, status } = res;
+                        if (!data.data) return;
+                        if (status == 200) {
+                            const {
+                                data: teams,
+                                sumData: { total },
+                            } = data;
+                            addTeams(teams);
+                            toast.success(t("success"));
+                        } else {
+                            toast.error(data.data ? data.data.toString() : t("error"));
+                        }
+                    });
+
                     return;
                 }
                 return Promise.reject(status);
