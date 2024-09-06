@@ -294,9 +294,9 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
 
     const ref = useRef<ITanTableRef<TLotsDrawMember>>(null);
     return (
-        <div>
+        <div className="gap-2 text-dark bg-light p-10">
             <TanTable ref={ref} data={data} getRowId={getLotDrawId} columns={columns} />
-            <Col xs="12" className="gap-2 justify-content-center" style={{ display: "flex" }}>
+            <Col xs="12" className="gap-2 justify-content-center bg-light" style={{ display: "flex" }}>
                 <Btn
                     color="primary"
                     type="button"

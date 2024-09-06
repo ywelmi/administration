@@ -288,7 +288,7 @@ const LotsDrawSubmitResultForm = ({ sportId, org_id, content_id, gender, onCance
     return (
         <div>
             <TanTable ref={ref} data={data} getRowId={getLotDrawId} columns={columns} />
-            <Col xs="12" className="gap-2 justify-content-center" style={{ display: "flex" }}>
+            <Col xs="12" className="gap-2 justify-content-center bg-light" style={{ display: "flex" }}>
                 <Btn
                     color="primary"
                     type="button"
