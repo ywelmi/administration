@@ -69,7 +69,7 @@ const InputSelect = <T,>({
         }}
       >
         <div className="rounded-[50%] p-1">
-          <i className="icon-close " />
+          <i className="icon-close" style={{ zIndex: 1 }} />
         </div>
       </div>
     </InputGroup>

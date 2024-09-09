@@ -1,9 +1,9 @@
-import { DUnit, DUnitType } from "./enum";
+import { DUnit, DUnitType, EMatchTurnTeamEnum } from "./enum";
 
 export interface TSport {
   id: string;
   competition_id: string;
-  code: string;
+  code: EMatchTurnTeamEnum;
   name: string;
   competition_name?: string;
   for_type: (typeof DUnit)[DUnitType];
