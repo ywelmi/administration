@@ -1,4 +1,4 @@
-import { Ref, useState } from "react";
+import { Ref, useRef, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -108,16 +108,114 @@ const TeamTableAction = ({ team }: { team: TTeamColumn }) => {
         </UL>
     );
 };
+const teamAction: ColumnDef<TTeamColumn> = {
+    id: "actions",
+    header: "#",
+    cell: function Action(props) {
+        const {
+            row: { original: team },
+        } = props;
+        const { updateTeam, deleteTeam, addTeams } = useTeamStore();
+        const { t } = useTranslation();
+
+        const handleUpdateTeam = (team: TTeam) => {
+            teamUpdate(team)
+                .then((res) => {
+                    const { status, data } = res;
+                    if (status === 200) {
+                        teamsGet().then((res) => {
+                            const { data, status } = res;
+                            if (!data.data) return;
+                            if (status == 200) {
+                                const {
+                                    data: teams,
+                                    sumData: { total },
+                                } = data;
+                                addTeams(teams);
+                                toast.success(t("success"));
+                            } else {
+                                toast.error(data.data ? data.data.toString() : t("error"));
+                            }
+                        });
+
+                        return;
+                    }
+                    return Promise.reject(status);
+                })
+                .catch((err) => {
+                    toast.error(err?.data ? err.data : t("error"));
+                    console.log({ err });
+                });
+        };
+
+        const { handleToggle: handleToggleUpdateModal, TeamModal: TeamUpdateModal } = useTeamModal({
+            onSubmit: handleUpdateTeam,
+            team: { ...team, list_member_id: team.member_ids },
+        });
+
+        const handleConfirmDel = async () => {
+            const { confirm } = await confirmModal();
+            if (confirm) {
+                teamDelete(team.team_sport_id)
+                    .then((res) => {
+                        const { status, data } = res;
+                        console.log({ status, data });
+                        if (status === 200) {
+                            teamsGet().then((res) => {
+                                const { data, status } = res;
+                                if (!data.data) return;
+                                if (status == 200) {
+                                    const {
+                                        data: teams,
+                                        sumData: { total },
+                                    } = data;
+                                    addTeams(teams);
+                                    toast.success(t("success"));
+                                } else {
+                                    toast.error(data.data ? data.data.toString() : t("error"));
+                                }
+                            });
+
+                            return;
+                        }
+                        return Promise.reject(status);
+                    })
+                    .catch((err) => {
+                        toast.error(t(err?.response?.data || "error"));
+                        console.log({ err });
+                    });
+            }
+            return;
+        };
+
+        return (
+            <UL className="action simple-list flex-row" id={team.id}>
+                <LI className="edit btn">
+                    <i
+                        className="icon-pencil-alt"
+                        onClick={() => {
+                            handleToggleUpdateModal();
+                        }}
+                    />
+                    <TeamUpdateModal />
+                </LI>
+                <LI className="delete btn" onClick={handleConfirmDel}>
+                    <i className="icon-trash cursor-pointer" />
+                </LI>
+            </UL>
+        );
+    },
+};
 
 interface IListTeam {
     showAction?: boolean;
     selectableRows?: boolean;
-    onRowSelect?: (row: TTeam, e: React.MouseEvent<Element, MouseEvent>) => void;
+
+    onRowSelect?: (row: TTeamColumn, e: React.MouseEvent<Element, MouseEvent>) => void;
     onSelectedRowsChange?: (v: { allSelected: boolean; selectedCount: number; selectedRows: TTeamColumn[] }) => void;
     columns?: ColumnDef<TTeamColumn>[];
     data?: TTeamColumn[];
     selectableRowSelected?: (row: TTeamColumn) => boolean;
-    tableRef?: Ref<ITanTableRef<TTeamColumn>>;
 }
 
 const tableColumns: ColumnDef<TTeamColumn>[] = [
@@ -147,67 +245,28 @@ const tableColumns: ColumnDef<TTeamColumn>[] = [
         },
     },
 ];
-const getLotDrawId = (d: TTeamColumn) => d.id;
 const ListTeam = ({
     data = [],
     showAction,
     onRowSelect,
     onSelectedRowsChange,
     columns = [...tableColumns],
-    tableRef,
+
     selectableRowSelected,
 }: IListTeam) => {
-    const [filterText, setFilterText] = useState("");
-
-    const filteredItems = data.filter((item) => item);
-
-    // const handlePerRowsChange = (newPerPage: number, page: number) => {
-    //   const take = newPerPage;
-    //   const skip = Math.max(page - 1, 0) * take;
-    //   updateGetFilter({ take, skip });
-    // };
-    //
-    // const handlePageChange = (page: number) => {
-    //   if (!filters) return;
-    //   const { take } = filters;
-    //   if (take) {
-    //     updateGetFilter({ skip: Math.max(page - 1, 0) * take });
-    //   }
-    // };
-
-    if (columns.length > 0 && showAction) {
-        columns = [
-            ...columns,
-            {
-                header: "#",
-                cell({ getValue, row: { index, original }, column: { id }, table }) {
-                    return <TeamTableAction team={original} />;
-                },
-            },
-        ];
+    let displayColumns = [...columns];
+    if (showAction) {
+        displayColumns = [...displayColumns, teamAction];
     }
-
-    // const subHeaderComponentMemo = useMemo(() => {
-    //   return (
-    //     <div
-    //       id="basic-1_filter"
-    //       className="dataTables_filter d-flex align-items-center"
-    //     >
-    //       <Label className="me-2">{SearchTableButton}:</Label>
-    //       <Input
-    //         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-    //           setFilterText(e.target.value)
-    //         }
-    //         type="search"
-    //         value={filterText}
-    //       />
-    //     </div>
-    //   );
-    // }, [filterText]);
-
     return (
         <div className="table-responsive">
-            <TanTable ref={tableRef} data={data} getRowId={getLotDrawId} columns={columns} />
+            <TanTable
+                data={data}
+                onSelectedRowsChange={onSelectedRowsChange}
+                selectableRowSelected={selectableRowSelected}
+                getRowId={(r) => r.team_sport_id}
+                columns={displayColumns}
+            />
         </div>
     );
 };
@@ -215,8 +274,8 @@ const ListTeam = ({
 const PageTeamNew = () => {
     const { t } = useTranslation();
     const { teamSelector } = useConfigStore();
-    const { addTeams, teams } = useTeamStore(teamSelector());
-
+    const { addTeams } = useTeamStore(teamSelector());
+    const { teams } = useTeamStore(teamSelector());
     const handleAddTeam = (team: TTeam) => {
         console.log({ handleAddTeam: team });
         const { ...rests } = team;
@@ -250,7 +309,7 @@ const PageTeamNew = () => {
             });
     };
     const { handleToggle: handleToggleAddModal, TeamModal: TeamAddModal } = useTeamModal({ onSubmit: handleAddTeam });
-
+    const ref = useRef<ITanTableRef<TTeamColumn>>(null);
     return (
         <div className="page-body">
             <Breadcrumbs mainTitle={"Danh sách đội thi đấu"} parent={"HTTQ2024"} />
