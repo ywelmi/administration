@@ -86,6 +86,9 @@ const CommonModal: React.FC<CommonModalType> = ({
           onPointerDownOutside={(e) => {
             e.preventDefault();
           }}
+          onInteractOutside={(e) => {
+            e.preventDefault();
+          }}
         >
           {title && (
             <Dialog.Title className="DialogTitle">{title}</Dialog.Title>
@@ -110,5 +113,5 @@ const CommonModal: React.FC<CommonModalType> = ({
   );
 };
 
-export { OriginalCommonModal };
-export default CommonModal;
+export default OriginalCommonModal;
+// export default CommonModal;
