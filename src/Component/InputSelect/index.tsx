@@ -62,7 +62,7 @@ const InputSelect = <T,>({
         ))}
       </Input>
       <div
-        className="absolute right-8 flex items-center cursor-pointer z-1 text-slate-800 top-[50%] translate-y-[-50%]"
+        className="absolute right-8 flex items-center cursor-pointer z-0 text-slate-800 top-[50%] translate-y-[-50%]"
         onClick={() => {
           if (ref.current) ref.current.value = "";
           const event = {
@@ -72,7 +72,7 @@ const InputSelect = <T,>({
         }}
       >
         <div className="rounded-[50%] p-1">
-          <i className="icon-close " />
+          <i className="icon-close" />
         </div>
       </div>
     </InputGroup>

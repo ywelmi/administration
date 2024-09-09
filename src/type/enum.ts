@@ -59,6 +59,41 @@ export const DMatchTurnTeam = [
   "Đôi nam nữ",
 ];
 
+export enum EMatchTurnTeamEnum {
+  BongBan = "bongban",
+  DanQuanBoiVuTrang = "danquan_boivutrang",
+  VuotVatCan = "vuotvatcan",
+  BoiVuTrang = "boivutrang",
+  CauLong = "caulong",
+  BongChuyenNam = "bongchuyennam",
+  QuanVot = "quanvot",
+  ChayVuTrang3000m = "chayvutrang3000m",
+  DanQuanBaMonQuanSu = "danquan_bamonquansu",
+  VoChienDauTayKhong = "vochiendautaykhong",
+  DanQuanVoChienDau = "danquan_vochiendau",
+  ChienSyKhoe = "chiensykhoe",
+}
+
+export const getMatchTurnTeam = (team: EMatchTurnTeamEnum) => {
+  switch (team) {
+    case EMatchTurnTeamEnum.BongBan:
+      return ["(A-X)", "(B-Y)", "(Đôi)", "(A-Y)", "(B-X)"];
+    case EMatchTurnTeamEnum.QuanVot:
+      return ["(A - X)", "(B - Y)", "(CA - ZX)", "(B - Z)", "(C - Y)"];
+    case EMatchTurnTeamEnum.DanQuanBoiVuTrang:
+    case EMatchTurnTeamEnum.VuotVatCan:
+    case EMatchTurnTeamEnum.BoiVuTrang:
+    case EMatchTurnTeamEnum.CauLong:
+    case EMatchTurnTeamEnum.BongChuyenNam:
+    case EMatchTurnTeamEnum.ChayVuTrang3000m:
+    case EMatchTurnTeamEnum.DanQuanBaMonQuanSu:
+    case EMatchTurnTeamEnum.VoChienDauTayKhong:
+    case EMatchTurnTeamEnum.DanQuanVoChienDau:
+    case EMatchTurnTeamEnum.ChienSyKhoe:
+  }
+  return DMatchTurnTeam;
+};
+
 export enum DSportType {
   LotDraw,
   TableQualifying,

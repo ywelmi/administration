@@ -1,8 +1,12 @@
+import * as Dialog from "@radix-ui/react-dialog";
+import { Cross2Icon } from "@radix-ui/react-icons";
+import { useEffect, useState } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import { Btn, H1, H4, H5 } from "../../../../AbstractElements";
 import { CommonModalType } from "../../../../Types/Ui-Kits/UiKitsTypes";
+import "./style.css";
 
-const CommonModal: React.FC<CommonModalType> = ({
+const OriginalCommonModal: React.FC<CommonModalType> = ({
   backdrop,
   centered,
   size = "xl",
@@ -52,4 +56,62 @@ const CommonModal: React.FC<CommonModalType> = ({
   );
 };
 
-export default CommonModal;
+const CommonModal: React.FC<CommonModalType> = ({
+  backdrop,
+  centered,
+  size = "xl",
+  isOpen: opened,
+  toggle,
+  title,
+  onClosed,
+  sizeTitle,
+  fullTitle,
+  modalBodyClassName,
+  children,
+  fullscreen,
+}) => {
+  const [isOpen, setIsOpen] = useState(opened);
+  useEffect(() => {
+    setIsOpen(opened);
+  }, [opened]);
+  return (
+    <Dialog.Root open={isOpen} onOpenChange={toggle}>
+      <Dialog.Trigger asChild>
+        <button hidden onClick={toggle}></button>
+      </Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Overlay className="DialogOverlay" />
+        <Dialog.Content
+          className="DialogContent"
+          onPointerDownOutside={(e) => {
+            e.preventDefault();
+          }}
+          onInteractOutside={(e) => {
+            e.preventDefault();
+          }}
+        >
+          {title && (
+            <Dialog.Title className="DialogTitle">{title}</Dialog.Title>
+          )}
+          {children}
+          <Dialog.Close asChild>
+            <button
+              className="IconButton"
+              aria-label="Close"
+              onClick={() => {
+                setIsOpen(false);
+                toggle?.();
+                onClosed?.();
+              }}
+            >
+              <Cross2Icon />
+            </button>
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+};
+
+export default OriginalCommonModal;
+// export default CommonModal;
