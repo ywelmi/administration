@@ -35,8 +35,9 @@ import { useTeamAtheleModal } from "./CreateGroupForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
 import LotsdrawTabs from "./navbar_item";
-import TestLotsDrawSubmitAllModal from "../LotsDrawSubmit/LotsDrawUpdateTicketAtheleModal";
+
 import LotsDrawSubmitResultGroupModal from "../LotsDrawSubmit/LotsDrawSubmitResultForGroupModal";
+import TestLotsDrawSubmitAllModal from "../LotsDrawSubmit/LotsDrawSubmitResultAtheleModal";
 
 interface IListLotsDraw {
     showAction?: boolean;
