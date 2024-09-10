@@ -266,10 +266,12 @@ const PageUpdateLotsdrawTicket = () => {
                 if (status === 200) {
                     toast.success(N["success"]);
                     fetchDataGroup();
+                } else {
+                    toast.error(res.data);
                 }
             })
             .catch((err) => {
-                toast.error(N["failed"]);
+                toast.error(N["failed"] + err);
                 console.log({ err });
             });
     };

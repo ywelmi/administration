@@ -47,10 +47,12 @@ const ContentSchedule = ({ content_id }: any) => {
                             setDataSchedule(res.data);
                         }
                     });
+                } else {
+                    toast.error(res.data);
                 }
             })
             .catch((err) => {
-                toast.error(N["failed"]);
+                toast.error(N["failed"] + "khi cập nhật khóa thăm" + err);
                 console.log({ err });
             });
     };

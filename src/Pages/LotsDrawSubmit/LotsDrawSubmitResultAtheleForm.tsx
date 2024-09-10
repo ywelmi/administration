@@ -306,7 +306,7 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
             })
             .catch((err) => {
                 console.log({ err });
-                toast.error(N["failed"]);
+                toast.error(N["failed"] + err);
             });
     };
 
