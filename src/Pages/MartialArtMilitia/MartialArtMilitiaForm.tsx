@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
 import { da } from "date-fns/locale";
 import { TLotsDraw } from "../../type/lotsdraw";
+import { getContentSport, lotsdrawScheduleUpdate } from "../../Service/lotsdraw";
 
 interface IMartialArtMilitiaForm {
     MartialArtMilitia: TMartialArtMilitiaArmyGroupGet[];
@@ -106,7 +107,14 @@ const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
                 if (status === 200) {
                     console.log({ data });
 
-                    onSubmit();
+                    getContentSport(sportId).then((res) => {
+                        console.log(res);
+                        if (res.status == 200) {
+                            res.data.forEach((element: any) => {
+                                lotsdrawScheduleUpdate(1, 1000, sportId, element.id);
+                            });
+                        }
+                    });
                     toast.success(N["success"]);
                 }
             })
@@ -114,6 +122,9 @@ const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
                 console.log({ err });
                 toast.error(err.data);
             });
+        console.log("hello");
+        onSubmit();
+
         setOpened(false);
     };
 

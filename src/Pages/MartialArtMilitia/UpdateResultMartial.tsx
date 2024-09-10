@@ -68,7 +68,7 @@ const PageUpdateResultMartial = () => {
                 if (status === 200) numberAthele.current = data;
             })
             .catch((err) => console.log({ err }));
-        lotsdrawScheduleUpdate(1, 1000, sportId, id);
+
         setSelectedContentSport(id);
     };
     const fetchData = useCallback((sportId: string) => {
