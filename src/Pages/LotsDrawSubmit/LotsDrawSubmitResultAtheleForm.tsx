@@ -91,7 +91,9 @@ const checkValidValue = (data: any) => {
     var isCanSubmit = true;
 
     data.forEach((element: any) => {
-        console.log(element[`content1_record_value`]);
+        if (element[`content1_record_value`] && element[`content1_record_value`].length > 5) {
+            isCanSubmit = false;
+        }
         if (
             (element[`content1_record_value`] && canParseToNumber(element[`content1_record_value`])) ||
             (element[`content1_record_value`] &&
@@ -230,30 +232,25 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
                                     content_id,
                                     original[`${valueField}_record_value`]
                                 );
+                                const [record_value, setRecordValue] = useState(original[`${valueField}_record_value`]);
                                 useEffect(() => {
-                                    setRecord_value(original[`${valueField}_record_value`]);
-                                    table.options.meta?.updateData(index, id, value);
+                                    setRecordValue(original[`${valueField}_record_value`]);
+                                    if (value) {
+                                        table.options.meta?.updateData(index, id, value);
+                                    }
                                 }, [original[`${valueField}_record_value`]]);
-                                const [record_value, setRecord_value] = useState(
-                                    original[`${valueField}_record_value`]
-                                );
 
                                 if (valueType == 2) {
                                     if (
-                                        (original[`${valueField}_record_value`] &&
-                                            canParseToNumber(original[`${valueField}_record_value`].toString())) ||
-                                        (original[`${valueField}_record_value`] &&
-                                            original[`${valueField}_record_value`].toString().split(":").length > 1 &&
-                                            original[`${valueField}_record_value`] &&
-                                            original[`${valueField}_record_value`].toString().split(":")[1].split("")
-                                                .length > 1)
+                                        (record_value && canParseToNumber(record_value.toString())) ||
+                                        (record_value &&
+                                            record_value.toString().split(":").length > 1 &&
+                                            record_value &&
+                                            record_value.toString().split(":")[1].split("").length > 1)
                                     ) {
-                                        setCanSubmit(true);
-
                                         dataResult = <div>{value}</div>;
                                     } else {
-                                        if (original[`${valueField}_record_value`]) {
-                                            setCanSubmit(false);
+                                        if (record_value) {
                                             dataResult = <strong className="text-danger">Sai định dạng</strong>;
                                         } else {
                                             dataResult = <></>;
@@ -266,12 +263,11 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
                                         canParseToNumber(original[`${valueField}_record_value`].toString())
                                     ) {
                                         //console.log(value);
-                                        setCanSubmit(true);
+
                                         // table.options.meta?.updateData(index, id, value);
                                         dataResult = <div>{value}</div>;
                                     } else {
                                         if (original[`${valueField}_record_value`]) {
-                                            setCanSubmit(false);
                                             dataResult = <strong className="text-danger">Sai định dạng</strong>;
                                         } else {
                                             dataResult = <></>;
@@ -293,7 +289,7 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
             .catch((err) => {
                 console.log({ err });
             });
-    }, [sportId]);
+    }, [sportId, content_id]);
 
     const handleSubmitLotsDraw = (results: TLotsDrawMember[]) => {
         const dataSubmit = {
@@ -327,7 +323,7 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
 
                         if (data) {
                             if (checkValidValue(data)) {
-                                //console.log(checkValidValue(data));
+                                console.log(checkValidValue(data));
                                 handleSubmitLotsDraw(data);
                             } else {
                                 toast.error("Có dữ liệu nhập sai định dạng! Kiểm tra lại");

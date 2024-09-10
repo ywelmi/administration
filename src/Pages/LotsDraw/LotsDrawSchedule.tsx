@@ -37,20 +37,20 @@ const LotsDrawSchedule = ({ member_count, turn_count, sport_id, content_id, onCa
             return res.data;
         });
 
-        listTicket.lst_member_ticket.forEach((ticket: TLotsDrawMatrix) => {
-            if (ticket.turn > 0 && ticket.turn_index > 0) {
-                if (ticket.ticket_code) {
-                    updateMatrix(
-                        ticket.turn - 1,
-                        ticket.turn_index - 1,
-                        ticket.ticket_index.toString() + ticket.ticket_code,
-                        ticket.id
-                    );
-                } else {
-                    updateMatrix(ticket.turn - 1, ticket.turn_index - 1, ticket.ticket_index.toString(), ticket.id);
-                }
-            }
-        });
+        // listTicket.lst_member_ticket.forEach((ticket: TLotsDrawMatrix) => {
+        //     if (ticket.turn > 0 && ticket.turn_index > 0) {
+        //         if (ticket.ticket_code) {
+        //             updateMatrix(
+        //                 ticket.turn - 1,
+        //                 ticket.turn_index - 1,
+        //                 ticket.ticket_index.toString() + ticket.ticket_code,
+        //                 ticket.id
+        //             );
+        //         } else {
+        //             updateMatrix(ticket.turn - 1, ticket.turn_index - 1, ticket.ticket_index.toString(), ticket.id);
+        //         }
+        //     }
+        // });
 
         listTicketValid.current = listTicket.lst_member_ticket
             .map((e: any) => {

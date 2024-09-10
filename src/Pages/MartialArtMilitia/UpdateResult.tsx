@@ -10,31 +10,11 @@ import { InputSelect } from "../../Component/InputSelect";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { N } from "../../name-conversion";
 import { getMoreFilterByValue } from "../../Service/_getParams";
-import {
-    getContentSport,
-    getNumberAthele,
-    lotsdrawResultTableGet,
-    lotsdrawScheduleGet,
-    lotsdrawsGet,
-    // lotsdrawCreate,
-    // lotsdrawDelete,
-    lotsdrawUpdate,
-} from "../../Service/lotsdraw";
-import { martialArtArmyGroupDelete } from "../../Service/martialArt";
-import { groupGetAll, martialArtMilitiaArmyGroupCreate } from "../../Service/martialArtMilitia";
+import { getContentSport, getNumberAthele } from "../../Service/lotsdraw";
+
 import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
 import { TLotsDraw } from "../../type/lotsdraw";
-import { convertToDate } from "../../utils/date";
-import {
-    useLotsDrawSubmitAllModal,
-    useLotsDrawSubmitGroupModal,
-    useLotsDrawUpdateAtheleModal,
-} from "../LotsDrawSubmit/LotsDrawSubmitForm";
-import { useTeamAtheleModal } from "./CreateGroupForm";
-import { useLotsDrawModal } from "./LotsDrawForm";
-import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
-import LotsdrawTabs from "./navbar_item";
 
 import LotsDrawSubmitResultGroupModal from "../LotsDrawSubmit/LotsDrawSubmitResultForGroupModal";
 import TestLotsDrawSubmitAllModal from "../LotsDrawSubmit/LotsDrawSubmitResultAtheleModal";

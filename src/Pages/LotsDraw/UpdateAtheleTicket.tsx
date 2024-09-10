@@ -37,6 +37,8 @@ import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
 import LotsdrawTabs from "./navbar_item";
 import { TGroup } from "../../type/team";
+import LotsDrawUpdateAtheleModal from "../LotsDrawSubmit/LotsDrawSubmitResultAtheleModal";
+import LotsDrawUpdateTicketAtheleModal from "../LotsDrawSubmit/LotsDrawUpdateTicketAtheleModal";
 
 interface IListLotsDraw {
     showAction?: boolean;
@@ -82,17 +84,12 @@ const PageUpdateAtheleTicket = () => {
                 // if (hasEmptyFiled) return null;
                 // if (!original.isDetail) return null;
 
-                const { LotsDrawUpdateAthele, handleToggle } = useLotsDrawUpdateAtheleModal({
-                    sportId: original.sport_id,
-                    team_id: original.team_id,
-                    content_id: original.content_id,
-                });
                 return (
-                    <Btn className="btn btn-success edit" onClick={handleToggle}>
-                        <i className="icon-pencil-alt" />
-                        Lập lịch
-                        <LotsDrawUpdateAthele />
-                    </Btn>
+                    <LotsDrawUpdateTicketAtheleModal
+                        sportId={original.sport_id}
+                        team_id={original.team_id}
+                        content_id={original.content_id}
+                    />
                 );
             },
         },

@@ -305,7 +305,7 @@ const ListMartialArtMilitia = ({
 const getLotDrawId = (d: TLotsDraw) => d.id;
 const getMartialArtMilitiaId = (d: TMartialArtMilitiaArmyGroupGet) => d.id;
 //Component render page lots draw
-const PageMartialArtMilitia = () => {
+const MartialArtMilitia = () => {
     const tableResultColumns: ColumnDef<TLotsDraw>[] = [
         {
             accessorKey: "team_name",
@@ -640,179 +640,99 @@ const PageMartialArtMilitia = () => {
         })();
     };
     return (
-        <div className="page-body">
-            <Breadcrumbs mainTitle={"Thi đấu võ Dân quân tự vệ"} parent={"HTTQ2024"} />
-            <Container fluid>
-                <Row>
-                    <Col sm="12">
-                        <Card>
-                            <CardHeader className="pb-0 card-no-border">
-                                {stateMartial == "manager" ? (
-                                    <>
-                                        <div className="d-flex justify-content-center">
-                                            <H3 className="text-center">Danh sách thi đấu võ Dân quân tự vệ</H3>
-                                            <div
-                                                className="btn btn-info"
-                                                onClick={() => {
-                                                    setStateMartial("update");
-                                                }}
-                                            >
-                                                <i className="fa fa-plus" />
-                                                &nbsp;
-                                                {"Cập nhật kết quả thi đấu"}
-                                            </div>
+        <Container fluid>
+            <Row>
+                <Col sm="12">
+                    <Card>
+                        <CardHeader className="pb-0 card-no-border">
+                            {stateMartial == "manager" ? (
+                                <>
+                                    <div className="d-flex justify-content-center">
+                                        <H3 className="text-center">Danh sách thi đấu võ Dân quân tự vệ</H3>
+                                        <div
+                                            className="btn btn-info"
+                                            onClick={() => {
+                                                //setStateMartial("update");
+                                            }}
+                                        >
+                                            <i className="fa fa-plus" />
+                                            &nbsp;
+                                            {"Cập nhật kết quả thi đấu"}
                                         </div>
-                                        <div className="d-flex justify-content-center">
-                                            <div
-                                                className="btn btn-primary"
-                                                onClick={() => {
-                                                    handleToggleAddModal();
-                                                }}
-                                            >
-                                                <i className="fa fa-plus" />
-                                                &nbsp;
-                                                {"Tạo đội thi đấu"}
-                                            </div>
-                                            <TeamAddModal />
+                                    </div>
+                                    <div className="d-flex justify-content-center">
+                                        <div
+                                            className="btn btn-primary"
+                                            onClick={() => {
+                                                handleToggleAddModal();
+                                            }}
+                                        >
+                                            <i className="fa fa-plus" />
+                                            &nbsp;
+                                            {"Tạo đội thi đấu"}
                                         </div>
-                                        <Row className="m-t-10">
-                                            <Col md={4}>
-                                                <InputSelect
-                                                    title={"Đơn vị"}
-                                                    data={orgs}
-                                                    k="name"
-                                                    name="org_id"
-                                                    v="id"
-                                                    handleChange={(e) => {
-                                                        e.target.value != ""
-                                                            ? setOrgName(e.target.value)
-                                                            : setOrgName(null);
-                                                    }}
-                                                    value={orgName}
-                                                />
-                                            </Col>
-                                            <Col md={4}>
-                                                <InputSelect
-                                                    title={"Giới tính"}
-                                                    data={[
-                                                        { id: 1, name: "Nam" },
-                                                        { id: 2, name: "Nữ" },
-                                                        { id: 0, name: "Tất cả" },
-                                                    ]}
-                                                    k="name"
-                                                    name="name"
-                                                    v="id"
-                                                    handleChange={(e) => {
-                                                        e.target.value != ""
-                                                            ? setGender(e.target.value)
-                                                            : setGender(null);
-                                                    }}
-                                                    value={gender}
-                                                />
-                                            </Col>
-                                            <Col md={4}>
-                                                <InputSelect
-                                                    title={"Nội dung"}
-                                                    data={listTypeGroup}
-                                                    k="name"
-                                                    name="name"
-                                                    v="name"
-                                                    handleChange={(e) => {
-                                                        e.target.value != "" ? setType(e.target.value) : setType(null);
-                                                        fetchDataLotsdraw(e.target.value);
-                                                    }}
-                                                    value={type}
-                                                />
-                                            </Col>
-                                        </Row>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="d-flex justify-content-center">
-                                            <H3 className="text-center">Cập nhật kết quả thi đấu Dân quân tự vệ</H3>
-                                            <div
-                                                className="btn btn-info"
-                                                onClick={() => {
-                                                    setStateMartial("manager");
-                                                }}
-                                            >
-                                                <i className="fa fa-arrow-left" aria-hidden="true"></i>
-                                                &nbsp;
-                                                {"Quay lại"}
-                                            </div>
-                                        </div>
-                                        <Col className=" offset-4 m-t-10" md={4}>
+                                        <TeamAddModal />
+                                    </div>
+                                    <Row className="m-t-10">
+                                        <Col md={4}>
                                             <InputSelect
-                                                title={"Nội dung"}
-                                                data={listContent.current}
+                                                title={"Đơn vị"}
+                                                data={orgs}
+                                                k="name"
+                                                name="org_id"
+                                                v="id"
+                                                handleChange={(e) => {
+                                                    e.target.value != ""
+                                                        ? setOrgName(e.target.value)
+                                                        : setOrgName(null);
+                                                }}
+                                                value={orgName}
+                                            />
+                                        </Col>
+                                        <Col md={4}>
+                                            <InputSelect
+                                                title={"Giới tính"}
+                                                data={[
+                                                    { id: 1, name: "Nam" },
+                                                    { id: 2, name: "Nữ" },
+                                                    { id: 0, name: "Tất cả" },
+                                                ]}
                                                 k="name"
                                                 name="name"
                                                 v="id"
                                                 handleChange={(e) => {
-                                                    setContent(e.target.value);
-                                                    // setType(e.target.value);
-
-                                                    //autoCallUpdateSchedule(e.target.value);
+                                                    e.target.value != "" ? setGender(e.target.value) : setGender(null);
                                                 }}
-                                                value={content}
+                                                value={gender}
                                             />
                                         </Col>
-                                        <div className="d-flex justify-content-center">
-                                            <div className="flex gap-2 mt-4">
-                                                <div className="btn btn-primary" onClick={handleUpdate}>
-                                                    <i className="fa fa-edit" />
-                                                    {"Cập nhật lịch"}
-                                                </div>
-                                                <div
-                                                    className="btn btn-danger"
-                                                    onClick={() => {
-                                                        toggleMartialArtMilitiaModal();
-
-                                                        // setTimeout(() => fetchData(sportId), 2000);
-                                                    }}
-                                                >
-                                                    <i className="fa fa-plus" /> &nbsp;
-                                                    {"Cập nhật kết quả bốc thăm"}
-                                                </div>
-                                            </div>
-
-                                            <MartialArtMilitiaAddModal />
-                                        </div>
-                                    </>
-                                )}
-                            </CardHeader>
-                            <CardBody>
-                                <>
-                                    {stateMartial == "manager" ? (
-                                        <ListMartialArtMilitia
-                                            tableRef={refGroup}
-                                            data={MartialArtMilitias}
-                                            showAction
-                                        />
-                                    ) : dataLotsdraw.length > 0 ? (
-                                        <>
-                                            <div className="d-flex justify-content-center mt-2">
-                                                <div
-                                                    className="btn btn-warning text-dark"
-                                                    onClick={() => {
-                                                        if (content) {
-                                                            autoCallUpdateSchedule(content);
-
-                                                            // setTimeout(() => fetchData(sportId), 2000);
-                                                        } else {
-                                                            toast.warn("Mời chọn môn thi");
-                                                        }
-                                                    }}
-                                                >
-                                                    <i className="fa fa-plus" /> &nbsp;
-                                                    {"Làm mới bốc thăm nội dung"}
-                                                </div>
-                                            </div>
-                                            <ListContentLotsDraw tableRef={ref} data={dataLotsdraw} showAction />
-                                        </>
-                                    ) : (
+                                        <Col md={4}>
+                                            <InputSelect
+                                                title={"Nội dung"}
+                                                data={listTypeGroup}
+                                                k="name"
+                                                name="name"
+                                                v="name"
+                                                handleChange={(e) => {
+                                                    e.target.value != "" ? setType(e.target.value) : setType(null);
+                                                    fetchDataLotsdraw(e.target.value);
+                                                }}
+                                                value={type}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </>
+                            ) : (
+                                <PageMartialArtMilitia />
+                            )}
+                        </CardHeader>
+                        <CardBody>
+                            <>
+                                {stateMartial == "manager" ? (
+                                    <ListMartialArtMilitia tableRef={refGroup} data={MartialArtMilitias} showAction />
+                                ) : dataLotsdraw.length > 0 ? (
+                                    <>
                                         <div className="d-flex justify-content-center mt-2">
-                                            <H3 className="text-danger text-center">Chưa cập nhật bốc thăm nội dung</H3>
                                             <div
                                                 className="btn btn-warning text-dark"
                                                 onClick={() => {
@@ -829,14 +749,34 @@ const PageMartialArtMilitia = () => {
                                                 {"Làm mới bốc thăm nội dung"}
                                             </div>
                                         </div>
-                                    )}
-                                </>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
+                                        <ListContentLotsDraw tableRef={ref} data={dataLotsdraw} showAction />
+                                    </>
+                                ) : (
+                                    <div className="d-flex justify-content-center mt-2">
+                                        <H3 className="text-danger text-center">Chưa cập nhật bốc thăm nội dung</H3>
+                                        <div
+                                            className="btn btn-warning text-dark"
+                                            onClick={() => {
+                                                if (content) {
+                                                    autoCallUpdateSchedule(content);
+
+                                                    // setTimeout(() => fetchData(sportId), 2000);
+                                                } else {
+                                                    toast.warn("Mời chọn môn thi");
+                                                }
+                                            }}
+                                        >
+                                            <i className="fa fa-plus" /> &nbsp;
+                                            {"Làm mới bốc thăm nội dung"}
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        </CardBody>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
     );
 };
-export { ListMartialArtMilitia, PageMartialArtMilitia };
+export { ListMartialArtMilitia, MartialArtMilitia };
