@@ -2,7 +2,8 @@ import { PageCompetitionRegister } from "../Pages/CompetitionRegister/ListCompet
 import { PageLotsDraw1 } from "../Pages/LotsDraw/PageLotsdraw";
 import { PageMartialArt } from "../Pages/MartialArt/ListMartialArt";
 import { MartialArtKnockout } from "../Pages/MartialArt/MartialArtKnockout";
-import { PageMartialArtMilitia } from "../Pages/MartialArtMilitia/MartialArtMilitia";
+import { PageMartialArtMilitia } from "../Pages/MartialArtMilitia/PageMartialArtMilitia";
+
 import { ListOrg } from "../Pages/Org/ListOrg";
 import { PageReportResult } from "../Pages/Report Result/ReportResult";
 import { PageResultExport } from "../Pages/ResultExport/ResultExport";

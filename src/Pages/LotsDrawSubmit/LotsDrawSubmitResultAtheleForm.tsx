@@ -91,7 +91,7 @@ const checkValidValue = (data: any) => {
     var isCanSubmit = true;
 
     data.forEach((element: any) => {
-        if (element[`content1_record_value`].length > 5) {
+        if (element[`content1_record_value`] && element[`content1_record_value`].length > 5) {
             isCanSubmit = false;
         }
         if (
