@@ -483,6 +483,8 @@ const MartialArtMilitia = () => {
                 if (res.status === 200) {
                     toast.success(N["success"]);
                     fetchDataGroup();
+                } else {
+                    toast.error(res.data);
                 }
             })
             .catch((err) => {

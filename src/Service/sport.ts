@@ -29,14 +29,17 @@ export const sportXuatPhieuDiem = async (id: string): Promise<void> => {
         const response = await httpGet(`sports/${id}/export/transcript`, {
             responseType: "blob",
         });
-
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `PhieuDiem_${id}.xlsx`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        if (response.status == 200) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `PhieuDiem_${id}.xlsx`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            toast.error(response.data);
+        }
     } catch (error) {
         console.error("Download failed:", error);
         toast.error("Download failed:" + error);
@@ -48,13 +51,17 @@ export const sportXuatPhieuKhoaTham = async (id: string): Promise<void> => {
             responseType: "blob",
         });
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `PhieuDiem_${id}.xlsx`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        if (response.status == 200) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `PhieuDiem_${id}.xlsx`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            toast.error(response.data);
+        }
     } catch (error) {
         console.error("Download failed:", error);
         toast.error("Download failed:" + error);
@@ -66,13 +73,17 @@ export const sportXuatXepHang = async (id: string): Promise<void> => {
             responseType: "blob",
         });
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `XepHang_${id}.xlsx`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        if (response.status == 200) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `PhieuDiem_${id}.xlsx`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            toast.error(response.data);
+        }
     } catch (error) {
         console.error("Download failed:", error);
         toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng");
