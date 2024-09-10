@@ -28,11 +28,7 @@ import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
 import { TLotsDraw } from "../../type/lotsdraw";
 import { convertToDate } from "../../utils/date";
-import {
-    useLotsDrawSubmitGroupModal,
-    useLotsDrawSubmitModal,
-    useLotsDrawUpdateAtheleModal,
-} from "../LotsDrawSubmit/LotsDrawSubmitForm";
+import { useLotsDrawSubmitGroupModal, useLotsDrawUpdateAtheleModal } from "../LotsDrawSubmit/LotsDrawSubmitForm";
 import { useTeamAtheleModal } from "./CreateGroupForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";

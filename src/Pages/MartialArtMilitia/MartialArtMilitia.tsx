@@ -29,7 +29,7 @@ import { useOrgStore } from "../../store/org";
 import { TTeammember } from "../../type/teammember";
 import { getFilterByValue, getMoreFilterByValue } from "../../Service/_getParams";
 import { teamsGet } from "../../Service/team";
-import { useLotsDrawSubmitGroupModal } from "./MartialArtMilitiaFormResult";
+
 import { useConfigStore } from "../../store/config";
 import { TLotsDraw } from "../../type/lotsdraw";
 import { getContentSport, lotsdrawScheduleGet, lotsdrawsGet, lotsdrawUpdate } from "../../Service/lotsdraw";
@@ -306,128 +306,6 @@ const getLotDrawId = (d: TLotsDraw) => d.id;
 const getMartialArtMilitiaId = (d: TMartialArtMilitiaArmyGroupGet) => d.id;
 //Component render page lots draw
 const MartialArtMilitia = () => {
-    const tableResultColumns: ColumnDef<TLotsDraw>[] = [
-        {
-            accessorKey: "team_name",
-            footer: (props) => props.column.id,
-            header: N["team_name"],
-            cell(props) {
-                return <div className="form-control">{props.getValue() as string}</div>;
-            },
-        },
-        {
-            accessorKey: "ticket_index",
-            footer: (props) => props.column.id,
-            header: N["ticket_index"],
-            cell(props) {
-                return <div className="">{props.getValue() as string}</div>;
-            },
-        },
-
-        {
-            accessorKey: "match_hour",
-            footer: (props) => props.column.id,
-            header: N["match_hour"],
-            cell({ getValue, row: { index, original }, column: { id }, table }) {
-                return (
-                    <ReactDatePicker
-                        className="form-control"
-                        name="match_hour"
-                        // selected={new Date(original.match_date as string || new Date())}
-                        value={original.match_hour}
-                        onChange={(date) =>
-                            table.options.meta?.updateData(index, id, `${date?.getHours()}:${date?.getMinutes()}`)
-                        }
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeFormat="HH:mm"
-                        timeIntervals={15}
-                        timeCaption="Giờ"
-                        locale={"vi"}
-                    />
-                );
-            },
-        },
-        {
-            accessorKey: "match_date",
-            footer: (props) => props.column.id,
-            header: N["match_date"],
-            cell({ getValue, row: { index, original }, column: { id }, table }) {
-                return (
-                    <ReactDatePicker
-                        className="form-control"
-                        name="date_join_army"
-                        showYearDropdown
-                        // selected={new Date(getValue() as string || new Date())}
-                        value={original.match_date ? convertToDate(original.match_date) : undefined}
-                        onChange={(date) => {
-                            table.options.meta?.updateData(index, id, date?.toISOString());
-                        }}
-                        locale={"vi"}
-                        dateFormat={"dd/MM/yyyy"}
-                    />
-                );
-            },
-        },
-        {
-            accessorKey: "locations",
-            footer: (props) => props.column.id,
-            header: N["locations"],
-        },
-        {
-            // accessorKey: "locations",
-            header: "Kết quả thi đấu",
-            footer: (props) => props.column.id,
-            cell({ getValue, row: { index, original }, column: { id }, table }) {
-                // let hasEmptyFiled = false;
-                // const idx = Object.values(original).findIndex((v) => v == null);
-                // if (idx !== -1) hasEmptyFiled = true;
-                // if (hasEmptyFiled) return null;
-
-                const { LotsDrawSubmitGroupResultModal, handleToggle } = useLotsDrawSubmitGroupModal({
-                    sportId: original.sport_id,
-
-                    content_id: content,
-                    team_id: original.org_id,
-                });
-                return (
-                    <Btn className="btn btn-info edit" onClick={handleToggle}>
-                        <i className="icon-pencil-alt" />
-                        Cập nhật
-                        <LotsDrawSubmitGroupResultModal />
-                    </Btn>
-                );
-            },
-        },
-    ];
-
-    const ListContentLotsDraw = ({
-        showAction,
-        onRowSelect,
-        onSelectedRowsChange,
-        columns = [...tableResultColumns],
-        data = [],
-        tableRef,
-        selectableRowSelected,
-    }: IListLotsDraw) => {
-        // if (columns.length > 0 && showAction) {
-        //   columns = [...columns, {
-        //     name: "#",
-        //     cell: (row: TLotsDrawColumn) => <LotsDrawTableAction lotsdraw={row} />,
-        //     sortable: true,
-        //   }];
-        // }
-        //
-        //
-        const tableData = data.map((d) => ({ ...d }));
-
-        console.log({ tableData });
-        return (
-            <div className="table-responsive">
-                <TanTable ref={tableRef} data={tableData} getRowId={getLotDrawId} columns={columns} />
-            </div>
-        );
-    };
     const { MartialArtMilitias, addMartialArtMilitias } = useMartialArtMilitiaStore();
     const [sportId, setSportId] = useState("");
     const [stateMartial, setStateMartial] = useState("manager");
@@ -555,7 +433,7 @@ const MartialArtMilitia = () => {
                                 toast.error(err.data);
                                 console.log({ err });
                             });
-                        lotsdrawScheduleGet(3, sportMartialArtMilitia!.id, content_id).then((res) => {
+                        lotsdrawScheduleGet(sportMartialArtMilitia!.id, content_id).then((res) => {
                             const { data, status } = res;
                             if (status === 200) toast.info("Đã cập nhật thông tin làn lượt");
                         });
@@ -614,14 +492,14 @@ const MartialArtMilitia = () => {
         return;
     };
 
-    const { handleToggle: toggleMartialArtMilitiaModal, MartialArtMilitiaModal: MartialArtMilitiaAddModal } =
-        useMartialArtMilitiaModal({
-            sportId: sportMartialArtMilitia ? sportMartialArtMilitia!.id! : sportId,
+    // const { handleToggle: toggleMartialArtMilitiaModal, MartialArtMilitiaModal: MartialArtMilitiaAddModal } =
+    //     useMartialArtMilitiaModal({
+    //         sportId: sportMartialArtMilitia ? sportMartialArtMilitia!.id! : sportId,
 
-            onSubmit: () => {
-                fetchDataGroup();
-            },
-        });
+    //         onSubmit: () => {
+    //             fetchDataGroup();
+    //         },
+    //     });
     const { handleToggle: handleToggleAddModal, TeamModal: TeamAddModal } = useGroupModal({
         sportId: sportMartialArtMilitia ? sportMartialArtMilitia!.id! : sportId,
         onSubmit: (e) => {
@@ -649,16 +527,6 @@ const MartialArtMilitia = () => {
                                 <>
                                     <div className="d-flex justify-content-center">
                                         <H3 className="text-center">Danh sách thi đấu võ Dân quân tự vệ</H3>
-                                        <div
-                                            className="btn btn-info"
-                                            onClick={() => {
-                                                //setStateMartial("update");
-                                            }}
-                                        >
-                                            <i className="fa fa-plus" />
-                                            &nbsp;
-                                            {"Cập nhật kết quả thi đấu"}
-                                        </div>
                                     </div>
                                     <div className="d-flex justify-content-center">
                                         <div
@@ -723,7 +591,7 @@ const MartialArtMilitia = () => {
                                     </Row>
                                 </>
                             ) : (
-                                <PageMartialArtMilitia />
+                                <></>
                             )}
                         </CardHeader>
                         <CardBody>
@@ -749,7 +617,6 @@ const MartialArtMilitia = () => {
                                                 {"Làm mới bốc thăm nội dung"}
                                             </div>
                                         </div>
-                                        <ListContentLotsDraw tableRef={ref} data={dataLotsdraw} showAction />
                                     </>
                                 ) : (
                                     <div className="d-flex justify-content-center mt-2">

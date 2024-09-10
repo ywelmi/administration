@@ -37,7 +37,7 @@ export interface TLotsDrawMember {
     turn: number;
     turn_index: number;
     indexs: number;
-
+    result_id?: string;
     clothers_number?: string;
     ticket_code?: string;
     group_id?: null;

@@ -220,12 +220,14 @@ const PageUpdateResult = () => {
                                                 />
                                             </div>
                                         ) : (
-                                            <div className="d-flex justify-content-center">
-                                                <LotsDrawSubmitResultGroupModal
-                                                    sportId={sportId}
-                                                    content_id={selectedContentSport}
-                                                />
-                                            </div>
+                                            selectedContentSport != "" && (
+                                                <div className="d-flex justify-content-center">
+                                                    <LotsDrawSubmitResultGroupModal
+                                                        sportId={sportId}
+                                                        content_id={selectedContentSport}
+                                                    />
+                                                </div>
+                                            )
                                         )}
                                     </>
                                 </>

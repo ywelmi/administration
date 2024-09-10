@@ -89,6 +89,7 @@ const PageMartialArtMilitia = () => {
     const [sportName, setSportName] = useState("");
     const { sport_id: paramSportId } = useParams();
 
+    const sportMartialArtMilitia = sports.find((s) => s.point_unit === 2);
     const { selectSport } = useSportStore();
 
     const updateSportId = useCallback(
@@ -104,10 +105,11 @@ const PageMartialArtMilitia = () => {
     );
 
     useEffect(() => {
-        if (paramSportId) {
-            updateSportId(paramSportId);
+        if (sportMartialArtMilitia) {
+            setSportId(sportMartialArtMilitia!.id);
+            setSportName(sportMartialArtMilitia!.name);
         }
-    }, [paramSportId, updateSportId]);
+    }, []);
 
     return (
         <div className="page-body">
