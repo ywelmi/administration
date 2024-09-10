@@ -235,6 +235,7 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
                                 const [record_value, setRecordValue] = useState(original[`${valueField}_record_value`]);
                                 useEffect(() => {
                                     setRecordValue(original[`${valueField}_record_value`]);
+
                                     if (value) {
                                         table.options.meta?.updateData(index, id, value);
                                     }
@@ -258,16 +259,13 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
                                     }
                                 }
                                 if (valueType == 1) {
-                                    if (
-                                        original[`${valueField}_record_value`] &&
-                                        canParseToNumber(original[`${valueField}_record_value`].toString())
-                                    ) {
+                                    if (record_value && canParseToNumber(record_value.toString())) {
                                         //console.log(value);
 
                                         // table.options.meta?.updateData(index, id, value);
                                         dataResult = <div>{value}</div>;
                                     } else {
-                                        if (original[`${valueField}_record_value`]) {
+                                        if (record_value) {
                                             dataResult = <strong className="text-danger">Sai định dạng</strong>;
                                         } else {
                                             dataResult = <></>;
