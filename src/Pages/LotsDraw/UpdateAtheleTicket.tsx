@@ -13,9 +13,6 @@ import { getMoreFilterByValue } from "../../Service/_getParams";
 import {
     getContentSport,
     getNumberAthele,
-    getScheduleContent,
-    lotsdrawResultTableGet,
-    lotsdrawScheduleGet,
     lotsdrawsGet,
     // lotsdrawCreate,
     // lotsdrawDelete,
@@ -26,18 +23,7 @@ import { groupGetAll, martialArtMilitiaArmyGroupCreate } from "../../Service/mar
 import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
 import { TLotsDraw } from "../../type/lotsdraw";
-import { convertToDate } from "../../utils/date";
-import {
-    useLotsDrawSubmitGroupModal,
-    useLotsDrawSubmitModal,
-    useLotsDrawUpdateAtheleModal,
-} from "../LotsDrawSubmit/LotsDrawSubmitForm";
-import { useTeamAtheleModal } from "./CreateGroupForm";
-import { useLotsDrawModal } from "./LotsDrawForm";
-import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
-import LotsdrawTabs from "./navbar_item";
-import { TGroup } from "../../type/team";
-import LotsDrawUpdateAtheleModal from "../LotsDrawSubmit/LotsDrawSubmitResultAtheleModal";
+
 import LotsDrawUpdateTicketAtheleModal from "../LotsDrawSubmit/LotsDrawUpdateTicketAtheleModal";
 
 interface IListLotsDraw {

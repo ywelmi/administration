@@ -1,5 +1,9 @@
 import { TLotsDraw } from "../type/lotsdraw";
-import { TMartialArtMilitiaArmyGroupGet, TMartialArtMilitiaArmyGroupCreate } from "../type/martialArtMilitia";
+import {
+    TMartialArtMilitiaArmyGroupGet,
+    TMartialArtMilitiaArmyGroupCreate,
+    TMartialArtMilitiaResultDetail,
+} from "../type/martialArtMilitia";
 import { TTablequalifyingKnockout } from "../type/tablequalifyingKnockout";
 import { baseGetParams } from "./_getParams";
 import { httpDel, httpGet, httpPost, httpPut } from "./_request";
@@ -39,4 +43,15 @@ export const groupGetAll = async (params = baseGetParams) => {
 
 export const martialArtMilitiaArmyGroupDelete = async (teamId: string) => {
     return httpDel(`/teamsportgroups/${teamId}`);
+};
+//lấy danh sách nhập điểm chi tiết theo result_id
+export const martialArtMilitiaArmyGroupGetDetailResult = (result_id: string) => {
+    return httpGet<any>(`sportcontents/get_result_content_detail?resultId=${result_id}`);
+};
+// Cập nhật bốc thăm môn thi
+export const martialArtMilitiaArmyGroupUpdateDetailResult = (
+    result_id: string,
+    listItem: Partial<TMartialArtMilitiaResultDetail>[]
+) => {
+    return httpPut(`sportcontents/update_result_content_detail?resultId=${result_id}`, listItem);
 };

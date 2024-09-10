@@ -77,7 +77,7 @@ export const lotsdrawScheduleGet = (sport_id: string, content_id: string) => {
 };
 export const lotsdrawScheduleUpdate = (
     member_count: number,
-    turn_count: string,
+    turn_count: number,
     sport_id: string,
     content_id: string
 ) => {
