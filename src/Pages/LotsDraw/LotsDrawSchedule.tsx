@@ -37,21 +37,6 @@ const LotsDrawSchedule = ({ member_count, turn_count, sport_id, content_id, onCa
             return res.data;
         });
 
-        // listTicket.lst_member_ticket.forEach((ticket: TLotsDrawMatrix) => {
-        //     if (ticket.turn > 0 && ticket.turn_index > 0) {
-        //         if (ticket.ticket_code) {
-        //             updateMatrix(
-        //                 ticket.turn - 1,
-        //                 ticket.turn_index - 1,
-        //                 ticket.ticket_index.toString() + ticket.ticket_code,
-        //                 ticket.id
-        //             );
-        //         } else {
-        //             updateMatrix(ticket.turn - 1, ticket.turn_index - 1, ticket.ticket_index.toString(), ticket.id);
-        //         }
-        //     }
-        // });
-
         listTicketValid.current = listTicket.lst_member_ticket
             .map((e: any) => {
                 if (e.ticket_index && e.ticket_code) {
@@ -61,6 +46,22 @@ const LotsDrawSchedule = ({ member_count, turn_count, sport_id, content_id, onCa
                 }
             })
             .filter((item: any) => item !== undefined);
+    };
+    const autoFillData = () => {
+        schedule.lst_member_ticket.forEach((ticket: TLotsDrawMatrix) => {
+            if (ticket.turn > 0 && ticket.turn_index > 0) {
+                if (ticket.ticket_code) {
+                    updateMatrix(
+                        ticket.turn - 1,
+                        ticket.turn_index - 1,
+                        ticket.ticket_index.toString() + ticket.ticket_code,
+                        ticket.id
+                    );
+                } else {
+                    updateMatrix(ticket.turn - 1, ticket.turn_index - 1, ticket.ticket_index.toString(), ticket.id);
+                }
+            }
+        });
     };
     const updateListTicketMatrix = () => {
         var newListTicket: { id: any; content_id: any; turn: any; turn_index: any }[] = [];
@@ -166,6 +167,11 @@ const LotsDrawSchedule = ({ member_count, turn_count, sport_id, content_id, onCa
                     )
                 )}
             </Row>
+            <Col xs="12" className="gap-2 d-flex justify-content-center m-t-10">
+                <Btn color="success" type="button" onClick={autoFillData}>
+                    Tự động điền khóa thăm
+                </Btn>
+            </Col>
             <Col xs="12" className="gap-2 d-flex justify-content-center m-t-10">
                 <Btn
                     color="primary"

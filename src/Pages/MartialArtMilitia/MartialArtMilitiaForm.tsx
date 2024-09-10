@@ -12,7 +12,7 @@ import {
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
 import { da } from "date-fns/locale";
-import { TLotsDraw } from "../../type/lotsdraw";
+import { TContentSport, TLotsDraw } from "../../type/lotsdraw";
 import { getContentSport, lotsdrawScheduleUpdate } from "../../Service/lotsdraw";
 
 interface IMartialArtMilitiaForm {
@@ -72,6 +72,7 @@ const MartialArtMilitiaForm = ({ MartialArtMilitia, onCancel, onSubmit }: IMarti
 
 const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
     const [data, setData] = useState<TMartialArtMilitiaArmyGroupGet[]>([]);
+    const [listContentSport, setlistContentSport] = useState<TContentSport[]>([]);
 
     const [opened, setOpened] = useState(false);
     const handleToggle = () => {
@@ -109,12 +110,16 @@ const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
 
                     getContentSport(sportId).then((res) => {
                         console.log(res);
-                        if (res.status == 200) {
-                            res.data.forEach((element: any) => {
-                                lotsdrawScheduleUpdate(1, 1000, sportId, element.id);
-                            });
-                        }
+                        lotsdrawScheduleUpdate(1, 1000, sportId, res.data[0].id).then((res1) => {
+                            if (res1.status == 200) {
+                                lotsdrawScheduleUpdate(1, 1000, sportId, res.data[1].id).then((res) =>
+                                    console.log(res)
+                                );
+                            }
+                        });
+                        return res.data;
                     });
+
                     toast.success(N["success"]);
                 }
             })
@@ -123,6 +128,9 @@ const useMartialArtMilitiaModal = ({ sportId, onSubmit, ...rest }: any) => {
                 toast.error(err.data);
             });
         console.log("hello");
+        if (listContentSport) {
+        }
+
         onSubmit();
 
         setOpened(false);
