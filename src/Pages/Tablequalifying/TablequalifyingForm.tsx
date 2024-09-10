@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Col, Input, Label, Row } from "reactstrap";
+import * as yup from "yup";
 import { Btn } from "../../AbstractElements";
 import { InputSelect } from "../../Component/InputSelect";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
@@ -25,6 +26,19 @@ interface ITablequalifyingForm {
 }
 
 interface ITablequalifyingModal extends ITablequalifyingForm {}
+
+const TablequalifyingSchema = yup.object().shape({
+  // id: yup.string().optional(),
+  // sport_id: yup.string().required(),
+  name: yup.string().required("Mời nhập tên bảng"),
+  // indexs: yup.number().required(),
+  // index: yup.number().required(),
+  // created: yup.string().required(),
+  // modified: yup.date().required(),
+  // sport_name: yup.string().optional(),
+  // list_team: yup.string().optional(),
+  // listTeams: yup.array(yup.string()).optional(),
+});
 
 const TablequalifyingForm = ({
   tablequalifying: initTablequalifying,
@@ -54,6 +68,7 @@ const TablequalifyingForm = ({
       } as TTablequalifying;
       if (submitValue) onSubmit(submitValue);
     },
+    validationSchema: TablequalifyingSchema,
   });
 
   useEffect(() => {
@@ -156,6 +171,9 @@ const TablequalifyingForm = ({
           <Label for="name" check>
             {t("name")}
           </Label>
+          {formik.errors.name ? (
+            <div className="invalid-input">{formik.errors.name}</div>
+          ) : null}
           <Input
             id="name"
             type="text"
