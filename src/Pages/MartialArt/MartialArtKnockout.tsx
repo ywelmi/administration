@@ -10,7 +10,12 @@ import { CustomRoundComponent } from "./CustomRound";
 import { CustomSeed } from "./CustomSeed";
 
 const MartialArtKnockout = () => {
-  const { rounds: fetchedRounds, sportId, contentId } = useKnockoutContext();
+  const {
+    rounds: fetchedRounds,
+    sportId,
+    contentId,
+    refreshMartialArtKnockout,
+  } = useKnockoutContext();
 
   const genMartialArtTree = () =>
     generateMartialArtContentTree(sportId, contentId)
@@ -18,6 +23,7 @@ const MartialArtKnockout = () => {
         const { status } = res;
         if (status === 200) {
           toast.success(N["success"]);
+          refreshMartialArtKnockout();
         }
       })
       .catch((err) => {

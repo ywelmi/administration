@@ -10,7 +10,7 @@ import {
 import { TTablequalifyingKnockoutMatchReport } from "../../type/tablequalifyingKnockout";
 import { ICustomSeedProps } from "../../typing/treeRound";
 import { useKnockoutContext } from "./context";
-import { TablequalifyingKnockoutMatchReportModal } from "./MartialArtForm";
+import { MartialArtMatchReportModal } from "./MartialArtForm";
 
 interface ISeedTeam {
   team1_id: string;
@@ -190,7 +190,7 @@ const FullSeed = ({
               </button>
             )}
             {isFilledPair && !isUpdatingTeam ? (
-              <TablequalifyingKnockoutMatchReportModal
+              <MartialArtMatchReportModal
                 onSubmit={handleUpdateKnockoutMatch}
                 tablequalifyingKnockoutMatchReport={{
                   id: seed.id.toString(),

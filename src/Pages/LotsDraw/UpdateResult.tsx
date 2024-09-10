@@ -215,8 +215,8 @@ const PageUpdateResult = () => {
                                                 <Btn className="btn btn-info edit" onClick={handleToggle}>
                                                     <i className="icon-pencil-alt" />
                                                     Cập nhật
-                                                    <LotsDrawSubmitModal />
                                                 </Btn>
+                                                <LotsDrawSubmitModal />
                                             </div>
                                         ) : (
                                             <div className="d-flex justify-content-center">
@@ -224,8 +224,8 @@ const PageUpdateResult = () => {
                                                 <Btn className="btn btn-info edit" onClick={handleToggleGroup}>
                                                     <i className="icon-pencil-alt" />
                                                     Cập nhật
-                                                    <LotsDrawSubmitGroupResultModal />
                                                 </Btn>
+                                                    <LotsDrawSubmitGroupResultModal />
                                             </div>
                                         )}
                                     </>
