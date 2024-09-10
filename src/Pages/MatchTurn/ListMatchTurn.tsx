@@ -9,6 +9,7 @@ import { N } from "../../name-conversion";
 import { useMatchTurnStore } from "../../store/matchTurn";
 import { TMatchTurnResult } from "../../type/matchTurn";
 import { MatchTurnSetWrapper } from "../MatchTurnSet";
+import { MatchTurnSetsForm } from "../MatchTurnSet/MatchTurnSetForm";
 import {
   IMatchTurnDirectoryModalProps,
   MatchTurnDirectoryModal,
@@ -103,46 +104,6 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
       const { tableType } = useContext(MatchTurnContext);
 
       const { match } = useMatchTurnContext();
-      // const handleUpdateMatchTurn = (matchTurn: TMatchTurnResult) => {
-      //   console.log({ handleUpdateMatchTurn: matchTurn });
-      //   if (matchTurn?.id.includes(PREF_TMP_ID)) {
-      //     console.log({ insertMatchTurn: matchTurn, matchTurnCreate });
-      //     const matchNoId = omit(matchTurn, ["id"]);
-      //     matchTurnCreate(matchNoId)
-      //       .then((res) => {
-      //         const { status, data } = res;
-      //         console.log({ status, data });
-      //         if (status === 200) {
-      //           toast.success(N["success"]);
-      //           createMatchTurn(data);
-      //           delMatchTurn(matchTurn.id);
-      //           console.log({ createMatchTurn: data });
-      //         }
-      //       })
-      //       .catch((err) => {
-      //         toast.error(err?.data ? err.data : N["error"]);
-      //         console.log({ err });
-      //       });
-      //     return;
-      //   } else {
-      //     console.log({ updateMatchTurn: matchTurn });
-      //     matchTurnUpdate(matchTurn)
-      //       .then((res) => {
-      //         const { status } = res;
-      //         if (status === 200) {
-      //           toast.success(N["success"]);
-      //           updateMatchTurn(matchTurn);
-      //           console.log({ updateMatchTurn: matchTurn });
-      //           // return;
-      //         }
-      //         // return Promise.reject(status);
-      //       })
-      //       .catch((err) => {
-      //         toast.error(N["error"]);
-      //         console.log({ err });
-      //       });
-      //   }
-      // };
 
       const handleConfirmDel = async () => {
         const { confirm } = await confirmModal();
@@ -188,22 +149,20 @@ const displayColumns: ColumnDef<TMatchTurnResult>[] = [
           >
             <i className="icon-signal cursor-pointer" />
             Nhập séc
-            <HocModal
-              title="Séc đấu"
-              ref={setModalRef}
-              onClose={increaseCounter}
-            >
-              <MatchTurnSetWrapper
-                match={match}
-                tableType={tableType}
-                matchTurn={
-                  // { id: tablequalifyingKnockoutMatchReport.id } as TMatchTurn,
-                  // matchTurns
-                  matchTurn
-                }
-              />
-            </HocModal>
           </LI>
+          <HocModal title="Séc đấu" ref={setModalRef} onClose={increaseCounter}>
+            <MatchTurnSetWrapper
+              match={match}
+              tableType={tableType}
+              matchTurn={
+                // { id: tablequalifyingKnockoutMatchReport.id } as TMatchTurn,
+                // matchTurns
+                matchTurn
+              }
+            >
+              <MatchTurnSetsForm onSuccess={increaseCounter} />
+            </MatchTurnSetWrapper>
+          </HocModal>
         </UL>
       );
     },

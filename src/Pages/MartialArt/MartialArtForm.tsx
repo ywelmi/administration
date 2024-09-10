@@ -137,6 +137,7 @@ import { ETable } from "../../type/enum";
 import { TMatchTurnResult } from "../../type/matchTurn";
 import { TTablequalifyingMatchReport } from "../../type/tablequalifyingMatch";
 import { MatchTurnSetWrapper } from "../MatchTurnSet";
+import { MatchTurnSetsForm } from "../MatchTurnSet/MatchTurnSetForm";
 
 export interface ITablequalifyingKnockoutMatchReportForm {
   tablequalifyingKnockoutMatchReport?: Partial<TTablequalifyingMatchReport>;
@@ -147,7 +148,7 @@ export interface ITablequalifyingKnockoutMatchReportForm {
 export interface ITablequalifyingMatchReportModal
   extends ITablequalifyingKnockoutMatchReportForm {}
 
-export const TablequalifyingKnockoutMatchReportModal = forwardRef(
+export const MartialArtMatchReportModal = forwardRef(
   (
     {
       tablequalifyingKnockoutMatchReport,
@@ -184,6 +185,7 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
           isOpen={opened}
           toggle={handleToggle}
           title="Võ chiến đấu"
+          onClosed={() => onClose?.()}
         >
           {tablequalifyingKnockoutMatchReport?.id ? (
             <MatchTurnSetWrapper
@@ -195,7 +197,9 @@ export const TablequalifyingKnockoutMatchReportModal = forwardRef(
               }
               // matchTurnSetsUpdate={martialArtTurnWithSetUpdate}
               // matchTurnSetsGet={martialArtTurnWithSetGet}
-            />
+            >
+              <MatchTurnSetsForm onSuccess={handleToggle} />
+            </MatchTurnSetWrapper>
           ) : null}
           {/* <TablequalifyingKnockoutMatchReportForm
             onSubmit={handleSubmit}

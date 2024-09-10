@@ -1,8 +1,9 @@
-import { Modal, ModalBody } from "reactstrap";
+import { Modal as BootstrapModal, ModalBody } from "reactstrap";
 import { Btn, H1, H4, H5 } from "../../../../AbstractElements";
 import { CommonModalType } from "../../../../Types/Ui-Kits/UiKitsTypes";
+import "./style.css";
 
-const CommonModal: React.FC<CommonModalType> = ({
+const OriginalCommonModal: React.FC<CommonModalType> = ({
   backdrop,
   centered,
   size = "xl",
@@ -17,7 +18,7 @@ const CommonModal: React.FC<CommonModalType> = ({
   fullscreen,
 }) => {
   return (
-    <Modal
+    <BootstrapModal
       backdrop={backdrop}
       centered={centered}
       size={size}
@@ -48,8 +49,8 @@ const CommonModal: React.FC<CommonModalType> = ({
           <Btn color="primary">{SaveChanges}</Btn>
         </ModalFooter>
       )} */}
-    </Modal>
+    </BootstrapModal>
   );
 };
 
-export default CommonModal;
+export default OriginalCommonModal;

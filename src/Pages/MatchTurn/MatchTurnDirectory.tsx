@@ -20,7 +20,8 @@ import {
 } from "../../Component/Tables/TanTable/TanTble";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { N } from "../../name-conversion";
-import { DMatchTurnTeam } from "../../type/enum";
+import { useSportStore } from "../../store/sport";
+import { getMatchTurnTeam } from "../../type/enum";
 import { TMatchTurn, TMatchTurnResult } from "../../type/matchTurn";
 import { getUniqueId } from "../../utils/id";
 import { useMatchTurnContext } from "./hook";
@@ -40,12 +41,19 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
     accessorKey: "name",
     footer: (props) => props.column.id,
     header: N["name"],
-    cell: ({ getValue, row: { index }, column: { id }, table }) => {
-      // return getValue() as string
+    cell: function Cell({ getValue, row: { index }, column: { id }, table }) {
+      const { sports } = useSportStore();
+      const selectedSportId = localStorage.getItem("selectedSportId") as string;
+      const selectedSport = sports.find((s) => s.id == selectedSportId);
+      if (!selectedSport) return <></>;
+      console.log({ selectedSport });
       return (
         <InputSelectConfirm
           name="name"
-          data={DMatchTurnTeam.map((t) => ({ k: t, v: t }))}
+          data={getMatchTurnTeam(selectedSport.code).map((t) => ({
+            k: t,
+            v: t,
+          }))}
           k={"k"}
           v={"v"}
           placeHolder={getValue() as string}
