@@ -3,8 +3,8 @@ import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 
 import { useEffect, useState } from "react";
 import { useSportStore } from "../../store/sport";
-import { Btn, H6 } from "../../AbstractElements";
-import { sportXuatXepHang } from "../../Service/result";
+import { Btn, H5, H6 } from "../../AbstractElements";
+import { getNumberTeam, sportXuatXepHang, updateNumberTeam } from "../../Service/result";
 import { toast } from "react-toastify";
 import { exportResultAll } from "../../Service/result";
 import { useConfigStore } from "../../store/config";
@@ -16,12 +16,27 @@ const ListComboBox = () => {
     const [filterText, setFilterText] = useState("all");
     const [block, setBlock] = useState("");
     const [typeExport, setTypeExport] = useState("all");
+    const [numberTeam, setNumberTeam] = useState(0);
     const handleChangeValue = (value: any) => {
         setFilterText(value);
     };
     useEffect(() => {
         unitType == "LLTT" ? setListSport(sportsMain) : setListSport(sportsSub);
+        getNumberTeam().then((res) => {
+            if (res.status == 200) {
+                setNumberTeam(res.data);
+            }
+        });
     }, []);
+    const handleChangeNumberTeam = (data: string) => {
+        updateNumberTeam(parseInt(data)).then((res) => {
+            if (res.status == 200) {
+                toast.success("Cập nhật thông tin số đội thành công");
+            } else {
+                toast.error("Cập nhật thông tin số đội thất bại" + res.data);
+            }
+        });
+    };
     const handleChangeBlock = (value: any) => {
         setBlock(value);
         if (value != "all") {
@@ -139,7 +154,7 @@ const ListComboBox = () => {
                         </option>
                     </Input>
                 </div>
-                {typeExport == "Theo môn" && (
+                {typeExport == "Theo môn" ? (
                     <div className="m-10">
                         <H6 className="text-primary text-center m-10">Chọn môn thi đấu</H6>
                         <Input
@@ -176,6 +191,29 @@ const ListComboBox = () => {
                                 </option>
                             ))}
                         </Input>
+                    </div>
+                ) : (
+                    <div className="m-10">
+                        <H6 className="text-primary text-center m-10">Số đội tham gia tính điểm</H6>
+
+                        <Input
+                            className=" form-control"
+                            name="match_location"
+                            // selected={new Date(original.match_date as string || new Date())}
+                            value={numberTeam}
+                            type="number"
+                            onChange={(e) => setNumberTeam(parseInt(e.target.value))}
+                            onBlur={
+                                (newdate) => {
+                                    handleChangeNumberTeam(newdate.target.value);
+                                }
+                                // table.options.meta?.updateData(
+                                //     index,
+                                //     id,
+                                //     `${date?.getHours()}:${date?.getMinutes()}`
+                                // )
+                            }
+                        />
                     </div>
                 )}
             </div>

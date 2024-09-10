@@ -1,7 +1,8 @@
 import { toast } from "react-toastify";
 import { TSport } from "../type/sport";
 import { baseGetParams, IListResponse } from "./_getParams";
-import { httpDel, httpGet, httpPost, httpPut } from "./_request";
+import { httpDel, httpGet, httpPatch, httpPost, httpPut } from "./_request";
+import axios from "axios";
 
 // TODO: how to filter
 
@@ -59,4 +60,14 @@ export const exportResultAll = async (type: string): Promise<void> => {
         console.error("Download failed:", error);
         toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng: Chưa xác định ");
     }
+};
+
+export const getNumberTeam = async () => {
+    return httpGet<any>(`competitions/6B427DEA-D7B0-467B-A4F3-544F4FD3856F/get_max_team_count`);
+};
+export const updateNumberTeam = async (maxTeam: number) => {
+    return httpPatch<any>(`competitions/6B427DEA-D7B0-467B-A4F3-544F4FD3856F/maxteamcount`, {
+        id: "6B427DEA-D7B0-467B-A4F3-544F4FD3856F",
+        max_team_count: maxTeam,
+    });
 };

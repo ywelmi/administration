@@ -29,13 +29,14 @@ import { convertToDate } from "../../utils/date";
 import {
     useLotsDrawSubmitAllModal,
     useLotsDrawSubmitGroupModal,
-    useLotsDrawSubmitModal,
     useLotsDrawUpdateAtheleModal,
 } from "../LotsDrawSubmit/LotsDrawSubmitForm";
 import { useTeamAtheleModal } from "./CreateGroupForm";
 import { useLotsDrawModal } from "./LotsDrawForm";
 import { useLotsDrawScheduleModal } from "./LotsDrawSchedule";
 import LotsdrawTabs from "./navbar_item";
+import TestLotsDrawSubmitAllModal from "../LotsDrawSubmit/LotsDrawUpdateTicketAtheleModal";
+import LotsDrawSubmitResultGroupModal from "../LotsDrawSubmit/LotsDrawSubmitResultForGroupModal";
 
 interface IListLotsDraw {
     showAction?: boolean;
@@ -170,15 +171,15 @@ const PageUpdateResult = () => {
             })
             .catch((err) => console.log({ err }));
     }, []);
-    const { LotsDrawSubmitModal, handleToggle } = useLotsDrawSubmitAllModal({
-        content_id: selectedContentSport,
-        sportId: sportId,
-    });
+    // const { LotsDrawSubmitModal, handleToggle } = useLotsDrawSubmitAllModal({
+    //     content_id: selectedContentSport,
+    //     sportId: sportId,
+    // });
 
-    const { LotsDrawSubmitGroupResultModal, handleToggleGroup } = useLotsDrawSubmitGroupModal({
-        content_id: selectedContentSport,
-        sportId: sportId,
-    });
+    // const { LotsDrawSubmitGroupResultModal, handleToggleGroup } = useLotsDrawSubmitGroupModal({
+    //     content_id: selectedContentSport,
+    //     sportId: sportId,
+    // });
     return (
         <Container fluid>
             <Row>
@@ -212,20 +213,17 @@ const PageUpdateResult = () => {
                                         {selectedContentSport != "" && contentType == 1 ? (
                                             <div className="d-flex justify-content-center">
                                                 {" "}
-                                                <Btn className="btn btn-info edit" onClick={handleToggle}>
-                                                    <i className="icon-pencil-alt" />
-                                                    Cập nhật
-                                                </Btn>
-                                                <LotsDrawSubmitModal />
+                                                <TestLotsDrawSubmitAllModal
+                                                    sportId={sportId}
+                                                    content_id={selectedContentSport}
+                                                />
                                             </div>
                                         ) : (
                                             <div className="d-flex justify-content-center">
-                                                {" "}
-                                                <Btn className="btn btn-info edit" onClick={handleToggleGroup}>
-                                                    <i className="icon-pencil-alt" />
-                                                    Cập nhật
-                                                </Btn>
-                                                    <LotsDrawSubmitGroupResultModal />
+                                                <LotsDrawSubmitResultGroupModal
+                                                    sportId={sportId}
+                                                    content_id={selectedContentSport}
+                                                />
                                             </div>
                                         )}
                                     </>

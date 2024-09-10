@@ -1,9 +1,9 @@
 import { TLotsDraw } from "../../type/lotsdraw";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useState } from "react";
-import { LotsDrawSubmitResultForm } from "./LotsDrawSubmitResultAtheleForm1";
+
 import { LotsDrawUpdateAtheleForm } from "./LotsDrawUpdateAtheleForm";
-import { H3 } from "../../AbstractElements";
+import { Btn, H3 } from "../../AbstractElements";
 import { LotsDrawSubmitGroupResultForm } from "./LotsDrawSubmitResultGroupForm";
 import { Modal } from "reactstrap";
 import { LotsDrawSubmitResultAllForm } from "./LotsDrawSubmitResultAtheleForm";
@@ -18,30 +18,6 @@ interface ILotsDrawSubmitModal {
     // onSubmit: (lotsdraw: TLotsDraw[]) => void;
 }
 
-const useLotsDrawSubmitModal = ({ sportId, team_id, content_id, gender }: ILotsDrawSubmitModal) => {
-    const [opened, setOpened] = useState(false);
-    const handleToggle = () => {
-        setOpened((s) => !s);
-    };
-
-    const LotsDrawSubmitModal = () => (
-        <Modal modalBodyClassName=" text-start" fullscreen isOpen={opened} toggle={handleToggle}>
-            <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
-                <H3 className="modal-header justify-content-center border-0">Cập nhật kết quả thi đấu</H3>
-                <LotsDrawSubmitResultForm
-                    sportId={sportId}
-                    // onSubmit={() => setOpened(false)}
-                    org_id={team_id}
-                    content_id={content_id}
-                    gender={gender}
-                    onCancel={() => setOpened(false)}
-                />
-            </div>
-        </Modal>
-    );
-
-    return { LotsDrawSubmitModal, handleToggle };
-};
 const useLotsDrawSubmitAllModal = ({ sportId, content_id }: any) => {
     const [opened, setOpened] = useState(false);
     const handleToggle = () => {
@@ -116,5 +92,34 @@ const useLotsDrawUpdateAtheleModal = ({ sportId, team_id, content_id, gender }: 
 
     return { LotsDrawUpdateAthele, handleToggle };
 };
+const testLotsDrawSubmitAllModal = ({ sportId, content_id }: any) => {
+    const [openModal, setOpenModal] = useState(false);
+    const openModalToggle = () => setOpenModal(!openModal);
+    return (
+        <>
+            <Btn className="btn btn-info edit" onClick={openModalToggle}>
+                <i className="icon-pencil-alt" />
+                Cập nhật
+            </Btn>
+            <CommonModal isOpen={openModal} toggle={openModalToggle} modalBodyClassName="p-0" heading="Riho SIGN-UP">
+                <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
+                    <H3 className="modal-header justify-content-center border-0">Cập nhật kết quả thi đấu</H3>
+                    <LotsDrawSubmitResultAllForm
+                        sportId={sportId}
+                        // onSubmit={() => setOpened(false)}
 
-export { useLotsDrawSubmitModal, useLotsDrawUpdateAtheleModal, useLotsDrawSubmitGroupModal, useLotsDrawSubmitAllModal };
+                        content_id={content_id}
+                        onCancel={() => setOpenModal(false)}
+                    />
+                </div>
+            </CommonModal>
+        </>
+    );
+};
+
+export {
+    useLotsDrawUpdateAtheleModal,
+    useLotsDrawSubmitGroupModal,
+    useLotsDrawSubmitAllModal,
+    testLotsDrawSubmitAllModal,
+};
