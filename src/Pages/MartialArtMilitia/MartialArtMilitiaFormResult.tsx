@@ -81,97 +81,11 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                 console.log(valueType);
                 _content_point.setPoints(pointConfig);
 
-                lst_map_sport_content.forEach(({ field, name, id }) => {
-                    if (id == content_id) {
-                        const col: ColumnDef<any> = {
-                            // accessorKey: field,
-                            footer: (props) => props.column.id,
-                            header: name,
-                            columns: [
-                                {
-                                    accessorKey: `${field}_record1_value`,
-                                    header:
-                                        N[`${field}_record_value`] +
-                                        (valueType == 2 ? "(Giờ: phút: giây. mili giây)" : "(Nhập dạng số)"),
-                                    footer: (props) => props.column.id,
-                                },
-                                {
-                                    accessorKey: `${field}_point_value`,
-                                    header: N[`${field}_point_value`],
-                                    footer: (props) => props.column.id,
-                                    cell({ getValue, row: { index, original }, column: { id }, table }) {
-                                        // let hasEmptyFiled = false;
-                                        // const idx = Object.values(original).findIndex((v) => v == null);
-                                        // if (idx !== -1) hasEmptyFiled = true;
-                                        // if (hasEmptyFiled) return null;
-                                        // if (!original.isDetail) return null;
-
-                                        var dataResult;
-                                        const value = _content_point.convert(
-                                            content_id,
-                                            original[`${field}_record_value`]
-                                        );
-                                        useEffect(() => {
-                                            setRecord_value(original[`${field}_record_value`]);
-                                            table.options.meta?.updateData(index, id, value);
-                                        }, [original[`${field}_record_value`]]);
-                                        const [record_value, setRecord_value] = useState(
-                                            original[`${field}_record_value`]
-                                        );
-
-                                        if (valueType == 2) {
-                                            if (
-                                                (original[`${field}_record_value`] &&
-                                                    canParseToNumber(original[`${field}_record_value`].toString())) ||
-                                                (original[`${field}_record_value`] &&
-                                                    original[`${field}_record_value`].toString().split(":").length >
-                                                        1 &&
-                                                    original[`${field}_record_value`] &&
-                                                    original[`${field}_record_value`].toString().split(":")[1].split("")
-                                                        .length > 1)
-                                            ) {
-                                                setCanSubmit(true);
-
-                                                dataResult = <div>{value}</div>;
-                                            } else {
-                                                setCanSubmit(false);
-                                                dataResult = (
-                                                    <strong className="text-danger">
-                                                        Sai định dạng
-                                                        <br />
-                                                        Định dạng: 00.00 / 00:00
-                                                    </strong>
-                                                );
-                                            }
-                                        }
-                                        if (valueType == 1) {
-                                            if (
-                                                original[`${field}_record_value`] &&
-                                                canParseToNumber(original[`${field}_record_value`].toString())
-                                            ) {
-                                                //console.log(value);
-                                                setCanSubmit(true);
-                                                // table.options.meta?.updateData(index, id, value);
-                                                dataResult = <div>{value}</div>;
-                                            } else {
-                                                setCanSubmit(false);
-                                                <strong className="text-danger">Sai định dạng</strong>;
-                                            }
-                                        }
-                                        //table.options.meta?.updateData(index, id, value);
-                                        return dataResult;
-                                    },
-                                },
-                            ],
-                        };
-                        newCols.push(col);
-                    }
-                });
                 const valueField = lst_map_sport_content.filter((e) => e.id == content_id)[0].field;
                 const colSpecial: ColumnDef<any> = {
                     // accessorKey: field,
                     footer: (props) => props.column.id,
-                    header: "Xử lý vi phạm",
+                    header: "Cập nhật điểm và Xử lý vi phạm",
                     columns: [
                         {
                             accessorKey: `${valueField}_ignore_type`,
@@ -217,68 +131,8 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                         },
                         {
                             accessorKey: `${valueField}_record_value`,
-                            header: "Thành tích cuối cùng",
+                            header: "Điểm tổng",
                             footer: (props) => props.column.id,
-                        },
-                        {
-                            accessorKey: `${valueField}_point_value`,
-                            header: "Điểm (Định dạng: 00.00 / 00:00)",
-                            footer: (props) => props.column.id,
-                            cell({ getValue, row: { index, original }, column: { id }, table }) {
-                                // let hasEmptyFiled = false;
-                                // const idx = Object.values(original).findIndex((v) => v == null);
-                                // if (idx !== -1) hasEmptyFiled = true;
-                                // if (hasEmptyFiled) return null;
-                                // if (!original.isDetail) return null;
-
-                                var dataResult;
-                                const value = _content_point.convert(
-                                    content_id,
-                                    original[`${valueField}_record_value`]
-                                );
-                                useEffect(() => {
-                                    setRecord_value(original[`${valueField}_record_value`]);
-                                    table.options.meta?.updateData(index, id, value);
-                                }, [original[`${valueField}_record_value`]]);
-                                const [record_value, setRecord_value] = useState(
-                                    original[`${valueField}_record_value`]
-                                );
-
-                                if (valueType == 2) {
-                                    if (
-                                        (original[`${valueField}_record_value`] &&
-                                            canParseToNumber(original[`${valueField}_record_value`].toString())) ||
-                                        (original[`${valueField}_record_value`] &&
-                                            original[`${valueField}_record_value`].toString().split(":").length > 1 &&
-                                            original[`${valueField}_record_value`] &&
-                                            original[`${valueField}_record_value`].toString().split(":")[1].split("")
-                                                .length > 1)
-                                    ) {
-                                        setCanSubmit(true);
-
-                                        dataResult = <div>{value}</div>;
-                                    } else {
-                                        setCanSubmit(false);
-                                        dataResult = <strong className="text-danger">Sai định dạng</strong>;
-                                    }
-                                }
-                                if (valueType == 1) {
-                                    if (
-                                        original[`${valueField}_record_value`] &&
-                                        canParseToNumber(original[`${valueField}_record_value`].toString())
-                                    ) {
-                                        //console.log(value);
-                                        setCanSubmit(true);
-                                        // table.options.meta?.updateData(index, id, value);
-                                        dataResult = <div>{value}</div>;
-                                    } else {
-                                        setCanSubmit(false);
-                                        <strong className="text-danger">Sai định dạng</strong>;
-                                    }
-                                }
-                                //table.options.meta?.updateData(index, id, value);
-                                return dataResult;
-                            },
                         },
                     ],
                 };
