@@ -176,9 +176,9 @@ const LotsDrawUpdateAtheleForm = ({ sportId, team_id, content_id, onCancel }: IL
 
     const ref = useRef<ITanTableRef<TLotsDrawUpdateAthele>>(null);
     return (
-        <div>
+        <div className="justify-content-center">
             <TanTable ref={ref} data={data} getRowId={getLotDrawId} columns={columns} />
-            <Col xs="12" className="gap-2" style={{ display: "flex" }}>
+            <Col xs="12" className="gap-2 d-flex justify-content-center" style={{ display: "flex" }}>
                 <Btn
                     color="primary"
                     type="button"
