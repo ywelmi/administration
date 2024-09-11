@@ -331,9 +331,15 @@ const PageTablequalifying = () => {
     },
   });
 
+  const { selectedSportId, sports } = useSportStore();
+  const selectedSport = sports.find(({ id }) => id === selectedSportId);
+
   return (
     <div className="page-body">
-      <Breadcrumbs mainTitle={"Thi đấu vòng bảng"} parent={"HTTQ2024"} />
+      <Breadcrumbs
+        mainTitle={`Vòng bảng ${selectedSport?.name}`}
+        parent={"HTTQ2024"}
+      />
       <Container fluid>
         <Row>
           <Col sm="12">

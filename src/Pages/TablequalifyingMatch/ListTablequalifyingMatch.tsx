@@ -9,6 +9,7 @@ import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { confirmModal } from "../../Component/confirmModal";
 import { InputSelect } from "../../Component/InputSelect";
 import { TanTable } from "../../Component/Tables/TanTable/TanTble";
+import useGetTablequalifyingMatch from "../../hook/useGetTablequalifyingMatch";
 import { N } from "../../name-conversion";
 import {
   tablequalifyingMatchCreate,
@@ -35,6 +36,7 @@ const TablequalifyingTableAction = ({
   const { updateTablequalifyingMatch, deleteTablequalifyingMatch } =
     useTablequalifyingMatchStore();
   const { t } = useTranslation();
+
   const handleUpdateTablequalifyingMatch = (
     tablequalifyingMatch: TTablequalifyingMatch
   ) => {
@@ -177,6 +179,7 @@ const IgnoreTeamSelect = ({
 const tableColumns: ColumnDef<TTablequalifyingMatch>[] = (
   [
     "indexs",
+    // "list_team",
     "team1_name",
     "team2_name",
     "match_day",
@@ -305,6 +308,8 @@ const PageTablequalifyingMatch = () => {
   } = useTablequalifyingMatchStore();
   const { table_id } = useParams();
 
+  const { refresh } = useGetTablequalifyingMatch();
+
   // console.log({ PageTablequalifyingMatch: tablequalifyingMatchs });
   useEffect(() => {
     if (table_id) {
@@ -315,33 +320,34 @@ const PageTablequalifyingMatch = () => {
     }
   }, [table_id]);
 
-  const handleAddTablequalifyingMatch = (
-    tablequalifyingMatch: TTablequalifyingMatch
-  ) => {
-    console.log({ handleAddTablequalifyingMatch: tablequalifyingMatch });
-    const { id, ...rests } = tablequalifyingMatch;
-    tablequalifyingMatchCreate(rests)
-      .then((res) => {
-        const { status, data } = res;
-        console.log({ addTablequalifyingMatchResult: data });
-        if (status === 200) {
-          const newData = {
-            ...tablequalifyingMatch,
-            ...data,
-          } as TTablequalifyingMatch;
-          console.log({ tablequalifyingMatchCreate: newData });
-          addTablequalifyingMatch(newData);
-          toast.info(t("success"));
-          return;
-        }
-        return Promise.reject(status);
-      })
-      .catch((err) => {
-        toast.error(err?.data ? err.data : t("error"));
-        console.log({ err });
-      });
-  };
-
+  const handleAddTablequalifyingMatch = useCallback(
+    (tablequalifyingMatch: TTablequalifyingMatch) => {
+      console.log({ handleAddTablequalifyingMatch: tablequalifyingMatch });
+      const { id, ...rests } = tablequalifyingMatch;
+      tablequalifyingMatchCreate(rests)
+        .then((res) => {
+          const { status, data } = res;
+          console.log({ addTablequalifyingMatchResult: data });
+          if (status === 200) {
+            const newData = {
+              ...tablequalifyingMatch,
+              ...data,
+            } as TTablequalifyingMatch;
+            console.log({ tablequalifyingMatchCreate: newData });
+            // addTablequalifyingMatch(newData);
+            refresh();
+            toast.info(t("success"));
+            return;
+          }
+          return Promise.reject(status);
+        })
+        .catch((err) => {
+          toast.error(err?.data ? err.data : t("error"));
+          console.log({ err });
+        });
+    },
+    [refresh, t]
+  );
   const {
     handleToggle: handleToggleAddModal,
     TablequalifyingMatchModal: TablequalifyingAddModal,
@@ -398,6 +404,7 @@ const PageTablequalifyingMatch = () => {
         console.log(err);
       });
   }, [table_id]);
+
   return (
     <div className="page-body">
       <Breadcrumbs mainTitle={"Lịch thi đấu"} parent={"HTTQ2024"} />

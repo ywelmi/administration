@@ -29,6 +29,7 @@ export interface TTablequalifyingMatch {
   match_location?: string;
   match_location_chid?: string;
   ignore_team_id?: string;
+  list_team?: string;
 }
 
 export interface TTablequalifyingMatchReport {

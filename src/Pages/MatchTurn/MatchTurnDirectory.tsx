@@ -46,7 +46,6 @@ const displayColumns: ColumnDef<TMatchTurn>[] = [
       const selectedSportId = localStorage.getItem("selectedSportId") as string;
       const selectedSport = sports.find((s) => s.id == selectedSportId);
       if (!selectedSport) return <></>;
-      console.log({ selectedSport });
       return (
         <InputSelectConfirm
           name="name"

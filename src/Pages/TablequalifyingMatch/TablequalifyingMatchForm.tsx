@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { parseInt } from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import { useTranslation } from "react-i18next";
 import { Col, Input, Label, Row } from "reactstrap";
@@ -45,13 +45,17 @@ const TablequalifyingMatchForm = ({
           match_hour: "",
           match_time: DTime[0].k,
           match_location_chid: "",
+          match_location: "",
           // team1_name: "",
           // team2_name: "",
         };
 
   const { sportSelector } = useConfigStore();
   const { sports, selectedSportId } = useSportStore(sportSelector());
-  const selectedSport = sports.find(({ id }) => id === selectedSportId);
+  const selectedSport = useMemo(
+    () => sports.find(({ id }) => id === selectedSportId),
+    [selectedSportId, sports]
+  );
 
   // const { teams } = useTeamStore(); // take teams from same table
   const [teams, setTeams] = useState<TTableQualifyingMember[]>([]);
@@ -71,6 +75,12 @@ const TablequalifyingMatchForm = ({
       if (submitValue) onSubmit(submitValue);
     },
   });
+
+  useEffect(() => {
+    if (selectedSport) {
+      formik.setFieldValue("match_location", selectedSport.sport_location);
+    }
+  }, [selectedSport]);
 
   useEffect(() => {
     const tableId = formik.values.table_id;

@@ -9,18 +9,26 @@ export default function useGetTablequalifyingMatch() {
     console.log({ useGetTablequalifyingMatchfilters: table_id });
     if (!table_id) return;
     updateLoading(true);
-    tablequalifyingMatchsGet(table_id).then((res) => {
-      const { data, status } = res;
-      console.log({ tablequalifyingMatchsGet: data });
-      if (!data?.length) {
-        addTablequalifyingMatchs([]);
-        return;
-      }
-      addTablequalifyingMatchs(data);
-    }).finally(() => updateLoading(false));
+    tablequalifyingMatchsGet(table_id)
+      .then((res) => {
+        const { data, status } = res;
+        console.log({ tablequalifyingMatchsGet: data });
+        if (!data?.length) {
+          addTablequalifyingMatchs([]);
+          return;
+        }
+        addTablequalifyingMatchs(data);
+      })
+      .finally(() => updateLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  const refresh = useCallback(() => {
     fetch(table_id);
-  }, [table_id]);
+  }, [fetch, table_id]);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+  return { refresh };
 }
