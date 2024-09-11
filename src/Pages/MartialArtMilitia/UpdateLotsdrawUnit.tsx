@@ -14,6 +14,7 @@ import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
 import { TLotsDraw } from "../../type/lotsdraw";
 import { useLotsDrawModal } from "../LotsDraw/LotsDrawForm";
+import { useMartialArtMilitiaModal } from "./MartialArtMilitiaForm";
 
 interface IListLotsDraw {
     showAction?: boolean;
@@ -90,32 +91,13 @@ const PageUpdateLotsDrawUnit = () => {
     const { sports, sportsMain, sportsSub } = useSportStore(sportSelector());
     const [sportId, setSportId] = useState("");
     const [listSport, setListSport] = useState(sports);
-    const { sport_id: paramSportId } = useParams();
+
     // số VĐV thi đấu trong 1 lượt
+    const sportMartialArtMilitia = sports.find((s) => s.point_unit === 2);
     const [numberPlayedPerRound, setNumberPlayedPerRound] = useState<number>(3);
     // số VĐV thi đấu trong 1 lượt
     const [selectedContentSport, setSelectedContentSport] = useState<string>("");
-    const [contentType, setContentType] = useState<any>("");
-    useEffect(() => {
-        unitType == "LLTT"
-            ? setListSport(sportsMain.filter((e) => e.point_unit == 1))
-            : setListSport(sportsSub.filter((e) => e.point_unit == 1));
-    }, []);
-    const { selectSport } = useSportStore();
 
-    const updateSportId = useCallback(
-        (v: string) => {
-            selectSport(v);
-            setSportId(v);
-        },
-        [selectSport]
-    );
-
-    useEffect(() => {
-        if (paramSportId) {
-            updateSportId(paramSportId);
-        }
-    }, [paramSportId, updateSportId]);
     //danh sách các nội dung thi đấu của môn
 
     // kiểm tra đã cập nhật thăm đơn vị chưa
@@ -124,10 +106,10 @@ const PageUpdateLotsDrawUnit = () => {
     const [dataUnit, setDataUnit] = useState<TLotsDraw[]>([]);
 
     useEffect(() => {
-        if (sportId) {
-            fetchData(sportId);
+        if (sportMartialArtMilitia) {
+            fetchData(sportMartialArtMilitia!.id);
         }
-    }, [sportId]);
+    }, []);
 
     const fetchData = useCallback((sportId: string) => {
         lotsdrawsGet(sportId, "")
@@ -143,12 +125,12 @@ const PageUpdateLotsDrawUnit = () => {
 
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
 
-    const { handleToggle: toggleLotsDrawModal, LotsDrawModal: LotsDrawAddModal } = useLotsDrawModal({
-        sportId: sportId,
+    const { handleToggle: toggleLotsDrawModal, MartialArtMilitiaModal: LotsDrawAddModal } = useMartialArtMilitiaModal({
+        sportId: sportMartialArtMilitia ? sportMartialArtMilitia!.id : "",
         content_id: selectedContentSport,
         onSubmit: () => {
-            if (sportId) {
-                fetchData(sportId);
+            if (sportMartialArtMilitia!.id) {
+                fetchData(sportMartialArtMilitia!.id);
             }
         },
     });
@@ -159,27 +141,26 @@ const PageUpdateLotsDrawUnit = () => {
                 <Col sm="12">
                     <Card>
                         <CardHeader className="pb-0 card-no-border">
-                            {sportId && sports.filter((e) => e.id == sportId).length > 0 && (
-                                <div className="d-flex justify-content-center">
-                                    <div className="flex gap-2 mt-4">
-                                        <div
-                                            className="btn btn-danger"
-                                            onClick={() => {
-                                                if (sportId) {
-                                                    toggleLotsDrawModal();
+                            <div className="d-flex justify-content-center">
+                                <div className="flex gap-2 mt-4">
+                                    <div
+                                        className="btn btn-danger"
+                                        onClick={() => {
+                                            if (sportMartialArtMilitia!.id) {
+                                                toggleLotsDrawModal();
 
-                                                    // setTimeout(() => fetchData(sportId), 2000);
-                                                } else {
-                                                    toast.warn("Mời chọn môn thi");
-                                                }
-                                            }}
-                                        >
-                                            <i className="fa fa-plus" /> &nbsp;
-                                            {"Cập nhật kết quả bốc thăm đơn vị"}
-                                        </div>
+                                                // setTimeout(() => fetchData(sportId), 2000);
+                                            } else {
+                                                toast.warn("Mời chọn môn thi");
+                                            }
+                                        }}
+                                    >
+                                        <i className="fa fa-plus" /> &nbsp;
+                                        {"Cập nhật kết quả bốc thăm đơn vị"}
                                     </div>
                                 </div>
-                            )}
+                            </div>
+
                             <LotsDrawAddModal />
                         </CardHeader>
                         <CardBody>

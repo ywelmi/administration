@@ -1,8 +1,8 @@
 import { TabContent, TabContentProps, TabPane } from "reactstrap";
 
-import { PageUpdateResult } from "./UpdateResult";
 import { PageUpdateLotsDrawUnit } from "./UpdateLotsdrawUnit";
 import { MartialArtMilitia } from "./MartialArtMilitia";
+import { PageUpdateResultMartial } from "./UpdateResultMartial";
 
 const LotsdrawTabs: React.FC<TabContentProps> = ({ basicTab, setActiveTab }) => {
     return (
@@ -14,7 +14,7 @@ const LotsdrawTabs: React.FC<TabContentProps> = ({ basicTab, setActiveTab }) => 
                 <MartialArtMilitia />
             </TabPane>
             <TabPane tabId="5">
-                <PageUpdateResult />
+                <PageUpdateResultMartial />
             </TabPane>
         </TabContent>
     );

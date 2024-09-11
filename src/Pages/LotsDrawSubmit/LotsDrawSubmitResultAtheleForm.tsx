@@ -1,7 +1,7 @@
 import { Col } from "reactstrap";
 import { TLotsDraw, TLotsDrawMember } from "../../type/lotsdraw";
 import { Btn } from "../../AbstractElements";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { ColumnDef } from "@tanstack/react-table";
 import { N } from "../../name-conversion";
@@ -232,9 +232,18 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
                                     content_id,
                                     original[`${valueField}_record_value`]
                                 );
+                                // const computedData = useMemo(() => {
+                                //     // Simulate an expensive computation
+                                //    if (value) {
+                                //        table.options.meta?.updateData(index, id, value);
+                                //    }
+                                //     return value;
+                                // }, [original[`${valueField}_record_value`]]);
                                 const [record_value, setRecordValue] = useState(original[`${valueField}_record_value`]);
                                 useEffect(() => {
-                                    setRecordValue(original[`${valueField}_record_value`]);
+                                    console.log("rerender");
+                                    //setRecordValue(original[`${valueField}_record_value`]);
+
                                     if (value) {
                                         table.options.meta?.updateData(index, id, value);
                                     }
@@ -242,15 +251,17 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
 
                                 if (valueType == 2) {
                                     if (
-                                        (record_value && canParseToNumber(record_value.toString())) ||
-                                        (record_value &&
-                                            record_value.toString().split(":").length > 1 &&
-                                            record_value &&
-                                            record_value.toString().split(":")[1].split("").length > 1)
+                                        (original[`${valueField}_record_value`] &&
+                                            canParseToNumber(original[`${valueField}_record_value`].toString())) ||
+                                        (original[`${valueField}_record_value`] &&
+                                            original[`${valueField}_record_value`].toString().split(":").length > 1 &&
+                                            original[`${valueField}_record_value`] &&
+                                            original[`${valueField}_record_value`].toString().split(":")[1].split("")
+                                                .length > 1)
                                     ) {
                                         dataResult = <div>{value}</div>;
                                     } else {
-                                        if (record_value) {
+                                        if (original[`${valueField}_record_value`]) {
                                             dataResult = <strong className="text-danger">Sai định dạng</strong>;
                                         } else {
                                             dataResult = <></>;
@@ -306,7 +317,7 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
             })
             .catch((err) => {
                 console.log({ err });
-                toast.error(N["failed"]);
+                toast.error(N["failed"] + err);
             });
     };
 

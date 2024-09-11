@@ -9,6 +9,8 @@ import { getContentConfig, getPointConfig, lotsdrawResultTableGet, lotsdrawResul
 import { toast } from "react-toastify";
 import { DRank } from "../../type/enum";
 import { InputSelect } from "../../Component/InputSelect";
+import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { LotsDrawSubmitDetailsResultMartialModal } from "./MartialArtMilitiaFormDetailsResult";
 
 interface ILotsDrawSubmitForm {
     // lotsdraw: TLotsDrawMember[];
@@ -56,13 +58,13 @@ const canParseToNumber = (str: string) => {
         return !isNaN(num) && isFinite(num);
     }
 };
-const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }: ILotsDrawSubmitForm) => {
+const LotsDrawSubmitGroupResultForm = ({ sportId, content_id, onCancel }: any) => {
     const [columns, setColumns] = useState<ColumnDef<TLotsDrawMember>[]>(defaultColumns);
-    const _content_point = window._content_point;
+
     const [data, setData] = useState<TLotsDrawMember[]>([]);
     const [canSubmit, setCanSubmit] = useState(false);
     useEffect(() => {
-        lotsdrawResultTableGet(org_id, sportId, content_id)
+        lotsdrawResultTableGet(",", sportId, content_id)
             .then(async (res) => {
                 const {
                     data: { lst_ticket_group, lst_map_sport_content },
@@ -71,15 +73,6 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                 if (status !== 200) return;
 
                 const newCols: ColumnDef<TLotsDrawMember>[] = [...defaultColumns];
-                const pointConfig = await getPointConfig(sportId).then((res) => {
-                    return res.data;
-                });
-                const contentConfig = await getContentConfig(sportId).then((res) => {
-                    return res.data;
-                });
-                const valueType = contentConfig.filter((e: any) => e.id == content_id)[0].record_type;
-                console.log(valueType);
-                _content_point.setPoints(pointConfig);
 
                 const valueField = lst_map_sport_content.filter((e) => e.id == content_id)[0].field;
                 const colSpecial: ColumnDef<any> = {
@@ -134,6 +127,20 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
                             header: "Điểm tổng",
                             footer: (props) => props.column.id,
                         },
+                        {
+                            // accessorKey: "locations",
+                            header: "Cập nhật chi tiết",
+                            footer: (props) => props.column.id,
+                            cell({ getValue, row: { index, original }, column: { id }, table }) {
+                                // let hasEmptyFiled = false;
+                                // const idx = Object.values(original).findIndex((v) => v == null);
+                                // if (idx !== -1) hasEmptyFiled = true;
+                                // if (hasEmptyFiled) return null;
+                                // if (!original.isDetail) return null;
+
+                                return <LotsDrawSubmitDetailsResultMartialModal result_id={original.result_id} />;
+                            },
+                        },
                     ],
                 };
                 newCols.push(colSpecial);
@@ -144,14 +151,14 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, org_id, content_id, onCancel }
             .catch((err) => {
                 console.log({ err });
             });
-    }, [sportId, org_id]);
+    }, [sportId]);
 
     const handleSubmitLotsDraw = (results: TLotsDrawMember[]) => {
         const dataSubmit = {
             listTicketMember: results,
             content_id: content_id,
         };
-        lotsdrawResultUpdate(org_id, dataSubmit)
+        lotsdrawResultUpdate(content_id, dataSubmit)
             .then((res) => {
                 const { data, status } = res;
                 if (status !== 200) return;
@@ -210,27 +217,28 @@ interface ILotsDrawSubmitModal {
     gender?: number;
     // onSubmit: (lotsdraw: TLotsDraw[]) => void;
 }
-const useLotsDrawSubmitGroupModal = ({ sportId, team_id, content_id, gender }: ILotsDrawSubmitModal) => {
-    const [opened, setOpened] = useState(false);
-    const handleToggle = () => {
-        setOpened((s) => !s);
-    };
+const LotsDrawSubmitResultMartialModal = ({ sportId, content_id, gender }: any) => {
+    const [openModal, setOpenModal] = useState(false);
+    const openModalToggle = () => setOpenModal(!openModal);
+    return (
+        <>
+            <Btn className="btn btn-info edit" onClick={openModalToggle}>
+                <i className="icon-pencil-alt" />
+                Cập nhật
+            </Btn>
+            <CommonModal isOpen={openModal} toggle={openModalToggle} fullscreen modalBodyClassName="p-0">
+                <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
+                    <H3 className="modal-header justify-content-center border-0">Cập nhật kết quả thi đấu</H3>
+                    <LotsDrawSubmitGroupResultForm
+                        sportId={sportId}
+                        // onSubmit={() => setOpened(false)}
 
-    const LotsDrawSubmitGroupResultModal = () => (
-        <Modal modalBodyClassName=" text-start" fullscreen isOpen={opened} toggle={handleToggle}>
-            <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
-                <H3 className="modal-header justify-content-center border-0">Cập nhật kết quả thi đấu</H3>
-                <LotsDrawSubmitGroupResultForm
-                    sportId={sportId}
-                    // onSubmit={() => setOpened(false)}
-                    org_id={team_id}
-                    content_id={content_id}
-                    onCancel={() => setOpened(false)}
-                />
-            </div>
-        </Modal>
+                        content_id={content_id}
+                        onCancel={() => setOpenModal(false)}
+                    />
+                </div>
+            </CommonModal>
+        </>
     );
-
-    return { LotsDrawSubmitGroupResultModal, handleToggle };
 };
-export { useLotsDrawSubmitGroupModal };
+export { LotsDrawSubmitResultMartialModal };

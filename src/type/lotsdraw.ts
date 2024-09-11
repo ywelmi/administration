@@ -26,6 +26,15 @@ export interface TLotsDrawUpdateAthele {
     turn_index: number;
 }
 
+export interface TContentSport {
+    id: string;
+    sport: string;
+    name: string;
+    code: string;
+
+    content_type?: number;
+}
+
 export interface TLotsDrawMember {
     id: string;
     sport_id: string;
@@ -37,7 +46,7 @@ export interface TLotsDrawMember {
     turn: number;
     turn_index: number;
     indexs: number;
-
+    result_id?: string;
     clothers_number?: string;
     ticket_code?: string;
     group_id?: null;

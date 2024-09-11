@@ -89,16 +89,15 @@ const useLotsDrawModal = ({ sportId, content_id, onSubmit, ...rest }: any) => {
             .then((res) => {
                 const { data, status } = res;
                 if (status === 200) {
-                    console.log("HHHHHHHHHHHH");
-                    console.log({ data });
-                    console.log("HHHHHHHHHHHH");
                     onSubmit();
                     toast.success(N["success"]);
+                } else {
+                    toast.error(res.data);
                 }
             })
             .catch((err) => {
                 console.log({ err });
-                toast.error(N["failed"]);
+                toast.error(N["failed"] + "khi cập nhật bốc thăm" + err);
             });
         setOpened(false);
     };

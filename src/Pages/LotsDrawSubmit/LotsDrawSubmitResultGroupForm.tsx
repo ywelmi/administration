@@ -56,6 +56,30 @@ const canParseToNumber = (str: string) => {
         return !isNaN(num) && isFinite(num);
     }
 };
+const checkValidValue = (data: any) => {
+    var isCanSubmit = true;
+
+    data.forEach((element: any) => {
+        if (element[`content2_record_value`] && element[`content2_record_value`].length > 5) {
+            isCanSubmit = false;
+        }
+        if (
+            (element[`content2_record_value`] && canParseToNumber(element[`content2_record_value`])) ||
+            (element[`content2_record_value`] &&
+                element[`content2_record_value`].toString().split(":").length > 1 &&
+                element[`content2_record_value`] &&
+                element[`content2_record_value`].toString().split(":")[1].split("").length > 1)
+        ) {
+        } else {
+            if (element[`content2_record_value`]) {
+                console.log("Sai định dạng");
+                isCanSubmit = false;
+                return false;
+            }
+        }
+    });
+    return isCanSubmit;
+};
 const LotsDrawSubmitGroupResultForm = ({ sportId, content_id, onCancel }: ILotsDrawSubmitForm) => {
     const [columns, setColumns] = useState<ColumnDef<TLotsDrawMember>[]>(defaultColumns);
     const _content_point = window._content_point;
@@ -94,83 +118,6 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, content_id, onCancel }: ILotsD
                                         N[`${field}_record_value`] +
                                         (valueType == 2 ? "(Giờ: phút: giây. mili giây)" : "(Nhập dạng số)"),
                                     footer: (props) => props.column.id,
-                                },
-                                {
-                                    accessorKey: `${field}_point_value`,
-                                    header: N[`${field}_point_value`],
-                                    footer: (props) => props.column.id,
-                                    cell({ getValue, row: { index, original }, column: { id }, table }) {
-                                        // let hasEmptyFiled = false;
-                                        // const idx = Object.values(original).findIndex((v) => v == null);
-                                        // if (idx !== -1) hasEmptyFiled = true;
-                                        // if (hasEmptyFiled) return null;
-                                        // if (!original.isDetail) return null;
-
-                                        var dataResult;
-                                        const value = _content_point.convert(
-                                            content_id,
-                                            original[`${field}_record1_value`]
-                                        );
-                                        useEffect(() => {
-                                            setRecord_value(original[`${field}_record1_value`]);
-                                            table.options.meta?.updateData(index, id, value);
-                                        }, [original[`${field}_record1_value`]]);
-                                        const [record_value, setRecord_value] = useState(
-                                            original[`${field}_record1_value`]
-                                        );
-
-                                        if (valueType == 2) {
-                                            if (
-                                                (original[`${field}_record1_value`] &&
-                                                    canParseToNumber(original[`${field}_record1_value`].toString())) ||
-                                                (original[`${field}_record1_value`] &&
-                                                    original[`${field}_record1_value`].toString().split(":").length >
-                                                        1 &&
-                                                    original[`${field}_record1_value`] &&
-                                                    original[`${field}_record1_value`]
-                                                        .toString()
-                                                        .split(":")[1]
-                                                        .split("").length > 1)
-                                            ) {
-                                                setCanSubmit(true);
-
-                                                dataResult = <div>{value}</div>;
-                                            } else {
-                                                if (original[`${field}_record1_value`]) {
-                                                    setCanSubmit(false);
-                                                    dataResult = (
-                                                        <strong className="text-danger">
-                                                            Sai định dạng
-                                                            <br />
-                                                            Định dạng: 00.00 / 00:00
-                                                        </strong>
-                                                    );
-                                                } else {
-                                                    dataResult = <></>;
-                                                }
-                                            }
-                                        }
-                                        if (valueType == 1) {
-                                            if (
-                                                original[`${field}_record1_value`] &&
-                                                canParseToNumber(original[`${field}_record1_value`].toString())
-                                            ) {
-                                                //console.log(value);
-                                                setCanSubmit(true);
-                                                // table.options.meta?.updateData(index, id, value);
-                                                dataResult = <div>{value}</div>;
-                                            } else {
-                                                if (original[`${field}_record1_value`]) {
-                                                    setCanSubmit(false);
-                                                    <strong className="text-danger">Sai định dạng</strong>;
-                                                } else {
-                                                    dataResult = <></>;
-                                                }
-                                            }
-                                        }
-                                        //table.options.meta?.updateData(index, id, value);
-                                        return dataResult;
-                                    },
                                 },
                             ],
                         };
@@ -342,7 +289,7 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, content_id, onCancel }: ILotsD
                             onClick={() => {
                                 const data = ref.current?.getData();
                                 if (data) {
-                                    if (canSubmit) {
+                                    if (checkValidValue(data)) {
                                         handleSubmitLotsDraw(data);
                                     } else {
                                         toast.error("Có dữ liệu nhập sai định dạng! Kiểm tra lại");
