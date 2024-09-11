@@ -185,7 +185,7 @@ const tableColumns: ColumnDef<TTablequalifyingMatch>[] = (
     "match_day",
     "match_hour",
     "match_location",
-    "match_location_chid",
+    // "match_location_chid",
     "ignore_team_id",
   ] as (keyof TTablequalifyingColumn)[]
 ).map((c) => ({

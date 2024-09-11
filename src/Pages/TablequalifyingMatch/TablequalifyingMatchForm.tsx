@@ -44,7 +44,7 @@ const TablequalifyingMatchForm = ({
           match_day: new Date().toISOString(),
           match_hour: "",
           match_time: DTime[0].k,
-          match_location_chid: "",
+          // match_location_chid: "",
           match_location: "",
           // team1_name: "",
           // team2_name: "",
@@ -151,7 +151,7 @@ const TablequalifyingMatchForm = ({
             value={selectedSport?.sport_location}
           />
         </Col>
-        <Col md="12">
+        {/* <Col md="12">
           <Label for="indexs" check>
             {N["match_location_chid"]}
           </Label>
@@ -160,7 +160,7 @@ const TablequalifyingMatchForm = ({
             value={formik.values.match_location_chid || ""}
             onChange={formik.handleChange}
           />
-        </Col>
+        </Col> */}
 
         <Col md="12">
           <Label for="match_day" check>

@@ -1,6 +1,9 @@
 .bracket-seed {
   background-color: rgb(146, 160, 174);
-  min-width: 18rem;
+  min-width: 24rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .bracket-team {

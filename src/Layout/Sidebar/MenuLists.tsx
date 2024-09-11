@@ -6,7 +6,6 @@ import { useConfigStore } from "../../store/config";
 import { useLayoutStore } from "../../store/layout";
 import { DUnitType } from "../../type/enum";
 import { MenuListType, SidebarItemTypes } from "../../Types/Layout/Sidebar";
-import { Href } from "../../utils/Constant";
 
 const MenuLists: React.FC<MenuListType> = ({
   menu,
@@ -98,7 +97,7 @@ const MenuLists: React.FC<MenuListType> = ({
                 ? "active"
                 : ""
             }`}
-            to={item.path ? item.path : Href}
+            to={item.path ? item.path : "#"}
             onClick={() =>
               item.title && handleClick(item.title, item?.unitType)
             }
