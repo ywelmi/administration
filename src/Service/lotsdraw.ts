@@ -1,5 +1,6 @@
 import {
     ILotsDrawResultTemplate,
+    TContentSport,
     TLotsDraw,
     TLotsDrawMatrix,
     TLotsDrawMember,
@@ -19,7 +20,7 @@ export const lotsdrawsGetNotContentId = async (sportId: string) => {
 
 // Lấy danh sách các nội dung thi của 1 môn
 export const getContentSport = async (sportId: string) => {
-    return httpGet<[]>(`/sports/${sportId}/SportContents`);
+    return httpGet<TContentSport[]>(`/sports/${sportId}/SportContents`);
 };
 export const getScheduleContent = async (content_id: string) => {
     return httpGet<[]>(`/sportcontents/${content_id}/get_team_sport_content_schedule`);

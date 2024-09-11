@@ -14,6 +14,7 @@ import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
 import { TLotsDraw } from "../../type/lotsdraw";
 import { useLotsDrawModal } from "../LotsDraw/LotsDrawForm";
+import { useMartialArtMilitiaModal } from "./MartialArtMilitiaForm";
 
 interface IListLotsDraw {
     showAction?: boolean;
@@ -124,7 +125,7 @@ const PageUpdateLotsDrawUnit = () => {
 
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
 
-    const { handleToggle: toggleLotsDrawModal, LotsDrawModal: LotsDrawAddModal } = useLotsDrawModal({
+    const { handleToggle: toggleLotsDrawModal, MartialArtMilitiaModal: LotsDrawAddModal } = useMartialArtMilitiaModal({
         sportId: sportMartialArtMilitia ? sportMartialArtMilitia!.id : "",
         content_id: selectedContentSport,
         onSubmit: () => {

@@ -28,9 +28,11 @@ const SportTableAction = ({ sport }: { sport: TSportColumn }) => {
                     <Btn color="warning" type="button" onClick={handleDownloadClick}>
                         Biên bản thi đấu
                     </Btn>
-                    <Btn color="success" type="button" className="m-l-20" onClick={handleDownloadTicketClick}>
-                        Phiếu khóa thăm
-                    </Btn>
+                    {sport.point_unit == 1 && (
+                        <Btn color="success" type="button" className="m-l-20" onClick={handleDownloadTicketClick}>
+                            Phiếu khóa thăm
+                        </Btn>
+                    )}
                 </LI>
             </>
         </UL>
