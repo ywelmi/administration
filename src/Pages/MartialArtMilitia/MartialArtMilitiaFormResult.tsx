@@ -58,6 +58,51 @@ const canParseToNumber = (str: string) => {
         return !isNaN(num) && isFinite(num);
     }
 };
+const checkValidValue = (data: any) => {
+    var isCanSubmit = true;
+
+    data.forEach((element: any) => {
+        if (element[`content1_point_value`]) {
+            if (element[`content1_point_value`] && element[`content1_point_value`].length > 5) {
+                isCanSubmit = false;
+            }
+            if (
+                (element[`content1_point_value`] && canParseToNumber(element[`content1_point_value`])) ||
+                (element[`content1_point_value`] &&
+                    element[`content1_point_value`].toString().split(":").length > 1 &&
+                    element[`content1_point_value`] &&
+                    element[`content1_point_value`].toString().split(":")[1].split("").length > 1)
+            ) {
+            } else {
+                if (element[`content1_point_value`]) {
+                    console.log("Sai định dạng");
+                    isCanSubmit = false;
+                    return false;
+                }
+            }
+        }
+        if (element[`content2_point_value`]) {
+            if (element[`content2_point_value`] && element[`content2_point_value`].length > 5) {
+                isCanSubmit = false;
+            }
+            if (
+                (element[`content2_point_value`] && canParseToNumber(element[`content2_point_value`])) ||
+                (element[`content2_point_value`] &&
+                    element[`content2_point_value`].toString().split(":").length > 1 &&
+                    element[`content2_point_value`] &&
+                    element[`content2_point_value`].toString().split(":")[1].split("").length > 1)
+            ) {
+            } else {
+                if (element[`content2_point_value`]) {
+                    console.log("Sai định dạng");
+                    isCanSubmit = false;
+                    return false;
+                }
+            }
+        }
+    });
+    return isCanSubmit;
+};
 const LotsDrawSubmitGroupResultForm = ({ sportId, content_id, onCancel }: any) => {
     const [columns, setColumns] = useState<ColumnDef<TLotsDrawMember>[]>(defaultColumns);
 
@@ -123,7 +168,7 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, content_id, onCancel }: any) =
                             footer: (props) => props.column.id,
                         },
                         {
-                            accessorKey: `${valueField}_record_value`,
+                            accessorKey: `${valueField}_point_value`,
                             header: "Điểm tổng",
                             footer: (props) => props.column.id,
                         },
@@ -137,8 +182,11 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, content_id, onCancel }: any) =
                                 // if (idx !== -1) hasEmptyFiled = true;
                                 // if (hasEmptyFiled) return null;
                                 // if (!original.isDetail) return null;
-
-                                return <LotsDrawSubmitDetailsResultMartialModal result_id={original.result_id} />;
+                                if (valueField != "content1") {
+                                    return <LotsDrawSubmitDetailsResultMartialModal result_id={original.result_id} />;
+                                } else {
+                                    return <></>;
+                                }
                             },
                         },
                     ],
@@ -188,7 +236,7 @@ const LotsDrawSubmitGroupResultForm = ({ sportId, content_id, onCancel }: any) =
                         onClick={() => {
                             const data = ref.current?.getData();
                             if (data) {
-                                if (canSubmit) {
+                                if (checkValidValue(data)) {
                                     handleSubmitLotsDraw(data);
                                 } else {
                                     toast.error("Có dữ liệu nhập sai định dạng! Kiểm tra lại");
