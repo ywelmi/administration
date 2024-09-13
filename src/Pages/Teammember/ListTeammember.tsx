@@ -274,6 +274,7 @@ const ListTeammember = ({
         selectableRowSelected={selectableRowSelected}
         enableRowSelection={enableRowSelection}
         getRowId={(r) => r.id}
+        resizeableColumns
       />
     </div>
   );

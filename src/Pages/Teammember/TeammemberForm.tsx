@@ -41,7 +41,7 @@ const TeammemberForm = ({
     : {
         name: "",
         rank: 0,
-        gender: 0,
+        gender: 1,
         dob: new Date("1/1/1980").toISOString(),
         date_join_army: new Date().toISOString(),
         org_id: "",
@@ -119,7 +119,8 @@ const TeammemberForm = ({
             className="form-control"
             name="name"
             type="text"
-            placeholder={teammember.name}
+            placeholder="Nhập tên..."
+            defaultValue={teammember.name}
             onChange={formik.handleChange}
           />
         </Col>
@@ -138,7 +139,7 @@ const TeammemberForm = ({
             className="form-control"
             name="id_number"
             type="text"
-            placeholder={formik.values.id_number}
+            defaultValue={formik.values.id_number}
             onChange={formik.handleChange}
           />
         </Col>
@@ -171,7 +172,7 @@ const TeammemberForm = ({
             className="form-control"
             name="issuing_authority"
             type="text"
-            placeholder={formik.values.issuing_authority}
+            defaultValue={formik.values.issuing_authority}
             onChange={formik.handleChange}
           />
         </Col>
@@ -338,7 +339,7 @@ const TeammemberForm = ({
             className="form-control"
             name="weights"
             type="text"
-            placeholder={teammember.weights}
+            defaultValue={teammember.weights}
             onChange={formik.handleChange}
           />
         </Col>

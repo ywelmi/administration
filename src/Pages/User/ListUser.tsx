@@ -105,12 +105,15 @@ const userAction: ColumnDef<TUser> = {
 const defaultColumns: ColumnDef<TUser>[] = [
   {
     accessorKey: "username",
+    // minSize: 100,
+    size: 20,
     footer: (props) => props.column.id,
     header: N["username"],
     cell: (props) => props.getValue() as string,
   },
   {
     accessorKey: "fullname",
+    size: 200,
     footer: (props) => props.column.id,
     header: N["fullname"],
   },
@@ -129,15 +132,14 @@ const ListUser = ({
   }
 
   return (
-    <div className="table-responsive">
-      <TanTable
-        data={data}
-        columns={displayColumns}
-        onSelectedRowsChange={onSelectedRowsChange}
-        selectableRowSelected={selectableRowSelected}
-        getRowId={(r) => r.id}
-      />
-    </div>
+    <TanTable
+      data={data}
+      columns={displayColumns}
+      onSelectedRowsChange={onSelectedRowsChange}
+      selectableRowSelected={selectableRowSelected}
+      getRowId={(r) => r.id}
+      // resizeableColumns
+    />
   );
 };
 
