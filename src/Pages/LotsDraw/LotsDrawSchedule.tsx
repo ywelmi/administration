@@ -192,10 +192,23 @@ const LotsDrawSchedule = ({ member_count, turn_count, sport_id, content_id, onCa
     );
 };
 
-const InputGroupCell = ({ onConfirm }: any) => {
+const InputGroupCell = ({ onConfirm, sport_id, content_id }: any) => {
     const [numberRow, setNumberRow] = useState(0);
     const [numberColumn, setNumberColumn] = useState(0);
+    const checkValidMatrix = async () => {
+        const valid = await lotsdrawScheduleUpdate(numberColumn, numberRow, sport_id, content_id)
+            .then((res) => {
+                if (res.status == 200) {
+                    return true;
+                }
+            })
+            .catch((error) => {
+                toast.error(error?.data ? error.data : "error");
+                return false;
+            });
 
+        return valid;
+    };
     return (
         <>
             <Row>
@@ -229,7 +242,16 @@ const InputGroupCell = ({ onConfirm }: any) => {
                 <Col md={3} className="d-flex"></Col>
             </Row>
             <div className="d-flex justify-content-center m-20">
-                <Btn className={`bg-primary`} onClick={() => onConfirm(numberRow, numberColumn)}>
+                <Btn
+                    className={`bg-primary`}
+                    onClick={async () => {
+                        const valid = await checkValidMatrix();
+
+                        if (valid) {
+                            onConfirm(numberRow, numberColumn);
+                        }
+                    }}
+                >
                     Tạo lịch khóa thăm &nbsp;
                     <i className="fa fa-plus" />
                 </Btn>
@@ -483,6 +505,8 @@ const useLotsDrawScheduleModal = ({ sportId, content_id }: any) => {
                     <>
                         {!showInput && (
                             <InputGroupCell
+                                sport_id={sportId}
+                                content_id={content_id}
                                 onConfirm={(row: any, column: any) => {
                                     setShowInput(true);
                                     setShowListSchedule(false);
