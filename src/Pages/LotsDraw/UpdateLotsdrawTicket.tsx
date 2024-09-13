@@ -294,6 +294,8 @@ const PageUpdateLotsdrawTicket = () => {
                 if (status === 200) setContent(data);
             })
             .catch((err) => console.log({ err }));
+    }, []);
+    const fetchDataContent = () => {
         lotsdrawsGet(sportId, selectedContentSport)
             .then((res) => {
                 const { data, status } = res;
@@ -303,7 +305,7 @@ const PageUpdateLotsdrawTicket = () => {
                 }
             })
             .catch((err) => console.log({ err }));
-    }, []);
+    };
     const fetchDataGroup = () => {
         const contentFilter = getMoreFilterByValue("content_id", "=", selectedContentSport);
 
@@ -330,17 +332,7 @@ const PageUpdateLotsdrawTicket = () => {
             });
         return;
     };
-    const checkHasSchedule = () => {
-        const value = lotsdrawScheduleGet(sportId, selectedContentSport).then((res) => {
-            if (res.status == 200) {
-                return true;
-            } else {
-                toast.error("Chưa có dữ liệu khóa thăm");
-                return false;
-            }
-        });
-        return value;
-    };
+
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
 
     const { LotsDrawScheduleModal: LotsDrawScheduleModal, handleToggle: toggleLotsDrawScheduleModal } =
@@ -368,6 +360,7 @@ const PageUpdateLotsdrawTicket = () => {
         sportId: sportId,
         content_id: selectedContentSport,
         onSubmit: () => {
+            fetchDataContent();
             if (sportId) {
                 fetchData(sportId);
             }
@@ -488,7 +481,7 @@ const PageUpdateLotsdrawTicket = () => {
                                                         toggleLotsDrawModal();
                                                     }}
                                                 >
-                                                    Chỉnh sửa khóa thăm
+                                                    Chỉnh sửa bốc thăm đơn vị
                                                 </Btn>
                                             </div>
                                             <ListUnitLotsDraw tableRef={ref} data={dataUnit} showAction />
