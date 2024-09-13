@@ -6,7 +6,6 @@ import { Btn, LI, UL } from "../../AbstractElements";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { useSportStore } from "../../store/sport";
 import { TSport } from "../../type/sport";
-import { SearchTableButton } from "../../utils/Constant";
 
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -198,7 +197,7 @@ const ListSport = ({
         id="basic-1_filter"
         className="dataTables_filter d-flex align-items-center"
       >
-        <Label className="me-2">{SearchTableButton}:</Label>
+        <Label className="me-2">Tìm kiếm</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFilterText(e.target.value)

@@ -10,7 +10,6 @@ import { N } from "../../name-conversion";
 import { userCreate, userDelete, userUpdate } from "../../Service/user";
 import { useUserStore } from "../../store/user";
 import { TUser } from "../../type/user";
-import { BasicDataTables, DataTables } from "../../utils/Constant";
 import { useUserModal } from "./UserForm";
 
 type TUserColumn = TUser;
@@ -168,7 +167,7 @@ const PageUser = () => {
 
   return (
     <div className="page-body">
-      <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
+      <Breadcrumbs mainTitle={"Nguời dùng"} parent={"HTTQ2024"} />
       <Container fluid>
         <Row>
           <Col sm="12">

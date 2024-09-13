@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Image } from "../../AbstractElements";
 import { dynamicImage } from "../../Service";
 import { useLayoutStore } from "../../store/layout";
 
@@ -11,7 +10,7 @@ const LogoWrapper = () => {
     <>
       <div className="logo-wrapper m-b-30 p-0 d-flex justify-content-center">
         <Link to={`/sport/list`} className="d-inline-block ">
-          <Image
+          <img
             className="img-fluid "
             src={dynamicImage("/assets/images/logo_trang.png")}
             height={70}
@@ -25,7 +24,7 @@ const LogoWrapper = () => {
       </div>
       <div className="logo-icon-wrapper">
         <Link to={`/dashboard`}>
-          <Image
+          <img
             className="img-fluid"
             src={dynamicImage("logo/logo-icon.png")}
             alt="logo"

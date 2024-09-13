@@ -8,7 +8,6 @@ import { N } from "../../name-conversion";
 import { sportLocationUpdate, sportNameUpdate } from "../../Service/sport";
 import { useSportStore } from "../../store/sport";
 import { TSport } from "../../type/sport";
-import { SearchTableButton } from "../../utils/Constant";
 import { useSportModal } from "./SportForm";
 
 type TSportColumn = TSport;
@@ -139,7 +138,7 @@ const ListSport = ({
         id="basic-1_filter"
         className="dataTables_filter d-flex align-items-center"
       >
-        <Label className="me-2">{SearchTableButton}:</Label>
+        <Label className="me-2">Tìm kiếm</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFilterText(e.target.value)

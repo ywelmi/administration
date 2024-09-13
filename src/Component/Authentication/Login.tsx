@@ -4,12 +4,6 @@ import { toast } from "react-toastify";
 import { Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import { Btn, H4 } from "../../AbstractElements";
 import { signIn } from "../../Service/authen";
-import {
-  EmailAddress,
-  Password,
-  SignIn,
-  SignInAccount,
-} from "../../utils/Constant";
 // import SocialApp from "./SocialApp";
 
 const Login = () => {
@@ -42,10 +36,10 @@ const Login = () => {
                   className="theme-form"
                   onSubmit={(e) => simpleLoginHandle(e)}
                 >
-                  <H4>{SignInAccount}</H4>
+                  <H4>Mời nhập thông tin tài khoản</H4>
                   {/* <P>{"Enter your email & password to login"}</P> */}
                   <FormGroup>
-                    <Label className="col-form-label">{EmailAddress}</Label>
+                    <Label className="col-form-label">Đăng nhập</Label>
                     <Input
                       type="text"
                       required
@@ -56,7 +50,7 @@ const Login = () => {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label className="col-form-label">{Password}</Label>
+                    <Label className="col-form-label">Mật khẩu</Label>
                     <div className="form-input position-relative">
                       <Input
                         type={show ? "text" : "password"}
@@ -90,7 +84,7 @@ const Login = () => {
                         className="w-100"
                         type="submit"
                       >
-                        {SignIn}
+                        Đăng nhập
                       </Btn>
                     </div>
                   </FormGroup>

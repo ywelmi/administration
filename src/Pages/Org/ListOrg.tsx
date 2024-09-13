@@ -19,7 +19,6 @@ import { orgCreate, orgDelete, orgUpdate } from "../../Service/org";
 import { useGroupStore } from "../../store/group";
 import { useOrgStore } from "../../store/org";
 import { TOrg } from "../../type/org";
-import { SearchTableButton } from "../../utils/Constant";
 import { useOrgModal } from "./OrgForm";
 
 type TOrgColumn = TOrg;
@@ -144,7 +143,7 @@ const ListOrg = () => {
         id="basic-1_filter"
         className="dataTables_filter d-flex align-items-center"
       >
-        <Label className="me-2">{SearchTableButton}:</Label>
+        <Label className="me-2">Tìm kiếm</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFilterText(e.target.value)

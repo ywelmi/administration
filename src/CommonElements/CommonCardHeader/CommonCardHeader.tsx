@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react'
 import { CardHeader } from 'reactstrap'
+import { CommonCardHeaderProp } from '../../Types/Ui-Kits/UiKitsTypes'
 import H4 from '../Headings/H4Element'
 import P from '../Paragraph'
-import { CommonCardHeaderProp } from '../../Types/Ui-Kits/UiKitsTypes'
 
 const CommonCardHeader: React.FC<CommonCardHeaderProp> = ({ title, span, headClass, icon, tagClass }) => {
   return (

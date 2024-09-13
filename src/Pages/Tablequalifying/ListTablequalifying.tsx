@@ -26,7 +26,6 @@ import {
 import { useSportStore } from "../../store/sport";
 import { useTablequalifyingStore } from "../../store/tablequalifying";
 import { TTablequalifying } from "../../type/tablequalifying";
-import { SearchTableButton } from "../../utils/Constant";
 import { useTablequalifyingModal } from "./TablequalifyingForm";
 
 type TTablequalifyingColumn = Omit<TTablequalifying, "list_member_id">;
@@ -219,7 +218,7 @@ const ListTablequalifying = ({
         id="basic-1_filter"
         className="dataTables_filter d-flex align-items-center"
       >
-        <Label className="me-2">{SearchTableButton}:</Label>
+        <Label className="me-2">Tìm kiếm</Label>
         <Input
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFilterText(e.target.value)

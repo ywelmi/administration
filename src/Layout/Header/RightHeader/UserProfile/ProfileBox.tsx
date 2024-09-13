@@ -1,6 +1,5 @@
 import { Btn, LI, UL } from "../../../../AbstractElements";
 import { clearUser } from "../../../../shared/localStorage/user";
-import { LogOut } from "../../../../utils/Constant";
 
 const ProfileBox = () => {
   // const navigate = useNavigate();
@@ -19,7 +18,7 @@ const ProfileBox = () => {
           className="btn-pill"
           onClick={handleClick}
         >
-          {LogOut}
+          Đăng xuất
         </Btn>
       </LI>
     </UL>

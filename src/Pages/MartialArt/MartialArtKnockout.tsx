@@ -4,7 +4,6 @@ import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { N } from "../../name-conversion";
 import { generateMartialArtContentTree } from "../../Service/martialArt";
-import { BasicDataTables, DataTables } from "../../utils/Constant";
 import { KnockoutContextProvider, useKnockoutContext } from "./context";
 import { CustomRoundComponent } from "./CustomRound";
 import { CustomSeed } from "./CustomSeed";
@@ -33,7 +32,7 @@ const MartialArtKnockout = () => {
 
   return (
     <div className="page-body">
-      <Breadcrumbs mainTitle={BasicDataTables} parent={DataTables} />
+      <Breadcrumbs mainTitle={"Võ chiến đấu tay không"} parent={"HTTQ2024"} />
       <Container fluid>
         <Row>
           <Col sm="12">

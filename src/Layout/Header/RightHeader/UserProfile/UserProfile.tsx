@@ -1,4 +1,4 @@
-import { Image, LI, P } from "../../../../AbstractElements";
+import { LI, P } from "../../../../AbstractElements";
 import { dynamicImage } from "../../../../Service";
 import ProfileBox from "./ProfileBox";
 
@@ -6,7 +6,7 @@ const UserProfile = () => {
   return (
     <LI className="profile-nav onhover-dropdown">
       <div className="media profile-media">
-        <Image
+        <img
           className="b-r-10"
           src={dynamicImage("/assets/images/logo_trang.png")}
           alt="image"

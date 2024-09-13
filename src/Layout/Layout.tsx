@@ -6,7 +6,6 @@ import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
 import Loader from "./Loader/Loader";
 import Sidebar from "./Sidebar/Sidebar";
-import TapTop from "./TapTop/TapTop";
 
 const Layout = () => {
   const { layout, setLayout } = useThemeStore();
@@ -41,7 +40,7 @@ const Layout = () => {
   return (
     <>
       <Loader />
-      <TapTop />
+      {/* <TapTop /> */}
       <div className={`page-wrapper ${layout}`}>
         <Header />
 
