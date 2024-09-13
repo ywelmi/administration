@@ -2,24 +2,36 @@
 // --------------------------
 
 // FONT / MARGINS / FONT SIZE / COLOUR
-@mixin icon($i, $m:10px, $fs:18px, $c:inherit) {
-  &:before { @include icon-themify-icons(); content: $i; margin-right: $m; font-size: $fs; color:$c;}
+@mixin icon($i, $m: 10px, $fs: 18px, $c: inherit) {
+  &:before {
+    @include icon-themify-icons();
+    content: $i;
+    margin-right: $m;
+    font-size: $fs;
+    color: $c;
+  }
 }
-@mixin iconafter($i, $m:10px, $fs:18px, $c:inherit) {
-  &:after { @include icon-themify-icons(); content: $i; margin-left: $m; font-size: $fs; color:$c; }
+@mixin iconafter($i, $m: 10px, $fs: 18px, $c: inherit) {
+  &:after {
+    @include icon-themify-icons();
+    content: $i;
+    margin-left: $m;
+    font-size: $fs;
+    color: $c;
+  }
 }
 
 @mixin icon-themify-icons() {
-  font-family: 'themify';
-speak: none;
-font-style: normal;
-font-weight: normal;
-font-variant: normal;
-text-transform: none;
-line-height: 1;
--webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;
-  *margin-right: .3em; // fixes ie7 issues
+  font-family: "themify";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  *margin-right: 0.3em; // fixes ie7 issues
 }
 
 @mixin border-radius($radius) {
@@ -28,8 +40,12 @@ line-height: 1;
   border-radius: $radius;
 }
 
-
-@mixin icon-stack($width: 2em, $height: 2em, $top-font-size: 1em, $base-font-size: 2em) {
+@mixin icon-stack(
+  $width: 2em,
+  $height: 2em,
+  $top-font-size: 1em,
+  $base-font-size: 2em
+) {
   .icon-stack {
     position: relative;
     display: inline-block;
@@ -50,7 +66,7 @@ line-height: 1;
     }
     .icon-stack-base {
       font-size: $base-font-size;
-      *line-height: #{$height / $base-font-size}em;
+      *line-height: calc($height / $base-font-size) em;
     }
   }
 }
