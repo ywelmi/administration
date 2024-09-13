@@ -26,10 +26,11 @@ const NavBar = () => {
             <CardBody>
                 <Nav pills className="m-10 justify-content-center nav-primary">
                     <NavLink className={basicTab === "1" ? "active" : ""} onClick={() => setBasicTab("1")}>
-                        Cập nhật kết quả bốc thăm
+                        {" "}
+                        Tạo nhóm thi đấu
                     </NavLink>
                     <NavLink className={basicTab === "2" ? "active" : ""} onClick={() => setBasicTab("2")}>
-                        Tạo nhóm thi đấu
+                        Cập nhật kết quả bốc thăm
                     </NavLink>
                     <NavLink className={basicTab === "5" ? "active" : ""} onClick={() => setBasicTab("5")}>
                         Nhập thành tích

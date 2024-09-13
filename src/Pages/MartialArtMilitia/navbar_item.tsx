@@ -8,10 +8,10 @@ const LotsdrawTabs: React.FC<TabContentProps> = ({ basicTab, setActiveTab }) => 
     return (
         <TabContent activeTab={basicTab} className="tab-content">
             <TabPane tabId="1">
-                <PageUpdateLotsDrawUnit />
+                <MartialArtMilitia />
             </TabPane>
             <TabPane tabId="2">
-                <MartialArtMilitia />
+                <PageUpdateLotsDrawUnit />
             </TabPane>
             <TabPane tabId="5">
                 <PageUpdateResultMartial />
