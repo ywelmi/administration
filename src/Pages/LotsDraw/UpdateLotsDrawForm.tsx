@@ -22,7 +22,19 @@ interface ILotsDrawModal extends Omit<ILotsDrawForm, "lotsdraw" | "onSubmit"> {
 }
 
 const getLotDrawId = (d: TLotsDraw) => d.id;
-const UpdateLotsDrawForm = ({ lotsdraw, onCancel, onSubmit }: ILotsDrawForm) => {
+const UpdateLotsDrawForm = ({ sportId, contentId, onCancel, onSubmit }: any) => {
+    const [data, setData] = useState<TLotsDraw[]>([]);
+    useEffect(() => {
+        if (sportId && contentId) {
+            lotsdrawsGet(sportId, contentId)
+                .then((res) => {
+                    const { data, status } = res;
+                    console.log({ data });
+                    if (status === 200) setData(data);
+                })
+                .catch((err) => console.log({ err }));
+        }
+    }, []);
     const columns: ColumnDef<TLotsDraw>[] = [
         {
             accessorKey: "team_name",
@@ -42,7 +54,7 @@ const UpdateLotsDrawForm = ({ lotsdraw, onCancel, onSubmit }: ILotsDrawForm) => 
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
     return (
         <div className="justify-content-center">
-            <TanTable ref={ref} data={lotsdraw} getRowId={getLotDrawId} columns={columns} />
+            <TanTable ref={ref} data={data} getRowId={getLotDrawId} columns={columns} />
             <Col xs="12" className="gap-2 justify-content-center" style={{ display: "flex" }}>
                 <Btn
                     color="primary"
@@ -66,9 +78,7 @@ const UpdateLotsDrawForm = ({ lotsdraw, onCancel, onSubmit }: ILotsDrawForm) => 
     );
 };
 
-const useUpdateLotsDrawModal = ({ sportId, content_id, onSubmit, ...rest }: any) => {
-    const [data, setData] = useState<TLotsDraw[]>([]);
-
+const useUpdateLotsDrawModal = ({ sportId, content_id, onSubmit }: any) => {
     const [opened, setOpened] = useState(false);
     const handleToggle = () => {
         setOpened((s) => !s);
@@ -89,6 +99,8 @@ const useUpdateLotsDrawModal = ({ sportId, content_id, onSubmit, ...rest }: any)
             .then((res) => {
                 const { data, status } = res;
                 if (status === 200) {
+                    toast.success("Chỉnh sửa bốc thăm đơn vị thành công");
+                    onSubmit();
                 } else {
                     toast.error(res.data);
                 }
@@ -97,33 +109,19 @@ const useUpdateLotsDrawModal = ({ sportId, content_id, onSubmit, ...rest }: any)
                 console.log({ err });
                 toast.error(N["failed"] + "khi cập nhật bốc thăm" + err);
             });
+        console.log("here");
 
         setOpened(false);
     };
-
-    useEffect(() => {
-        console.log(sportId + content_id);
-        if (sportId) {
-            lotsdrawsGetNotContentId(sportId)
-                .then((res) => {
-                    const { data, status } = res;
-                    console.log({ data });
-                    if (status === 200) setData(data);
-                })
-                .catch((err) => console.log({ err }));
-        }
-    }, [sportId, content_id]);
 
     const UpdateLotsDrawModal = () => (
         <CommonModal modalBodyClassName=" text-start" isOpen={opened} toggle={handleToggle}>
             <div className="modal-toggle-wrapper social-profile text-start dark-sign-up">
                 <H3 className="modal-header justify-content-center border-0">Chỉnh sửa kết quả bốc thăm đơn vị </H3>
                 <UpdateLotsDrawForm
-                    lotsdraw={data}
                     sportId={sportId}
                     contentId={content_id}
                     onSubmit={handleSubmit}
-                    {...rest}
                     onCancel={() => setOpened(false)}
                 />
             </div>
