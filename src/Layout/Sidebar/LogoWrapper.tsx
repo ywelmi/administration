@@ -2,12 +2,10 @@ import { Link } from "react-router-dom";
 import { Image } from "../../AbstractElements";
 import { dynamicImage } from "../../Service";
 import { useLayoutStore } from "../../store/layout";
-import { useThemeStore } from "../../store/theme";
 
 const LogoWrapper = () => {
-  const { toggleSidebar, setToggleSidebar, handleResponsiveToggle } =
-    useLayoutStore();
-  const { sidebarIconType } = useThemeStore();
+  const { handleResponsiveToggle } = useLayoutStore();
+  // const { sidebarIconType } = useThemeStore();
 
   return (
     <>
@@ -24,9 +22,6 @@ const LogoWrapper = () => {
         <div className="back-btn" onClick={() => handleResponsiveToggle()}>
           <i className="fa fa-angle-left"></i>
         </div>
-        {/* <div className="toggle-sidebar" onClick={() => setToggleSidebar(!toggleSidebar)}>
-                    <FeatherIcons className="status_toggle middle sidebar-toggle" iconName="Grid" />
-                </div> */}
       </div>
       <div className="logo-icon-wrapper">
         <Link to={`/dashboard`}>

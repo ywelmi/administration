@@ -443,4 +443,4 @@ const PageTablequalifyingMatch = () => {
   );
 };
 
-export { ListTablequalifyingMatch, PageTablequalifyingMatch };
+export { PageTablequalifyingMatch };

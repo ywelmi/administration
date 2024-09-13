@@ -11,14 +11,6 @@ const ProfileBox = () => {
   };
   return (
     <UL className="profile-dropdown onhover-show-div">
-      {/* {profilesMessage.map((data, index) => (
-        <LI key={index}>
-          <Link to={data.link}>
-            <FeatherIcons iconName={data.icon} />
-            <span>{data.name}</span>
-          </Link>
-        </LI>
-      ))} */}
       <LI>
         <Btn
           size="sm"
