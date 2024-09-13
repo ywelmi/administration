@@ -37,6 +37,7 @@ import NavBar from "./navbar";
 import { useViewLotsDrawScheduleModal } from "./ViewLotsdrawTicket";
 import { TGroup } from "../../type/team";
 import { ContentSchedule } from "./ContentSchedule";
+import { useUpdateLotsDrawModal } from "./UpdateLotsDrawForm";
 
 interface IListLotsDraw {
     showAction?: boolean;
@@ -243,7 +244,15 @@ const PageUpdateLotsdrawTicket = () => {
             })
             .catch((err) => console.log({ err }));
         fetchData(sportId);
-
+        lotsdrawsGet(sportId, id)
+            .then((res) => {
+                const { data, status } = res;
+                console.log({ data });
+                if (status === 200) {
+                    setDataUnit(data);
+                }
+            })
+            .catch((err) => console.log({ err }));
         if (content_type == 2) {
             const contentFilter = getMoreFilterByValue("content_id", "=", id);
 
@@ -257,6 +266,7 @@ const PageUpdateLotsdrawTicket = () => {
                 })
                 .catch((err) => console.log({ err }));
         }
+
         setSelectedContentSport(id);
     };
     const handleDeleteGroup = (id: any) => {
@@ -284,7 +294,7 @@ const PageUpdateLotsdrawTicket = () => {
                 if (status === 200) setContent(data);
             })
             .catch((err) => console.log({ err }));
-        lotsdrawsGet(sportId, "")
+        lotsdrawsGet(sportId, selectedContentSport)
             .then((res) => {
                 const { data, status } = res;
                 console.log({ data });
@@ -320,6 +330,17 @@ const PageUpdateLotsdrawTicket = () => {
             });
         return;
     };
+    const checkHasSchedule = () => {
+        const value = lotsdrawScheduleGet(sportId, selectedContentSport).then((res) => {
+            if (res.status == 200) {
+                return true;
+            } else {
+                toast.error("Chưa có dữ liệu khóa thăm");
+                return false;
+            }
+        });
+        return value;
+    };
     const ref = useRef<ITanTableRef<TLotsDraw>>(null);
 
     const { LotsDrawScheduleModal: LotsDrawScheduleModal, handleToggle: toggleLotsDrawScheduleModal } =
@@ -343,7 +364,15 @@ const PageUpdateLotsdrawTicket = () => {
             handleAddNew(e);
         },
     });
-
+    const { handleToggle: toggleLotsDrawModal, UpdateLotsDrawModal: LotsDrawAddModal } = useUpdateLotsDrawModal({
+        sportId: sportId,
+        content_id: selectedContentSport,
+        onSubmit: () => {
+            if (sportId) {
+                fetchData(sportId);
+            }
+        },
+    });
     return (
         <Container fluid>
             <Row>
@@ -433,6 +462,7 @@ const PageUpdateLotsdrawTicket = () => {
                                     </div>
                                     <ViewLotsDrawScheduleModal />
                                     <LotsDrawScheduleModal />
+                                    <LotsDrawAddModal />
                                     <ContentSchedule content_id={selectedContentSport} />
                                     {contentType == "2" && (
                                         <div className="d-flex justify-content-center m-b-10">
@@ -449,8 +479,20 @@ const PageUpdateLotsdrawTicket = () => {
                                             <TeamAddModal />
                                         </div>
                                     )}
-                                    <div className="d-flex justify-content-center">
-                                        <ListUnitLotsDraw tableRef={ref} data={dataUnit} showAction />
+                                    <div className=" justify-content-center">
+                                        <>
+                                            <div className="d-flex justify-content-center m-10">
+                                                <Btn
+                                                    className="btn btn-danger m-l-10"
+                                                    onClick={() => {
+                                                        toggleLotsDrawModal();
+                                                    }}
+                                                >
+                                                    Chỉnh sửa khóa thăm
+                                                </Btn>
+                                            </div>
+                                            <ListUnitLotsDraw tableRef={ref} data={dataUnit} showAction />
+                                        </>
                                         {contentType == 2 && dataGroup.length > 0 ? (
                                             <ListGroupLotsDraw tableRef={refGroup} data={dataGroup} showAction />
                                         ) : (
@@ -462,12 +504,18 @@ const PageUpdateLotsdrawTicket = () => {
                                     <div className="d-flex justify-content-center m-10">
                                         <Btn
                                             className="btn btn-info m-l-10"
-                                            onClick={() => {
+                                            onClick={async () => {
                                                 if (contentType == 2) {
                                                     dataGroup.length == dataUnit.length
                                                         ? toggleLotsDrawScheduleModal()
                                                         : toast.error("Chưa đăng ký đủ số đội vào nội dung thi");
                                                 } else {
+                                                    //const hasData = await checkHasSchedule();
+                                                    // if (hasData) {
+                                                    //     toggleViewLotsDrawScheduleModal();
+                                                    // } else {
+                                                    //     toggleLotsDrawScheduleModal();
+                                                    // }
                                                     toggleLotsDrawScheduleModal();
                                                 }
                                             }}
@@ -475,7 +523,7 @@ const PageUpdateLotsdrawTicket = () => {
                                             Cập nhật khóa thăm
                                         </Btn>
                                     </div>
-                                    <div className="d-flex justify-content-center m-10">
+                                    {/* <div className="d-flex justify-content-center m-10">
                                         <Btn
                                             className="btn btn-success m-l-10"
                                             onClick={() => {
@@ -486,7 +534,7 @@ const PageUpdateLotsdrawTicket = () => {
                                         >
                                             Xem khóa thăm
                                         </Btn>
-                                    </div>
+                                    </div> */}
                                 </>
                             )}
                         </CardBody>

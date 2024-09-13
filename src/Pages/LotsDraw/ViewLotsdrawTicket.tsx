@@ -1,4 +1,4 @@
-import { Col, Input, Row } from "reactstrap";
+import { Col, Input, InputGroup, InputGroupText, Row } from "reactstrap";
 import { TLotsDraw, TLotsDrawMatrix } from "../../type/lotsdraw";
 import { Btn, H3, H5 } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";

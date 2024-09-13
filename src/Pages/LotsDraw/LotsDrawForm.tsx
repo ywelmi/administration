@@ -1,11 +1,11 @@
 import { Col } from "reactstrap";
-import { TLotsDraw } from "../../type/lotsdraw";
+import { TContentSport, TLotsDraw } from "../../type/lotsdraw";
 import { Btn, H3 } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
 import { useEffect, useRef, useState } from "react";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { ColumnDef } from "@tanstack/react-table";
-import { lotsdrawsGet, lotsdrawsGetNotContentId, lotsdrawUpdate } from "../../Service/lotsdraw";
+import { getContentSport, lotsdrawsGet, lotsdrawsGetNotContentId, lotsdrawUpdate } from "../../Service/lotsdraw";
 import { toast } from "react-toastify";
 import { N } from "../../name-conversion";
 import { da } from "date-fns/locale";
@@ -75,30 +75,35 @@ const useLotsDrawModal = ({ sportId, content_id, onSubmit, ...rest }: any) => {
     };
 
     const handleSubmit = (lotsdraw: TLotsDraw[]) => {
-        const dataSubmit = lotsdraw.map((e: TLotsDraw) => {
-            return {
-                id: e.id,
-                sport_id: e.sport_id,
-                content_id: content_id,
-                team_id: e.team_id,
-                ticket_index: e.ticket_index,
-                has_ranking: true,
-            };
+        getContentSport(sportId).then((res) => {
+            if (res.status == 200) {
+                res.data.forEach((contentSport: TContentSport) => {
+                    const dataSubmit = lotsdraw.map((e: TLotsDraw) => {
+                        return {
+                            id: e.id,
+                            sport_id: e.sport_id,
+                            content_id: contentSport.id,
+                            team_id: e.team_id,
+                            ticket_index: e.ticket_index,
+                            has_ranking: true,
+                        };
+                    });
+                    lotsdrawUpdate(sportId, content_id, dataSubmit)
+                        .then((res) => {
+                            const { data, status } = res;
+                            if (status === 200) {
+                            } else {
+                                toast.error(res.data);
+                            }
+                        })
+                        .catch((err) => {
+                            console.log({ err });
+                            toast.error(N["failed"] + "khi cập nhật bốc thăm" + err);
+                        });
+                });
+            }
         });
-        lotsdrawUpdate(sportId, content_id, dataSubmit)
-            .then((res) => {
-                const { data, status } = res;
-                if (status === 200) {
-                    onSubmit();
-                    toast.success(N["success"]);
-                } else {
-                    toast.error(res.data);
-                }
-            })
-            .catch((err) => {
-                console.log({ err });
-                toast.error(N["failed"] + "khi cập nhật bốc thăm" + err);
-            });
+
         setOpened(false);
     };
 
