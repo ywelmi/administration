@@ -7,7 +7,7 @@ import { InputSelect } from "../../Component/InputSelect";
 import { ITanTableRef, TanTable } from "../../Component/Tables/TanTable/TanTble";
 import { N } from "../../name-conversion";
 import { getFilterByValue, getMoreFilterByValue } from "../../Service/_getParams";
-import { getMapTicketAthele, lotsdrawUpdateAthele } from "../../Service/lotsdraw";
+import { getContentSport, getMapTicketAthele, lotsdrawUpdateAthele } from "../../Service/lotsdraw";
 import { teammembersGet } from "../../Service/teammember";
 import { TLotsDrawUpdateAthele } from "../../type/lotsdraw";
 import { TTeammember } from "../../type/teammember";
@@ -112,50 +112,36 @@ const LotsDrawUpdateAtheleForm = ({ sportId, team_id, content_id, onCancel }: IL
     const [data, setData] = useState<TLotsDrawUpdateAthele[]>([]);
 
     useEffect(() => {
-        getMapTicketAthele(sportId, team_id, content_id)
-            .then(async (res) => {
-                const { data, status } = res;
-                if (status !== 200) return;
-                const memberFilter1 = getMoreFilterByValue("team_id", "=", team_id);
-                const sportFilter1 = getMoreFilterByValue("sport_id", "=", sportId);
-                var allFilter = [memberFilter1, sportFilter1];
-                const members = await teammembersGet({ filter: `[${allFilter}]` }).then((res) => {
-                    const {
-                        data: { data },
-                    } = res;
+        getContentSport(sportId).then((res) => {
+            for (const element of res.data) {
+                if (element.id == content_id) {
+                    getMapTicketAthele(sportId, team_id, content_id)
+                        .then(async (res) => {
+                            const { data, status } = res;
+                            if (status !== 200) return;
+                            const memberFilter1 = getMoreFilterByValue("team_id", "=", team_id);
+                            const sportFilter1 = getMoreFilterByValue("sport_id", "=", sportId);
+                            const genderFilter1 = getMoreFilterByValue("gender", "=", element.gender!.toString());
+                            var allFilter = [memberFilter1, sportFilter1, genderFilter1];
+                            const members = await teammembersGet({ filter: `[${allFilter}]` }).then((res) => {
+                                const {
+                                    data: { data },
+                                } = res;
 
-                    return data;
-                });
-                // const newCols: ColumnDef<TLotsDrawMember>[] = [...defaultColumns];
-                // lst_map_sport_content.forEach(({ field, name }) => {
-                //     const col: ColumnDef<TLotsDrawMember> = {
-                //         // accessorKey: field,
-                //         footer: (props) => props.column.id,
-                //         header: name,
-                //         columns: [
-                //             {
-                //                 accessorKey: `${field}_record_value`,
-                //                 header: N[`${field}_record_value`],
-                //                 footer: (props) => props.column.id,
-                //             },
-                //             {
-                //                 accessorKey: `${field}_point_value`,
-                //                 header: N[`${field}_point_value`],
-                //                 footer: (props) => props.column.id,
-                //             },
-                //         ],
-                //     };
-                //     newCols.push(col);
-                // });
+                                return data;
+                            });
 
-                setData(data);
+                            setData(data);
 
-                setTeammembers(members);
-                console.log({ members });
-            })
-            .catch((err) => {
-                console.log({ err });
-            });
+                            setTeammembers(members);
+                            console.log({ members });
+                        })
+                        .catch((err) => {
+                            console.log({ err });
+                        });
+                }
+            }
+        });
     }, [sportId, team_id]);
     useEffect(() => {
         setColumns(defaultColumns);

@@ -192,11 +192,11 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
                                             if (e.target.value == "") {
                                                 table.options.meta?.updateData(index, id, null);
                                             } else {
-                                                table.options.meta?.updateData(index, id, e.target.value);
+                                                table.options.meta?.updateData(index, id, parseInt(e.target.value));
                                             }
                                         }}
                                         name={"name"}
-                                        value={getValue()}
+                                        value={parseInt(getValue())}
                                     />
                                 );
                             },

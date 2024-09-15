@@ -31,7 +31,7 @@ export interface TContentSport {
     sport: string;
     name: string;
     code: string;
-
+    gender?: number;
     content_type?: number;
 }
 
