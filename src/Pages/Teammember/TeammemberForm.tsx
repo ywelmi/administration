@@ -63,8 +63,22 @@ const TeammemberForm = ({
   const formik = useFormik({
     initialValues: { ...teammember },
     onSubmit: (value) => {
-      console.log({ submitValue: value });
       const submitValue = { ...value } as TTeammember;
+      Object.keys(submitValue).forEach((k: string) => {
+        if (!["dob", "date_join_army", "date_of_issue"].includes(k)) {
+          return;
+        }
+        try {
+          let v = value[k];
+          v = new Date(v);
+          if (v && !isNaN(v) && v instanceof Date) {
+            value[k] = convertToDate(value[k]);
+          }
+        } catch (err) {
+          console.log(1);
+        }
+      });
+      console.log({ submitValue: value });
       if (submitValue) onSubmit(submitValue);
     },
   });
@@ -159,7 +173,8 @@ const TeammemberForm = ({
                   : undefined
               }
               onChange={(date) =>
-                formik.setFieldValue("date_of_issue", date?.toISOString())
+                // formik.setFieldValue("date_of_issue", date?.toISOString())
+                formik.setFieldValue("date_of_issue", date)
               }
               locale={"vi"}
               dateFormat={"dd/MM/yyyy"}
