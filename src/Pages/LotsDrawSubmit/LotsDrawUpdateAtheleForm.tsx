@@ -121,8 +121,13 @@ const LotsDrawUpdateAtheleForm = ({ sportId, team_id, content_id, onCancel }: IL
                             if (status !== 200) return;
                             const memberFilter1 = getMoreFilterByValue("team_id", "=", team_id);
                             const sportFilter1 = getMoreFilterByValue("sport_id", "=", sportId);
-                            const genderFilter1 = getMoreFilterByValue("gender", "=", element.gender!.toString());
-                            var allFilter = [memberFilter1, sportFilter1, genderFilter1];
+                            if (element.gender) {
+                                const genderFilter1 = getMoreFilterByValue("gender", "=", element.gender!.toString());
+                                var allFilter = [memberFilter1, sportFilter1, genderFilter1];
+                            } else {
+                                var allFilter = [memberFilter1, sportFilter1];
+                            }
+
                             const members = await teammembersGet({ filter: `[${allFilter}]` }).then((res) => {
                                 const {
                                     data: { data },
