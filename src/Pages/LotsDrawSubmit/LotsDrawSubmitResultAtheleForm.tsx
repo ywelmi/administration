@@ -170,7 +170,7 @@ const LotsDrawSubmitResultAllForm = ({ sportId, content_id, onCancel }: ILotsDra
                     header: "Xử lý vi phạm",
                     columns: [
                         {
-                            accessorKey: `content1_ignore_type`,
+                            accessorKey: `${valueField}_ignore_type`,
                             header: "Lỗi",
                             footer: (props) => props.column.id,
                             cell({ getValue, row: { index, original }, column: { id }, table }) {
