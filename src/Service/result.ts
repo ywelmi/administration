@@ -26,12 +26,12 @@ export const sportXuatXepHang = async (id: string): Promise<void> => {
                 document.body.removeChild(link);
             } catch (error) {
                 console.error("Download failed:", error);
-                toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng");
+                toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng theo môn: " + response.data);
             }
         }
     } catch (error) {
         console.error("Download failed:", error);
-        toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng");
+        toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng:" + error);
     }
 };
 
@@ -53,12 +53,12 @@ export const exportResultAll = async (type: string): Promise<void> => {
                 document.body.removeChild(link);
             } catch (err) {
                 console.error("Download failed:", err);
-                toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng" + err);
+                toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng toàn đoàn: " + response.data);
             }
         }
     } catch (error) {
         console.error("Download failed:", error);
-        toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng: Chưa xác định ");
+        toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng:" + error);
     }
 };
 
