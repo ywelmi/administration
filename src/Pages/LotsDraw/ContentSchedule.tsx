@@ -1,4 +1,4 @@
-import { Col, Input, InputGroup, InputGroupText, Row } from "reactstrap";
+import { Col, Input, InputGroup, InputGroupText, Label, Row } from "reactstrap";
 import { TLotsDraw, TLotsDrawMatrix } from "../../type/lotsdraw";
 import { Btn, H3, H5 } from "../../AbstractElements";
 import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
@@ -20,7 +20,7 @@ import { forEach } from "lodash";
 import { t } from "i18next";
 import ReactDatePicker from "react-datepicker";
 import { TGroup } from "../../type/team";
-import { convertToDate } from "../../utils/date";
+import { convertToDate, convertToDateType2 } from "../../utils/date";
 const ContentSchedule = ({ content_id }: any) => {
     const [dataSchedule, setDataSchedule] = useState<any>(null);
 
@@ -38,6 +38,7 @@ const ContentSchedule = ({ content_id }: any) => {
         });
     };
     const handleUpdateSchedule = (id: any, data: any) => {
+        console.log(data);
         updateScheduleContent(id, data)
             .then((res) => {
                 const { data, status } = res;
@@ -64,10 +65,10 @@ const ContentSchedule = ({ content_id }: any) => {
     return (
         <div className="d-flex justify-content-between">
             <div className="d-flex align-items-center m-l-20">
-                <H5 className="">
+                {/* <H5 className="">
                     <strong>Ngày thi đấu</strong>
-                </H5>
-                <ReactDatePicker
+                </H5> */}
+                {/* <ReactDatePicker
                     className="form-control m-l-10"
                     name="date_join_army"
                     showYearDropdown
@@ -82,7 +83,29 @@ const ContentSchedule = ({ content_id }: any) => {
                     }}
                     locale={"vi"}
                     dateFormat={"dd/MM/yyyy"}
-                />
+                /> */}
+                <Row>
+                    <Col md="5">
+                        <Label className="col-form-label">
+                            <strong>Ngày thi đấu</strong>
+                        </Label>
+                    </Col>
+                    <Col md="7">
+                        <Input
+                            className="digits"
+                            type="date"
+                            name="match_date"
+                            defaultValue={dataSchedule ? convertToDateType2(dataSchedule.match_date) : ""}
+                            onChange={(newdate) => {
+                                const newData = {
+                                    ...dataSchedule,
+                                    match_date: newdate.target.value,
+                                };
+                                handleUpdateSchedule(content_id, newData);
+                            }}
+                        />
+                    </Col>
+                </Row>
             </div>
             {dataSchedule && (
                 <>
