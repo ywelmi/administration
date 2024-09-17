@@ -358,7 +358,7 @@ const PageTablequalifyingMatch = () => {
       team1_id: "",
       team2_id: "",
       indexs: 0,
-      match_day: new Date().toISOString(),
+      match_day: new Date().toLocaleDateString(),
       match_time: "",
     },
   });

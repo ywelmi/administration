@@ -42,8 +42,8 @@ const TeammemberForm = ({
         name: "",
         rank: 0,
         gender: 1,
-        dob: new Date("1/1/1980").toISOString(),
-        date_join_army: new Date().toISOString(),
+        dob: new Date("1/1/1980").toLocaleDateString(),
+        date_join_army: new Date().toLocaleDateString(),
         org_id: "",
         competition_id: competitions?.[0].id || "",
         weights: "60",
@@ -64,20 +64,21 @@ const TeammemberForm = ({
     initialValues: { ...teammember },
     onSubmit: (value) => {
       const submitValue = { ...value } as TTeammember;
-      Object.keys(submitValue).forEach((k: string) => {
-        if (!["dob", "date_join_army", "date_of_issue"].includes(k)) {
-          return;
-        }
-        try {
-          let v = value[k];
-          v = new Date(v);
-          if (v && !isNaN(v) && v instanceof Date) {
-            value[k] = convertToDate(value[k]);
-          }
-        } catch (err) {
-          console.log(1);
-        }
-      });
+      // Object.keys(submitValue).forEach((k: string) => {
+      //   if (!["dob", "date_join_army", "date_of_issue"].includes(k)) {
+      //     return;
+      //   }
+      //   try {
+      //     let v = value[k];
+
+      //     v = new Date(v);
+      //     if (v && !isNaN(v) && v instanceof Date) {
+      //       value[k] = convertToDate(value[k]);
+      //     }
+      //   } catch (err) {
+      //     console.log(1);
+      //   }
+      // });
       console.log({ submitValue: value });
       if (submitValue) onSubmit(submitValue);
     },
@@ -176,8 +177,8 @@ const TeammemberForm = ({
                 // formik.setFieldValue("date_of_issue", date?.toISOString())
                 formik.setFieldValue("date_of_issue", date)
               }
-              locale={"vi"}
-              dateFormat={"dd/MM/yyyy"}
+              // locale={"vi"}
+              // dateFormat={"dd/MM/yyyy"}
             />
           </InputGroup>
         </Col>
@@ -290,11 +291,9 @@ const TeammemberForm = ({
             value={
               formik.values.dob ? convertToDate(formik.values.dob) : undefined
             }
-            onChange={(date) =>
-              formik.setFieldValue("dob", date?.toISOString())
-            }
-            locale={"vi"}
-            dateFormat={"dd/MM/yyyy"}
+            onChange={(date) => formik.setFieldValue("dob", date)}
+            // locale={"vi"}
+            // dateFormat={"dd/MM/yyyy"}
           />
         </Col>
         <Col md="12">
@@ -311,11 +310,9 @@ const TeammemberForm = ({
                 ? convertToDate(formik.values.date_join_army)
                 : undefined
             }
-            onChange={(date) =>
-              formik.setFieldValue("date_join_army", date?.toISOString())
-            }
-            locale={"vi"}
-            dateFormat={"dd/MM/yyyy"}
+            onChange={(date) => formik.setFieldValue("date_join_army", date)}
+            // locale={"vi"}
+            // dateFormat={"dd/MM/yyyy"}
           />
         </Col>
         {!omitColumns?.includes("orgs") ? (

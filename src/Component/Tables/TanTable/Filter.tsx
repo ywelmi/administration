@@ -107,7 +107,7 @@ const FilterDate = <T, Q>({
           setData(date?.toISOString());
         }}
         // locale={"vi"}
-        dateFormat={"dd/MM/yyyy"}
+        // dateFormat={"dd/MM/yyyy"}
       />
     </div>
   );
