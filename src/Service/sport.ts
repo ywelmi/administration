@@ -55,7 +55,30 @@ export const sportXuatPhieuKhoaTham = async (id: string): Promise<void> => {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement("a");
             link.href = url;
-            link.setAttribute("download", `PhieuDiem_${id}.xlsx`);
+            link.setAttribute("download", `PhieuKhoaTham_${id}.xlsx`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            toast.error(response.data);
+        }
+    } catch (error) {
+        console.error("Download failed:", error);
+        toast.error("Download failed:" + error);
+    }
+};
+
+export const sportexportschedulereport = async (id: string): Promise<void> => {
+    try {
+        const response = await httpGet(`sports/${id}/export/match-schedule`, {
+            responseType: "blob",
+        });
+
+        if (response.status == 200) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `LichThiDau_${id}.xlsx`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -77,7 +100,7 @@ export const sportXuatXepHang = async (id: string): Promise<void> => {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement("a");
             link.href = url;
-            link.setAttribute("download", `PhieuDiem_${id}.xlsx`);
+            link.setAttribute("download", `BangXepHang_${id}.xlsx`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
