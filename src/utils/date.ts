@@ -2,7 +2,8 @@ import { format } from "date-fns";
 
 export function convertToDate(date: Date | string | number) {
     try {
-        return format(date, "dd/MM/yyyy");
+        // return format(date, "dd/MM/yyyy");
+        return new Date(date).toLocaleDateString();
     } catch (err) {
         console.log({ err, date });
     }

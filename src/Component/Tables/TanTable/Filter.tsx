@@ -98,6 +98,8 @@ const FilterDate = <T, Q>({
         className="form-control"
         name="date-picker"
         showYearDropdown
+        dropdownMode="select"
+        peekNextMonth
         isClearable
         // value={data ? convertToDate(data) : undefined}
         placeholderText="..."
@@ -107,7 +109,7 @@ const FilterDate = <T, Q>({
           setData(date?.toISOString());
         }}
         // locale={"vi"}
-        dateFormat={"dd/MM/yyyy"}
+        // dateFormat={"dd/MM/yyyy"}
       />
     </div>
   );

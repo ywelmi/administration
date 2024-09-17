@@ -230,10 +230,10 @@ const TanTableComponent = <T,>(
     data,
     columns: tableColumns,
     defaultColumn: getDefaultColumn<T>(),
-    // columnResizeMode: resizeableColumns ? "onChange" : undefined,
-    // columnResizeDirection: resizeableColumns ? "ltr" : undefined,
-    columnResizeMode: "onChange",
-    columnResizeDirection: "ltr",
+    columnResizeMode: resizeableColumns ? "onChange" : undefined,
+    columnResizeDirection: resizeableColumns ? "ltr" : undefined,
+    // columnResizeMode: "onChange",
+    // columnResizeDirection: "ltr",
     getRowId: getRowId,
     state: {
       rowSelection,
@@ -361,18 +361,20 @@ const TanTableComponent = <T,>(
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                      <div
-                        {...{
-                          onDoubleClick: () => header.column.resetSize(),
-                          onMouseDown: header.getResizeHandler(),
-                          onTouchStart: header.getResizeHandler(),
-                          className: `resizer ${
-                            table.options.columnResizeDirection
-                          } ${
-                            header.column.getIsResizing() ? "isResizing" : ""
-                          }`,
-                        }}
-                      ></div>
+                      {resizeableColumns && (
+                        <div
+                          {...{
+                            onDoubleClick: () => header.column.resetSize(),
+                            onMouseDown: header.getResizeHandler(),
+                            onTouchStart: header.getResizeHandler(),
+                            className: `resizer ${
+                              table.options.columnResizeDirection
+                            } ${
+                              header.column.getIsResizing() ? "isResizing" : ""
+                            }`,
+                          }}
+                        ></div>
+                      )}
                       <div>
                         {(() => {
                           if (!header.column.getCanFilter()) return null;

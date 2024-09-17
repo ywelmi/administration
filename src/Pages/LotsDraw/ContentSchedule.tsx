@@ -35,40 +35,38 @@ const ContentSchedule = ({ content_id }: any) => {
                     }
                 });
             }
-        });
-    };
-    const handleUpdateSchedule = (id: any, data: any) => {
-        console.log(data);
-        updateScheduleContent(id, data)
-            .then((res) => {
-                const { data, status } = res;
-                if (status === 200) {
-                    getScheduleContent(id).then((res) => {
-                        if (res.status == 200) {
-                            setDataSchedule(res.data);
+            const handleUpdateSchedule = (id: any, data: any) => {
+                console.log(data);
+                updateScheduleContent(id, data)
+                    .then((res) => {
+                        const { data, status } = res;
+                        if (status === 200) {
+                            getScheduleContent(id).then((res) => {
+                                if (res.status == 200) {
+                                    setDataSchedule(res.data);
+                                }
+                            });
+                        } else {
+                            toast.error(res.data);
                         }
+                    })
+                    .catch((err) => {
+                        toast.error(N["failed"] + "khi cập nhật khóa thăm" + err);
+                        console.log({ err });
                     });
-                } else {
-                    toast.error(res.data);
-                }
-            })
-            .catch((err) => {
-                toast.error(N["failed"] + "khi cập nhật khóa thăm" + err);
-                console.log({ err });
-            });
-    };
-    useEffect(() => {
-        setDataSchedule(null);
-        fetch_data();
-    }, [content_id]);
+            };
+            useEffect(() => {
+                setDataSchedule(null);
+                fetch_data();
+            }, [content_id]);
 
-    return (
-        <div className="d-flex justify-content-between">
-            <div className="d-flex align-items-center m-l-20">
-                {/* <H5 className="">
+            return (
+                <div className="d-flex justify-content-between">
+                    <div className="d-flex align-items-center m-l-20">
+                        {/* <H5 className="">
                     <strong>Ngày thi đấu</strong>
                 </H5> */}
-                {/* <ReactDatePicker
+                        {/* <ReactDatePicker
                     className="form-control m-l-10"
                     name="date_join_army"
                     showYearDropdown
@@ -84,91 +82,93 @@ const ContentSchedule = ({ content_id }: any) => {
                     locale={"vi"}
                     dateFormat={"dd/MM/yyyy"}
                 /> */}
-                <Row>
-                    <Col md="5">
-                        <Label className="col-form-label">
-                            <strong>Ngày thi đấu</strong>
-                        </Label>
-                    </Col>
-                    <Col md="7">
-                        <Input
-                            className="digits"
-                            type="date"
-                            name="match_date"
-                            defaultValue={dataSchedule ? convertToDateType2(dataSchedule.match_date) : ""}
-                            onChange={(newdate) => {
-                                const newData = {
-                                    ...dataSchedule,
-                                    match_date: newdate.target.value,
-                                };
-                                handleUpdateSchedule(content_id, newData);
-                            }}
-                        />
-                    </Col>
-                </Row>
-            </div>
-            {dataSchedule && (
-                <>
-                    <div className="d-flex align-items-center">
-                        <H5 className="">
-                            <strong>Giờ thi đấu</strong>
-                        </H5>
-                        <ReactDatePicker
-                            className="form-control m-l-10"
-                            name="match_hour"
-                            // selected={new Date(original.match_date as string || new Date())}
-                            value={dataSchedule ? dataSchedule.match_hour : ""}
-                            onChange={
-                                (newdate) => {
-                                    const newData = {
-                                        ...dataSchedule,
-                                        match_hour: `${newdate?.getHours()}: ${newdate?.getMinutes()}`,
-                                    };
-                                    handleUpdateSchedule(content_id, newData);
-                                }
-                                // table.options.meta?.updateData(
-                                //     index,
-                                //     id,
-                                //     `${date?.getHours()}:${date?.getMinutes()}`
-                                // )
-                            }
-                            showTimeSelect
-                            showTimeSelectOnly
-                            timeFormat="HH:mm"
-                            timeIntervals={15}
-                            timeCaption="Giờ"
-                            locale={"vi"}
-                        />
+                        <Row>
+                            <Col md="5">
+                                <Label className="col-form-label">
+                                    <strong>Ngày thi đấu</strong>
+                                </Label>
+                            </Col>
+                            <Col md="7">
+                                <Input
+                                    className="digits"
+                                    type="date"
+                                    name="match_date"
+                                    defaultValue={dataSchedule ? convertToDateType2(dataSchedule.match_date) : ""}
+                                    onChange={(newdate) => {
+                                        const newData = {
+                                            ...dataSchedule,
+                                            match_date: newdate.target.value,
+                                        };
+                                        handleUpdateSchedule(content_id, newData);
+                                    }}
+                                />
+                            </Col>
+                        </Row>
                     </div>
-                    <div className="d-flex align-items-center m-l-20">
-                        <H5 className="m-r-50">
-                            <strong>Địa điểm</strong>
-                        </H5>
-                        <Input
-                            className=" form-control"
-                            name="match_location"
-                            // selected={new Date(original.match_date as string || new Date())}
-                            value={dataSchedule ? dataSchedule.match_location : ""}
-                            onBlur={
-                                (newdate) => {
-                                    const newData = {
-                                        ...dataSchedule,
-                                        match_location: newdate.target.value,
-                                    };
-                                    handleUpdateSchedule(content_id, newData);
-                                }
-                                // table.options.meta?.updateData(
-                                //     index,
-                                //     id,
-                                //     `${date?.getHours()}:${date?.getMinutes()}`
-                                // )
-                            }
-                        />
-                    </div>
-                </>
-            )}
-        </div>
-    );
+                    {dataSchedule && (
+                        <>
+                            <div className="d-flex align-items-center">
+                                <H5 className="">
+                                    <strong>Giờ thi đấu</strong>
+                                </H5>
+                                <ReactDatePicker
+                                    className="form-control m-l-10"
+                                    name="match_hour"
+                                    // selected={new Date(original.match_date as string || new Date())}
+                                    value={dataSchedule ? dataSchedule.match_hour : ""}
+                                    onChange={
+                                        (newdate) => {
+                                            const newData = {
+                                                ...dataSchedule,
+                                                match_hour: `${newdate?.getHours()}: ${newdate?.getMinutes()}`,
+                                            };
+                                            handleUpdateSchedule(content_id, newData);
+                                        }
+                                        // table.options.meta?.updateData(
+                                        //     index,
+                                        //     id,
+                                        //     `${date?.getHours()}:${date?.getMinutes()}`
+                                        // )
+                                    }
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeFormat="HH:mm"
+                                    timeIntervals={15}
+                                    timeCaption="Giờ"
+                                    locale={"vi"}
+                                />
+                            </div>
+                            <div className="d-flex align-items-center m-l-20">
+                                <H5 className="m-r-50">
+                                    <strong>Địa điểm</strong>
+                                </H5>
+                                <Input
+                                    className=" form-control"
+                                    name="match_location"
+                                    // selected={new Date(original.match_date as string || new Date())}
+                                    value={dataSchedule ? dataSchedule.match_location : ""}
+                                    onBlur={
+                                        (newdate) => {
+                                            const newData = {
+                                                ...dataSchedule,
+                                                match_location: newdate.target.value,
+                                            };
+                                            handleUpdateSchedule(content_id, newData);
+                                        }
+                                        // table.options.meta?.updateData(
+                                        //     index,
+                                        //     id,
+                                        //     `${date?.getHours()}:${date?.getMinutes()}`
+                                        // )
+                                    }
+                                />
+                            </div>
+                        </>
+                    )}
+                </div>
+            );
+        });
+    };
 };
 
 export { ContentSchedule };

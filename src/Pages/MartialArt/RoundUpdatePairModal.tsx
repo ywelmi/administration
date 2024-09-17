@@ -1,17 +1,17 @@
-import { Col } from "reactstrap";
-import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
-import { Btn } from "../../AbstractElements";
-import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { ColumnDef } from "@tanstack/react-table";
 import { useRef, useState } from "react";
-import { InputSelect } from "../../Component/InputSelect";
 import ReactDatePicker from "react-datepicker";
-import { DTime } from "../../type/enum";
-import { N } from "../../name-conversion";
+import { Col } from "reactstrap";
+import { Btn } from "../../AbstractElements";
+import { InputSelect } from "../../Component/InputSelect";
 import {
   ITanTableRef,
   TanTable,
 } from "../../Component/Tables/TanTable/TanTble";
-import { ColumnDef } from "@tanstack/react-table";
+import CommonModal from "../../Component/Ui-Kits/Modal/Common/CommonModal";
+import { N } from "../../name-conversion";
+import { DTime } from "../../type/enum";
+import { TTablequalifyingKnockout } from "../../type/tablequalifyingKnockout";
 import { convertHoursToDate } from "../../utils/date";
 
 interface IRoundUpdatePairForm {
@@ -67,11 +67,9 @@ const RoundUpdatePairForm = ({
             name="match_day"
             selected={v ? new Date(v) : undefined}
             // value={convertToDate(v ? new Date(v) : new Date())}
-            onChange={(date) =>
-              table.options.meta?.updateData(index, id, date?.toISOString())
-            }
-            locale={"vi"}
-            dateFormat={"dd/MM/yyyy"}
+            onChange={(date) => table.options.meta?.updateData(index, id, date)}
+            // locale={"vi"}
+            // dateFormat={"dd/MM/yyyy"}
           />
         );
       },
@@ -103,7 +101,7 @@ const RoundUpdatePairForm = ({
             dateFormat="HH:mm"
             timeIntervals={15}
             timeCaption="Giờ"
-            locale={"vi"}
+            // locale={"vi"}
           />
         );
       },

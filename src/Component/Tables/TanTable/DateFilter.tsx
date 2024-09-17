@@ -1,6 +1,6 @@
 import { Column, Table } from "@tanstack/react-table";
-import { DGender } from "../../../type/enum";
 import { useState } from "react";
+import { DGender } from "../../../type/enum";
 
 const DateFilter = ({
   column,
@@ -11,7 +11,7 @@ const DateFilter = ({
   const [state, setState] = useState("");
   const data = DGender.map((v, i) => ({ i, v }));
   return (
-    <div style={{ "minWidth": "124px" }}>
+    <div style={{ minWidth: "124px" }}>
       <ReactDatePicker
         className="form-control"
         name="match_hour"
@@ -21,14 +21,15 @@ const DateFilter = ({
           table.options.meta?.updateData(
             index,
             id,
-            `${date?.getHours()}:${date?.getMinutes()}`,
-          )}
+            `${date?.getHours()}:${date?.getMinutes()}`
+          )
+        }
         showTimeSelect
         showTimeSelectOnly
         timeFormat="HH:mm"
         timeIntervals={15}
         timeCaption="Giờ"
-        locale={"vi"}
+        // locale={"vi"}
       />
     </div>
   );

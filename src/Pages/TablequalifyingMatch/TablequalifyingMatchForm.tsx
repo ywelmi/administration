@@ -41,7 +41,7 @@ const TablequalifyingMatchForm = ({
           team1_id: "",
           team2_id: "",
           indexs: 0,
-          match_day: new Date().toISOString(),
+          match_day: new Date(),
           match_hour: "",
           match_time: DTime[0].k,
           // match_location_chid: "",
@@ -171,11 +171,9 @@ const TablequalifyingMatchForm = ({
             name="match_day"
             selected={new Date(formik.values.match_day || new Date())}
             // value={formik.values.match_day}
-            onChange={(date) =>
-              formik.setFieldValue("match_day", date?.toISOString())
-            }
-            locale={"vi"}
-            dateFormat={"dd/MM/yyyy"}
+            onChange={(date) => formik.setFieldValue("match_day", date)}
+            // locale={"vi"}
+            // dateFormat={"dd/MM/yyyy"}
           />
         </Col>
         <Col md="12">
@@ -202,7 +200,7 @@ const TablequalifyingMatchForm = ({
             dateFormat="HH:mm"
             timeIntervals={15}
             timeCaption="Giờ"
-            locale={"vi"}
+            // locale={"vi"}
           />
         </Col>
         <Col>
