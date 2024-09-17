@@ -151,7 +151,7 @@ const InputSelectConfirm = <T,>({
 interface IInputMultipleSelect<T> {
   title?: string;
   data: (T & { [ki: string]: any })[];
-  selectedData: (T & { [ki: string]: any })[];
+  selectedData?: (T & { [ki: string]: any })[];
   onSelect: (
     a: (T & { [ki: string]: any })[],
     s: T & { [ki: string]: any }
@@ -168,7 +168,7 @@ interface IInputMultipleSelect<T> {
 const InputMultipleSelect = <T,>({
   title,
   data,
-  selectedData,
+  selectedData = [],
   k,
   v,
   onSelect,
@@ -194,6 +194,7 @@ const InputMultipleSelect = <T,>({
           onRemove={onRemove} // Function will trigger on remove event
           displayValue="name" // Property name to display in the dropdown options
           emptyRecordMsg="Không còn dữ liệu"
+          showCheckbox
         />
       </div>
     </InputGroup>

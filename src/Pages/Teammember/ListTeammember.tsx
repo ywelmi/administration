@@ -266,7 +266,7 @@ const ListTeammember = ({
   }
 
   return (
-    <div className="table-responsive">
+    <div className="table-responsive w-full">
       <TanTable
         data={data}
         columns={displayColumns}
@@ -274,7 +274,8 @@ const ListTeammember = ({
         selectableRowSelected={selectableRowSelected}
         enableRowSelection={enableRowSelection}
         getRowId={(r) => r.id}
-        // resizeableColumns
+        resizeableColumns
+        enableColumnPicker
       />
     </div>
   );

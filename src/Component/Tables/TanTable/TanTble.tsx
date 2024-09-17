@@ -8,6 +8,7 @@ import {
   RowData,
   RowSelectionState,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
 import React, {
   CSSProperties,
@@ -59,6 +60,7 @@ interface ITable<T> {
   enableRowSelection?: (row: Row<T>) => boolean;
   getRowId?: (r: T) => string;
   resizeableColumns?: boolean;
+  enableColumnPicker?: boolean;
 }
 
 function useSkipper() {
@@ -149,6 +151,7 @@ const TanTableComponent = <T,>(
     selectableRowSelected,
     enableRowSelection,
     resizeableColumns,
+    enableColumnPicker,
   }: ITable<T>,
   ref: Ref<ITanTableRef<T>>
 ) => {
@@ -226,6 +229,9 @@ const TanTableComponent = <T,>(
     });
   }, [data, getRowId, onSelectedRowsChange, rowSelection]);
 
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+
   const table = useReactTable({
     data,
     columns: tableColumns,
@@ -237,9 +243,12 @@ const TanTableComponent = <T,>(
     getRowId: getRowId,
     state: {
       rowSelection,
+      columnVisibility,
     },
     enableRowSelection: enableRowSelection ? enableRowSelection : true, //enable row selection for all rows
-    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+    onColumnVisibilityChange: enableColumnPicker
+      ? setColumnVisibility
+      : undefined,
     onRowSelectionChange: setRowSelection,
     // onStateChange
     getCoreRowModel: getCoreRowModel(),
@@ -325,13 +334,49 @@ const TanTableComponent = <T,>(
           placeholder="Tìm kiếm"
         />
       </div> */}
+      {enableColumnPicker && (
+        <div className="inline-block border border-black shadow rounded">
+          <div className="px-1 border-b border-black">
+            <label>
+              <input
+                {...{
+                  type: "checkbox",
+                  checked: table.getIsAllColumnsVisible(),
+                  onChange: table.getToggleAllColumnsVisibilityHandler(),
+                }}
+              />{" "}
+              Chọn tất cả
+            </label>
+          </div>
+          <div className="flex">
+            {table.getAllLeafColumns().map((column) => {
+              return (
+                <div key={column.id} className="px-1">
+                  <label>
+                    <input
+                      {...{
+                        type: "checkbox",
+                        checked: column.getIsVisible(),
+                        onChange: column.getToggleVisibilityHandler(),
+                      }}
+                    />{" "}
+                    {column.columnDef.header?.toString()}
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="overflow-x-auto" style={{ overflowX: "auto" }}>
         <table
           className="table items-center"
           {...{
             style: {
               width: resizeableColumns
-                ? table.getCenterTotalSize()
+                ? // ? table.getCenterTotalSize()
+                  "w-full"
                 : "inherited",
             },
           }}
