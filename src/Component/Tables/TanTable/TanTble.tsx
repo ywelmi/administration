@@ -24,6 +24,7 @@ import React, {
 import _ from "lodash";
 import { DefaultColumn } from "./Column";
 import { Filter, FilterDate, FilterGender } from "./Filter";
+import "./style.css";
 import { dateFilter } from "./utils";
 
 declare module "@tanstack/react-table" {
@@ -57,6 +58,7 @@ interface ITable<T> {
   selectableRowSelected?: (row: T) => boolean; // pre selected rows condition
   enableRowSelection?: (row: Row<T>) => boolean;
   getRowId?: (r: T) => string;
+  resizeableColumns?: boolean;
 }
 
 function useSkipper() {
@@ -74,6 +76,7 @@ function useSkipper() {
 
   return [shouldSkip, skip] as const;
 }
+
 function IndeterminateCheckbox({
   indeterminate,
   className = "",
@@ -96,6 +99,7 @@ function IndeterminateCheckbox({
     />
   );
 }
+
 function getDefaultColumn<T>() {
   return {
     cell: (props) => <DefaultColumn {...props} />,
@@ -144,12 +148,13 @@ const TanTableComponent = <T,>(
     columns,
     selectableRowSelected,
     enableRowSelection,
+    resizeableColumns,
   }: ITable<T>,
   ref: Ref<ITanTableRef<T>>
 ) => {
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
   const [data, setData] = useState(srcData);
-  const [globalFilter, setGlobalFilter] = React.useState("");
+  // const [globalFilter, setGlobalFilter] = React.useState("");
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>(
     selectableRowSelected && getRowId
       ? srcData.reduce(
@@ -225,6 +230,10 @@ const TanTableComponent = <T,>(
     data,
     columns: tableColumns,
     defaultColumn: getDefaultColumn<T>(),
+    // columnResizeMode: resizeableColumns ? "onChange" : undefined,
+    // columnResizeDirection: resizeableColumns ? "ltr" : undefined,
+    columnResizeMode: "onChange",
+    columnResizeDirection: "ltr",
     getRowId: getRowId,
     state: {
       rowSelection,
@@ -240,6 +249,9 @@ const TanTableComponent = <T,>(
     filterFns: {
       dateFilter,
     },
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
     // Provide our updateData function to our table meta
     meta: {
       updateData: (rowIndex, columnId, value) => {
@@ -298,14 +310,13 @@ const TanTableComponent = <T,>(
         })(),
       }),
     },
-    debugTable: true,
   });
 
   const rerender = React.useReducer(() => ({}), {})[1];
   const refreshData = () => setData([...srcData]);
 
   return (
-    <div className="table-responsive-sm ">
+    <div className="table-responsive">
       {/* <div>
         <input
           value={globalFilter ?? ""}
@@ -314,27 +325,55 @@ const TanTableComponent = <T,>(
           placeholder="Tìm kiếm"
         />
       </div> */}
-      <table className="table flex items-center">
-        <thead className="text-center">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header, i) => {
-                let className = "align-middle border border-slate-300 ";
-                if (i == 0 && onSelectedRowsChange) {
-                  className += " w-8";
-                }
-                return (
-                  <th
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    className={className}
-                  >
-                    {header.isPlaceholder ? null : (
+      <div className="overflow-x-auto" style={{ overflowX: "auto" }}>
+        <table
+          className="table items-center"
+          {...{
+            style: {
+              width: resizeableColumns
+                ? table.getCenterTotalSize()
+                : "inherited",
+            },
+          }}
+        >
+          <thead className="text-center">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header, i) => {
+                  let className = "align-middle border border-slate-300 ";
+                  if (i == 0 && onSelectedRowsChange) {
+                    className += " w-8";
+                  }
+                  return (
+                    <th
+                      className={className}
+                      {...{
+                        key: header.id,
+                        colSpan: header.colSpan,
+                        style: {
+                          width: header.getSize(),
+                        },
+                      }}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      <div
+                        {...{
+                          onDoubleClick: () => header.column.resetSize(),
+                          onMouseDown: header.getResizeHandler(),
+                          onTouchStart: header.getResizeHandler(),
+                          className: `resizer ${
+                            table.options.columnResizeDirection
+                          } ${
+                            header.column.getIsResizing() ? "isResizing" : ""
+                          }`,
+                        }}
+                      ></div>
                       <div>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
                         {(() => {
                           if (!header.column.getCanFilter()) return null;
                           if (header.column.columnDef.meta?.custom.gender) {
@@ -359,36 +398,36 @@ const TanTableComponent = <T,>(
                           );
                         })()}
                       </div>
-                    )}
-                  </th>
-                );
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <tr key={row.id} style={table.options.meta?.getRowStyles(row)}>
-                {row.getVisibleCells().map((cell) => {
-                  return (
-                    <td
-                      key={cell.id}
-                      className="border border-slate-300"
-                      style={table.options.meta?.getRowStyles(row)}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
+                    </th>
                   );
                 })}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <tr key={row.id} style={table.options.meta?.getRowStyles(row)}>
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <td
+                        key={cell.id}
+                        className="border border-slate-300"
+                        style={table.options.meta?.getRowStyles(row)}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
       <div className="h-2" />
       <div className="flex items-center gap-2 justify-center">
         <button

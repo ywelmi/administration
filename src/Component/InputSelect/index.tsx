@@ -51,7 +51,9 @@ const InputSelect = <T,>({
         type="select"
         onChange={onChange}
         // defaultValue={defaultValue}
-        value={defaultValue}
+        // value={defaultValue}
+        defaultValue={defaultValue}
+        value={value ? value : undefined}
         {...rest}
       >
         <option value={"null"} selected hidden></option>

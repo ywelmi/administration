@@ -41,7 +41,7 @@ const TeammemberForm = ({
     : {
         name: "",
         rank: 0,
-        gender: 0,
+        gender: 1,
         dob: new Date("1/1/1980").toISOString(),
         date_join_army: new Date().toISOString(),
         org_id: "",
@@ -63,8 +63,22 @@ const TeammemberForm = ({
   const formik = useFormik({
     initialValues: { ...teammember },
     onSubmit: (value) => {
-      console.log({ submitValue: value });
       const submitValue = { ...value } as TTeammember;
+      Object.keys(submitValue).forEach((k: string) => {
+        if (!["dob", "date_join_army", "date_of_issue"].includes(k)) {
+          return;
+        }
+        try {
+          let v = value[k];
+          v = new Date(v);
+          if (v && !isNaN(v) && v instanceof Date) {
+            value[k] = convertToDate(value[k]);
+          }
+        } catch (err) {
+          console.log(1);
+        }
+      });
+      console.log({ submitValue: value });
       if (submitValue) onSubmit(submitValue);
     },
   });
@@ -119,7 +133,8 @@ const TeammemberForm = ({
             className="form-control"
             name="name"
             type="text"
-            placeholder={teammember.name}
+            placeholder="Nhập tên..."
+            defaultValue={teammember.name}
             onChange={formik.handleChange}
           />
         </Col>
@@ -138,7 +153,7 @@ const TeammemberForm = ({
             className="form-control"
             name="id_number"
             type="text"
-            placeholder={formik.values.id_number}
+            defaultValue={formik.values.id_number}
             onChange={formik.handleChange}
           />
         </Col>
@@ -158,7 +173,8 @@ const TeammemberForm = ({
                   : undefined
               }
               onChange={(date) =>
-                formik.setFieldValue("date_of_issue", date?.toISOString())
+                // formik.setFieldValue("date_of_issue", date?.toISOString())
+                formik.setFieldValue("date_of_issue", date)
               }
               locale={"vi"}
               dateFormat={"dd/MM/yyyy"}
@@ -171,7 +187,7 @@ const TeammemberForm = ({
             className="form-control"
             name="issuing_authority"
             type="text"
-            placeholder={formik.values.issuing_authority}
+            defaultValue={formik.values.issuing_authority}
             onChange={formik.handleChange}
           />
         </Col>
@@ -338,7 +354,7 @@ const TeammemberForm = ({
             className="form-control"
             name="weights"
             type="text"
-            placeholder={teammember.weights}
+            defaultValue={teammember.weights}
             onChange={formik.handleChange}
           />
         </Col>

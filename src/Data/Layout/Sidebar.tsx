@@ -41,7 +41,7 @@ export const useMenuList = () => {
                     type: "link",
                 },
                 {
-                    title: "Nhập vận động viên",
+                    title: "Quản lý động viên",
                     icon: "fa fa-group",
                     lanClass: "lan-4",
                     path: "/teammember/list",
@@ -117,7 +117,9 @@ export const useMenuList = () => {
                         // },
                         ...(() => {
                             let filteredSports = sportFilterByUnitType(sports, "LLTT");
-                            filteredSports = filteredSports.filter((s) => s.point_unit === 1 || s.point_unit === 2);
+                            filteredSports = filteredSports.filter(
+                                (s) => s.point_unit === 1 || (s.point_unit === 2 && s.code != "danquan_vochiendau")
+                            );
                             return filteredSports.map((s) => {
                                 return {
                                     path: `/lotsdraw/list/${s.id}`,
@@ -171,7 +173,6 @@ export const useMenuList = () => {
                                 };
                             });
                         })(),
-
                         {
                             path: "/martialartmilitia",
                             title: "Võ chiến đấu DQTV",
@@ -181,20 +182,6 @@ export const useMenuList = () => {
                         ...(() => {
                             let filteredSports = sportFilterByUnitType(sports, "DQTV");
                             filteredSports = filteredSports.filter((s) => s.point_unit === 1);
-                            return filteredSports.map((s) => {
-                                return {
-                                    path: `/lotsdraw/list/${s.id}`,
-                                    title: `${s.name}`,
-                                    type: "link",
-                                    lanClass: "lan-3",
-                                };
-                            });
-                        })(),
-                        ...(() => {
-                            let filteredSports = sportFilterByUnitType(sports, "DQTV");
-                            filteredSports = filteredSports.filter(
-                                (s) => s.point_unit === 2 && s.code != "danquan_vochiendau"
-                            );
                             return filteredSports.map((s) => {
                                 return {
                                     path: `/lotsdraw/list/${s.id}`,
