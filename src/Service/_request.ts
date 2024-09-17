@@ -11,10 +11,12 @@ import {
   saveUserRefreshToken,
   saveUserToken,
 } from "../shared/localStorage/user";
+import { convertToDateType2 } from "../utils/date";
 
 const dateTransformer: AxiosRequestTransformer = (data) => {
   if (data instanceof Date) {
-    return data.toLocaleDateString();
+    return convertToDateType2(data);
+    // return data.toLocaleDateString();
   }
   if (Array.isArray(data)) {
     return data.map((v) => dateTransformer(v));
