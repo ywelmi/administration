@@ -59,6 +59,8 @@ const ContentSchedule = ({ content_id }: any) => {
           className="form-control m-l-10"
           name="date_join_army"
           showYearDropdown
+          dropdownMode="select"
+          peekNextMonth
           // selected={new Date(getValue() as string || new Date())}
           value={dataSchedule ? convertToDate(dataSchedule.match_date) : ""}
           onChange={(newdate) => {

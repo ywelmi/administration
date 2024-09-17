@@ -100,10 +100,16 @@ const TeammemberForm = ({
   }, [initTeammember]);
 
   const handleUpdatePhoto = (im: ImageType, idx: number) => {
-    uploadFile({ file: im }).then(() => {
-      // TODO: update current photo
-      console.log(`update image at ${idx} successfully`);
-    });
+    console.log({ updatePhoto: im });
+    uploadFile({ file: im })
+      .then(() => {
+        // TODO: update current photo
+        console.log(`update image at ${idx} successfully`);
+      })
+      .catch((err) => {
+        toast.error(err?.data ? err.data : N["error"]);
+        console.log({ err });
+      });
   };
 
   const handleAddPhoto = (im: ImageType) => {
@@ -167,6 +173,8 @@ const TeammemberForm = ({
               className="form-control"
               name="date_of_issue"
               showYearDropdown
+              dropdownMode="select"
+              peekNextMonth
               selected={new Date(formik.values.date_of_issue || new Date())}
               value={
                 formik.values.date_of_issue
@@ -287,6 +295,8 @@ const TeammemberForm = ({
             className="form-control"
             name="dob"
             showYearDropdown
+            dropdownMode="select"
+            peekNextMonth
             selected={new Date(formik.values.dob || new Date())}
             value={
               formik.values.dob ? convertToDate(formik.values.dob) : undefined
@@ -304,6 +314,8 @@ const TeammemberForm = ({
             className="form-control"
             name="date_join_army"
             showYearDropdown
+            dropdownMode="select"
+            peekNextMonth
             selected={new Date(formik.values.date_join_army || new Date())}
             value={
               formik.values.date_join_army

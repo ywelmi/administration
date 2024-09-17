@@ -80,14 +80,14 @@ const tableColumns: ColumnDef<TTeammember>[] = [
     meta: { custom: { gender: true } },
     filterFn: "weakEquals",
   },
-  {
-    accessorKey: "created",
-    footer: (props) => props.column.id,
-    header: N["created"],
-    cell: (props) => convertToDate(props.getValue() as string),
-    filterFn: "dateFilter",
-    meta: { custom: { date: true } },
-  },
+  // {
+  //   accessorKey: "created",
+  //   footer: (props) => props.column.id,
+  //   header: N["created"],
+  //   cell: (props) => convertToDate(props.getValue() as string),
+  //   filterFn: "dateFilter",
+  //   meta: { custom: { date: true } },
+  // },
   {
     accessorKey: "dob",
     footer: (props) => props.column.id,
@@ -97,14 +97,14 @@ const tableColumns: ColumnDef<TTeammember>[] = [
     meta: { custom: { date: true } },
   },
 
-  {
-    accessorKey: "date_join_army",
-    footer: (props) => props.column.id,
-    header: N["date_join_army"],
-    cell: (props) => convertToDate(props.getValue() as string),
-    filterFn: "dateFilter",
-    meta: { custom: { date: true } },
-  },
+  // {
+  //   accessorKey: "date_join_army",
+  //   footer: (props) => props.column.id,
+  //   header: N["date_join_army"],
+  //   cell: (props) => convertToDate(props.getValue() as string),
+  //   filterFn: "dateFilter",
+  //   meta: { custom: { date: true } },
+  // },
   {
     accessorKey: "org_name",
     footer: (props) => props.column.id,
@@ -124,38 +124,38 @@ const tableColumns: ColumnDef<TTeammember>[] = [
   //   header: N["has_militia"],
   //   cell: (props) => convertToDate(props.getValue() as string),
   // },
-  {
-    accessorKey: "id_number",
-    footer: (props) => props.column.id,
-    header: N["id_number"],
-    cell: (props) => props.getValue() as string,
-  },
-  {
-    accessorKey: "date_of_issue",
-    footer: (props) => props.column.id,
-    header: N["date_of_issue"],
-    cell: (props) => convertToDate((props.getValue() as string) || new Date()),
-    filterFn: "dateFilter",
-    meta: { custom: { date: true } },
-  },
+  // {
+  //   accessorKey: "id_number",
+  //   footer: (props) => props.column.id,
+  //   header: N["id_number"],
+  //   cell: (props) => props.getValue() as string,
+  // },
+  // {
+  //   accessorKey: "date_of_issue",
+  //   footer: (props) => props.column.id,
+  //   header: N["date_of_issue"],
+  //   cell: (props) => convertToDate((props.getValue() as string) || new Date()),
+  //   filterFn: "dateFilter",
+  //   meta: { custom: { date: true } },
+  // },
   // {
   //   accessorKey: "issuing_authority",
   //   footer: (props) => props.column.id,
   //   header: N["issuing_authority"],
   //   cell: (props) => props.getValue() as string,
   // },
-  {
-    accessorKey: "weights",
-    footer: (props) => props.column.id,
-    header: N["weights"],
-    cell: (props) => props.getValue() as string,
-  },
-  {
-    accessorKey: "competition_name",
-    footer: (props) => props.column.id,
-    header: N["competition_name"],
-    cell: (props) => props.getValue() as string,
-  },
+  // {
+  //   accessorKey: "weights",
+  //   footer: (props) => props.column.id,
+  //   header: N["weights"],
+  //   cell: (props) => props.getValue() as string,
+  // },
+  // {
+  //   accessorKey: "competition_name",
+  //   footer: (props) => props.column.id,
+  //   header: N["competition_name"],
+  //   cell: (props) => props.getValue() as string,
+  // },
   {
     accessorKey: "sport_id",
     footer: (props) => props.column.id,
@@ -274,7 +274,7 @@ const ListTeammember = ({
         selectableRowSelected={selectableRowSelected}
         enableRowSelection={enableRowSelection}
         getRowId={(r) => r.id}
-        resizeableColumns
+        // resizeableColumns
       />
     </div>
   );

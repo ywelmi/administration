@@ -98,6 +98,8 @@ const FilterDate = <T, Q>({
         className="form-control"
         name="date-picker"
         showYearDropdown
+        dropdownMode="select"
+        peekNextMonth
         isClearable
         // value={data ? convertToDate(data) : undefined}
         placeholderText="..."

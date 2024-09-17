@@ -3,6 +3,7 @@ import axios, {
   AxiosRequestTransformer,
   AxiosResponse,
 } from "axios";
+import { isPlainObject } from "lodash";
 import {
   clearUser,
   getUserRefreshToken,
@@ -18,7 +19,7 @@ const dateTransformer: AxiosRequestTransformer = (data) => {
   if (Array.isArray(data)) {
     return data.map((v) => dateTransformer(v));
   }
-  if (typeof data === "object" && data !== null) {
+  if (isPlainObject(data)) {
     return Object.fromEntries(
       Object.entries(data).map(([k, v]) => [k, dateTransformer(v)])
     );
@@ -138,7 +139,7 @@ const httpPost: <T = any, R = AxiosResponse<T, any>, D = any>(
 
 const parseDateObject = (a: any) => {
   if (a instanceof Date) {
-    return a.toLocaleDateString();
+    return a.toISOString();
   }
   return a;
 };

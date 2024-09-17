@@ -194,6 +194,8 @@ const PageLotsDraw = () => {
             className="form-control"
             name="date_join_army"
             showYearDropdown
+            dropdownMode="select"
+            peekNextMonth
             // selected={new Date(getValue() as string || new Date())}
             value={
               original.match_date
@@ -355,6 +357,8 @@ const PageLotsDraw = () => {
             className="form-control"
             name="date_join_army"
             showYearDropdown
+            dropdownMode="select"
+            peekNextMonth
             // selected={new Date(getValue() as string || new Date())}
             value={
               original.match_date
