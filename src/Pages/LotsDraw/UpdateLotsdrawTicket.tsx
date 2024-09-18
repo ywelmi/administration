@@ -36,8 +36,9 @@ import LotsdrawTabs from "./navbar_item";
 import NavBar from "./navbar";
 import { useViewLotsDrawScheduleModal } from "./ViewLotsdrawTicket";
 import { TGroup } from "../../type/team";
-import { ContentSchedule } from "./ContentSchedule";
+
 import { useUpdateLotsDrawModal } from "./UpdateLotsDrawForm";
+import { ContentSchedule } from "./ContentSchedule";
 
 interface IListLotsDraw {
     showAction?: boolean;
