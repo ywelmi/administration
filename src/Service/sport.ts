@@ -40,9 +40,9 @@ export const sportXuatPhieuDiem = async (id: string): Promise<void> => {
         } else {
             toast.error(response.data);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Download failed:", error);
-        toast.error("Download failed:" + error);
+        toast.error("Xuất biên bản thi đấu lỗi: " + error.data);
     }
 };
 export const sportXuatPhieuKhoaTham = async (id: string): Promise<void> => {
@@ -62,9 +62,9 @@ export const sportXuatPhieuKhoaTham = async (id: string): Promise<void> => {
         } else {
             toast.error(response.data);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Download failed:", error);
-        toast.error("Download failed:" + error);
+        toast.error("Xuất phiếu khóa thăm lỗi: " + error.data);
     }
 };
 
@@ -85,9 +85,9 @@ export const sportexportschedulereport = async (id: string): Promise<void> => {
         } else {
             toast.error(response.data);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Download failed:", error);
-        toast.error("Download failed:" + error);
+        toast.error("Xuất lịch thi đấu lỗi:" + error.data);
     }
 };
 export const sportXuatXepHang = async (id: string): Promise<void> => {

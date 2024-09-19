@@ -28,10 +28,49 @@ export const sportXuatXepHang = async (id: string): Promise<void> => {
                 console.error("Download failed:", error);
                 toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng theo môn: " + response.data);
             }
+        } else {
+            toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng:" + response.data);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Download failed:", error);
-        toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng:" + error);
+        toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng:" + error.data);
+    }
+};
+export const sportExportListAtheleBySport = async (id: string): Promise<void> => {
+    try {
+        const response = await httpGet(`sports/${id}/export/members`, {
+            responseType: "blob",
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `DanhSachVĐVTheoMonThi_${id}.xlsx`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error: any) {
+        console.error("Download failed:", error);
+        toast.error("Xảy ra lỗi trong xuất danh sách VĐV: " + error.data);
+    }
+};
+
+export const sportExportListAtheleByTeam = async (id: string): Promise<void> => {
+    try {
+        const response = await httpGet(`teams/${id}/export/members`, {
+            responseType: "blob",
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `DanhSachVĐVTheoDoiThi_${id}.xlsx`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error: any) {
+        console.error("Download failed:", error);
+        toast.error("Xảy ra lỗi trong xuất danh sách VĐV: " + error.data);
     }
 };
 
@@ -56,9 +95,9 @@ export const exportResultAll = async (type: string): Promise<void> => {
                 toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng toàn đoàn: " + response.data);
             }
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Download failed:", error);
-        toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng:" + error);
+        toast.error("Xảy ra lỗi trong xuất kết quả xếp hạng:" + error.data);
     }
 };
 
