@@ -10,8 +10,7 @@ import { exportResultAll } from "../../Service/result";
 import { useConfigStore } from "../../store/config";
 
 const ListComboBox = () => {
-    const { sportSelector, unitType } = useConfigStore();
-    const { sports, sportsMain, sportsSub } = useSportStore(sportSelector());
+    const { sports, sportsMain, sportsSub } = useSportStore();
     const [listSport, setListSport] = useState(sports);
     const [filterText, setFilterText] = useState("all");
     const [block, setBlock] = useState("");
