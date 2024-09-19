@@ -238,21 +238,16 @@ export const useMenuList = () => {
                     type: "link",
                     children: [
                         {
-                            //path: "/team/list",
+                            path: "/export/sport/listathele",
                             title: "Môn thi",
                             type: "link",
                             lanClass: "lan-4",
                         },
                         {
-                            title: "Đơn vị",
+                            path: "/export/org/listathele",
+                            title: "Đội thi",
                             type: "link",
                             lanClass: "lan-3",
-                        },
-                        {
-                            //path: "/lotsdraw/list/",
-                            title: "Vận động viên",
-                            type: "link",
-                            lanClass: "lan-4",
                         },
                     ],
                 },
