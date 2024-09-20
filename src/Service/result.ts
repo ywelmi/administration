@@ -73,9 +73,9 @@ export const sportExportListAtheleByTeam = async (id: string): Promise<void> => 
         toast.error("Xảy ra lỗi trong xuất danh sách VĐV: " + error.data);
     }
 };
-export const sportExportListAtheleByContent = async (): Promise<void> => {
+export const sportExportListAtheleByContent = async (id: string): Promise<void> => {
     try {
-        const response = await httpGet(`sports/017358A8-FE81-45F6-914B-B8507987A343/export/content-members`, {
+        const response = await httpGet(`sports/${id}/export/content-members`, {
             responseType: "blob",
         });
 

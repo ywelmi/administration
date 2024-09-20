@@ -4,6 +4,7 @@ import { MartialArtKnockout } from "../Pages/MartialArt/MartialArtKnockout";
 import { PageMartialArtMilitia } from "../Pages/MartialArtMilitia/PageMartialArtMilitia";
 
 import { ListOrg } from "../Pages/Org/ListOrg";
+import { PageExportAtheleByAllContent } from "../Pages/Report Result/ListMemberExportByAllContent";
 import { PageExportAtheleBySport } from "../Pages/Report Result/ListMemberExportBySport";
 import { PageExportAtheleByTeam } from "../Pages/Report Result/ListMemberExportByTeam";
 
@@ -94,6 +95,10 @@ const Routes = [
     {
         path: "/export/org/listathele",
         Component: <PageExportAtheleByTeam />,
+    },
+    {
+        path: "/export/sport/content-members",
+        Component: <PageExportAtheleByAllContent />,
     },
 ];
 

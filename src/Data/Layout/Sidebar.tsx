@@ -249,6 +249,12 @@ export const useMenuList = () => {
                             type: "link",
                             lanClass: "lan-3",
                         },
+                        {
+                            path: "/export/sport/content-members",
+                            title: "Tất cả nội dung ",
+                            type: "link",
+                            lanClass: "lan-3",
+                        },
                     ],
                 },
                 {
