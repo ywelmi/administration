@@ -15,6 +15,8 @@ import { toast } from "react-toastify";
 import { exportResultAll } from "../../Service/result";
 import { useConfigStore } from "../../store/config";
 import { useTeamStore } from "../../store/team";
+import { sportsGet } from "../../Service/sport";
+import { teamsGet } from "../../Service/team";
 
 const ListComboBox = () => {
     const { teams } = useTeamStore();
@@ -30,7 +32,21 @@ const ListComboBox = () => {
     const handleDownloadClick = () => {
         sportExportListAtheleByTeam(filterText);
     };
-
+    useEffect(() => {
+        teamsGet().then((res) => {
+            const { data, status } = res;
+            if (!data.data) return;
+            const {
+                data: teams,
+                sumData: { total },
+            } = data;
+            setListSport(
+                teams.sort((a, b) => {
+                    return a.org_name.localeCompare(b.org_name);
+                })
+            );
+        });
+    }, []);
     return (
         <>
             <div className="d-flex justify-content-center">

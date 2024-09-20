@@ -8,6 +8,7 @@ import { getNumberTeam, sportExportListAtheleBySport, sportXuatXepHang, updateNu
 import { toast } from "react-toastify";
 import { exportResultAll } from "../../Service/result";
 import { useConfigStore } from "../../store/config";
+import { sportsGet } from "../../Service/sport";
 
 const ListComboBox = () => {
     const { sports, sportsMain, sportsSub } = useSportStore();
@@ -19,7 +20,21 @@ const ListComboBox = () => {
     const handleChangeValue = (value: any) => {
         setFilterText(value);
     };
-
+    useEffect(() => {
+        sportsGet().then((res) => {
+            const { data, status } = res;
+            if (!data.data) return;
+            const {
+                data: sports1,
+                sumData: { total },
+            } = data;
+            setListSport(
+                sports1.sort((a, b) => {
+                    return a.name.localeCompare(b.name);
+                })
+            );
+        });
+    }, []);
     const handleDownloadClick = () => {
         sportExportListAtheleBySport(filterText);
     };

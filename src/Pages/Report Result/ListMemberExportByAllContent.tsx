@@ -14,6 +14,7 @@ import {
 import { toast } from "react-toastify";
 import { exportResultAll } from "../../Service/result";
 import { useConfigStore } from "../../store/config";
+import { sportsGet } from "../../Service/sport";
 
 const ListComboBox = () => {
     const { sports, sportsMain, sportsSub } = useSportStore();
@@ -22,6 +23,18 @@ const ListComboBox = () => {
     const [block, setBlock] = useState("");
     const [typeExport, setTypeExport] = useState("all");
     const [numberTeam, setNumberTeam] = useState(0);
+
+    useEffect(() => {
+        sportsGet().then((res) => {
+            const { data, status } = res;
+            if (!data.data) return;
+            const {
+                data: sports1,
+                sumData: { total },
+            } = data;
+            setListSport(sports1);
+        });
+    }, []);
     const handleChangeValue = (value: any) => {
         setFilterText(value);
     };

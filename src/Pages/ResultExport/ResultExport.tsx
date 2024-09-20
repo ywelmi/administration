@@ -8,10 +8,11 @@ import { getNumberTeam, sportXuatXepHang, updateNumberTeam } from "../../Service
 import { toast } from "react-toastify";
 import { exportResultAll } from "../../Service/result";
 import { useConfigStore } from "../../store/config";
+import { sportsGet } from "../../Service/sport";
 
 const ListComboBox = () => {
     const { sportSelector, unitType } = useConfigStore();
-    const { sports, sportsMain, sportsSub } = useSportStore(sportSelector());
+    const { sports, sportsMain, sportsSub } = useSportStore();
     const [listSport, setListSport] = useState(sports);
     const [filterText, setFilterText] = useState("all");
     const [block, setBlock] = useState("");
@@ -26,6 +27,15 @@ const ListComboBox = () => {
             if (res.status == 200) {
                 setNumberTeam(res.data);
             }
+        });
+        sportsGet().then((res) => {
+            const { data, status } = res;
+            if (!data.data) return;
+            const {
+                data: sports1,
+                sumData: { total },
+            } = data;
+            setListSport(sports1);
         });
     }, []);
     const handleChangeNumberTeam = (data: string) => {
