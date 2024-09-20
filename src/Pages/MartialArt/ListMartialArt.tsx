@@ -167,7 +167,7 @@ const PageMartialArt = () => {
     const { sportSelector } = useConfigStore();
     const { sports } = useSportStore(sportSelector());
     const sportMartialArt = sports.find((s) => s.point_unit === 3);
-    const handleDownload = () => sportExportListAtheleByContent();
+    const handleDownload = () => sportExportListAtheleByContent(sportMartialArt!.id);
 
     useEffect(() => {
         if (!sportMartialArt) return;
