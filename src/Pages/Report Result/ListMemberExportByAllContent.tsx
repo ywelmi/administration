@@ -17,12 +17,9 @@ import { useConfigStore } from "../../store/config";
 import { sportsGet } from "../../Service/sport";
 
 const ListComboBox = () => {
-    const { sports, sportsMain, sportsSub } = useSportStore();
+    const { sports } = useSportStore();
     const [listSport, setListSport] = useState(sports);
     const [filterText, setFilterText] = useState("all");
-    const [block, setBlock] = useState("");
-    const [typeExport, setTypeExport] = useState("all");
-    const [numberTeam, setNumberTeam] = useState(0);
 
     useEffect(() => {
         sportsGet().then((res) => {

@@ -57,7 +57,7 @@ export const sportExportListAtheleBySport = async (id: string): Promise<void> =>
 
 export const sportExportListAtheleByTeam = async (id: string): Promise<void> => {
     try {
-        const response = await httpGet(`teams/${id}/export/members`, {
+        const response = await httpGet(`teams/${id}/export/content-members/detail`, {
             responseType: "blob",
         });
 
@@ -75,7 +75,7 @@ export const sportExportListAtheleByTeam = async (id: string): Promise<void> => 
 };
 export const sportExportListAtheleByContent = async (id: string): Promise<void> => {
     try {
-        const response = await httpGet(`sports/${id}/export/content-members`, {
+        const response = await httpGet(`sports/${id}/export/content-members/summary`, {
             responseType: "blob",
         });
 
