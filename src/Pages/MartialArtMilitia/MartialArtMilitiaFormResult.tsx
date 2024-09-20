@@ -46,17 +46,8 @@ const defaultColumns: ColumnDef<TLotsDrawMember>[] = [
 
 const getLotDrawId = (d: TLotsDrawMember) => d.id;
 const canParseToNumber = (str: string) => {
-    if (str.split(".").length > 1) {
-        if (str.split(".")[1].split("").length == 1) {
-            return false;
-        } else {
-            const num = Number(str);
-            return !isNaN(num) && isFinite(num);
-        }
-    } else {
-        const num = Number(str);
-        return !isNaN(num) && isFinite(num);
-    }
+    const num = Number(str);
+    return !isNaN(num) && isFinite(num);
 };
 const checkValidValue = (data: any) => {
     var isCanSubmit = true;
