@@ -30,7 +30,7 @@ const PageUpdateResultMartial = () => {
     const [contentType, setContentType] = useState<any>("");
     // số VĐV thi đấu trong 1 lượt
     const [selectedContentSport, setSelectedContentSport] = useState<string>("");
-    const sportMartialArtMilitia = sports.find((s) => s.point_unit === 2);
+    const sportMartialArtMilitia = sports.find((s) => s.code === "danquan_vochiendau");
 
     const { selectSport } = useSportStore();
 

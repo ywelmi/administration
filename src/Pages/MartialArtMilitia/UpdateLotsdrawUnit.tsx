@@ -93,7 +93,7 @@ const PageUpdateLotsDrawUnit = () => {
     const [listSport, setListSport] = useState(sports);
 
     // số VĐV thi đấu trong 1 lượt
-    const sportMartialArtMilitia = sports.find((s) => s.point_unit === 2);
+    const sportMartialArtMilitia = sports.find((s) => s.code === "danquan_vochiendau");
     const [numberPlayedPerRound, setNumberPlayedPerRound] = useState<number>(3);
     // số VĐV thi đấu trong 1 lượt
     const [selectedContentSport, setSelectedContentSport] = useState<string>("");
