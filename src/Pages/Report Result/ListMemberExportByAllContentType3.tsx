@@ -92,7 +92,7 @@ const ListComboBox = () => {
 const PageExportAtheleType3 = () => {
     return (
         <div className="page-body">
-            <Breadcrumbs mainTitle={"Xuất danh sách VĐV theo môn thi - Mẫu 1"} parent={"HTTQ2024"} />
+            <Breadcrumbs mainTitle={"Xuất danh sách VĐV theo môn thi - Mẫu 3"} parent={"HTTQ2024"} />
             <Container fluid>
                 <Row>
                     <Col sm="15">
