@@ -14,7 +14,8 @@ import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
 import { DGender } from "../../type/enum";
 import { TMartialArt } from "../../type/martialArt";
-import { sportExportListAtheleByContent } from "../../Service/result";
+import { sportExportListAtheleByContentType1 } from "../../Service/result";
+
 // import "./style.css";
 
 interface IListMartialArt {
@@ -167,7 +168,7 @@ const PageMartialArt = () => {
     const { sportSelector } = useConfigStore();
     const { sports } = useSportStore(sportSelector());
     const sportMartialArt = sports.find((s) => s.point_unit === 3);
-    const handleDownload = () => sportExportListAtheleByContent(sportMartialArt!.id);
+    const handleDownload = () => sportExportListAtheleByContentType1(sportMartialArt!.id);
 
     useEffect(() => {
         if (!sportMartialArt) return;

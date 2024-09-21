@@ -6,7 +6,7 @@ import { useSportStore } from "../../store/sport";
 import { Btn, H5, H6 } from "../../AbstractElements";
 import {
     getNumberTeam,
-    sportExportListAtheleByContent,
+    sportExportListAtheleByContentType1,
     sportExportListAtheleBySport,
     sportXuatXepHang,
     updateNumberTeam,
@@ -37,7 +37,7 @@ const ListComboBox = () => {
     };
 
     const handleDownloadClick = () => {
-        sportExportListAtheleByContent(filterText);
+        sportExportListAtheleByContentType1(filterText);
     };
 
     return (
@@ -90,10 +90,10 @@ const ListComboBox = () => {
     );
 };
 
-const PageExportAtheleByAllContent = () => {
+const PageExportAtheleType1 = () => {
     return (
         <div className="page-body">
-            <Breadcrumbs mainTitle={"Xuất danh sách VĐV theo môn thi"} parent={"HTTQ2024"} />
+            <Breadcrumbs mainTitle={"Xuất danh sách VĐV theo môn thi - Mẫu 2"} parent={"HTTQ2024"} />
             <Container fluid>
                 <Row>
                     <Col sm="15">
@@ -116,4 +116,4 @@ const PageExportAtheleByAllContent = () => {
     );
 };
 
-export { PageExportAtheleByAllContent };
+export { PageExportAtheleType1 };

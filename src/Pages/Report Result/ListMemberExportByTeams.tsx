@@ -4,15 +4,23 @@ import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { useEffect, useState } from "react";
 import { useSportStore } from "../../store/sport";
 import { Btn, H5, H6 } from "../../AbstractElements";
-import { getNumberTeam, sportExportListAtheleBySport, sportXuatXepHang, updateNumberTeam } from "../../Service/result";
+import {
+    getNumberTeam,
+    sportExportListAtheleByContentType3,
+    sportExportListAtheleBySport,
+    sportXuatXepHang,
+    updateNumberTeam,
+} from "../../Service/result";
 import { toast } from "react-toastify";
 import { exportResultAll } from "../../Service/result";
 import { useConfigStore } from "../../store/config";
+import { useTeamStore } from "../../store/team";
 import { sportsGet } from "../../Service/sport";
+import { teamsGet } from "../../Service/team";
 
 const ListComboBox = () => {
-    const { sports, sportsMain, sportsSub } = useSportStore();
-    const [listSport, setListSport] = useState(sports);
+    const { teams } = useTeamStore();
+    const [listSport, setListSport] = useState(teams);
     const [filterText, setFilterText] = useState("all");
     const [block, setBlock] = useState("");
     const [typeExport, setTypeExport] = useState("all");
@@ -20,30 +28,30 @@ const ListComboBox = () => {
     const handleChangeValue = (value: any) => {
         setFilterText(value);
     };
+
+    const handleDownloadClick = () => {
+        sportExportListAtheleByContentType3(filterText);
+    };
     useEffect(() => {
-        sportsGet().then((res) => {
+        teamsGet().then((res) => {
             const { data, status } = res;
             if (!data.data) return;
             const {
-                data: sports1,
+                data: teams,
                 sumData: { total },
             } = data;
             setListSport(
-                sports1.sort((a, b) => {
-                    return a.name.localeCompare(b.name);
+                teams.sort((a, b) => {
+                    return a.org_name.localeCompare(b.org_name);
                 })
             );
         });
     }, []);
-    const handleDownloadClick = () => {
-        sportExportListAtheleBySport(filterText);
-    };
-
     return (
         <>
             <div className="d-flex justify-content-center">
                 <div className="m-10">
-                    <H6 className="text-primary text-center m-10">Chọn môn thi đấu</H6>
+                    <H6 className="text-primary text-center m-10">Chọn đội thi đấu</H6>
                     <Input
                         type="select"
                         className="btn-square form-select"
@@ -63,7 +71,7 @@ const ListComboBox = () => {
                             value="all"
                             defaultChecked
                         >
-                            Môn thi đấu
+                            Đội thi đấu
                         </option>
                         {listSport.map((data: any) => (
                             <option
@@ -74,7 +82,7 @@ const ListComboBox = () => {
                                 }}
                                 value={data.id}
                             >
-                                {data.name}
+                                {data.org_name + "--" + data.sport_name}
                             </option>
                         ))}
                     </Input>
@@ -89,7 +97,7 @@ const ListComboBox = () => {
     );
 };
 
-const PageExportAtheleBySport = () => {
+const PageExportAtheleByTeam = () => {
     return (
         <div className="page-body">
             <Breadcrumbs mainTitle={"Xuất danh sách VĐV theo môn thi"} parent={"HTTQ2024"} />
@@ -115,4 +123,4 @@ const PageExportAtheleBySport = () => {
     );
 };
 
-export { PageExportAtheleBySport };
+export { PageExportAtheleByTeam };
