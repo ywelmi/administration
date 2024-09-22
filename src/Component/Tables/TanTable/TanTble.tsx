@@ -349,7 +349,10 @@ const TanTableComponent = <T,>(
             </label>
           </div>
           <div className="flex">
-            {table.getAllLeafColumns().map((column) => {
+            {table.getAllLeafColumns().map((column, i) => {
+              if (enableColumnPicker && i === 0) {
+                return null;
+              }
               return (
                 <div key={column.id} className="px-1">
                   <label>

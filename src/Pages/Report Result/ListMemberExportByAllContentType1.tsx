@@ -4,24 +4,40 @@ import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { useEffect, useState } from "react";
 import { useSportStore } from "../../store/sport";
 import { Btn, H5, H6 } from "../../AbstractElements";
-import { getNumberTeam, sportExportListAtheleBySport, sportXuatXepHang, updateNumberTeam } from "../../Service/result";
+import {
+    getNumberTeam,
+    sportExportListAtheleByContentType1,
+    sportExportListAtheleBySport,
+    sportXuatXepHang,
+    updateNumberTeam,
+} from "../../Service/result";
 import { toast } from "react-toastify";
 import { exportResultAll } from "../../Service/result";
 import { useConfigStore } from "../../store/config";
+import { sportsGet } from "../../Service/sport";
 
 const ListComboBox = () => {
-    const { sports, sportsMain, sportsSub } = useSportStore();
+    const { sports } = useSportStore();
     const [listSport, setListSport] = useState(sports);
     const [filterText, setFilterText] = useState("all");
-    const [block, setBlock] = useState("");
-    const [typeExport, setTypeExport] = useState("all");
-    const [numberTeam, setNumberTeam] = useState(0);
+
+    useEffect(() => {
+        sportsGet().then((res) => {
+            const { data, status } = res;
+            if (!data.data) return;
+            const {
+                data: sports1,
+                sumData: { total },
+            } = data;
+            setListSport(sports1);
+        });
+    }, []);
     const handleChangeValue = (value: any) => {
         setFilterText(value);
     };
 
     const handleDownloadClick = () => {
-        sportExportListAtheleBySport(filterText);
+        sportExportListAtheleByContentType1(filterText);
     };
 
     return (
@@ -74,10 +90,10 @@ const ListComboBox = () => {
     );
 };
 
-const PageExportAtheleBySport = () => {
+const PageExportAtheleType1 = () => {
     return (
         <div className="page-body">
-            <Breadcrumbs mainTitle={"Xuất danh sách VĐV theo môn thi"} parent={"HTTQ2024"} />
+            <Breadcrumbs mainTitle={"Xuất danh sách VĐV theo môn thi - Mẫu 1"} parent={"HTTQ2024"} />
             <Container fluid>
                 <Row>
                     <Col sm="15">
@@ -100,4 +116,4 @@ const PageExportAtheleBySport = () => {
     );
 };
 
-export { PageExportAtheleBySport };
+export { PageExportAtheleType1 };

@@ -10,6 +10,7 @@ import { confirmModal } from "../../Component/confirmModal";
 import { N } from "../../name-conversion";
 import { getFilterByValue } from "../../Service/_getParams";
 import {
+    sportExportBestSecondTeam,
     sportExportProgressTableQualifying,
     tablequalifyingCreate,
     tablequalifyingDelete,
@@ -274,6 +275,9 @@ const PageTablequalifying = () => {
     const handleDownloadClick = () => {
         sportExportProgressTableQualifying(sportId);
     };
+    const handleDownloadClick2nd = () => {
+        sportExportBestSecondTeam(sportId);
+    };
     const { handleToggle: handleToggleAddModal, TablequalifyingModal: TablequalifyingAddModal } =
         useTablequalifyingModal({
             onSubmit: handleAddTablequalifying,
@@ -330,6 +334,15 @@ const PageTablequalifying = () => {
                                         >
                                             <i className="fa fa-file" aria-hidden="true"></i>
                                             {" Xuất tiến độ vòng bảng"}
+                                        </div>
+                                    ) : null}
+                                    {sportId ? (
+                                        <div
+                                            className="btn btn-success"
+                                            onClick={() => (sportId ? handleDownloadClick2nd() : undefined)}
+                                        >
+                                            <i className="fa fa-file" aria-hidden="true"></i>
+                                            {" Xuất danh sách đội thứ 2 tốt nhất"}
                                         </div>
                                     ) : null}
                                 </div>

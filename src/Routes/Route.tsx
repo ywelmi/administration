@@ -4,9 +4,10 @@ import { MartialArtKnockout } from "../Pages/MartialArt/MartialArtKnockout";
 import { PageMartialArtMilitia } from "../Pages/MartialArtMilitia/PageMartialArtMilitia";
 
 import { ListOrg } from "../Pages/Org/ListOrg";
-import { PageExportAtheleByAllContent } from "../Pages/Report Result/ListMemberExportByAllContent";
-import { PageExportAtheleBySport } from "../Pages/Report Result/ListMemberExportBySport";
-import { PageExportAtheleByTeam } from "../Pages/Report Result/ListMemberExportByTeam";
+import { PageExportAtheleType1 } from "../Pages/Report Result/ListMemberExportByAllContentType1";
+import { PageExportAtheleType2 } from "../Pages/Report Result/ListMemberExportByAllContentType2";
+import { PageExportAtheleType3 } from "../Pages/Report Result/ListMemberExportByAllContentType3";
+import { PageExportAtheleByTeam } from "../Pages/Report Result/ListMemberExportByTeams";
 
 import { PageReportResult } from "../Pages/Report Result/ReportResult";
 import { PageResultExport } from "../Pages/ResultExport/ResultExport";
@@ -89,16 +90,20 @@ const Routes = [
         Component: <PageReportResult />,
     },
     {
-        path: "/export/sport/listathele",
-        Component: <PageExportAtheleBySport />,
-    },
-    {
         path: "/export/org/listathele",
         Component: <PageExportAtheleByTeam />,
     },
     {
-        path: "/export/sport/content-members",
-        Component: <PageExportAtheleByAllContent />,
+        path: "/export/sport/type1",
+        Component: <PageExportAtheleType1 />,
+    },
+    {
+        path: "/export/sport/type3",
+        Component: <PageExportAtheleType3 />,
+    },
+    {
+        path: "/export/sport/type2",
+        Component: <PageExportAtheleType2 />,
     },
 ];
 

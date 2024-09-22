@@ -55,7 +55,7 @@ export const sportExportListAtheleBySport = async (id: string): Promise<void> =>
     }
 };
 
-export const sportExportListAtheleByTeam = async (id: string): Promise<void> => {
+export const sportExportListAtheleByContentType3 = async (id: string): Promise<void> => {
     try {
         const response = await httpGet(`teams/${id}/export/members`, {
             responseType: "blob",
@@ -73,9 +73,27 @@ export const sportExportListAtheleByTeam = async (id: string): Promise<void> => 
         toast.error("Xảy ra lỗi trong xuất danh sách VĐV: " + error.data);
     }
 };
-export const sportExportListAtheleByContent = async (id: string): Promise<void> => {
+export const sportExportListAtheleByContentType1 = async (id: string): Promise<void> => {
     try {
-        const response = await httpGet(`sports/${id}/export/content-members`, {
+        const response = await httpGet(`sports/${id}/export/content-members/detail`, {
+            responseType: "blob",
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `DanhSachVĐVTheoDoiThi_${id}.xlsx`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error: any) {
+        console.error("Download failed:", error);
+        toast.error("Xảy ra lỗi trong xuất danh sách VĐV: " + error.data);
+    }
+};
+export const sportExportListAtheleByContentType2 = async (id: string): Promise<void> => {
+    try {
+        const response = await httpGet(`sports/${id}/export/content-members/summary`, {
             responseType: "blob",
         });
 

@@ -4,16 +4,11 @@ import Breadcrumbs from "../../CommonElements/Breadcrumbs/Breadcrumbs";
 import { useEffect, useState } from "react";
 import { useSportStore } from "../../store/sport";
 import { Btn, H5, H6 } from "../../AbstractElements";
-import {
-    getNumberTeam,
-    sportExportListAtheleByContent,
-    sportExportListAtheleBySport,
-    sportXuatXepHang,
-    updateNumberTeam,
-} from "../../Service/result";
+import { getNumberTeam, sportExportListAtheleBySport, sportXuatXepHang, updateNumberTeam } from "../../Service/result";
 import { toast } from "react-toastify";
 import { exportResultAll } from "../../Service/result";
 import { useConfigStore } from "../../store/config";
+import { sportsGet } from "../../Service/sport";
 
 const ListComboBox = () => {
     const { sports, sportsMain, sportsSub } = useSportStore();
@@ -25,9 +20,23 @@ const ListComboBox = () => {
     const handleChangeValue = (value: any) => {
         setFilterText(value);
     };
-
+    useEffect(() => {
+        sportsGet().then((res) => {
+            const { data, status } = res;
+            if (!data.data) return;
+            const {
+                data: sports1,
+                sumData: { total },
+            } = data;
+            setListSport(
+                sports1.sort((a, b) => {
+                    return a.name.localeCompare(b.name);
+                })
+            );
+        });
+    }, []);
     const handleDownloadClick = () => {
-        sportExportListAtheleByContent(filterText);
+        sportExportListAtheleBySport(filterText);
     };
 
     return (
@@ -80,10 +89,10 @@ const ListComboBox = () => {
     );
 };
 
-const PageExportAtheleByAllContent = () => {
+const PageExportAtheleType3 = () => {
     return (
         <div className="page-body">
-            <Breadcrumbs mainTitle={"Xuất danh sách VĐV theo môn thi"} parent={"HTTQ2024"} />
+            <Breadcrumbs mainTitle={"Xuất danh sách VĐV theo môn thi - Mẫu 3"} parent={"HTTQ2024"} />
             <Container fluid>
                 <Row>
                     <Col sm="15">
@@ -106,4 +115,4 @@ const PageExportAtheleByAllContent = () => {
     );
 };
 
-export { PageExportAtheleByAllContent };
+export { PageExportAtheleType3 };

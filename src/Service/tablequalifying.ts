@@ -35,6 +35,25 @@ export const sportExportProgressTableQualifying = async (id: string): Promise<vo
     }
 };
 
+export const sportExportBestSecondTeam = async (id: string): Promise<void> => {
+    try {
+        const response = await httpGet(`/sports/${id}/export/qualifying-2nd/`, {
+            responseType: "blob",
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `BangDau_${id}.xlsx`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error: any) {
+        console.error("Download failed:", error);
+        toast.error("Xảy ra lỗi trong xuất bảng đấu: " + error.data);
+    }
+};
+
 export const tablequalifyingCreate = (tablequalifying: Omit<TTablequalifying, "id">) => {
     return httpPost("/tablequalifyings", tablequalifying);
 };

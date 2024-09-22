@@ -238,20 +238,26 @@ export const useMenuList = () => {
                     type: "link",
                     children: [
                         {
-                            path: "/export/sport/listathele",
-                            title: "Môn thi",
-                            type: "link",
-                            lanClass: "lan-4",
-                        },
-                        {
                             path: "/export/org/listathele",
                             title: "Đội thi",
                             type: "link",
                             lanClass: "lan-3",
                         },
                         {
-                            path: "/export/sport/content-members",
-                            title: "Tất cả nội dung ",
+                            path: "/export/sport/type1",
+                            title: "Mẫu VĐV 1",
+                            type: "link",
+                            lanClass: "lan-4",
+                        },
+                        {
+                            path: "/export/sport/type2",
+                            title: "Mẫu VĐV 2 ",
+                            type: "link",
+                            lanClass: "lan-3",
+                        },
+                        {
+                            path: "/export/sport/type3",
+                            title: "Mẫu VĐV 3 ",
                             type: "link",
                             lanClass: "lan-3",
                         },
