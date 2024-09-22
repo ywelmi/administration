@@ -243,18 +243,18 @@ export const useMenuList = () => {
                             type: "link",
                             lanClass: "lan-3",
                         },
-                        {
-                            path: "/export/sport/type1",
-                            title: "Mẫu VĐV 1",
-                            type: "link",
-                            lanClass: "lan-4",
-                        },
-                        {
-                            path: "/export/sport/type2",
-                            title: "Mẫu VĐV 2 ",
-                            type: "link",
-                            lanClass: "lan-3",
-                        },
+                        // {
+                        //     path: "/export/sport/type1",
+                        //     title: "Mẫu VĐV 1",
+                        //     type: "link",
+                        //     lanClass: "lan-4",
+                        // },
+                        // {
+                        //     path: "/export/sport/type2",
+                        //     title: "Mẫu VĐV 2 ",
+                        //     type: "link",
+                        //     lanClass: "lan-3",
+                        // },
                         {
                             path: "/export/sport/type3",
                             title: "Mẫu VĐV 3 ",
