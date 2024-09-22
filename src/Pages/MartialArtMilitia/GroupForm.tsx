@@ -126,11 +126,11 @@ const GroupForm = ({
     { id: 1, name: "Đôi nam 1", number: 2, gender: 1 },
     { id: 2, name: "Đôi nam 2", number: 2, gender: 1 },
 
-    { id: 3, name: "Đôi nữ 1", number: 2, gender: 2 },
+    { id: 3, name: "Đôi nữ 1", number: 2, gender: 0 },
 
-    { id: 4, name: "Đôi nữ 2", number: 2, gender: 2 },
+    { id: 4, name: "Đôi nữ 2", number: 2, gender: 0 },
 
-    { id: 5, name: "Thi đấu đồng diễn", number: 100, gender: 0 },
+    { id: 5, name: "Thi đấu đồng diễn", number: 100, gender: 1 },
   ];
   const fetch_data_content = () => {
     (async () => {
