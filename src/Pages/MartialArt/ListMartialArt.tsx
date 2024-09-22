@@ -14,7 +14,7 @@ import { useConfigStore } from "../../store/config";
 import { useSportStore } from "../../store/sport";
 import { DGender } from "../../type/enum";
 import { TMartialArt } from "../../type/martialArt";
-import { sportExportListAtheleByContentType1 } from "../../Service/result";
+import { sportExportListAtheleByContentType1, sportExportListAtheleByContentType2 } from "../../Service/result";
 
 // import "./style.css";
 
@@ -169,7 +169,7 @@ const PageMartialArt = () => {
     const { sports } = useSportStore(sportSelector());
     const sportMartialArt = sports.find((s) => s.point_unit === 3);
     const handleDownload = () => sportExportListAtheleByContentType1(sportMartialArt!.id);
-
+    const handleDownload2 = () => sportExportListAtheleByContentType2(sportMartialArt!.id);
     useEffect(() => {
         if (!sportMartialArt) return;
         martialArtsGet(sportMartialArt.id)
@@ -195,7 +195,11 @@ const PageMartialArt = () => {
                             <CardHeader className="pb-0 card-no-border">
                                 <div className="btn btn-info" onClick={handleDownload}>
                                     <i className="fa fa-plus" />
-                                    Xuất danh sách
+                                    Xuất danh sách chi tiết
+                                </div>
+                                <div className="btn btn-success" onClick={handleDownload}>
+                                    <i className="fa fa-plus" />
+                                    Xuất danh sách tổng hợp
                                 </div>
                             </CardHeader>
                             <CardBody>

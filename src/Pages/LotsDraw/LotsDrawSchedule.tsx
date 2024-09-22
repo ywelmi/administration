@@ -121,7 +121,7 @@ const LotsDrawSchedule = ({ member_count, turn_count, sport_id, content_id, onCa
             return true;
         }
     };
-    const numberWay = ["I", "II", "III", "IV", "V", "VI"].slice(0, member_count);
+    const numberWay = ["I", "II", "III", "IV", "V", "VI","VII","VIII","IX","X","XI","XII","XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI", "XXII", "XXIII"].slice(0, member_count);
     return (
         <div>
             <Row className="d-flex">
