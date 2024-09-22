@@ -257,7 +257,7 @@ export const useMenuList = () => {
                         // },
                         {
                             path: "/export/sport/type3",
-                            title: "Mẫu VĐV 3 ",
+                            title: "DS VĐV  ",
                             type: "link",
                             lanClass: "lan-3",
                         },
